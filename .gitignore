@@ -1,0 +1,5 @@
+/pkg/
+/doc/reference/
+/doc/po/*.pot
+/.yardoc/
+/test/.test-result/
