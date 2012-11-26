@@ -47,7 +47,7 @@ module Groonga
       end
 
       def command
-        @command ||= Command.parse(@raw_command)
+        @command ||= Groonga::Command::Parser.parse(@raw_command)
       end
 
       def elapsed_in_seconds
@@ -138,7 +138,7 @@ module Groonga
 
       def ensure_parse_command
         return unless select_command?
-        @select_command = SelectCommand.parse(@raw_command)
+        @select_command = Groonga::Command::Parser.parse(@raw_command)
       end
 
       def slow_operation?(elapsed)

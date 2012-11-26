@@ -19,13 +19,18 @@
 require "cgi"
 require "stringio"
 
+require "groonga/command"
+
 require "groonga/query-log"
 
 module GroongaQueryLogTestUtils
   module CommandParser
     private
     def command(name, parameters)
-      Groonga::QueryLog::Command.new(name, parameters)
+      command_class = Groonga::Command.find(name)
+      command = command_class.new(name, parameters)
+      command.original_format = :command
+      command
     end
 
     def parse_http_path(command, parameters)
@@ -37,7 +42,7 @@ module GroongaQueryLogTestUtils
         path << "?"
         path << uri_parameters.join("&")
       end
-      Groonga::QueryLog::Command.parse(path)
+      Groonga::Command::Parser.parse(path)
     end
 
     def parse_command_line(command, parameters)
@@ -50,7 +55,7 @@ module GroongaQueryLogTestUtils
         end
         command_line << " --#{key} #{escaped_value}"
       end
-      Groonga::QueryLog::Command.parse(command_line)
+      Groonga::Command::Parser.parse(command_line)
     end
   end
 
