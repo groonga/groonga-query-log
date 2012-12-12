@@ -43,7 +43,7 @@ module Groonga
         statistics.apply_options(@options)
         parser = Groonga::QueryLog::Parser.new
         if stream
-          streamer = Groonga::QueryLog::Streamer.new(create_reporter(statistics))
+          streamer = Groonga::QueryLog::Analyzer::Streamer.new(create_reporter(statistics))
           streamer.start
           process_statistic = lambda do |statistic|
             streamer << statistic

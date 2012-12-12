@@ -19,6 +19,7 @@
 
 module Groonga
   module QueryLog
+    class Analyzer
     class Streamer
       def initialize(reporter)
         @reporter = reporter
@@ -35,6 +36,7 @@ module Groonga
       def finish
         @reporter.finish
       end
+    end
     end
   end
 end
