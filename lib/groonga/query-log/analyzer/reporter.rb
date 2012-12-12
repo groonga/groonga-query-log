@@ -20,82 +20,82 @@
 module Groonga
   module QueryLog
     class Analyzer
-    class Reporter
-      include Enumerable
+      class Reporter
+        include Enumerable
 
-      attr_reader :output
-      def initialize(statistics)
-        @statistics = statistics
-        @report_summary = true
-        @output = $stdout
-      end
-
-      def apply_options(options)
-        self.output = options[:output] || @output
-        unless options[:report_summary].nil?
-          @report_summary = options[:report_summary]
+        attr_reader :output
+        def initialize(statistics)
+          @statistics = statistics
+          @report_summary = true
+          @output = $stdout
         end
-      end
 
-      def output=(output)
-        @output = output
-        @output = $stdout if @output == "-"
-      end
-
-      def each
-        @statistics.each do |statistic|
-          yield statistic
+        def apply_options(options)
+          self.output = options[:output] || @output
+          unless options[:report_summary].nil?
+            @report_summary = options[:report_summary]
+          end
         end
-      end
 
-      def report
-        setup do
-          report_summary if @report_summary
-          report_statistics
+        def output=(output)
+          @output = output
+          @output = $stdout if @output == "-"
         end
-      end
 
-      def report_statistics
-        each do |statistic|
-          report_statistic(statistic)
+        def each
+          @statistics.each do |statistic|
+            yield statistic
+          end
         end
-      end
 
-      private
-      def setup
-        setup_output do
-          start
-          yield
-          finish
+        def report
+          setup do
+            report_summary if @report_summary
+            report_statistics
+          end
         end
-      end
 
-      def setup_output
-        original_output = @output
-        if @output.is_a?(String)
-          File.open(@output, "w") do |output|
-            @output = output
+        def report_statistics
+          each do |statistic|
+            report_statistic(statistic)
+          end
+        end
+
+        private
+        def setup
+          setup_output do
+            start
+            yield
+            finish
+          end
+        end
+
+        def setup_output
+          original_output = @output
+          if @output.is_a?(String)
+            File.open(@output, "w") do |output|
+              @output = output
+              yield(@output)
+            end
+          else
             yield(@output)
           end
-        else
-          yield(@output)
+        ensure
+          @output = original_output
         end
-      ensure
-        @output = original_output
-      end
 
-      def write(*args)
-        @output.write(*args)
-      end
+        def write(*args)
+          @output.write(*args)
+        end
 
-      def format_time(time)
-        if time.nil?
-          "NaN"
-        else
-          time.strftime("%Y-%m-%d %H:%M:%S.%u")
+        def format_time(time)
+          if time.nil?
+            "NaN"
+          else
+            time.strftime("%Y-%m-%d %H:%M:%S.%u")
+          end
         end
       end
-    end
     end
   end
 end
