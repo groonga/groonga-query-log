@@ -21,6 +21,7 @@ require "groonga/query-log/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    class Analyzer
     class JSONReporter < Reporter
       def report_statistic(statistic)
         write(",") if @index > 0
@@ -71,6 +72,7 @@ module Groonga
         data["operations"] = operations
         JSON.generate(data)
       end
+    end
     end
   end
 end

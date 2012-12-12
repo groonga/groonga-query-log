@@ -186,7 +186,7 @@ module Groonga
           case @options[:reporter]
           when "json"
             require 'json'
-            Groonga::QueryLog::JSONReporter.new(statistics)
+            Groonga::QueryLog::Analyzer::JSONReporter.new(statistics)
           when "html"
             Groonga::QueryLog::Analyzer::HTMLReporter.new(statistics)
           else
