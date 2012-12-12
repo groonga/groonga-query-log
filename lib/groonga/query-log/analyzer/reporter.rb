@@ -19,6 +19,7 @@
 
 module Groonga
   module QueryLog
+    class Analyzer
     class Reporter
       include Enumerable
 
@@ -94,6 +95,7 @@ module Groonga
           time.strftime("%Y-%m-%d %H:%M:%S.%u")
         end
       end
+    end
     end
   end
 end
