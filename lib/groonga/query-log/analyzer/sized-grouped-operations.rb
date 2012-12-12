@@ -19,6 +19,7 @@
 
 module Groonga
   module QueryLog
+    class Analyzer
     class SizedGroupedOperations < Array
       def initialize
         @max_size = 10
@@ -77,6 +78,7 @@ module Groonga
           -grouped_operation[:total_elapsed]
         end
       end
+    end
     end
   end
 end
