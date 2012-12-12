@@ -18,7 +18,7 @@
 
 require "English"
 
-require "groonga/query-log/statistics"
+require "groonga/query-log/analyzer/statistics"
 
 module Groonga
   module QueryLog
