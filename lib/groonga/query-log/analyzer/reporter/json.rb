@@ -66,13 +66,13 @@ module Groonga
             operation_data = {}
             operation_data["name"] = operation[:name]
             operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
-          operation_data["context"] = operation[:context]
-          operations << operation_data
+            operation_data["context"] = operation[:context]
+            operations << operation_data
+          end
+          data["operations"] = operations
+          JSON.generate(data)
         end
-        data["operations"] = operations
-        JSON.generate(data)
       end
-    end
     end
   end
 end
