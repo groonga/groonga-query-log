@@ -188,7 +188,7 @@ module Groonga
             require 'json'
             Groonga::QueryLog::JSONReporter.new(statistics)
           when "html"
-            Groonga::QueryLog::HTMLReporter.new(statistics)
+            Groonga::QueryLog::Analyzer::HTMLReporter.new(statistics)
           else
             Groonga::QueryLog::Analyzer::ConsoleReporter.new(statistics)
           end

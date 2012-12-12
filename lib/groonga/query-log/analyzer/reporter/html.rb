@@ -22,6 +22,7 @@ require "groonga/query-log/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    class Analyzer
     class HTMLReporter < Reporter
       include ERB::Util
 
@@ -325,6 +326,7 @@ module Groonga
       def div(attributes, content)
         tag("div", attributes, content)
       end
+    end
     end
   end
 end
