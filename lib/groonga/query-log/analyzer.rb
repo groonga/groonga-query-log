@@ -190,7 +190,7 @@ module Groonga
           when "html"
             Groonga::QueryLog::HTMLReporter.new(statistics)
           else
-            Groonga::QueryLog::ConsoleReporter.new(statistics)
+            Groonga::QueryLog::Analyzer::ConsoleReporter.new(statistics)
           end
         end
 
