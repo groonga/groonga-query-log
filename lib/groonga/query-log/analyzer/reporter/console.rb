@@ -21,6 +21,7 @@ require "groonga/query-log/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    class Analyzer
     class ConsoleReporter < Reporter
       class Color
         NAMES = ["black", "red", "green", "yellow",
@@ -284,6 +285,7 @@ module Groonga
         end
         "%s%s%s" % [color.escape_sequence, text, @reset_color.escape_sequence]
       end
+    end
     end
   end
 end
