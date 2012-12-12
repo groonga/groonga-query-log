@@ -39,7 +39,7 @@ module Groonga
 
         stream = @options[:stream]
         dynamic_sort = @options[:dynamic_sort]
-        statistics = Groonga::QueryLog::SizedStatistics.new
+        statistics = Groonga::QueryLog::Analyzer::SizedStatistics.new
         statistics.apply_options(@options)
         parser = Groonga::QueryLog::Parser.new
         if stream

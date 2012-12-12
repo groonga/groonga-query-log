@@ -24,6 +24,7 @@ require "groonga/query-log/analyzer/reporter/json"
 
 module Groonga
   module QueryLog
+    class Analyzer
     class SizedStatistics < Array
       attr_reader :n_responses, :n_slow_responses, :n_slow_operations
       attr_reader :slow_operations, :total_elapsed
@@ -165,6 +166,7 @@ module Groonga
           end
         end
       end
+    end
     end
   end
 end
