@@ -19,6 +19,7 @@
 
 require 'optparse'
 require "groonga/query-log/analyzer/reporter"
+require "groonga/query-log/analyzer/sized-statistics"
 
 module Groonga
   module QueryLog
