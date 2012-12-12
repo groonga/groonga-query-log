@@ -19,4 +19,3 @@
 require "groonga/query-log/version"
 require "groonga/query-log/analyzer"
 require "groonga/query-log/parser"
-require "groonga/query-log/streamer"
