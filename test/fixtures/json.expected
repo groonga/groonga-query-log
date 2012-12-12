@@ -1,0 +1,3 @@
+[
+{"start_time":1355301557,"last_time":1355301557,"elapsed":0.00121714,"return_code":0,"command":{"raw":"select --table Users --query follower:@groonga --output_columns _key,name","name":"select","parameters":[{"key":"table","value":"Users"},{"key":"query","value":"follower:@groonga"},{"key":"output_columns","value":"_key,name"}]},"operations":[{"name":"filter","relative_elapsed":0.0008429529999999999,"context":"query: follower:@groonga"},{"name":"select","relative_elapsed":2.7947e-05,"context":null},{"name":"output","relative_elapsed":0.000195852,"context":"_key,name"}]}
+]
