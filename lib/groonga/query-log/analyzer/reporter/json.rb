@@ -22,50 +22,50 @@ require "groonga/query-log/analyzer/reporter"
 module Groonga
   module QueryLog
     class Analyzer
-    class JSONReporter < Reporter
-      def report_statistic(statistic)
-        write(",") if @index > 0
-        write("\n")
-        write(format_statistic(statistic))
-        @index += 1
-      end
-
-      def start
-        @index = 0
-        write("[")
-      end
-
-      def finish
-        write("\n")
-        write("]\n")
-      end
-
-      def report_summary
-        # TODO
-      end
-
-      private
-      def format_statistic(statistic)
-        data = {
-          "start_time" => statistic.start_time.to_i,
-          "last_time" => statistic.last_time.to_i,
-          "elapsed" => statistic.elapsed_in_seconds,
-          "return_code" => statistic.return_code,
-        }
-        command = statistic.command
-        arguments = command.arguments.collect do |key, value|
-          {"key" => key, "value" => value}
+      class JSONReporter < Reporter
+        def report_statistic(statistic)
+          write(",") if @index > 0
+          write("\n")
+          write(format_statistic(statistic))
+          @index += 1
         end
-        data["command"] = {
-          "raw" => statistic.raw_command,
-          "name" => command.name,
-          "parameters" => arguments,
-        }
-        operations = []
-        statistic.each_operation do |operation|
-          operation_data = {}
-          operation_data["name"] = operation[:name]
-          operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
+
+        def start
+          @index = 0
+          write("[")
+        end
+
+        def finish
+          write("\n")
+          write("]\n")
+        end
+
+        def report_summary
+          # TODO
+        end
+
+        private
+        def format_statistic(statistic)
+          data = {
+            "start_time" => statistic.start_time.to_i,
+            "last_time" => statistic.last_time.to_i,
+            "elapsed" => statistic.elapsed_in_seconds,
+            "return_code" => statistic.return_code,
+          }
+          command = statistic.command
+          arguments = command.arguments.collect do |key, value|
+            {"key" => key, "value" => value}
+          end
+          data["command"] = {
+            "raw" => statistic.raw_command,
+            "name" => command.name,
+            "parameters" => arguments,
+          }
+          operations = []
+          statistic.each_operation do |operation|
+            operation_data = {}
+            operation_data["name"] = operation[:name]
+            operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
           operation_data["context"] = operation[:context]
           operations << operation_data
         end
