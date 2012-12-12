@@ -20,6 +20,7 @@ require "groonga/command"
 
 module Groonga
   module QueryLog
+  class Analyzer
     class Statistic
       attr_reader :context_id, :start_time, :raw_command
       attr_reader :elapsed, :return_code
@@ -145,5 +146,6 @@ module Groonga
         elapsed >= @slow_operation_threshold
       end
     end
+  end
   end
 end

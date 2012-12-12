@@ -49,7 +49,7 @@ module Groonga
                      time_stamp, context_id, type, rest, &block)
         case type
         when ">"
-          statistic = Statistic.new(context_id)
+          statistic = Analyzer::Statistic.new(context_id)
           statistic.start(time_stamp, rest)
           current_statistics[context_id] = statistic
         when ":"
