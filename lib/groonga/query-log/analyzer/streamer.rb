@@ -20,23 +20,23 @@
 module Groonga
   module QueryLog
     class Analyzer
-    class Streamer
-      def initialize(reporter)
-        @reporter = reporter
-      end
+      class Streamer
+        def initialize(reporter)
+          @reporter = reporter
+        end
 
-      def start
-        @reporter.start
-      end
+        def start
+          @reporter.start
+        end
 
-      def <<(statistic)
-        @reporter.report_statistic(statistic)
-      end
+        def <<(statistic)
+          @reporter.report_statistic(statistic)
+        end
 
-      def finish
-        @reporter.finish
+        def finish
+          @reporter.finish
+        end
       end
-    end
     end
   end
 end
