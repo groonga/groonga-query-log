@@ -74,7 +74,7 @@ td.name
           <tr><th>Name</th><th>Value</th></tr>
           <tr>
             <th># of responses</th>
-            <td>1</td>
+            <td>2</td>
           </tr>
           <tr>
             <th># of slow responses</th>
@@ -82,7 +82,7 @@ td.name
           </tr>
           <tr>
             <th>responses/sec</th>
-            <td>821.5981727656638</td>
+            <td>387.0613143828114</td>
           </tr>
           <tr>
             <th>start time</th>
@@ -94,7 +94,7 @@ td.name
           </tr>
           <tr>
             <th>period</th>
-            <td>0.00121714sec</td>
+            <td>0.00516714sec</td>
           </tr>
           <tr>
             <th>slow response ratio</th>
@@ -102,7 +102,7 @@ td.name
           </tr>
           <tr>
             <th>total response time</th>
-            <td>0.00121714sec</td>
+            <td>0.004345996sec</td>
           </tr>
         </table>
       </div>
@@ -122,6 +122,31 @@ td.name
     </div>
     <h2>Slow Queries</h2>
     <div>
+      <div class="statistic-heading">
+        <h3>Command</h3>
+        <div class="metrics">
+          [<span class="time">2012-12-12 17:39:17.3</span>
+           -
+           <span class="time">2012-12-12 17:39:17.3</span>
+           (<span class="elapsed">0.00312886</span>)]
+          (<span class="return-code">0</span>)
+        </div>
+        <div class="raw-command">load --table Video</div>
+      </div>
+      <div class="statistic-parameters">
+        <h3>Parameters</h3>
+        <dl>
+          <dt>name</dt>
+          <dd>load</dd>
+          <dt>table</dt>
+          <dd>Video</dd>
+         </dl>
+      </div>
+      <div class="statistic-operations">
+        <h3>Operations</h3>
+        <ol>
+        </ol>
+      </div>
       <div class="statistic-heading">
         <h3>Command</h3>
         <div class="metrics">

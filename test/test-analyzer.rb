@@ -53,6 +53,12 @@ class AnalyzerTest < Test::Unit::TestCase
     assert_equal(expected_result, actual_result)
   end
 
+  def test_n_entries
+    actual_result = run_analyzer("--n-entries=1", @query_log_path)
+    expected_result = expected_analyzed_query("n_entries.expected")
+    assert_equal(expected_result, actual_result)
+  end
+
   private
   def run_analyzer(*arguments)
     @analyzer.run(*arguments)
