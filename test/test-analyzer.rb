@@ -23,8 +23,8 @@ require "groonga/query-log/analyzer"
 class AnalyzerTest < Test::Unit::TestCase
   setup
   def setup_fixtures
-    @fixture_path = File.join(File.dirname(__FILE__), "fixtures")
-    @query_log_path = File.join(@fixture_path, "query.log")
+    @fixtures_path = File.join(File.dirname(__FILE__), "fixtures")
+    @query_log_path = File.join(@fixtures_path, "query.log")
   end
 
   def setup
@@ -71,6 +71,6 @@ class AnalyzerTest < Test::Unit::TestCase
   end
 
   def expected_analyzed_query(file_name)
-    File.read(File.join(@fixture_path, file_name))
+    File.read(File.join(@fixtures_path, file_name))
   end
 end
