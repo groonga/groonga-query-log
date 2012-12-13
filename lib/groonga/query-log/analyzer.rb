@@ -181,6 +181,7 @@ module Groonga
             @options[:report_summary] = report_summary
           end
         end
+      end
 
         def create_reporter(statistics)
           case @options[:reporter]
@@ -205,7 +206,6 @@ module Groonga
             Groonga::QueryLog::StreamConsoleQueryLogReporter.new
           end
         end
-      end
     end
   end
 end
