@@ -40,7 +40,12 @@ end
 
 desc "Run tests"
 task :test do
-  run_test_options = ARGV - ["test"]
+  task_index = ARGV.index("test")
+  if task_index
+    run_test_options = ARGV[(task_index + 1)..-1]
+  else
+    run_test_options = []
+  end
   tests_exit_status = ruby("test/run-test.rb", *run_test_options)
   exit(tests_exit_status)
 end
