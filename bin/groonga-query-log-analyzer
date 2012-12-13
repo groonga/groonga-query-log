@@ -5,7 +5,7 @@ require "groonga/query-log"
 
 analyzer = Groonga::QueryLog::Analyzer.new
 begin
-  analyzer.run
+  analyzer.run(*ARGV)
 rescue Groonga::QueryLog::Analyzer::Error
   $stderr.puts($!.message)
   exit(false)

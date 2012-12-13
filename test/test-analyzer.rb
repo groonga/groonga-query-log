@@ -68,7 +68,7 @@ class AnalyzerTest < Test::Unit::TestCase
 
   private
   def run_analyzer(*arguments)
-    @analyzer.run(arguments)
+    @analyzer.run(*arguments)
     @output.string
   end
 

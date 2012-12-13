@@ -35,8 +35,8 @@ module Groonga
         setup_options
       end
 
-      def run(argv=nil)
-        log_paths = @option_parser.parse!(argv || ARGV)
+      def run(*argv)
+        log_paths = @option_parser.parse!(argv)
 
         stream = @options[:stream]
         dynamic_sort = @options[:dynamic_sort]
