@@ -1,183 +1,171 @@
-    <html>
-      <head>
-        <title>groonga query analyzer</title>
-        <style>
-    table,
-    table tr,
-    table tr th,
-    table tr td
-    {
-      border: 1px solid black;
-    }
+<html>
+  <head>
+    <title>groonga query analyzer</title>
+    <style>
+table,
+table tr,
+table tr th,
+table tr td
+{
+  border: 1px solid black;
+}
 
-    span.slow
-    {
-      color: red;
-    }
+span.slow
+{
+  color: red;
+}
 
-    div.parameters
-    {
-      float: left;
-      padding: 2em;
-    }
+div.parameters
+{
+  float: left;
+  padding: 2em;
+}
 
-    div.parameters h3
-    {
-      text-align: center;
-    }
+div.parameters h3
+{
+  text-align: center;
+}
 
-    div.parameters table
-    {
-      margin-right: auto;
-      margin-left: auto;
-    }
+div.parameters table
+{
+  margin-right: auto;
+  margin-left: auto;
+}
 
-    div.statistics
-    {
-      clear: both;
-    }
+div.statistics
+{
+  clear: both;
+}
 
-    td.elapsed,
-    td.ratio,
-    td.n
-    {
-      text-align: right;
-    }
+td.elapsed,
+td.ratio,
+td.n
+{
+  text-align: right;
+}
 
-    td.name
-    {
-      text-align: center;
-    }
-        </style>
-      </head>
-      <body>
-        <h1>groonga query analyzer</h1>
-        <h2>Summary</h2>
-        <div class="summary">
-              <div class="parameters">
-            <h3>Analyze Parameters</h3>
-            <table>
-              <tr><th>Name</th><th>Value</th></tr>
-              <tr>
-                <th>Slow response threshold</th>
-                <td>0.2sec</td>
-              </tr>
-              <tr>
-                <th>Slow operation threshold</th>
-                <td>0.1sec</td>
-              </tr>
-            </table>
-          </div>
-
-              <div class="parameters">
-            <h3>Metrics</h3>
-            <table>
-              <tr><th>Name</th><th>Value</th></tr>
-              <tr>
-                <th># of responses</th>
-                <td>1</td>
-              </tr>
-              <tr>
-                <th># of slow responses</th>
-                <td>0</td>
-              </tr>
-              <tr>
-                <th>responses/sec</th>
-                <td>821.5981727656638</td>
-              </tr>
-              <tr>
-                <th>start time</th>
-                <td><span class="time">2012-12-12 17:39:17.3</span></td>
-              </tr>
-              <tr>
-                <th>last time</th>
-                <td><span class="time">2012-12-12 17:39:17.3</span></td>
-              </tr>
-              <tr>
-                <th>period</th>
-                <td>0.00121714sec</td>
-              </tr>
-              <tr>
-                <th>slow response ratio</th>
-                <td>0.0%</td>
-              </tr>
-              <tr>
-                <th>total response time</th>
-                <td>0.00121714sec</td>
-              </tr>
-            </table>
-          </div>
-
-              <div class="statistics">
-            <h3>Slow Operations</h3>
-            <table class="slow-operations">
-              <tr>
-                <th>total elapsed(sec)</th>
-                <th>total elapsed(%)</th>
-                <th># of operations</th>
-                <th># of operations(%)</th>
-                <th>operation name</th>
-                <th>context</th>
-              </tr>
-    
-            </table>
-          </div>
-
+td.name
+{
+  text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <h1>groonga query analyzer</h1>
+    <h2>Summary</h2>
+    <div class="summary">
+      <div class="parameters">
+        <h3>Analyze Parameters</h3>
+        <table>
+          <tr><th>Name</th><th>Value</th></tr>
+          <tr>
+            <th>Slow response threshold</th>
+            <td>0.2sec</td>
+          </tr>
+          <tr>
+            <th>Slow operation threshold</th>
+            <td>0.1sec</td>
+          </tr>
+        </table>
+      </div>
+      <div class="parameters">
+        <h3>Metrics</h3>
+        <table>
+          <tr><th>Name</th><th>Value</th></tr>
+          <tr>
+            <th># of responses</th>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th># of slow responses</th>
+            <td>0</td>
+          </tr>
+          <tr>
+            <th>responses/sec</th>
+            <td>821.5981727656638</td>
+          </tr>
+          <tr>
+            <th>start time</th>
+            <td><span class="time">2012-12-12 17:39:17.3</span></td>
+          </tr>
+          <tr>
+            <th>last time</th>
+            <td><span class="time">2012-12-12 17:39:17.3</span></td>
+          </tr>
+          <tr>
+            <th>period</th>
+            <td>0.00121714sec</td>
+          </tr>
+          <tr>
+            <th>slow response ratio</th>
+            <td>0.0%</td>
+          </tr>
+          <tr>
+            <th>total response time</th>
+            <td>0.00121714sec</td>
+          </tr>
+        </table>
+      </div>
+      <div class="statistics">
+        <h3>Slow Operations</h3>
+        <table class="slow-operations">
+          <tr>
+            <th>total elapsed(sec)</th>
+            <th>total elapsed(%)</th>
+            <th># of operations</th>
+            <th># of operations(%)</th>
+            <th>operation name</th>
+            <th>context</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <h2>Slow Queries</h2>
+    <div>
+      <div class="statistic-heading">
+        <h3>Command</h3>
+        <div class="metrics">
+          [<span class="time">2012-12-12 17:39:17.3</span>
+           -
+           <span class="time">2012-12-12 17:39:17.3</span>
+           (<span class="elapsed">0.00121714</span>)]
+          (<span class="return-code">0</span>)
         </div>
-        <h2>Slow Queries</h2>
-        <div>
-          <div class="statistic-heading">
-            <h3>Command</h3>
-            <div class="metrics">
-              [<span class="time">2012-12-12 17:39:17.3</span>
-               -
-               <span class="time">2012-12-12 17:39:17.3</span>
-               (<span class="elapsed">0.00121714</span>)]
-              (<span class="return-code">0</span>)
-            </div>
-            <div class="raw-command">select --table Users --query follower:@groonga --output_columns _key,name</div>
-          </div>
-          <div class="statistic-parameters">
-            <h3>Parameters</h3>
-            <dl>
-              <dt>name</dt>
-              <dd>select</dd>
-    
-              <dt>table</dt>
-              <dd>Users</dd>
-    
-              <dt>query</dt>
-              <dd>follower:@groonga</dd>
-    
-              <dt>output_columns</dt>
-              <dd>_key,name</dd>
-    
-             </dl>
-          </div>
-          <div class="statistic-operations">
-            <h3>Operations</h3>
-            <ol>
-    
-              <li>
-                <span class="elapsed">0.00084295</span>:
-                <span class="name">filter</span>:
-                <span class="context">query: follower:@groonga</span>
-              </li>
-    
-              <li>
-                <span class="elapsed">0.00002795</span>:
-                <span class="name">select</span>:
-                <span class="context"></span>
-              </li>
-    
-              <li>
-                <span class="elapsed">0.00019585</span>:
-                <span class="name">output</span>:
-                <span class="context">_key,name</span>
-              </li>
-    
-            </ol>
-          </div>
-        </div>
-      </body>
-    </html>
+        <div class="raw-command">select --table Users --query follower:@groonga --output_columns _key,name</div>
+      </div>
+      <div class="statistic-parameters">
+        <h3>Parameters</h3>
+        <dl>
+          <dt>name</dt>
+          <dd>select</dd>
+          <dt>table</dt>
+          <dd>Users</dd>
+          <dt>query</dt>
+          <dd>follower:@groonga</dd>
+          <dt>output_columns</dt>
+          <dd>_key,name</dd>
+         </dl>
+      </div>
+      <div class="statistic-operations">
+        <h3>Operations</h3>
+        <ol>
+          <li>
+            <span class="elapsed">0.00084295</span>:
+            <span class="name">filter</span>:
+            <span class="context">query: follower:@groonga</span>
+          </li>
+          <li>
+            <span class="elapsed">0.00002795</span>:
+            <span class="name">select</span>:
+            <span class="context"></span>
+          </li>
+          <li>
+            <span class="elapsed">0.00019585</span>:
+            <span class="name">output</span>:
+            <span class="context">_key,name</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </body>
+</html>

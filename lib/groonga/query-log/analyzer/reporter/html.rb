@@ -43,12 +43,12 @@ module Groonga
 
         def report_summary
           summary_html = erb(<<-EOH, __LINE__ + 1, binding)
-        <h2>Summary</h2>
-        <div class="summary">
-    <%= analyze_parameters %>
-    <%= metrics %>
-    <%= slow_operations %>
-        </div>
+    <h2>Summary</h2>
+    <div class="summary">
+<%= analyze_parameters %>
+<%= metrics %>
+<%= slow_operations %>
+    </div>
           EOH
           write(summary_html)
         end
@@ -62,42 +62,42 @@ module Groonga
         def report_statistic(statistic)
           command = statistic.command
           statistic_html = erb(<<-EOH, __LINE__ + 1, binding)
-          <div class="statistic-heading">
-            <h3>Command</h3>
-            <div class="metrics">
-              [<%= format_time(statistic.start_time) %>
-               -
-               <%= format_time(statistic.last_time) %>
-               (<%= format_elapsed(statistic.elapsed_in_seconds,
-                                   :slow? => statistic.slow?) %>)]
-              (<%= span({:class => "return-code"}, h(statistic.return_code)) %>)
-            </div>
-            <%= div({:class => "raw-command"}, h(statistic.raw_command)) %>
-          </div>
-          <div class="statistic-parameters">
-            <h3>Parameters</h3>
-            <dl>
-              <dt>name</dt>
-              <dd><%= h(command.name) %></dd>
-    <% command.arguments.each do |key, value| %>
-              <dt><%= h(key) %></dt>
-              <dd><%= h(value) %></dd>
-    <% end %>
-             </dl>
-          </div>
-          <div class="statistic-operations">
-            <h3>Operations</h3>
-            <ol>
-    <% statistic.each_operation do |operation| %>
-              <li>
-                <%= format_elapsed(operation[:relative_elapsed_in_seconds],
-                                   :slow? => operation[:slow?]) %>:
-                <%= span({:class => "name"}, h(operation[:name])) %>:
-                <%= span({:class => "context"}, h(operation[:context])) %>
-              </li>
-    <% end %>
-            </ol>
-          </div>
+      <div class="statistic-heading">
+        <h3>Command</h3>
+        <div class="metrics">
+          [<%= format_time(statistic.start_time) %>
+           -
+           <%= format_time(statistic.last_time) %>
+           (<%= format_elapsed(statistic.elapsed_in_seconds,
+                               :slow? => statistic.slow?) %>)]
+          (<%= span({:class => "return-code"}, h(statistic.return_code)) %>)
+        </div>
+        <%= div({:class => "raw-command"}, h(statistic.raw_command)) %>
+      </div>
+      <div class="statistic-parameters">
+        <h3>Parameters</h3>
+        <dl>
+          <dt>name</dt>
+          <dd><%= h(command.name) %></dd>
+<% command.arguments.each do |key, value| %>
+          <dt><%= h(key) %></dt>
+          <dd><%= h(value) %></dd>
+<% end %>
+         </dl>
+      </div>
+      <div class="statistic-operations">
+        <h3>Operations</h3>
+        <ol>
+<% statistic.each_operation do |operation| %>
+          <li>
+            <%= format_elapsed(operation[:relative_elapsed_in_seconds],
+                               :slow? => operation[:slow?]) %>:
+            <%= span({:class => "name"}, h(operation[:name])) %>:
+            <%= span({:class => "context"}, h(operation[:context])) %>
+          </li>
+<% end %>
+        </ol>
+      </div>
           EOH
           write(statistic_html)
         end
@@ -110,180 +110,180 @@ module Groonga
 
         def header
           erb(<<-EOH, __LINE__ + 1)
-    <html>
-      <head>
-        <title>groonga query analyzer</title>
-        <style>
-    table,
-    table tr,
-    table tr th,
-    table tr td
-    {
-      border: 1px solid black;
-    }
+<html>
+  <head>
+    <title>groonga query analyzer</title>
+    <style>
+table,
+table tr,
+table tr th,
+table tr td
+{
+  border: 1px solid black;
+}
 
-    span.slow
-    {
-      color: red;
-    }
+span.slow
+{
+  color: red;
+}
 
-    div.parameters
-    {
-      float: left;
-      padding: 2em;
-    }
+div.parameters
+{
+  float: left;
+  padding: 2em;
+}
 
-    div.parameters h3
-    {
-      text-align: center;
-    }
+div.parameters h3
+{
+  text-align: center;
+}
 
-    div.parameters table
-    {
-      margin-right: auto;
-      margin-left: auto;
-    }
+div.parameters table
+{
+  margin-right: auto;
+  margin-left: auto;
+}
 
-    div.statistics
-    {
-      clear: both;
-    }
+div.statistics
+{
+  clear: both;
+}
 
-    td.elapsed,
-    td.ratio,
-    td.n
-    {
-      text-align: right;
-    }
+td.elapsed,
+td.ratio,
+td.n
+{
+  text-align: right;
+}
 
-    td.name
-    {
-      text-align: center;
-    }
-        </style>
-      </head>
-      <body>
-        <h1>groonga query analyzer</h1>
-          EOH
-        end
+td.name
+{
+  text-align: center;
+}
+    </style>
+  </head>
+  <body>
+    <h1>groonga query analyzer</h1>
+      EOH
+    end
 
-        def footer
-          erb(<<-EOH, __LINE__ + 1)
-      </body>
-    </html>
+    def footer
+      erb(<<-EOH, __LINE__ + 1)
+  </body>
+</html>
           EOH
         end
 
         def statistics_header
           erb(<<-EOH, __LINE__ + 1)
-        <h2>Slow Queries</h2>
-        <div>
+    <h2>Slow Queries</h2>
+    <div>
           EOH
         end
 
         def statistics_footer
           erb(<<-EOH, __LINE__ + 1)
-        </div>
+    </div>
           EOH
         end
 
         def analyze_parameters
           erb(<<-EOH, __LINE__ + 1)
-          <div class="parameters">
-            <h3>Analyze Parameters</h3>
-            <table>
-              <tr><th>Name</th><th>Value</th></tr>
-              <tr>
-                <th>Slow response threshold</th>
-                <td><%= h(@statistics.slow_response_threshold) %>sec</td>
-              </tr>
-              <tr>
-                <th>Slow operation threshold</th>
-                <td><%= h(@statistics.slow_operation_threshold) %>sec</td>
-              </tr>
-            </table>
-          </div>
+      <div class="parameters">
+        <h3>Analyze Parameters</h3>
+        <table>
+          <tr><th>Name</th><th>Value</th></tr>
+          <tr>
+            <th>Slow response threshold</th>
+            <td><%= h(@statistics.slow_response_threshold) %>sec</td>
+          </tr>
+          <tr>
+            <th>Slow operation threshold</th>
+            <td><%= h(@statistics.slow_operation_threshold) %>sec</td>
+          </tr>
+        </table>
+      </div>
           EOH
         end
 
         def metrics
           erb(<<-EOH, __LINE__ + 1)
-          <div class="parameters">
-            <h3>Metrics</h3>
-            <table>
-              <tr><th>Name</th><th>Value</th></tr>
-              <tr>
-                <th># of responses</th>
-                <td><%= h(@statistics.n_responses) %></td>
-              </tr>
-              <tr>
-                <th># of slow responses</th>
-                <td><%= h(@statistics.n_slow_responses) %></td>
-              </tr>
-              <tr>
-                <th>responses/sec</th>
-                <td><%= h(@statistics.responses_per_second) %></td>
-              </tr>
-              <tr>
-                <th>start time</th>
-                <td><%= format_time(@statistics.start_time) %></td>
-              </tr>
-              <tr>
-                <th>last time</th>
-                <td><%= format_time(@statistics.last_time) %></td>
-              </tr>
-              <tr>
-                <th>period</th>
-                <td><%= h(@statistics.period) %>sec</td>
-              </tr>
-              <tr>
-                <th>slow response ratio</th>
-                <td><%= h(@statistics.slow_response_ratio) %>%</td>
-              </tr>
-              <tr>
-                <th>total response time</th>
-                <td><%= h(@statistics.total_elapsed) %>sec</td>
-              </tr>
-            </table>
-          </div>
+      <div class="parameters">
+        <h3>Metrics</h3>
+        <table>
+          <tr><th>Name</th><th>Value</th></tr>
+          <tr>
+            <th># of responses</th>
+            <td><%= h(@statistics.n_responses) %></td>
+          </tr>
+          <tr>
+            <th># of slow responses</th>
+            <td><%= h(@statistics.n_slow_responses) %></td>
+          </tr>
+          <tr>
+            <th>responses/sec</th>
+            <td><%= h(@statistics.responses_per_second) %></td>
+          </tr>
+          <tr>
+            <th>start time</th>
+            <td><%= format_time(@statistics.start_time) %></td>
+          </tr>
+          <tr>
+            <th>last time</th>
+            <td><%= format_time(@statistics.last_time) %></td>
+          </tr>
+          <tr>
+            <th>period</th>
+            <td><%= h(@statistics.period) %>sec</td>
+          </tr>
+          <tr>
+            <th>slow response ratio</th>
+            <td><%= h(@statistics.slow_response_ratio) %>%</td>
+          </tr>
+          <tr>
+            <th>total response time</th>
+            <td><%= h(@statistics.total_elapsed) %>sec</td>
+          </tr>
+        </table>
+      </div>
           EOH
         end
 
         def slow_operations
           erb(<<-EOH, __LINE__ + 1)
-          <div class="statistics">
-            <h3>Slow Operations</h3>
-            <table class="slow-operations">
-              <tr>
-                <th>total elapsed(sec)</th>
-                <th>total elapsed(%)</th>
-                <th># of operations</th>
-                <th># of operations(%)</th>
-                <th>operation name</th>
-                <th>context</th>
-              </tr>
-    <% @statistics.each_slow_operation do |grouped_operation| %>
-              <tr>
-                <td class="elapsed">
-                  <%= format_elapsed(grouped_operation[:total_elapsed]) %>
-                </td>
-                <td class="ratio">
-                  <%= format_ratio(grouped_operation[:total_elapsed_ratio]) %>
-                </td>
-                <td class="n">
-                  <%= h(grouped_operation[:n_operations]) %>
-                </td>
-                <td class="ratio">
-                  <%= format_ratio(grouped_operation[:n_operations_ratio]) %>
-                </td>
-                <td class="name"><%= h(grouped_operation[:name]) %></td>
-                <td class="context">
-                  <%= format_context(grouped_operation[:context]) %>
-                </td>
-              </tr>
-    <% end %>
-            </table>
-          </div>
+      <div class="statistics">
+        <h3>Slow Operations</h3>
+        <table class="slow-operations">
+          <tr>
+            <th>total elapsed(sec)</th>
+            <th>total elapsed(%)</th>
+            <th># of operations</th>
+            <th># of operations(%)</th>
+            <th>operation name</th>
+            <th>context</th>
+          </tr>
+<% @statistics.each_slow_operation do |grouped_operation| %>
+          <tr>
+            <td class="elapsed">
+              <%= format_elapsed(grouped_operation[:total_elapsed]) %>
+            </td>
+            <td class="ratio">
+              <%= format_ratio(grouped_operation[:total_elapsed_ratio]) %>
+            </td>
+            <td class="n">
+              <%= h(grouped_operation[:n_operations]) %>
+            </td>
+            <td class="ratio">
+              <%= format_ratio(grouped_operation[:n_operations_ratio]) %>
+            </td>
+            <td class="name"><%= h(grouped_operation[:name]) %></td>
+            <td class="context">
+              <%= format_context(grouped_operation[:context]) %>
+            </td>
+          </tr>
+<% end %>
+        </table>
+      </div>
           EOH
         end
 
