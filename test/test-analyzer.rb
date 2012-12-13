@@ -43,26 +43,13 @@ class AnalyzerTest < Test::Unit::TestCase
     $stdout = @original_stdout
   end
 
-  def test_to_console
-    actual_result = run_analyzer("--reporter", "console", @query_log_path)
-    expected_result = expected_analyzed_query("console.expected")
-    assert_equal(expected_result, actual_result)
-  end
 
-  def test_to_html
-    actual_result = run_analyzer("--reporter", "html", @query_log_path)
-    expected_result = expected_analyzed_query("html.expected")
-    assert_equal(expected_result, actual_result)
-  end
+  data(:console => "console", :html => "html", :json => "json")
+  def test_output(output_type)
+    actual_result = run_analyzer("--reporter", output_type, @query_log_path)
+    actual_result = normalize_time(actual_result) if output_type == "json"
 
-  def test_to_json
-    actual_result = run_analyzer("--reporter", "json", @query_log_path)
-
-    actual_result = actual_result.gsub(/(\"start_time\"):\d+/,
-                                       "\\1:START_TIME")
-    actual_result = actual_result.gsub(/(\"last_time\"):\d+/,
-                                       "\\1:LAST_TIME")
-    expected_result = expected_analyzed_query("json.expected")
+    expected_result = expected_analyzed_query("#{output_type}.expected")
     assert_equal(expected_result, actual_result)
   end
 
@@ -70,6 +57,12 @@ class AnalyzerTest < Test::Unit::TestCase
   def run_analyzer(*arguments)
     @analyzer.run(*arguments)
     @output.string
+  end
+
+  def normalize_time(json_string)
+    json_string = json_string.gsub(/(\"start_time\"):(\d+)/,
+                                     "\\1:START_TIME")
+    json_string.gsub(/(\"last_time\"):(\d+)/, "\\1:LAST_TIME")
   end
 
   def expected_analyzed_query(file_name)
