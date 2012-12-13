@@ -183,29 +183,29 @@ module Groonga
         end
       end
 
-        def create_reporter(statistics)
-          case @options[:reporter]
-          when "json"
-            require 'json'
-            JSONReporter.new(statistics)
-          when "html"
-            HTMLReporter.new(statistics)
-          else
-            ConsoleReporter.new(statistics)
-          end
+      def create_reporter(statistics)
+        case @options[:reporter]
+        when "json"
+          require 'json'
+          JSONReporter.new(statistics)
+        when "html"
+          HTMLReporter.new(statistics)
+        else
+          ConsoleReporter.new(statistics)
         end
+      end
 
-        def create_stream_reporter
-          case @options[:reporter]
-          when "json"
-            require 'json'
-            Groonga::QueryLog::StreamJSONQueryLogReporter.new
-          when "html"
-            raise UnsupportedReporter, "HTML reporter doesn't support --stream."
-          else
-            Groonga::QueryLog::StreamConsoleQueryLogReporter.new
-          end
+      def create_stream_reporter
+        case @options[:reporter]
+        when "json"
+          require 'json'
+          Groonga::QueryLog::StreamJSONQueryLogReporter.new
+        when "html"
+          raise UnsupportedReporter, "HTML reporter doesn't support --stream."
+        else
+          Groonga::QueryLog::StreamConsoleQueryLogReporter.new
         end
+      end
     end
   end
 end
