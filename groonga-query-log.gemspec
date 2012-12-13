@@ -43,9 +43,9 @@ Gem::Specification.new do |spec|
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("doc/text/*")
   spec.test_files += Dir.glob("test/**/*")
-  # Dir.chdir("bin") do
-  #   spec.executables = Dir.glob("*")
-  # end
+  Dir.chdir("bin") do
+    spec.executables = Dir.glob("*")
+  end
 
   spec.homepage = "https://github.com/groonga/groonga-query-log"
   spec.licenses = ["LGPLv2.1+"]
