@@ -46,6 +46,14 @@ class AnalyzerTest < Test::Unit::TestCase
     assert_equal(expected_result, actual_result)
   end
 
+  data(:desc_elapsed => "-elapsed", :desc_start_time => "-start-time")
+  def test_order(order)
+    actual_result = run_analyzer("--order=#{order}", @query_log_path)
+
+    expected_result = expected_analyzed_query("order/#{order}.expected")
+    assert_equal(expected_result, actual_result)
+  end
+
   private
   def run_analyzer(*arguments)
     output = Tempfile.new("output.actual").path

@@ -136,11 +136,11 @@ module Groonga
             end
           when "-start-time"
             lambda do |statistic|
-              -statistic.start_time
+              -statistic.start_time.to_f
             end
           else
             lambda do |statistic|
-              statistic.start_time
+              statistic.start_time.to_f
             end
           end
         end
