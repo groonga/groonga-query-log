@@ -26,13 +26,6 @@ module Groonga
       class HTMLReporter < Reporter
         include ERB::Util
 
-        def report_statistic(statistic)
-          write(",") if @index > 0
-          write("\n")
-          write(format_statistic(statistic))
-          @index += 1
-        end
-
         def start
           write(header)
         end
@@ -165,14 +158,14 @@ td.name
   <body>
     <h1>groonga query analyzer</h1>
       EOH
-    end
+        end
 
     def footer
       erb(<<-EOH, __LINE__ + 1)
   </body>
 </html>
           EOH
-        end
+    end
 
         def statistics_header
           erb(<<-EOH, __LINE__ + 1)
