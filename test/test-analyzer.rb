@@ -58,9 +58,9 @@ class AnalyzerTest < Test::Unit::TestCase
   def test_to_json
     actual_result = run_analyzer("--reporter", "json", @query_log_path)
 
-    actual_result = actual_result.gsub(/(\"start_time\"):(\d+)/,
+    actual_result = actual_result.gsub(/(\"start_time\"):\d+/,
                                        "\\1:START_TIME")
-    actual_result = actual_result.gsub(/(\"last_time\"):(\d+)/,
+    actual_result = actual_result.gsub(/(\"last_time\"):\d+/,
                                        "\\1:LAST_TIME")
     expected_result = expected_analyzed_query("json.expected")
     assert_equal(expected_result, actual_result)
