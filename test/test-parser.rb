@@ -17,6 +17,15 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 class ParserTest < Test::Unit::TestCase
+  def test_load
+    @log = <<-EOL
+2012-12-13 11:15:21.628105|0x7fff148c8a50|>load --table Video
+2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
+EOL
+    parsed_command = statistics.first.command
+    assert_instance_of(Groonga::Command::Load, parsed_command)
+  end
+
   private
   def statistics
     statistics = []

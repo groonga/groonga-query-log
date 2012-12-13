@@ -48,7 +48,16 @@ module Groonga
         end
 
         def command
-          @command ||= Groonga::Command::Parser.parse(@raw_command)
+          Groonga::Command::Parser.parse(@raw_command) do |status, command|
+            case status
+            when :on_load_start
+              @loading = false
+              @command ||= command
+            when :on_command
+              @command ||= command
+            end
+          end
+          @command
         end
 
         def elapsed_in_seconds
