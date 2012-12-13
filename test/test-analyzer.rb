@@ -36,7 +36,7 @@ class AnalyzerTest < Test::Unit::TestCase
     actual_result = run_analyzer("--reporter", reporter, @query_log_path)
     actual_result = normalize_json(actual_result) if reporter == "json"
 
-    expected_result = expected_analyzed_query("output/#{reporter}.expected")
+    expected_result = expected_analyzed_query("reporter/#{reporter}.expected")
     assert_equal(expected_result, actual_result)
   end
 
