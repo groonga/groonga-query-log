@@ -18,6 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require 'optparse'
+require 'json'
 require "groonga/query-log/parser"
 require "groonga/query-log/analyzer/sized-statistics"
 
@@ -186,7 +187,6 @@ module Groonga
       def create_reporter(statistics)
         case @options[:reporter]
         when "json"
-          require 'json'
           JSONReporter.new(statistics)
         when "html"
           HTMLReporter.new(statistics)
