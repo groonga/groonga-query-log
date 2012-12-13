@@ -39,11 +39,11 @@ module Groonga
 
         stream = @options[:stream]
         dynamic_sort = @options[:dynamic_sort]
-        statistics = Groonga::QueryLog::Analyzer::SizedStatistics.new
+        statistics = SizedStatistics.new
         statistics.apply_options(@options)
         parser = Groonga::QueryLog::Parser.new
         if stream
-          streamer = Groonga::QueryLog::Analyzer::Streamer.new(create_reporter(statistics))
+          streamer = Streamer.new(create_reporter(statistics))
           streamer.start
           process_statistic = lambda do |statistic|
             streamer << statistic
@@ -186,11 +186,11 @@ module Groonga
           case @options[:reporter]
           when "json"
             require 'json'
-            Groonga::QueryLog::Analyzer::JSONReporter.new(statistics)
+            JSONReporter.new(statistics)
           when "html"
-            Groonga::QueryLog::Analyzer::HTMLReporter.new(statistics)
+            HTMLReporter.new(statistics)
           else
-            Groonga::QueryLog::Analyzer::ConsoleReporter.new(statistics)
+            ConsoleReporter.new(statistics)
           end
         end
 
