@@ -57,11 +57,12 @@ class AnalyzerTest < Test::Unit::TestCase
 
   private
   def run_analyzer(*arguments)
-    output_file = Tempfile.new("output.actual")
-    output = output_file.path
-    arguments << "--output" << output
-    @analyzer.run(*arguments)
-    File.read(output)
+    output = ""
+    Tempfile.open("output.actual") do |output|
+      arguments << "--output" << output.path
+      @analyzer.run(*arguments)
+      File.read(output.path)
+    end
   end
 
   def normalize_json(json_string)
