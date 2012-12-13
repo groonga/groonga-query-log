@@ -40,5 +40,7 @@ end
 
 desc "Run tests"
 task :test do
-  ruby("test/run-test.rb")
+  Rake.application.top_level_tasks.replace(["test"])
+  options = ARGV - ["test"]
+  ruby("test/run-test.rb", *options)
 end
