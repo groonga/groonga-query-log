@@ -43,7 +43,6 @@ class AnalyzerTest < Test::Unit::TestCase
     $stdout = @original_stdout
   end
 
-
   data(:console => "console", :html => "html", :json => "json")
   def test_output(output_type)
     actual_result = run_analyzer("--reporter", output_type, @query_log_path)
