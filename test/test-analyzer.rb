@@ -47,7 +47,7 @@ class AnalyzerTest < Test::Unit::TestCase
   data(:console => "console", :html => "html", :json => "json")
   def test_output(output_type)
     actual_result = run_analyzer("--reporter", output_type, @query_log_path)
-    actual_result = normalize_time(actual_result) if output_type == "json"
+    actual_result = normalize_json(actual_result) if output_type == "json"
 
     expected_result = expected_analyzed_query("#{output_type}.expected")
     assert_equal(expected_result, actual_result)
@@ -59,7 +59,7 @@ class AnalyzerTest < Test::Unit::TestCase
     @output.string
   end
 
-  def normalize_time(json_string)
+  def normalize_json(json_string)
     json_string = json_string.gsub(/(\"start_time\"):\d+/,
                                    "\\1:START_TIME")
     json_string.gsub(/(\"last_time\"):\d+/, "\\1:LAST_TIME")
