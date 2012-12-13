@@ -33,11 +33,11 @@ class AnalyzerTest < Test::Unit::TestCase
   end
 
   data(:console => "console", :html => "html", :json => "json")
-  def test_output(output_type)
-    actual_result = run_analyzer("--reporter", output_type, @query_log_path)
-    actual_result = normalize_json(actual_result) if output_type == "json"
+  def test_reporter(reporter)
+    actual_result = run_analyzer("--reporter", reporter, @query_log_path)
+    actual_result = normalize_json(actual_result) if reporter == "json"
 
-    expected_result = expected_analyzed_query("output/#{output_type}.expected")
+    expected_result = expected_analyzed_query("output/#{reporter}.expected")
     assert_equal(expected_result, actual_result)
   end
 
