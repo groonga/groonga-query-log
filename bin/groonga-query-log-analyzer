@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+require "groonga/query-log"
+
+analyzer = Groonga::QueryLog::Analyzer.new
+begin
+  analyzer.run
+rescue Groonga::QueryLog::Analyzer::Error
+  $stderr.puts($!.message)
+  exit(false)
+end
