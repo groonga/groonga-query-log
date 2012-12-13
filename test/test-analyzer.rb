@@ -28,19 +28,8 @@ class AnalyzerTest < Test::Unit::TestCase
     @query_log_path = File.join(@fixture_path, "query.log")
   end
 
-  setup
-  def setup_stdout
-    @output = StringIO.new
-    @original_stdout = $stdout.dup
-    $stdout = @output
-  end
-
   def setup
     @analyzer = Groonga::QueryLog::Analyzer.new
-  end
-
-  def teardown
-    $stdout = @original_stdout
   end
 
   data(:console => "console", :html => "html", :json => "json")
@@ -60,8 +49,10 @@ class AnalyzerTest < Test::Unit::TestCase
 
   private
   def run_analyzer(*arguments)
+    @output = Tempfile.new("output.actual").path
+    arguments << "--output" << @output
     @analyzer.run(*arguments)
-    @output.string
+    File.read(@output)
   end
 
   def normalize_json(json_string)
