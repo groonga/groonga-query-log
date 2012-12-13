@@ -49,7 +49,7 @@ class AnalyzerTest < Test::Unit::TestCase
     actual_result = run_analyzer("--reporter", output_type, @query_log_path)
     actual_result = normalize_json(actual_result) if output_type == "json"
 
-    expected_result = expected_analyzed_query("#{output_type}.expected")
+    expected_result = expected_analyzed_query("output/#{output_type}.expected")
     assert_equal(expected_result, actual_result)
   end
 
