@@ -20,8 +20,7 @@
 require "ostruct"
 require "optparse"
 require "pathname"
-
-require "groonga/query-log"
+require "groonga/query-log/parser"
 
 module Groonga
   module QueryLog
