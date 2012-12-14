@@ -48,11 +48,11 @@ module Groonga
         exclude_commands = @options.exclude_commands
 
         unless commands.empty?
-          return commands.include?(name)
+          return commands.any? {|command| command === name}
         end
 
         unless exclude_commands.empty?
-          return (not exclude_commands.include?(name))
+          return (not exclude_commands.any? {|command| command === name})
         end
 
         true

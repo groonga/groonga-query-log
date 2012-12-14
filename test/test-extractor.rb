@@ -42,6 +42,18 @@ class TestExtractor < Test::Unit::TestCase
       assert_true(target?("dump"))
     end
 
+    def test_regular_expression_include
+      @extractor.options.commands = [/table/]
+      assert_true(target?("table_create"))
+      assert_false(target?("dump"))
+    end
+
+    def test_regular_expression_exclude
+      @extractor.options.exclude_commands = [/table/]
+      assert_false(target?("table_create"))
+      assert_true(target?("dump"))
+    end
+
     private
     def target?(name)
       command_class = Groonga::Command.find(name)
