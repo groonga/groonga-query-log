@@ -1,0 +1,5 @@
+--protected
+--no-private
+--output doc/reference/en
+-
+doc/text/*

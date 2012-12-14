@@ -42,6 +42,7 @@ Gem::Specification.new do |spec|
   spec.files = ["README.md", "Rakefile", "Gemfile", "#{spec.name}.gemspec"]
   spec.files += Dir.glob("lib/**/*.rb")
   spec.files += Dir.glob("doc/text/*")
+  spec.files += [".yardopts"]
   spec.test_files += Dir.glob("test/**/*")
   Dir.chdir("bin") do
     spec.executables = Dir.glob("*")
