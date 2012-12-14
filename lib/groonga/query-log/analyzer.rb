@@ -20,6 +20,7 @@
 require "optparse"
 require "json"
 require "groonga/query-log/parser"
+require "groonga/query-log/analyzer/streamer"
 require "groonga/query-log/analyzer/sized-statistics"
 
 module Groonga
