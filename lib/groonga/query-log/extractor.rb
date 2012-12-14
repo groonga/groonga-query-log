@@ -41,6 +41,18 @@ module Groonga
         setup_options
       end
 
+      private
+      def target?(command)
+        name = command.name
+        if @options.commands.any? {|target_command| target_command === name}
+          true
+        elsif @options.exclude_commands.any? {|exclude_command| exclude_command == name}
+          false
+        else
+          true
+        end
+      end
+
       def setup_options
         @options = OpenStruct.new
         @options.unify_format = nil
