@@ -63,7 +63,6 @@ class AnalyzerTest < Test::Unit::TestCase
 
   private
   def run_analyzer(*arguments)
-    output = ""
     Tempfile.open("output.actual") do |output|
       arguments << "--output" << output.path
       @analyzer.run(*arguments)
