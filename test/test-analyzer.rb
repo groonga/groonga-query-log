@@ -55,6 +55,12 @@ class AnalyzerTest < Test::Unit::TestCase
     assert_equal(expected_result, actual_result)
   end
 
+  def test_no_report_summary
+    actual_result = run_analyzer("--no-report-summary", @query_log_path)
+    expected_result = expected_analyzed_query("no-report-summary.expected")
+    assert_equal(expected_result, actual_result)
+  end
+
   private
   def run_analyzer(*arguments)
     output = ""
