@@ -21,8 +21,90 @@ require "groonga/command"
 require "groonga/query-log/extractor"
 
 class TestExtractor < Test::Unit::TestCase
+  setup
+  def setup_fixtures
+    @fixtures_path = File.join(File.dirname(__FILE__), "fixtures")
+    @query_log_path = File.join(@fixtures_path, "query.log")
+  end
+
   def setup
     @extractor = Groonga::QueryLog::Extractor.new
+  end
+
+  class TestInputFile < self
+    def test_multi
+      other_query_log_path = File.join(@fixtures_path, "other-query.log")
+      actual_commands = run_extractor(@query_log_path, other_query_log_path)
+      expected_commands = <<-EOC
+load --table Video
+select --table Users --query follower:@groonga --output_columns _key,name
+table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32
+column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText
+EOC
+      assert_equal(expected_commands, actual_commands)
+    end
+
+    def test_no_specified
+      assert_raise(Groonga::QueryLog::Extractor::NoInputError) do
+        run_extractor
+      end
+    end
+  end
+
+  class TestUnifyFormat < self
+    def test_commands
+      actual_commands = run_extractor(@query_log_path,
+                                      "--unify-format", "command")
+
+      expected_commands = <<-EOC
+load --table "Video"
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+EOC
+      assert_equal(expected_commands, actual_commands)
+    end
+
+    def test_uri
+      actual_commands = run_extractor(@query_log_path,
+                                      "--unify-format", "uri")
+      expected_commands =  <<-EOC
+/d/load?table=Video
+/d/select?output_columns=_key%2Cname&query=follower%3A%40groonga&table=Users
+EOC
+      assert_equal(expected_commands, actual_commands)
+    end
+
+    def test_not_unify
+      actual_commands = run_extractor(@query_log_path)
+      expected_commands = <<-EOC
+load --table Video
+select --table Users --query follower:@groonga --output_columns _key,name
+EOC
+      assert_equal(expected_commands, actual_commands)
+    end
+  end
+
+  def test_command
+    actual_command = run_extractor(@query_log_path, "--command", "load")
+    expected_command = "load --table Video\n"
+
+    assert_equal(expected_command, actual_command)
+  end
+
+  def test_exclude_command
+    actual_command = run_extractor(@query_log_path, "--exclude-command", "load")
+    expected_command = "select --table Users --query follower:@groonga" +
+                         " --output_columns _key,name\n"
+
+    assert_equal(expected_command, actual_command)
+  end
+
+  private
+  def run_extractor(*arguments)
+    Tempfile.open("extract.actual") do |output|
+      arguments << "--output" << output.path
+      @extractor.run(*arguments)
+      File.read(output.path)
+    end
   end
 
   class TestExtract < self

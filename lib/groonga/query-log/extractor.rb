@@ -41,6 +41,31 @@ module Groonga
         setup_options
       end
 
+      def run(*arguments)
+        begin
+          log_paths = @option_parser.parse!(arguments)
+        rescue OptionParser::ParseError
+          raise(ArgumentError, $!.message)
+        end
+
+        if log_paths.empty?
+          raise(NoInputError, "Error: Please specify input log files.")
+        end
+
+        log = ""
+        log_paths.each do |log_path|
+          log << File.read(log_path)
+        end
+
+        if @options.output_path
+          File.open(@options.output_path, "w") do |output|
+            extract(log, output)
+          end
+        else
+          extract(log, $stdout)
+        end
+      end
+
       private
       def setup_options
         @options = OpenStruct.new

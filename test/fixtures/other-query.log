@@ -1,0 +1,5 @@
+2012-12-17 15:00:10.165344|0x7fff8f4c8ca0|>table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32
+2012-12-17 15:00:10.217643|0x7fff8f4c8ca0|<000000052316820 rc=0
+2012-12-17 15:00:10.217818|0x7fff8f4c8ca0|>column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText
+2012-12-17 15:00:10.262427|0x7fff8f4c8ca0|<000000044635779 rc=0
+2012-12-17 15:00:10.476747|0x60c8e0| query log will be closed: </tmp/query.log>
