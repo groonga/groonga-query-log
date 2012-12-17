@@ -42,7 +42,8 @@ module Groonga
       end
 
       def run(*arguments)
-        log = ""
+        log = nil
+
         begin
           log_paths = @option_parser.parse!(arguments)
         rescue OptionParser::ParseError
@@ -56,17 +57,20 @@ module Groonga
           log = ARGF
         end
 
-        log_paths.each do |log_path|
-          log << File.read(log_path)
+        if @options.output_path
+          output = File.open(@options.output_path, "w")
+        else
+          output = $stdout
         end
 
-        if @options.output_path
-          File.open(@options.output_path, "w") do |output|
-            extract(log, output)
+        if log.nil?
+          log_paths.each do |log_path|
+            extract(File.read(log_path), output)
           end
         else
-          extract(log, $stdout)
+          extract(log, output)
         end
+        output.close
       end
 
       private
