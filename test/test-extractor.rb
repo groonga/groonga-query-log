@@ -121,26 +121,26 @@ EOL
 
     def test_command_format
       @extractor.options.unify_format = "command"
-      expected_fommated_command = "select --output_columns \"_key,name\""+
-                                    " --query \"follower:@groonga\"" +
-                                    " --table \"Users\"\n"
-      assert_equal(expected_fommated_command, extract)
+      expected_formatted_command = "select --output_columns \"_key,name\""+
+                                     " --query \"follower:@groonga\"" +
+                                     " --table \"Users\"\n"
+      assert_equal(expected_formatted_command, extract)
     end
 
     def test_uri_format
       @extractor.options.unify_format = "uri"
-      expected_fommated_command = "/d/select?output_columns=_key%2Cname" +
-                                    "&query=follower%3A%40groonga" +
-                                    "&table=Users\n"
-      assert_equal(expected_fommated_command, extract)
+      expected_formatted_command = "/d/select?output_columns=_key%2Cname" +
+                                     "&query=follower%3A%40groonga" +
+                                     "&table=Users\n"
+      assert_equal(expected_formatted_command, extract)
     end
 
     def test_not_unify
       @extractor.options.unify_format = nil
-      expected_fommated_command = "select --table Users" +
-                                    " --query follower:@groonga" +
-                                    " --output_columns _key,name\n"
-      assert_equal(expected_fommated_command, extract)
+      expected_formatted_command = "select --table Users" +
+                                     " --query follower:@groonga" +
+                                     " --output_columns _key,name\n"
+      assert_equal(expected_formatted_command, extract)
     end
 
     private
