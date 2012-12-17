@@ -56,8 +56,8 @@ EOL
     def test_not_unify
       @extractor.options.unify_format = nil
       expected_fommated_command = "select --table Users" +
-                                  " --query follower:@groonga" +
-                                  " --output_columns _key,name\n"
+                                    " --query follower:@groonga" +
+                                    " --output_columns _key,name\n"
       assert_equal(expected_fommated_command, extract)
     end
 
