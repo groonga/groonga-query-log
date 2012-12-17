@@ -31,7 +31,9 @@ class AnalyzerTest < Test::Unit::TestCase
     @analyzer = Groonga::QueryLog::Analyzer.new
   end
 
-  data(:console => "console", :html => "html", :json => "json")
+  data(:console => "console",
+       :html    => "html",
+       :json    => "json")
   def test_reporter(reporter)
     actual_result = run_analyzer("--reporter", reporter, @query_log_path)
     actual_result = normalize_json(actual_result) if reporter == "json"
@@ -46,8 +48,10 @@ class AnalyzerTest < Test::Unit::TestCase
     assert_equal(expected_result, actual_result)
   end
 
-  data(:asc_elapsed => "elapsed", :asc_start_time => "start-time",
-         :desc_elapsed => "-elapsed", :desc_start_time => "-start-time")
+  data(:asc_elapsed     => "elapsed",
+       :asc_start_time  => "start-time",
+       :desc_elapsed    => "-elapsed",
+       :desc_start_time => "-start-time")
   def test_order(order)
     actual_result = run_analyzer("--order=#{order}", @query_log_path)
 
