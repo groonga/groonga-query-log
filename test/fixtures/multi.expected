@@ -1,0 +1,41 @@
+Summary:
+  Threshold:
+    slow response     : 0.2
+    slow operation    : 0.1
+  # of responses      : 4
+  # of slow responses : 0
+  responses/sec       : 9.468517046370479e-06
+  start time          : 2012-12-12 17:39:17.3
+  last time           : 2012-12-17 15:00:10.1
+  period(sec)         : 422452.637557779
+  slow response ratio : 0.000%
+  total response time : 0.10129859499999999
+  Slow Operations:
+
+Slow Queries:
+1) [2012-12-17 15:00:10.1-2012-12-17 15:00:10.1 (0.05231682)](0): table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32  name: <table_create>
+  parameters:
+    <name>: <Comments>
+    <flags>: <TABLE_HASH_KEY>
+    <key_type>: <UInt32>
+
+2) [2012-12-17 15:00:10.1-2012-12-17 15:00:10.1 (0.04463578)](0): column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText  name: <column_create>
+  parameters:
+    <table>: <Comments>
+    <name>: <title>
+    <flags>: <COLUMN_SCALAR>
+    <type>: <ShortText>
+
+3) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00312886)](0): load --table Video  name: <load>
+  parameters:
+    <table>: <Video>
+
+4) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00121714)](0): select --table Users --query follower:@groonga --output_columns _key,name  name: <select>
+  parameters:
+    <table>: <Users>
+    <query>: <follower:@groonga>
+    <output_columns>: <_key,name>
+  1) 0.00084295:     filter(     2) query: follower:@groonga
+  2) 0.00002795:     select(     2)
+  3) 0.00019585:     output(     2) _key,name
+
