@@ -123,8 +123,9 @@ module Groonga
             command_text = command.to_uri_format
           when "command"
             command_text = command.to_command_format
+          else
+            command_text = statistic.raw_command
           end
-          command_text ||= statistic.raw_command
           output.puts(command_text)
         end
       end
