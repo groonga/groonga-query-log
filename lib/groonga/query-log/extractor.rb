@@ -42,22 +42,6 @@ module Groonga
       end
 
       private
-      def target?(command)
-        name = command.name
-        commands = @options.commands
-        exclude_commands = @options.exclude_commands
-
-        unless commands.empty?
-          return commands.any? {|command| command === name}
-        end
-
-        unless exclude_commands.empty?
-          return (not exclude_commands.any? {|command| command === name})
-        end
-
-        true
-      end
-
       def setup_options
         @options = OpenStruct.new
         @options.unify_format = nil
@@ -128,6 +112,22 @@ module Groonga
           end
           output.puts(command_text)
         end
+      end
+
+      def target?(command)
+        name = command.name
+        commands = @options.commands
+        exclude_commands = @options.exclude_commands
+
+        unless commands.empty?
+          return commands.any? {|command| command === name}
+        end
+
+        unless exclude_commands.empty?
+          return (not exclude_commands.any? {|command| command === name})
+        end
+
+        true
       end
     end
   end
