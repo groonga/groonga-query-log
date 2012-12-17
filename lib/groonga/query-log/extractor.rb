@@ -111,6 +111,23 @@ module Groonga
           end
         end
       end
+
+      def extract(log, output)
+        parser = Groonga::QueryLog::Parser.new
+        parser.parse(log) do |statistic|
+          command = statistic.command
+          next unless target?(command)
+          command_text = nil
+          case @options.unify_format
+          when "uri"
+            command_text = command.to_uri_format
+          when "command"
+            command_text = command.to_command_format
+          end
+          command_text ||= statistic.raw_command
+          output.puts(command_text)
+        end
+      end
     end
   end
 end

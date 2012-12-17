@@ -16,12 +16,57 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-require "groonga/query-log/extractor"
+require "stringio"
 require "groonga/command"
+require "groonga/query-log/extractor"
 
 class TestExtractor < Test::Unit::TestCase
   def setup
     @extractor = Groonga::QueryLog::Extractor.new
+  end
+
+  class TestExtract < self
+    def setup
+      super
+      @log = <<-EOL
+2012-12-12 17:39:17.628846|0x7fff786aa2b0|>select --table Users --query follower:@groonga --output_columns _key,name
+2012-12-12 17:39:17.629676|0x7fff786aa2b0|:000000000842953 filter(2)
+2012-12-12 17:39:17.629709|0x7fff786aa2b0|:000000000870900 select(2)
+2012-12-12 17:39:17.629901|0x7fff786aa2b0|:000000001066752 output(2)
+2012-12-12 17:39:17.630052|0x7fff786aa2b0|<000000001217140 rc=0
+EOL
+    end
+
+    def test_command_format
+      @extractor.options.unify_format = "command"
+      expected_fommated_command = "select --output_columns \"_key,name\""+
+                                    " --query \"follower:@groonga\"" +
+                                    " --table \"Users\"\n"
+      assert_equal(expected_fommated_command, extract)
+    end
+
+    def test_uri_format
+      @extractor.options.unify_format = "uri"
+      expected_fommated_command = "/d/select?output_columns=_key%2Cname" +
+                                    "&query=follower%3A%40groonga" +
+                                    "&table=Users\n"
+      assert_equal(expected_fommated_command, extract)
+    end
+
+    def test_not_unify
+      @extractor.options.unify_format = nil
+      expected_fommated_command = "select --table Users" +
+                                  " --query follower:@groonga" +
+                                  " --output_columns _key,name\n"
+      assert_equal(expected_fommated_command, extract)
+    end
+
+    private
+    def extract
+      output = StringIO.new
+      @extractor.send(:extract, @log, output)
+      output.string
+    end
   end
 
   class TestTarget < self
