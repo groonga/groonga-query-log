@@ -29,6 +29,9 @@ module Groonga
       class Error < StandardError
       end
 
+      class NoInputError < Error
+      end
+
       class UnsupportedReporter < Error
       end
 
@@ -60,13 +63,14 @@ module Groonga
             full_statistics << statistic
           end
         end
+
         if log_paths.empty?
-          parser.parse(ARGF, &process_statistic)
-        else
-          log_paths.each do |log_path|
-            File.open(log_path) do |log|
-              parser.parse(log, &process_statistic)
-            end
+          raise(NoInputError, "Error: Please specify input log files.")
+        end
+
+        log_paths.each do |log_path|
+          File.open(log_path) do |log|
+            parser.parse(log, &process_statistic)
           end
         end
         if stream

@@ -31,6 +31,24 @@ class AnalyzerTest < Test::Unit::TestCase
     @analyzer = Groonga::QueryLog::Analyzer.new
   end
 
+  class TestInputFile < self
+    def test_multi
+      other_query_log_path = File.join(@fixtures_path, "other-query.log")
+      actual_result = run_analyzer(@query_log_path, other_query_log_path)
+
+      expected_result_path = File.join(@fixtures_path, "multi.expected")
+      File.open(expected_result_path, "w") {|f| f.puts(actual_result)}
+
+      assert_equal(File.read(expected_result_path), actual_result)
+    end
+
+    def test_no_specified
+      assert_raise(Groonga::QueryLog::Analyzer::NoInputError) do
+        run_analyzer
+      end
+    end
+  end
+
   data(:console => "console",
        :html    => "html",
        :json    => "json")
