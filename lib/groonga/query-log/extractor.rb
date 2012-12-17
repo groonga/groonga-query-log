@@ -42,6 +42,7 @@ module Groonga
       end
 
       def run(*arguments)
+        log = ""
         begin
           log_paths = @option_parser.parse!(arguments)
         rescue OptionParser::ParseError
@@ -49,10 +50,12 @@ module Groonga
         end
 
         if log_paths.empty?
-          raise(NoInputError, "Error: Please specify input log files.")
+          unless log_via_stdin?
+            raise(NoInputError, "Error: Please specify input log files.")
+          end
+          log = ARGF
         end
 
-        log = ""
         log_paths.each do |log_path|
           log << File.read(log_path)
         end
@@ -153,6 +156,18 @@ module Groonga
         end
 
         true
+      end
+
+      def log_via_stdin?
+        input_with_pipe? or input_with_redirect?
+      end
+
+      def input_with_pipe?
+        File.pipe?($stdin)
+      end
+
+      def input_with_redirect?
+        not File.select([$stdin], [], [], 0).nil?
       end
     end
   end
