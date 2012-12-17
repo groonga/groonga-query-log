@@ -65,7 +65,10 @@ module Groonga
         end
 
         if log_paths.empty?
-          raise(NoInputError, "Error: Please specify input log files.")
+          unless log_via_stdin?
+            raise(NoInputError, "Error: Please specify input log files.")
+          end
+          parser.parse(ARGF, &process_statistic)
         end
 
         log_paths.each do |log_path|
@@ -210,6 +213,18 @@ module Groonga
         else
           Groonga::QueryLog::StreamConsoleQueryLogReporter.new
         end
+      end
+
+      def log_via_stdin?
+        input_with_pipe? or input_with_redirect?
+      end
+
+      def input_with_pipe?
+        File.pipe?($stdin)
+      end
+
+      def input_with_redirect?
+        not File.select([$stdin], [], [], 0).nil?
       end
     end
   end
