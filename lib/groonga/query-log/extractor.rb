@@ -65,7 +65,9 @@ module Groonga
 
         if log.nil?
           log_paths.each do |log_path|
-            extract(File.read(log_path), output)
+            File.open(log_path) do |log|
+              extract(log, output)
+            end
           end
         else
           extract(log, output)
