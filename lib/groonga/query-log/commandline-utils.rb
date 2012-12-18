@@ -19,14 +19,14 @@ module Groonga
   module QueryLog
     module CommandLineUtils
       def log_via_stdin?
-        input_with_pipe? or input_with_redirect?
+        stdin_with_pipe? or stdin_with_redirect?
       end
 
-      def input_with_pipe?
+      def stdin_with_pipe?
         File.pipe?($stdin)
       end
 
-      def input_with_redirect?
+      def stdin_with_redirect?
         not File.select([$stdin], [], [], 0).nil?
       end
     end
