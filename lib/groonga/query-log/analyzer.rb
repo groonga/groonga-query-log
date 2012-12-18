@@ -19,6 +19,7 @@
 
 require "optparse"
 require "json"
+require "groonga/query-log/commandline-utils"
 require "groonga/query-log/parser"
 require "groonga/query-log/analyzer/streamer"
 require "groonga/query-log/analyzer/sized-statistics"
@@ -26,6 +27,8 @@ require "groonga/query-log/analyzer/sized-statistics"
 module Groonga
   module QueryLog
     class Analyzer
+      include CommandLineUtils
+
       class Error < StandardError
       end
 
@@ -213,18 +216,6 @@ module Groonga
         else
           Groonga::QueryLog::StreamConsoleQueryLogReporter.new
         end
-      end
-
-      def log_via_stdin?
-        input_with_pipe? or input_with_redirect?
-      end
-
-      def input_with_pipe?
-        File.pipe?($stdin)
-      end
-
-      def input_with_redirect?
-        not File.select([$stdin], [], [], 0).nil?
       end
     end
   end

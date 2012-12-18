@@ -20,11 +20,13 @@
 require "ostruct"
 require "optparse"
 require "pathname"
+require "groonga/query-log/commandline-utils"
 require "groonga/query-log/parser"
 
 module Groonga
   module QueryLog
     class Extractor
+      include CommandLineUtils
 
       class Error < StandardError
       end
@@ -165,18 +167,6 @@ module Groonga
         end
 
         true
-      end
-
-      def log_via_stdin?
-        input_with_pipe? or input_with_redirect?
-      end
-
-      def input_with_pipe?
-        File.pipe?($stdin)
-      end
-
-      def input_with_redirect?
-        not File.select([$stdin], [], [], 0).nil?
       end
     end
   end
