@@ -70,7 +70,8 @@ module Groonga
         else
           extract(log, output)
         end
-        output.close
+
+        output.close if File.file?(output)
       end
 
       private
