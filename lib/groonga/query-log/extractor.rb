@@ -42,8 +42,6 @@ module Groonga
       end
 
       def run(*arguments)
-        log = nil
-
         begin
           log_paths = @option_parser.parse!(arguments)
         rescue OptionParser::ParseError
@@ -55,25 +53,17 @@ module Groonga
             raise(NoInputError, "Error: Please specify input log files.")
           end
           log = ARGF
+        else
+          log = log_paths
         end
 
         if @options.output_path
-          output = File.open(@options.output_path, "w")
-        else
-          output = $stdout
-        end
-
-        if log.nil?
-          log_paths.each do |log_path|
-            File.open(log_path) do |log_file|
-              extract(log_file, output)
-            end
+          File.open(@options.output_path, "w") do |output|
+            extract(log, output)
           end
         else
-          extract(log, output)
+          extract(log, $stdout)
         end
-
-        output.close if File.file?(output)
       end
 
       private
@@ -132,6 +122,18 @@ module Groonga
       end
 
       def extract(log, output)
+        if log.instance_of?(Array)
+          log.each do |log_path|
+            File.open(log_path) do |log_file|
+              extract_command(log_file, output)
+            end
+          end
+        else
+          extract_command(log, output)
+        end
+      end
+
+      def extract_command(log, output)
         parser = Groonga::QueryLog::Parser.new
         parser.parse(log) do |statistic|
           command = statistic.command
