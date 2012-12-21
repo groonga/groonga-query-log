@@ -43,7 +43,7 @@ module Groonga
       end
 
       # Executes analyzer for groonga's query logs.
-      # "groonga-query-log-analyze" command run this method.a
+      # "groonga-query-log-analyze" command run this method.
       #
       # @example
       #   analyzer = Groonga::QueryLog::Analyzer.new
