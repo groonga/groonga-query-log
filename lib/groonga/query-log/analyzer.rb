@@ -43,7 +43,7 @@ module Groonga
       end
 
       # Executes analyzer for groonga's query logs.
-      # "groonga-query-log-analyzer" command run this method.a
+      # "groonga-query-log-analyze" command run this method.a
       #
       # @example
       #   analyzer = Groonga::QueryLog::Analyzer.new
@@ -55,8 +55,8 @@ module Groonga
       # this method prints a result of them to console with coloring.
       #
       # @param [Array<String>] arguments arguments for
-      #   groonga-query-log-analyer. Please execute
-      #   "groonga-query-log-analyzer --help" or see #setup_options.
+      #   groonga-query-log-analyze. Please execute
+      #   "groonga-query-log-analyze --help" or see #setup_options.
       def run(*arguments)
         log_paths = @option_parser.parse!(arguments)
 
