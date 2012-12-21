@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: groonga-query-log 1.0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-11-20 22:17+0900\n"
-"PO-Revision-Date: 2012-12-14 12:32+0900\n"
+"PO-Revision-Date: 2012-12-21 14:44+0900\n"
 "Last-Translator: Haruka Yoshihara <yoshihara@clear-code.com>\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -17,668 +17,811 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../../README.md:1
+#: ./README.md:1
 msgid "# README"
 msgstr ""
 
-#: ../../README.md:3
+#: ./README.md:3
 msgid "## Name"
 msgstr "## 名前"
 
-#: ../../README.md:5
+#: ./README.md:5
 msgid "groonga-query-log"
 msgstr ""
 
-#: ../../README.md:7
+#: ./README.md:7
 msgid "## Description"
 msgstr "## 説明"
 
-#: ../../README.md:9
+#: ./README.md:9
 msgid "Groonga-query-log is a collection of libarary and tools to process\n[groonga](http://groonga.org/)'s query log. You can write a program to\nprocess query log by using groonga-query-log as a library. You can\nanalyze your groonga's queries and test with your groonga's query log\nby using groonga-query-log as a tool."
 msgstr "groonga-query-logは[groonga](http://groonga.org/ja/)のクエリログを処理するためのライブラリとツール群です。groonga-query-logをライブラリとして使うことでクエリログを処理するプログラムを書くことができます。ツールとして使うことで、使用しているgroongaのクエリを解析したり、クエリログを使ったテストを行うことができます。"
 
-#: ../../README.md:15
+#: ./README.md:15
 msgid "## Install"
 msgstr "## インストール"
 
-#: ../../README.md:17
+#: ./README.md:17
 msgid "    % gem install groonga-query-log"
 msgstr ""
 
-#: ../../README.md:19
+#: ./README.md:19
 msgid "## Usage"
 msgstr "## 使い方"
 
-#: ../../README.md:21 ../../README.md:25
+#: ./README.md:21 ./README.md:25
 msgid "TODO..."
 msgstr ""
 
-#: ../../README.md:23
+#: ./README.md:23
 msgid "## Examples"
 msgstr "## 例"
 
-#: ../../README.md:27
+#: ./README.md:27
 msgid "## Dependencies"
 msgstr "## 依存関係"
 
-#: ../../README.md:29
+#: ./README.md:29
 msgid "* Ruby"
 msgstr ""
 
-#: ../../README.md:31
+#: ./README.md:31
 msgid "## Mailing list"
 msgstr "## メーリングリスト"
 
-#: ../../README.md:33
+#: ./README.md:33
 msgid "* English: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/groonga-talk)\n* Japanese: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailman/listinfo/groonga-dev)"
 msgstr ""
 "* 英語: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/groonga-talk)\n"
 "* 日本語: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailman/listinfo/groonga-dev)"
 
-#: ../../README.md:36
+#: ./README.md:36
 msgid "## Thanks"
 msgstr "## 感謝"
 
-#: ../../README.md:38
+#: ./README.md:38
 msgid "* ..."
 msgstr ""
 
-#: ../../README.md:40
+#: ./README.md:40
 msgid "## Authors"
 msgstr "## 作者"
 
-#: ../../README.md:42
+#: ./README.md:42
 msgid "* Kouhei Sutou \\<kou@clear-code.com\\>"
 msgstr ""
 
-#: ../../README.md:44
+#: ./README.md:44
 msgid "## License"
 msgstr "## ライセンス"
 
-#: ../../README.md:46
+#: ./README.md:46
 msgid "LGPLv2.1 or later. See doc/text/lgpl-2.1.txt for details."
 msgstr "LGPLv2.1以降です。詳しくはdoc/text/lgpl-2.1.txtを見てください。"
 
-#: ../../README.md:48
+#: ./README.md:48
 msgid "(Kouhei Sutou has a right to change the license including contributed\npatches.)"
 msgstr "（コントリビュートされたパッチなども含み、Kouhei Sutouがライセンスを変更する権利を持ちます。）"
 
-#: ../../doc/text/lgpl-2.1.txt:1
+#: ./doc/text/lgpl-2.1.txt:1
 msgid "                  GNU LESSER GENERAL PUBLIC LICENSE\n                       Version 2.1, February 1999"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:4
+#: ./doc/text/lgpl-2.1.txt:4
 msgid " Copyright (C) 1991, 1999 Free Software Foundation, Inc.\n 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n Everyone is permitted to copy and distribute verbatim copies\n of this license document, but changing it is not allowed."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:9
+#: ./doc/text/lgpl-2.1.txt:9
 msgid "[This is the first released version of the Lesser GPL.  It also counts\n as the successor of the GNU Library Public License, version 2, hence\n the version number 2.1.]"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:13
+#: ./doc/text/lgpl-2.1.txt:13
 msgid "                            Preamble"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:15
+#: ./doc/text/lgpl-2.1.txt:15
 msgid "  The licenses for most software are designed to take away your\nfreedom to share and change it.  By contrast, the GNU General Public\nLicenses are intended to guarantee your freedom to share and change\nfree software--to make sure the software is free for all its users."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:20
+#: ./doc/text/lgpl-2.1.txt:20
 msgid "  This license, the Lesser General Public License, applies to some\nspecially designated software packages--typically libraries--of the\nFree Software Foundation and other authors who decide to use it.  You\ncan use it too, but we suggest you first think carefully about whether\nthis license or the ordinary General Public License is the better\nstrategy to use in any particular case, based on the explanations below."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:27
+#: ./doc/text/lgpl-2.1.txt:27
 msgid "  When we speak of free software, we are referring to freedom of use,\nnot price.  Our General Public Licenses are designed to make sure that\nyou have the freedom to distribute copies of free software (and charge\nfor this service if you wish); that you receive source code or can get\nit if you want it; that you can change the software and use pieces of\nit in new free programs; and that you are informed that you can do\nthese things."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:35
+#: ./doc/text/lgpl-2.1.txt:35
 msgid "  To protect your rights, we need to make restrictions that forbid\ndistributors to deny you these rights or to ask you to surrender these\nrights.  These restrictions translate to certain responsibilities for\nyou if you distribute copies of the library or if you modify it."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:40
+#: ./doc/text/lgpl-2.1.txt:40
 msgid "  For example, if you distribute copies of the library, whether gratis\nor for a fee, you must give the recipients all the rights that we gave\nyou.  You must make sure that they, too, receive or can get the source\ncode.  If you link other code with the library, you must provide\ncomplete object files to the recipients, so that they can relink them\nwith the library after making changes to the library and recompiling\nit.  And you must show them these terms so they know their rights."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:48
+#: ./doc/text/lgpl-2.1.txt:48
 msgid "  We protect your rights with a two-step method: (1) we copyright the\nlibrary, and (2) we offer you this license, which gives you legal\npermission to copy, distribute and/or modify the library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:52
+#: ./doc/text/lgpl-2.1.txt:52
 msgid "  To protect each distributor, we want to make it very clear that\nthere is no warranty for the free library.  Also, if the library is\nmodified by someone else and passed on, the recipients should know\nthat what they have is not the original version, so that the original\nauthor's reputation will not be affected by problems that might be\nintroduced by others."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:59
+#: ./doc/text/lgpl-2.1.txt:59
 msgid "  Finally, software patents pose a constant threat to the existence of\nany free program.  We wish to make sure that a company cannot\neffectively restrict the users of a free program by obtaining a\nrestrictive license from a patent holder.  Therefore, we insist that\nany patent license obtained for a version of the library must be\nconsistent with the full freedom of use specified in this license."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:66
+#: ./doc/text/lgpl-2.1.txt:66
 msgid "  Most GNU software, including some libraries, is covered by the\nordinary GNU General Public License.  This license, the GNU Lesser\nGeneral Public License, applies to certain designated libraries, and\nis quite different from the ordinary General Public License.  We use\nthis license for certain libraries in order to permit linking those\nlibraries into non-free programs."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:73
+#: ./doc/text/lgpl-2.1.txt:73
 msgid "  When a program is linked with a library, whether statically or using\na shared library, the combination of the two is legally speaking a\ncombined work, a derivative of the original library.  The ordinary\nGeneral Public License therefore permits such linking only if the\nentire combination fits its criteria of freedom.  The Lesser General\nPublic License permits more lax criteria for linking other code with\nthe library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:81
+#: ./doc/text/lgpl-2.1.txt:81
 msgid "  We call this license the \"Lesser\" General Public License because it\ndoes Less to protect the user's freedom than the ordinary General\nPublic License.  It also provides other free software developers Less\nof an advantage over competing non-free programs.  These disadvantages\nare the reason we use the ordinary General Public License for many\nlibraries.  However, the Lesser license provides advantages in certain\nspecial circumstances."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:89
+#: ./doc/text/lgpl-2.1.txt:89
 msgid "  For example, on rare occasions, there may be a special need to\nencourage the widest possible use of a certain library, so that it becomes\na de-facto standard.  To achieve this, non-free programs must be\nallowed to use the library.  A more frequent case is that a free\nlibrary does the same job as widely used non-free libraries.  In this\ncase, there is little to gain by limiting the free library to free\nsoftware only, so we use the Lesser General Public License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:97
+#: ./doc/text/lgpl-2.1.txt:97
 msgid "  In other cases, permission to use a particular library in non-free\nprograms enables a greater number of people to use a large body of\nfree software.  For example, permission to use the GNU C Library in\nnon-free programs enables many more people to use the whole GNU\noperating system, as well as its variant, the GNU/Linux operating\nsystem."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:104
+#: ./doc/text/lgpl-2.1.txt:104
 msgid "  Although the Lesser General Public License is Less protective of the\nusers' freedom, it does ensure that the user of a program that is\nlinked with the Library has the freedom and the wherewithal to run\nthat program using a modified version of the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:109
+#: ./doc/text/lgpl-2.1.txt:109
 msgid "  The precise terms and conditions for copying, distribution and\nmodification follow.  Pay close attention to the difference between a\n\"work based on the library\" and a \"work that uses the library\".  The\nformer contains code derived from the library, whereas the latter must\nbe combined with the library in order to run."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:115
+#: ./doc/text/lgpl-2.1.txt:115
 msgid "                  GNU LESSER GENERAL PUBLIC LICENSE\n   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:118
+#: ./doc/text/lgpl-2.1.txt:118
 msgid "  0. This License Agreement applies to any software library or other\nprogram which contains a notice placed by the copyright holder or\nother authorized party saying it may be distributed under the terms of\nthis Lesser General Public License (also called \"this License\").\nEach licensee is addressed as \"you\"."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:124
+#: ./doc/text/lgpl-2.1.txt:124
 msgid "  A \"library\" means a collection of software functions and/or data\nprepared so as to be conveniently linked with application programs\n(which use some of those functions and data) to form executables."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:128
+#: ./doc/text/lgpl-2.1.txt:128
 msgid "  The \"Library\", below, refers to any such software library or work\nwhich has been distributed under these terms.  A \"work based on the\nLibrary\" means either the Library or any derivative work under\ncopyright law: that is to say, a work containing the Library or a\nportion of it, either verbatim or with modifications and/or translated\nstraightforwardly into another language.  (Hereinafter, translation is\nincluded without limitation in the term \"modification\".)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:136
+#: ./doc/text/lgpl-2.1.txt:136
 msgid "  \"Source code\" for a work means the preferred form of the work for\nmaking modifications to it.  For a library, complete source code means\nall the source code for all modules it contains, plus any associated\ninterface definition files, plus the scripts used to control compilation\nand installation of the library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:142
+#: ./doc/text/lgpl-2.1.txt:142
 msgid "  Activities other than copying, distribution and modification are not\ncovered by this License; they are outside its scope.  The act of\nrunning a program using the Library is not restricted, and output from\nsuch a program is covered only if its contents constitute a work based\non the Library (independent of the use of the Library in a tool for\nwriting it).  Whether that is true depends on what the Library does\nand what the program that uses the Library does."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:150
+#: ./doc/text/lgpl-2.1.txt:150
 msgid "  1. You may copy and distribute verbatim copies of the Library's\ncomplete source code as you receive it, in any medium, provided that\nyou conspicuously and appropriately publish on each copy an\nappropriate copyright notice and disclaimer of warranty; keep intact\nall the notices that refer to this License and to the absence of any\nwarranty; and distribute a copy of this License along with the\nLibrary."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:158
+#: ./doc/text/lgpl-2.1.txt:158
 msgid "  You may charge a fee for the physical act of transferring a copy,\nand you may at your option offer warranty protection in exchange for a\nfee."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:162
+#: ./doc/text/lgpl-2.1.txt:162
 msgid "  2. You may modify your copy or copies of the Library or any portion\nof it, thus forming a work based on the Library, and copy and\ndistribute such modifications or work under the terms of Section 1\nabove, provided that you also meet all of these conditions:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:167
+#: ./doc/text/lgpl-2.1.txt:167
 msgid "    a) The modified work must itself be a software library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:169
+#: ./doc/text/lgpl-2.1.txt:169
 msgid "    b) You must cause the files modified to carry prominent notices\n    stating that you changed the files and the date of any change."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:172
+#: ./doc/text/lgpl-2.1.txt:172
 msgid "    c) You must cause the whole of the work to be licensed at no\n    charge to all third parties under the terms of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:175
+#: ./doc/text/lgpl-2.1.txt:175
 msgid "    d) If a facility in the modified Library refers to a function or a\n    table of data to be supplied by an application program that uses\n    the facility, other than as an argument passed when the facility\n    is invoked, then you must make a good faith effort to ensure that,\n    in the event an application does not supply such function or\n    table, the facility still operates, and performs whatever part of\n    its purpose remains meaningful."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:183
+#: ./doc/text/lgpl-2.1.txt:183
 msgid "    (For example, a function in a library to compute square roots has\n    a purpose that is entirely well-defined independent of the\n    application.  Therefore, Subsection 2d requires that any\n    application-supplied function or table used by this function must\n    be optional: if the application does not supply it, the square\n    root function must still compute square roots.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:190
+#: ./doc/text/lgpl-2.1.txt:190
 msgid "These requirements apply to the modified work as a whole.  If\nidentifiable sections of that work are not derived from the Library,\nand can be reasonably considered independent and separate works in\nthemselves, then this License, and its terms, do not apply to those\nsections when you distribute them as separate works.  But when you\ndistribute the same sections as part of a whole which is a work based\non the Library, the distribution of the whole must be on the terms of\nthis License, whose permissions for other licensees extend to the\nentire whole, and thus to each and every part regardless of who wrote\nit."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:201
+#: ./doc/text/lgpl-2.1.txt:201
 msgid "Thus, it is not the intent of this section to claim rights or contest\nyour rights to work written entirely by you; rather, the intent is to\nexercise the right to control the distribution of derivative or\ncollective works based on the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:206
+#: ./doc/text/lgpl-2.1.txt:206
 msgid "In addition, mere aggregation of another work not based on the Library\nwith the Library (or with a work based on the Library) on a volume of\na storage or distribution medium does not bring the other work under\nthe scope of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:211
+#: ./doc/text/lgpl-2.1.txt:211
 msgid "  3. You may opt to apply the terms of the ordinary GNU General Public\nLicense instead of this License to a given copy of the Library.  To do\nthis, you must alter all the notices that refer to this License, so\nthat they refer to the ordinary GNU General Public License, version 2,\ninstead of to this License.  (If a newer version than version 2 of the\nordinary GNU General Public License has appeared, then you can specify\nthat version instead if you wish.)  Do not make any other change in\nthese notices."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:220
+#: ./doc/text/lgpl-2.1.txt:220
 msgid "  Once this change is made in a given copy, it is irreversible for\nthat copy, so the ordinary GNU General Public License applies to all\nsubsequent copies and derivative works made from that copy."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:224
+#: ./doc/text/lgpl-2.1.txt:224
 msgid "  This option is useful when you wish to copy part of the code of\nthe Library into a program that is not a library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:227
+#: ./doc/text/lgpl-2.1.txt:227
 msgid "  4. You may copy and distribute the Library (or a portion or\nderivative of it, under Section 2) in object code or executable form\nunder the terms of Sections 1 and 2 above provided that you accompany\nit with the complete corresponding machine-readable source code, which\nmust be distributed under the terms of Sections 1 and 2 above on a\nmedium customarily used for software interchange."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:234
+#: ./doc/text/lgpl-2.1.txt:234
 msgid "  If distribution of object code is made by offering access to copy\nfrom a designated place, then offering equivalent access to copy the\nsource code from the same place satisfies the requirement to\ndistribute the source code, even though third parties are not\ncompelled to copy the source along with the object code."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:240
+#: ./doc/text/lgpl-2.1.txt:240
 msgid "  5. A program that contains no derivative of any portion of the\nLibrary, but is designed to work with the Library by being compiled or\nlinked with it, is called a \"work that uses the Library\".  Such a\nwork, in isolation, is not a derivative work of the Library, and\ntherefore falls outside the scope of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:246
+#: ./doc/text/lgpl-2.1.txt:246
 msgid "  However, linking a \"work that uses the Library\" with the Library\ncreates an executable that is a derivative of the Library (because it\ncontains portions of the Library), rather than a \"work that uses the\nlibrary\".  The executable is therefore covered by this License.\nSection 6 states terms for distribution of such executables."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:252
+#: ./doc/text/lgpl-2.1.txt:252
 msgid "  When a \"work that uses the Library\" uses material from a header file\nthat is part of the Library, the object code for the work may be a\nderivative work of the Library even though the source code is not.\nWhether this is true is especially significant if the work can be\nlinked without the Library, or if the work is itself a library.  The\nthreshold for this to be true is not precisely defined by law."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:259
+#: ./doc/text/lgpl-2.1.txt:259
 msgid "  If such an object file uses only numerical parameters, data\nstructure layouts and accessors, and small macros and small inline\nfunctions (ten lines or less in length), then the use of the object\nfile is unrestricted, regardless of whether it is legally a derivative\nwork.  (Executables containing this object code plus portions of the\nLibrary will still fall under Section 6.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:266
+#: ./doc/text/lgpl-2.1.txt:266
 msgid "  Otherwise, if the work is a derivative of the Library, you may\ndistribute the object code for the work under the terms of Section 6.\nAny executables containing that work also fall under Section 6,\nwhether or not they are linked directly with the Library itself."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:271
+#: ./doc/text/lgpl-2.1.txt:271
 msgid "  6. As an exception to the Sections above, you may also combine or\nlink a \"work that uses the Library\" with the Library to produce a\nwork containing portions of the Library, and distribute that work\nunder terms of your choice, provided that the terms permit\nmodification of the work for the customer's own use and reverse\nengineering for debugging such modifications."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:278
+#: ./doc/text/lgpl-2.1.txt:278
 msgid "  You must give prominent notice with each copy of the work that the\nLibrary is used in it and that the Library and its use are covered by\nthis License.  You must supply a copy of this License.  If the work\nduring execution displays copyright notices, you must include the\ncopyright notice for the Library among them, as well as a reference\ndirecting the user to the copy of this License.  Also, you must do one\nof these things:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:286
+#: ./doc/text/lgpl-2.1.txt:286
 msgid "    a) Accompany the work with the complete corresponding\n    machine-readable source code for the Library including whatever\n    changes were used in the work (which must be distributed under\n    Sections 1 and 2 above); and, if the work is an executable linked\n    with the Library, with the complete machine-readable \"work that\n    uses the Library\", as object code and/or source code, so that the\n    user can modify the Library and then relink to produce a modified\n    executable containing the modified Library.  (It is understood\n    that the user who changes the contents of definitions files in the\n    Library will not necessarily be able to recompile the application\n    to use the modified definitions.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:298
+#: ./doc/text/lgpl-2.1.txt:298
 msgid "    b) Use a suitable shared library mechanism for linking with the\n    Library.  A suitable mechanism is one that (1) uses at run time a\n    copy of the library already present on the user's computer system,\n    rather than copying library functions into the executable, and (2)\n    will operate properly with a modified version of the library, if\n    the user installs one, as long as the modified version is\n    interface-compatible with the version that the work was made with."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:306
+#: ./doc/text/lgpl-2.1.txt:306
 msgid "    c) Accompany the work with a written offer, valid for at\n    least three years, to give the same user the materials\n    specified in Subsection 6a, above, for a charge no more\n    than the cost of performing this distribution."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:311
+#: ./doc/text/lgpl-2.1.txt:311
 msgid "    d) If distribution of the work is made by offering access to copy\n    from a designated place, offer equivalent access to copy the above\n    specified materials from the same place."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:315
+#: ./doc/text/lgpl-2.1.txt:315
 msgid "    e) Verify that the user has already received a copy of these\n    materials or that you have already sent this user a copy."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:318
+#: ./doc/text/lgpl-2.1.txt:318
 msgid "  For an executable, the required form of the \"work that uses the\nLibrary\" must include any data and utility programs needed for\nreproducing the executable from it.  However, as a special exception,\nthe materials to be distributed need not include anything that is\nnormally distributed (in either source or binary form) with the major\ncomponents (compiler, kernel, and so on) of the operating system on\nwhich the executable runs, unless that component itself accompanies\nthe executable."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:327
+#: ./doc/text/lgpl-2.1.txt:327
 msgid "  It may happen that this requirement contradicts the license\nrestrictions of other proprietary libraries that do not normally\naccompany the operating system.  Such a contradiction means you cannot\nuse both them and the Library together in an executable that you\ndistribute."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:333
+#: ./doc/text/lgpl-2.1.txt:333
 msgid "  7. You may place library facilities that are a work based on the\nLibrary side-by-side in a single library together with other library\nfacilities not covered by this License, and distribute such a combined\nlibrary, provided that the separate distribution of the work based on\nthe Library and of the other library facilities is otherwise\npermitted, and provided that you do these two things:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:340
+#: ./doc/text/lgpl-2.1.txt:340
 msgid "    a) Accompany the combined library with a copy of the same work\n    based on the Library, uncombined with any other library\n    facilities.  This must be distributed under the terms of the\n    Sections above."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:345
+#: ./doc/text/lgpl-2.1.txt:345
 msgid "    b) Give prominent notice with the combined library of the fact\n    that part of it is a work based on the Library, and explaining\n    where to find the accompanying uncombined form of the same work."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:349
+#: ./doc/text/lgpl-2.1.txt:349
 msgid "  8. You may not copy, modify, sublicense, link with, or distribute\nthe Library except as expressly provided under this License.  Any\nattempt otherwise to copy, modify, sublicense, link with, or\ndistribute the Library is void, and will automatically terminate your\nrights under this License.  However, parties who have received copies,\nor rights, from you under this License will not have their licenses\nterminated so long as such parties remain in full compliance."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:357
+#: ./doc/text/lgpl-2.1.txt:357
 msgid "  9. You are not required to accept this License, since you have not\nsigned it.  However, nothing else grants you permission to modify or\ndistribute the Library or its derivative works.  These actions are\nprohibited by law if you do not accept this License.  Therefore, by\nmodifying or distributing the Library (or any work based on the\nLibrary), you indicate your acceptance of this License to do so, and\nall its terms and conditions for copying, distributing or modifying\nthe Library or works based on it."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:366
+#: ./doc/text/lgpl-2.1.txt:366
 msgid "  10. Each time you redistribute the Library (or any work based on the\nLibrary), the recipient automatically receives a license from the\noriginal licensor to copy, distribute, link with or modify the Library\nsubject to these terms and conditions.  You may not impose any further\nrestrictions on the recipients' exercise of the rights granted herein.\nYou are not responsible for enforcing compliance by third parties with\nthis License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:374
+#: ./doc/text/lgpl-2.1.txt:374
 msgid "  11. If, as a consequence of a court judgment or allegation of patent\ninfringement or for any other reason (not limited to patent issues),\nconditions are imposed on you (whether by court order, agreement or\notherwise) that contradict the conditions of this License, they do not\nexcuse you from the conditions of this License.  If you cannot\ndistribute so as to satisfy simultaneously your obligations under this\nLicense and any other pertinent obligations, then as a consequence you\nmay not distribute the Library at all.  For example, if a patent\nlicense would not permit royalty-free redistribution of the Library by\nall those who receive copies directly or indirectly through you, then\nthe only way you could satisfy both it and this License would be to\nrefrain entirely from distribution of the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:387
+#: ./doc/text/lgpl-2.1.txt:387
 msgid "If any portion of this section is held invalid or unenforceable under any\nparticular circumstance, the balance of the section is intended to apply,\nand the section as a whole is intended to apply in other circumstances."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:391
+#: ./doc/text/lgpl-2.1.txt:391
 msgid "It is not the purpose of this section to induce you to infringe any\npatents or other property right claims or to contest validity of any\nsuch claims; this section has the sole purpose of protecting the\nintegrity of the free software distribution system which is\nimplemented by public license practices.  Many people have made\ngenerous contributions to the wide range of software distributed\nthrough that system in reliance on consistent application of that\nsystem; it is up to the author/donor to decide if he or she is willing\nto distribute software through any other system and a licensee cannot\nimpose that choice."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:402
+#: ./doc/text/lgpl-2.1.txt:402
 msgid "This section is intended to make thoroughly clear what is believed to\nbe a consequence of the rest of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:405
+#: ./doc/text/lgpl-2.1.txt:405
 msgid "  12. If the distribution and/or use of the Library is restricted in\ncertain countries either by patents or by copyrighted interfaces, the\noriginal copyright holder who places the Library under this License may add\nan explicit geographical distribution limitation excluding those countries,\nso that distribution is permitted only in or among countries not thus\nexcluded.  In such case, this License incorporates the limitation as if\nwritten in the body of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:413
+#: ./doc/text/lgpl-2.1.txt:413
 msgid "  13. The Free Software Foundation may publish revised and/or new\nversions of the Lesser General Public License from time to time.\nSuch new versions will be similar in spirit to the present version,\nbut may differ in detail to address new problems or concerns."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:418
+#: ./doc/text/lgpl-2.1.txt:418
 msgid "Each version is given a distinguishing version number.  If the Library\nspecifies a version number of this License which applies to it and\n\"any later version\", you have the option of following the terms and\nconditions either of that version or of any later version published by\nthe Free Software Foundation.  If the Library does not specify a\nlicense version number, you may choose any version ever published by\nthe Free Software Foundation."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:426
+#: ./doc/text/lgpl-2.1.txt:426
 msgid "  14. If you wish to incorporate parts of the Library into other free\nprograms whose distribution conditions are incompatible with these,\nwrite to the author to ask for permission.  For software which is\ncopyrighted by the Free Software Foundation, write to the Free\nSoftware Foundation; we sometimes make exceptions for this.  Our\ndecision will be guided by the two goals of preserving the free status\nof all derivatives of our free software and of promoting the sharing\nand reuse of software generally."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:435
+#: ./doc/text/lgpl-2.1.txt:435
 msgid "                            NO WARRANTY"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:437
+#: ./doc/text/lgpl-2.1.txt:437
 msgid "  15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO\nWARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW.\nEXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR\nOTHER PARTIES PROVIDE THE LIBRARY \"AS IS\" WITHOUT WARRANTY OF ANY\nKIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE\nLIBRARY IS WITH YOU.  SHOULD THE LIBRARY PROVE DEFECTIVE, YOU ASSUME\nTHE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:447
+#: ./doc/text/lgpl-2.1.txt:447
 msgid "  16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN\nWRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY\nAND/OR REDISTRIBUTE THE LIBRARY AS PERMITTED ABOVE, BE LIABLE TO YOU\nFOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR\nCONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE\nLIBRARY (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING\nRENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A\nFAILURE OF THE LIBRARY TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF\nSUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH\nDAMAGES."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:458
+#: ./doc/text/lgpl-2.1.txt:458
 msgid "                     END OF TERMS AND CONDITIONS"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:460
+#: ./doc/text/lgpl-2.1.txt:460
 msgid "           How to Apply These Terms to Your New Libraries"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:462
+#: ./doc/text/lgpl-2.1.txt:462
 msgid "  If you develop a new library, and you want it to be of the greatest\npossible use to the public, we recommend making it free software that\neveryone can redistribute and change.  You can do so by permitting\nredistribution under these terms (or, alternatively, under the terms of the\nordinary General Public License)."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:468
+#: ./doc/text/lgpl-2.1.txt:468
 msgid "  To apply these terms, attach the following notices to the library.  It is\nsafest to attach them to the start of each source file to most effectively\nconvey the exclusion of warranty; and each file should have at least the\n\"copyright\" line and a pointer to where the full notice is found."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:473
+#: ./doc/text/lgpl-2.1.txt:473
 msgid "    <one line to give the library's name and a brief idea of what it does.>\n    Copyright (C) <year>  <name of author>"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:476
+#: ./doc/text/lgpl-2.1.txt:476
 msgid "    This library is free software; you can redistribute it and/or\n    modify it under the terms of the GNU Lesser General Public\n    License as published by the Free Software Foundation; either\n    version 2.1 of the License, or (at your option) any later version."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:481
+#: ./doc/text/lgpl-2.1.txt:481
 msgid "    This library is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n    Lesser General Public License for more details."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:486
+#: ./doc/text/lgpl-2.1.txt:486
 msgid "    You should have received a copy of the GNU Lesser General Public\n    License along with this library; if not, write to the Free Software\n    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:490
+#: ./doc/text/lgpl-2.1.txt:490
 msgid "Also add information on how to contact you by electronic and paper mail."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:492
+#: ./doc/text/lgpl-2.1.txt:492
 msgid "You should also get your employer (if you work as a programmer) or your\nschool, if any, to sign a \"copyright disclaimer\" for the library, if\nnecessary.  Here is a sample; alter the names:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:496
+#: ./doc/text/lgpl-2.1.txt:496
 msgid "  Yoyodyne, Inc., hereby disclaims all copyright interest in the\n  library `Frob' (a library for tweaking knobs) written by James Random Hacker."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:499
+#: ./doc/text/lgpl-2.1.txt:499
 msgid "  <signature of Ty Coon>, 1 April 1990\n  Ty Coon, President of Vice"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:502
+#: ./doc/text/lgpl-2.1.txt:502
 msgid "That's all there is to it!"
 msgstr ""
 
-#: ../../doc/text/news.md:1
+#: ./doc/text/news.md:1
 msgid "# News"
+msgstr "# お知らせ"
+
+#: ./doc/text/news.md:3
+msgid "## 1.0.1: 2012-12-21"
 msgstr ""
 
-#: ../../doc/text/news.md:3
+#: ./doc/text/news.md:5
+msgid "### Improvements"
+msgstr "### 改善"
+
+#: ./doc/text/news.md:7
+msgid " * Added \"groonga-query-log-extract\" command and classes implementing it.\n   \"groonga-query-log-extract\" is the command to extract commands\n   (table_create ..., load..., select... and so on) from query\n   logs. \"groonga-query-log-extract --help\" shows its usage."
+msgstr ""
+" * \"groonga-query-log-extract\"コマンドとそれを実装するクラスを追加。\n"
+"   \"groonga-query-log-extract\"コマンドはクエリログからコマンド（table_create..., load..., select... など）を抽出します。使い方は\"groonga-query-log-extract --help\"を実行すると表示されます。"
+
+#: ./doc/text/news.md:12
+msgid "### Changes"
+msgstr "### 変更"
+
+#: ./doc/text/news.md:14
+msgid " * Rename groonga-query-log-analyzer to groonga-query-log-analyze\n   (removed trailing \"r\").\n * Raised error and exited of each running command for no specified\n   input files, redirects, and pipe via standard input."
+msgstr ""
+" * groonga-query-log-analyzerをgroonga-query-log-analyzeにリネーム（後ろの\"r\"を削除）。\n"
+" * 各コマンドに対して、入力ファイル、リダイレクト、パイプによりクエリログが入力されない場合はエラーを出して終了するようにした。"
+
+#: ./doc/text/news.md:19
 msgid "## 1.0.0: 2012-12-14"
 msgstr ""
 
-#: ../../doc/text/news.md:5
+#: ./doc/text/news.md:21
 msgid "The first release!!!"
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:3
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:3
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:3
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:3
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:3
-#: ../../lib/groonga/query-log/parser.rb:3
-#: ../../lib/groonga/query-log/version.rb:3
+#: ./lib/groonga/query-log/analyzer.rb:3
+#: ./lib/groonga/query-log/analyzer/reporter.rb:3
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:3
+#: ./lib/groonga/query-log/analyzer/reporter/html.rb:3
+#: ./lib/groonga/query-log/analyzer/reporter/json.rb:3
+#: ./lib/groonga/query-log/analyzer/sized-grouped-operations.rb:3
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:3
+#: ./lib/groonga/query-log/analyzer/statistic.rb:3
+#: ./lib/groonga/query-log/analyzer/streamer.rb:3
+#: ./lib/groonga/query-log/commandline-utils.rb:3
+#: ./lib/groonga/query-log/extractor.rb:3
+#: ./lib/groonga/query-log/parser.rb:3
+#: ./lib/groonga/query-log/version.rb:3
 msgid "Copyright (C) 2012  Kouhei Sutou <kou@clear-code.com>"
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:5
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:5
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:5
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:5
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:5
-#: ../../lib/groonga/query-log/parser.rb:5
-#: ../../lib/groonga/query-log/version.rb:5
+#: ./lib/groonga/query-log/analyzer.rb:5
+#: ./lib/groonga/query-log/analyzer/reporter.rb:5
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:5
+#: ./lib/groonga/query-log/analyzer/reporter/html.rb:5
+#: ./lib/groonga/query-log/analyzer/reporter/json.rb:5
+#: ./lib/groonga/query-log/analyzer/sized-grouped-operations.rb:5
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:5
+#: ./lib/groonga/query-log/analyzer/statistic.rb:5
+#: ./lib/groonga/query-log/analyzer/streamer.rb:5
+#: ./lib/groonga/query-log/commandline-utils.rb:5
+#: ./lib/groonga/query-log/extractor.rb:5
+#: ./lib/groonga/query-log/parser.rb:5
+#: ./lib/groonga/query-log/version.rb:5
 msgid "This library is free software; you can redistribute it and/or\nmodify it under the terms of the GNU Lesser General Public\nLicense as published by the Free Software Foundation; either\nversion 2.1 of the License, or (at your option) any later version."
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:10
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:10
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:10
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:10
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:10
-#: ../../lib/groonga/query-log/parser.rb:10
-#: ../../lib/groonga/query-log/version.rb:10
+#: ./lib/groonga/query-log/analyzer.rb:10
+#: ./lib/groonga/query-log/analyzer/reporter.rb:10
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:10
+#: ./lib/groonga/query-log/analyzer/reporter/html.rb:10
+#: ./lib/groonga/query-log/analyzer/reporter/json.rb:10
+#: ./lib/groonga/query-log/analyzer/sized-grouped-operations.rb:10
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:10
+#: ./lib/groonga/query-log/analyzer/statistic.rb:10
+#: ./lib/groonga/query-log/analyzer/streamer.rb:10
+#: ./lib/groonga/query-log/commandline-utils.rb:10
+#: ./lib/groonga/query-log/extractor.rb:10
+#: ./lib/groonga/query-log/parser.rb:10
+#: ./lib/groonga/query-log/version.rb:10
 msgid "This library is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\nLesser General Public License for more details."
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:15
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:15
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:15
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:15
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:15
-#: ../../lib/groonga/query-log/parser.rb:15
-#: ../../lib/groonga/query-log/version.rb:15
+#: ./lib/groonga/query-log/analyzer.rb:15
+#: ./lib/groonga/query-log/analyzer/reporter.rb:15
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:15
+#: ./lib/groonga/query-log/analyzer/reporter/html.rb:15
+#: ./lib/groonga/query-log/analyzer/reporter/json.rb:15
+#: ./lib/groonga/query-log/analyzer/sized-grouped-operations.rb:15
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:15
+#: ./lib/groonga/query-log/analyzer/statistic.rb:15
+#: ./lib/groonga/query-log/analyzer/streamer.rb:15
+#: ./lib/groonga/query-log/commandline-utils.rb:15
+#: ./lib/groonga/query-log/extractor.rb:15
+#: ./lib/groonga/query-log/parser.rb:15
+#: ./lib/groonga/query-log/version.rb:15
 msgid "You should have received a copy of the GNU Lesser General Public\nLicense along with this library; if not, write to the Free Software\nFoundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA"
 msgstr ""
 
 # @return [Analyzer]
-#: ../../lib/groonga/query-log/analyzer.rb:35
+#: ./lib/groonga/query-log/analyzer.rb:41
 msgid "a new instance of Analyzer"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::Reporter#output
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
-msgid "Returns the value of attribute output"
+# Groonga::QueryLog::Analyzer#run
+#: ./lib/groonga/query-log/analyzer.rb:46
+msgid "Executes analyzer for groonga's query logs.\n\"groonga-query-log-analyze\" command run this method."
+msgstr "groongaのクエリログの解析を実行します。\"groonga-query-log-analyze\"コマンドはこのメソッドを実行します。"
+
+# Groonga::QueryLog::Analyzer#run
+#: ./lib/groonga/query-log/analyzer.rb:49
+msgid "If only paths of query log files are specified,\nthis method prints a result of them to console with coloring."
+msgstr "もし入力となるログファイルだけ指定した場合は、端末上に色付けした結果を表示します。"
+
+# @example
+#: ./lib/groonga/query-log/analyzer.rb:60
+msgid "analyzer = Groonga::QueryLog::Analyzer.new\nanalyzer.run(\"--output\", \"statistics.html\",\n             \"--reporter\", \"html\",\n             \"query.log\")"
+msgstr ""
+"analyzer = Groonga::QueryLog::Analyzer.new\n"
+"analyzer.run(\"--output\", \"statistics.html\",\n"
+"             \"--reporter\", \"html\",\n"
+"             \"query.log\")"
+
+# @param [Array<String>] arguments
+#: ./lib/groonga/query-log/analyzer.rb:60
+msgid "arguments for\ngroonga-query-log-analyze. Please execute\n\"groonga-query-log-analyze --help\" or see #setup_options."
+msgstr "groonga-query-log-analyzeに渡すオプション。詳細は\"groonga-query-log-analyze --help\"を実行するか#setup_optionsをご覧ください。"
+
+# @param
+#: ./lib/groonga/query-log/analyzer.rb:60
+#: ./lib/groonga/query-log/extractor.rb:61
+msgid "tag|param|arguments"
 msgstr ""
 
 # @return [Reporter]
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
+#: ./lib/groonga/query-log/analyzer/reporter.rb:27
 msgid "a new instance of Reporter"
 msgstr ""
 
-# @return [Color]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:31
-msgid "a new instance of Color"
+# Groonga::QueryLog::Analyzer::Reporter#output
+#: ./lib/groonga/query-log/analyzer/reporter.rb:27
+msgid "Returns the value of attribute output"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::ConsoleReporter::Color#name
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:31
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:31
 msgid "Returns the value of attribute name"
 msgstr ""
 
+# @return [Color]
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:31
+msgid "a new instance of Color"
+msgstr ""
+
 # @return [MixColor]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:96
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:96
 msgid "a new instance of MixColor"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::ConsoleReporter::MixColor#colors
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:96
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:96
 msgid "Returns the value of attribute colors"
 msgstr ""
 
 # @return [ConsoleReporter]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:119
+#: ./lib/groonga/query-log/analyzer/reporter/console.rb:119
 msgid "a new instance of ConsoleReporter"
 msgstr ""
 
 # @return [SizedGroupedOperations]
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:24
+#: ./lib/groonga/query-log/analyzer/sized-grouped-operations.rb:24
 msgid "a new instance of SizedGroupedOperations"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_operations
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
-msgid "Returns the value of attribute n_slow_operations"
-msgstr ""
-
-# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_responses
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
-msgid "Returns the value of attribute n_slow_responses"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::SizedStatistics#n_responses
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:30
 msgid "Returns the value of attribute n_responses"
 msgstr ""
 
+# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_responses
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:30
+msgid "Returns the value of attribute n_slow_responses"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_operations
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:30
+msgid "Returns the value of attribute n_slow_operations"
+msgstr ""
+
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_operations
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:31
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:31
 msgid "Returns the value of attribute slow_operations"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#total_elapsed
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:31
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:31
 msgid "Returns the value of attribute total_elapsed"
 msgstr ""
 
+# @param value
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:32
+#: ./lib/groonga/query-log/analyzer/statistic.rb:27
+msgid "the value to set the attribute slow_operation_threshold to."
+msgstr ""
+
 # Groonga::QueryLog::Analyzer::SizedStatistics#last_time
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:32
 msgid "Returns the value of attribute last_time"
+msgstr ""
+
+# @param value
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:32
+#: ./lib/groonga/query-log/analyzer/statistic.rb:27
+msgid "the value to set the attribute slow_response_threshold to."
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#start_time
 # Groonga::QueryLog::Analyzer::Statistic#start_time
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:26
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:32
+#: ./lib/groonga/query-log/analyzer/statistic.rb:26
 msgid "Returns the value of attribute start_time"
 msgstr ""
 
-# @param value
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:27
-msgid "the value to set the attribute slow_response_threshold to."
-msgstr ""
-
-# @param value
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:27
-msgid "the value to set the attribute slow_operation_threshold to."
-msgstr ""
-
 # @param
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:27
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:32
+#: ./lib/groonga/query-log/analyzer/statistic.rb:27
+#: ./lib/groonga/query-log/extractor.rb:37
 msgid "tag|param|value"
-msgstr ""
-
-# Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold
-# Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:33
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:28
-msgid "Returns the value of attribute slow_response_threshold"
-msgstr ""
-
-# Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold=
-# Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold=
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:33
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:28
-msgid "Sets the attribute slow_response_threshold"
-msgstr ""
-
-# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold=
-# Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold=
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:33
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:28
-msgid "Sets the attribute slow_operation_threshold"
-msgstr ""
-
-# @return [SizedStatistics]
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:33
-msgid "a new instance of SizedStatistics"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold
 # Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:33
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:28
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:33
+#: ./lib/groonga/query-log/analyzer/statistic.rb:28
 msgid "Returns the value of attribute slow_operation_threshold"
 msgstr ""
 
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold=
+# Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold=
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:33
+#: ./lib/groonga/query-log/analyzer/statistic.rb:28
+msgid "Sets the attribute slow_operation_threshold"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold=
+# Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold=
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:33
+#: ./lib/groonga/query-log/analyzer/statistic.rb:28
+msgid "Sets the attribute slow_response_threshold"
+msgstr ""
+
+# @return [SizedStatistics]
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:33
+msgid "a new instance of SizedStatistics"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold
+# Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold
+#: ./lib/groonga/query-log/analyzer/sized-statistics.rb:33
+#: ./lib/groonga/query-log/analyzer/statistic.rb:28
+msgid "Returns the value of attribute slow_response_threshold"
+msgstr ""
+
 # Groonga::QueryLog::Analyzer::Statistic#context_id
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:26
+#: ./lib/groonga/query-log/analyzer/statistic.rb:26
 msgid "Returns the value of attribute context_id"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#raw_command
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:26
+#: ./lib/groonga/query-log/analyzer/statistic.rb:26
 msgid "Returns the value of attribute raw_command"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::Statistic#return_code
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:27
-msgid "Returns the value of attribute return_code"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::Statistic#elapsed
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:27
+#: ./lib/groonga/query-log/analyzer/statistic.rb:27
 msgid "Returns the value of attribute elapsed"
 msgstr ""
 
+# Groonga::QueryLog::Analyzer::Statistic#return_code
+#: ./lib/groonga/query-log/analyzer/statistic.rb:27
+msgid "Returns the value of attribute return_code"
+msgstr ""
+
 # @return [Statistic]
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:28
+#: ./lib/groonga/query-log/analyzer/statistic.rb:28
 msgid "a new instance of Statistic"
 msgstr ""
 
 # @return [Streamer]
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:24
+#: ./lib/groonga/query-log/analyzer/streamer.rb:24
 msgid "a new instance of Streamer"
 msgstr ""
 
+# @param value
+#: ./lib/groonga/query-log/extractor.rb:37
+msgid "the value to set the attribute options to."
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold=
+# Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold=
+#: ./lib/groonga/query-log/extractor.rb:38
+msgid "Sets the attribute options"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::Reporter#output
+#: ./lib/groonga/query-log/extractor.rb:38
+msgid "Returns the value of attribute options"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#total_elapsed
+#: ./lib/groonga/query-log/extractor.rb:39
+msgid "Returns the value of attribute option_parser"
+msgstr ""
+
+# @return [Streamer]
+#: ./lib/groonga/query-log/extractor.rb:40
+msgid "a new instance of Extractor"
+msgstr ""
+
+# Groonga::QueryLog::Extractor#run
+#: ./lib/groonga/query-log/extractor.rb:47
+msgid "Executes extractor for groonga's query logs.\n\"groonga-query-log-extract\" command runs this method."
+msgstr "クエリログからのコマンドの抽出を実行します。\"groonga-query-log-extract\"はこのメソッドを実行します。"
+
+# Groonga::QueryLog::Extractor#run
+#: ./lib/groonga/query-log/extractor.rb:50
+msgid "If only paths of query log files are specified,\nthis method prints command(s) of them to console."
+msgstr "もし入力となるログファイルだけが指定された場合は、このメソッドは抽出したコマンドを端末上に表示します。"
+
+# @example
+#: ./lib/groonga/query-log/extractor.rb:61
+msgid "extractor = Groonga::QueryLog::Extractor.new\nextractor.run(\"--output\", \"commands.output\",\n              \"--command\", \"select\",\n              \"query.log\")"
+msgstr ""
+"extractor = Groonga::QueryLog::Extractor.new\n"
+"extractor.run(\"--output\", \"commands.output\",\n"
+"              \"--command\", \"select\",\n"
+"              \"query.log\")"
+
+# @param [Array<String>] arguments
+#: ./lib/groonga/query-log/extractor.rb:61
+msgid "arguments for\ngroonga-query-log-extract. Please execute\n\"groonga-query-log-extract --help\" or see #setup_options."
+msgstr "groonga-query-log-extractに渡すオプション。詳細は\"groonga-query-log-extract --help\"を実行するか#setup_optionsをご覧ください。"
+
 # @return [Parser]
-#: ../../lib/groonga/query-log/parser.rb:26
+#: ./lib/groonga/query-log/parser.rb:26
 msgid "a new instance of Parser"
 msgstr ""
+
+# Groonga::QueryLog::Parser#parse
+#: ./lib/groonga/query-log/parser.rb:30
+msgid "Parses query-log file as stream to\n{Groonga::QueryLog::Analyzer::Statistics} including some\ninformations for each query."
+msgstr "クエリログファイルをクエリに対する情報をもつ {Groonga::QueryLog::Analyzer::Statistics} オブジェクトの配列にパースします。"
+
+# @param
+#: ./lib/groonga/query-log/parser.rb:38
+msgid "tag|param|input"
+msgstr ""
+
+# @param [IO] input
+#: ./lib/groonga/query-log/parser.rb:38
+msgid "IO for input query log file."
+msgstr "クエリログファイルを示すIOオブジェクト。"
+
+# @yieldparam [Groonga::QueryLog::Analyzer::Statistic] Statistic
+#: ./lib/groonga/query-log/parser.rb:38
+msgid "statistics of each query in log files."
+msgstr "ログファイル内の各クエリに対応したStatisticsオブジェクト。"
+
+# @yieldparam [Groonga::QueryLog::Analyzer::Statistic]
+#: ./lib/groonga/query-log/parser.rb:38
+msgid "tag|yieldparam|statistic"
+msgstr ""
+
+# @yield [statistics]
+#: ./lib/groonga/query-log/parser.rb:38
+msgid "if a block is specified, it is called\nevery time a query is finished parsing."
+msgstr "もしブロックが指定された場合は、1つのクエリがパースし終わるごとにブロックが実行されます。"
