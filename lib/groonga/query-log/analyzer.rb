@@ -42,6 +42,19 @@ module Groonga
         setup_options
       end
 
+      # Executes analyzer for groonga's query logs.
+      # "groonga-query-log-analyzer" command run this method.a
+      # @example
+      #   analyzer = Groonga::QueryLog::Analyzer.new
+      #   analyzer.run("--output", "statistics.html",
+      #                "--reporter", "html",
+      #                "query.log")
+      # If only paths of query log files are specified,
+      # this method prints a result of it to console with coloring.
+      #
+      # @param [Array<String>] argv arguments for
+      #   groonga-query-log-analyer. Please execute
+      #   "groonga-query-log-analyzer --help" or see #setup_options.
       def run(*argv)
         log_paths = @option_parser.parse!(argv)
 
