@@ -54,11 +54,11 @@ module Groonga
       # If only paths of query log files are specified,
       # this method prints a result of them to console with coloring.
       #
-      # @param [Array<String>] argv arguments for
+      # @param [Array<String>] arguments arguments for
       #   groonga-query-log-analyer. Please execute
       #   "groonga-query-log-analyzer --help" or see #setup_options.
-      def run(*argv)
-        log_paths = @option_parser.parse!(argv)
+      def run(*arguments)
+        log_paths = @option_parser.parse!(arguments)
 
         stream = @options[:stream]
         dynamic_sort = @options[:dynamic_sort]
