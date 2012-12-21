@@ -53,7 +53,7 @@ module Groonga
       #                 "query.log")
       #
       # If only paths of query log files are specified,
-      # this method prints command(s) of them to console with coloring.
+      # this method prints command(s) of them to console.
       #
       # @param [Array<String>] arguments arguments for
       #   groonga-query-log-extract. Please execute
