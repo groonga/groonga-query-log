@@ -50,7 +50,7 @@ module Groonga
       #                "--reporter", "html",
       #                "query.log")
       # If only paths of query log files are specified,
-      # this method prints a result of it to console with coloring.
+      # this method prints a result of them to console with coloring.
       #
       # @param [Array<String>] argv arguments for
       #   groonga-query-log-analyer. Please execute
