@@ -31,10 +31,10 @@ module Groonga
       # informations for each query.
       #
       # @param [IO] input IO for input query log file.
-      # @yield if a block is specified, it is called every time
-      #   log of a query is finished parsing.
-      # @yieldparam [Groonga::QueryLog::Analyzer::Statistic] Statistic
-      #   of each query in log files.
+      # @yield [statistics] if a block is specified, it is called
+      #   every time a query is finished parsing.
+      # @yieldparam [Groonga::QueryLog::Analyzer::Statistic] statistic
+      #   statistics of each query in log files.
       def parse(input, &block)
         current_statistics = {}
         input.each_line do |line|
