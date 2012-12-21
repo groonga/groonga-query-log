@@ -43,6 +43,21 @@ module Groonga
         setup_options
       end
 
+      # Executes extractor for groonga's query logs.
+      # "groonga-query-log-extract" command runs this method.
+      #
+      # @example
+      #   extractor = Groonga::QueryLog::Extractor.new
+      #   extractor.run("--output", "commands.output",
+      #                 "--command", "select",
+      #                 "query.log")
+      #
+      # If only paths of query log files are specified,
+      # this method prints command(s) of them to console with coloring.
+      #
+      # @param [Array<String>] arguments arguments for
+      #   groonga-query-log-extract. Please execute
+      #   "groonga-query-log-extract --help" or see #setup_options.
       def run(*arguments)
         begin
           log_paths = @option_parser.parse!(arguments)
