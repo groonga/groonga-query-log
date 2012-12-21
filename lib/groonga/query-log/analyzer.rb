@@ -44,11 +44,13 @@ module Groonga
 
       # Executes analyzer for groonga's query logs.
       # "groonga-query-log-analyzer" command run this method.a
+      #
       # @example
       #   analyzer = Groonga::QueryLog::Analyzer.new
       #   analyzer.run("--output", "statistics.html",
       #                "--reporter", "html",
       #                "query.log")
+      #
       # If only paths of query log files are specified,
       # this method prints a result of them to console with coloring.
       #
