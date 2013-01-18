@@ -1,5 +1,7 @@
 # README
 
+[![Build Status](https://travis-ci.org/groonga/groonga-query-log.png?branch=master)](undefined)
+
 ## Name
 
 groonga-query-log
