@@ -170,15 +170,15 @@ module Groonga
 
       def target?(command)
         name = command.name
-        commands = @options.commands
+        target_commands = @options.commands
         exclude_commands = @options.exclude_commands
 
-        unless commands.empty?
-          return commands.any? {|command| command === name}
+        unless target_commands.empty?
+          return target_commands.any? {|target_command| target_command === name}
         end
 
         unless exclude_commands.empty?
-          return (not exclude_commands.any? {|command| command === name})
+          return (not exclude_commands.any? {|exclude_command| exclude_command === name})
         end
 
         true
