@@ -54,6 +54,7 @@ module Groonga
 
         def report_statistic(statistic)
           command = statistic.command
+          _ = command # XXX: suppress warning
           statistic_html = erb(<<-EOH, __LINE__ + 1, binding)
       <div class="statistic-heading">
         <h3>Command</h3>
