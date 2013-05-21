@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Copyright (C) 2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2012-2013  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,20 @@ $VERBOSE = true
 
 $KCODE = "u" if RUBY_VERSION < "1.9"
 
-base_dir = File.expand_path(File.join(File.dirname(__FILE__), ".."))
-lib_dir = File.join(base_dir, "lib")
-test_dir = File.join(base_dir, "test")
+require "pathname"
+
+base_dir = Pathname.new(__FILE__).dirname.parent.expand_path
+lib_dir = base_dir + "lib"
+test_dir = base_dir + "test"
 
 require "test-unit"
 require "test/unit/notify"
 
 Test::Unit::Priority.enable
 
-$LOAD_PATH.unshift(lib_dir)
+$LOAD_PATH.unshift(lib_dir.to_s)
 
-$LOAD_PATH.unshift(test_dir)
+$LOAD_PATH.unshift(test_dir.to_s)
 require "groonga-query-log-test-utils"
 
 Dir.glob("#{base_dir}/test/**/test{_,-}*.rb") do |file|
