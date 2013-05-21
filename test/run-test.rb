@@ -21,6 +21,16 @@ $VERBOSE = true
 require "pathname"
 
 base_dir = Pathname.new(__FILE__).dirname.parent.expand_path
+top_dir = base_dir.parent
+
+gqtp_base_dir = top_dir + "gqtp"
+gqtp_lib_dir = gqtp_base_dir + "lib"
+$LOAD_PATH.unshift(gqtp_lib_dir.to_s)
+
+groonga_client_base_dir = top_dir + "groonga-client"
+groonga_client_lib_dir = groonga_client_base_dir + "lib"
+$LOAD_PATH.unshift(groonga_client_lib_dir.to_s)
+
 lib_dir = base_dir + "lib"
 test_dir = base_dir + "test"
 
