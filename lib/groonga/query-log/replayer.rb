@@ -59,14 +59,14 @@ module Groonga
 
       def run_consumers
         @options.n_clients.times.collect do
-          client = @options.create_client
           Thread.new do
+            @options.create_client do
             loop do
               id, statistic = @queue.pop
               break if id.nil?
               replay_command(client, id, statistic.command)
             end
-            client.shutdown
+            end
           end
         end
       end
