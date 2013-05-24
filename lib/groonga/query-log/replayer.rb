@@ -48,12 +48,12 @@ module Groonga
           parser = Parser.new
           id = 0
           @options.create_request_output do |output|
-          parser.parse(input) do |statistic|
-            # TODO: validate orignal_source is one line
-            output << statistic.command.original_source
-            @queue.push([id, statistic])
-            id += 1
-          end
+            parser.parse(input) do |statistic|
+              # TODO: validate orignal_source is one line
+              output << statistic.command.original_source
+              @queue.push([id, statistic])
+              id += 1
+            end
           end
           @options.n_clients.times do
             @queue.push(nil)
