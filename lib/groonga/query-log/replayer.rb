@@ -60,7 +60,7 @@ module Groonga
       def run_consumers
         @options.n_clients.times.collect do
           Thread.new do
-            @options.create_client do
+            @options.create_client do |client|
               loop do
                 id, statistic = @queue.pop
                 break if id.nil?
