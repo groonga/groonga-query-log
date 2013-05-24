@@ -61,11 +61,11 @@ module Groonga
         @options.n_clients.times.collect do
           Thread.new do
             @options.create_client do
-            loop do
-              id, statistic = @queue.pop
-              break if id.nil?
-              replay_command(client, id, statistic.command)
-            end
+              loop do
+                id, statistic = @queue.pop
+                break if id.nil?
+                replay_command(client, id, statistic.command)
+              end
             end
           end
         end
