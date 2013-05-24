@@ -50,7 +50,7 @@ module Groonga
           @options.create_request_output do |output|
             parser.parse(input) do |statistic|
               # TODO: validate orignal_source is one line
-              output << statistic.command.original_source
+              output.puts(statistic.command.original_source)
               @queue.push([id, statistic])
               id += 1
             end
@@ -91,8 +91,7 @@ module Groonga
           end
         end
 
-        def <<(string)
-          string.bytesize
+        def puts(string)
         end
       end
 
