@@ -17,6 +17,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "thread"
+require "optparse"
 
 require "groonga/client"
 
@@ -25,15 +26,13 @@ require "groonga/query-log/parser"
 module Groonga
   module QueryLog
     class Replayer
-      attr_accessor :host
-      attr_accessor :port
-      attr_accessor :protocol
       def initialize
-        @host = "127.0.0.1"
-        @port = 10041
-        @protocol = :gqtp
-        @n_clients = 8
         @queue = Queue.new
+        @options = Options.new
+      end
+
+      def parse_command_line_options(arguments)
+        @options.parse(arguments)
       end
 
       def replay(input)
@@ -44,13 +43,6 @@ module Groonga
       end
 
       private
-      def create_client(&block)
-        Groonga::Client.open(:host     => @host,
-                             :port     => @port,
-                             :protocol => @protocol,
-                             &block)
-      end
-
       def run_producer(input)
         Thread.new do
           parser = Parser.new
@@ -59,15 +51,15 @@ module Groonga
             @queue.push([id, statistic])
             id += 1
           end
-          @n_clients.times do
+          @options.n_clients.times do
             @queue.push(nil)
           end
         end
       end
 
       def run_consumers
-        @n_clients.times.collect do
-          client = create_client
+        @options.n_clients.times.collect do
+          client = @options.create_client
           Thread.new do
             loop do
               id, statistic = @queue.pop
@@ -81,6 +73,65 @@ module Groonga
 
       def replay_command(client, id, command)
         client.execute(command)
+      end
+
+      class Options
+        attr_accessor :host
+        attr_accessor :port
+        attr_accessor :protocol
+        attr_accessor :n_clients
+        def initialize
+          @host = "127.0.0.1"
+          @port = 10041
+          @protocol = :gqtp
+          @n_clients = 8
+        end
+
+        def parse(arguments)
+          create_parser.parse!(arguments)
+        end
+
+        def create_client(&block)
+          Groonga::Client.open(:host     => @host,
+                               :port     => @port,
+                               :protocol => @protocol,
+                               &block)
+        end
+
+        private
+        def create_parser
+          parser = OptionParser.new
+          parser.banner += " QUERY_LOG"
+
+          parser.separator("")
+          parser.separator("Options:")
+
+          parser.on("--host=HOST",
+                    "Host name or IP address of groonga server",
+                    "[#{@host}]") do |host|
+            @host = host
+          end
+
+          parser.on("--port=PORT", Integer,
+                    "Port number of groonga server",
+                    "[#{@port}]") do |port|
+            @port = port
+          end
+
+          available_protocols = [:gqtp, :http]
+          available_protocols_label = "[#{available_protocols.join(', ')}]"
+          parser.on("--protocol=PROTOCOL", available_protocols,
+                    "Protocol of groonga server",
+                    available_protocols_label) do |protocol|
+            @protocol = protocol
+          end
+
+          parser.on("--n-clients=N", Integer,
+                    "The max number of concurrency",
+                    "[#{@n_clients}]") do |n_clients|
+            @n_cilents = n_clients
+          end
+        end
       end
     end
   end
