@@ -28,6 +28,7 @@ module Groonga
     class Replayer
       def initialize
         @queue = Queue.new
+        @responses = Queue.new
         @options = Options.new
       end
 
@@ -38,8 +39,10 @@ module Groonga
       def replay(input)
         producer = run_producer(input)
         consumers = run_consumers
+        response_logger = run_response_logger
         producer.join
         consumers.each(&:join)
+        resonse_logger.join
       end
 
       private
@@ -76,7 +79,22 @@ module Groonga
       end
 
       def replay_command(client, id, command)
-        client.execute(command)
+        response = client.execute(command)
+        @responses.push(response)
+      end
+
+      def run_response_logger
+        Thread.new do
+          @options.create_responses_output do |output|
+            loop do
+              response = @responses.pop
+              break if response.nil?
+              # TODO: ensure response is one line
+              # TODO: reorder by ID
+              output.puts(response.raw)
+            end
+          end
+        end
       end
 
       class NullOutput
@@ -106,6 +124,7 @@ module Groonga
           @protocol = :gqtp
           @n_clients = 8
           @requests_path = nil
+          @responses_path = nil
         end
 
         def parse(arguments)
@@ -122,6 +141,14 @@ module Groonga
         def create_request_output(&block)
           if @requests_path
             File.open(@requests_path, "w", &block)
+          else
+            NullOutput.open(&block)
+          end
+        end
+
+        def create_responses_output(&block)
+          if @responses_path
+            File.open(@responses_path, "w", &block)
           else
             NullOutput.open(&block)
           end
@@ -165,6 +192,12 @@ module Groonga
                     "Output requests to PATH",
                     "[not output]") do |path|
             @requests_path = path
+          end
+
+          parser.on("--output-responses=PATH",
+                    "Output responses to PATH",
+                    "[not output]") do |path|
+            @responses_path = path
           end
         end
       end
