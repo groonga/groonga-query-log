@@ -16,6 +16,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+require "thread"
+
 require "groonga/client"
 
 require "groonga/query-log/parser"
@@ -30,15 +32,15 @@ module Groonga
         @host = "127.0.0.1"
         @port = 10041
         @protocol = :gqtp
+        @n_clients = 8
+        @queue = Queue.new
       end
 
       def replay(input)
-        create_client do |client|
-          parser = Parser.new
-          parser.parse(input) do |statistic|
-            replay_command(client, statistic.command)
-          end
-        end
+        producer = run_producer(input)
+        consumers = run_consumers
+        producer.join
+        consumers.each(&:join)
       end
 
       private
@@ -49,8 +51,36 @@ module Groonga
                              &block)
       end
 
-      def replay_command(client, command)
-        p client.execute(command)
+      def run_producer(input)
+        Thread.new do
+          parser = Parser.new
+          id = 0
+          parser.parse(input) do |statistic|
+            @queue.push([id, statistic])
+            id += 1
+          end
+          @n_clients.times do
+            @queie.push(nil)
+          end
+        end
+      end
+
+      def run_consumers
+        @n_clients.times.collect do
+          client = create_client
+          Thread.new do
+            loop do
+              id, statistic = @queue.pop
+              break if id.nil?
+              replay_command(client, id, statistic.command)
+            end
+            client.shutdown
+          end
+        end
+      end
+
+      def replay_command(client, id, command)
+        client.execute(command)
       end
     end
   end

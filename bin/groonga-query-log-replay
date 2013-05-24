@@ -19,5 +19,7 @@
 
 require "groonga/query-log"
 
+Thread.abort_on_exception = true
+
 replayer = Groonga::QueryLog::Replayer.new
 replayer.replay(ARGF)
