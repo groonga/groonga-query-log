@@ -60,7 +60,7 @@ module Groonga
             id += 1
           end
           @n_clients.times do
-            @queie.push(nil)
+            @queue.push(nil)
           end
         end
       end
