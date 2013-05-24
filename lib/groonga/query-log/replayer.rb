@@ -47,9 +47,13 @@ module Groonga
         Thread.new do
           parser = Parser.new
           id = 0
+          @options.create_request_output do |output|
           parser.parse(input) do |statistic|
+            # TODO: validate orignal_source is one line
+            output << statistic.command.original_source
             @queue.push([id, statistic])
             id += 1
+          end
           end
           @options.n_clients.times do
             @queue.push(nil)
@@ -75,6 +79,23 @@ module Groonga
         client.execute(command)
       end
 
+      class NullOutput
+        class << self
+          def open
+            output = new
+            if block_given?
+              yield(output)
+            else
+              output
+            end
+          end
+        end
+
+        def <<(string)
+          string.bytesize
+        end
+      end
+
       class Options
         attr_accessor :host
         attr_accessor :port
@@ -85,6 +106,7 @@ module Groonga
           @port = 10041
           @protocol = :gqtp
           @n_clients = 8
+          @requests_path = nil
         end
 
         def parse(arguments)
@@ -96,6 +118,14 @@ module Groonga
                                :port     => @port,
                                :protocol => @protocol,
                                &block)
+        end
+
+        def create_request_output(&block)
+          if @requests_path
+            File.open(@requests_path, "w", &block)
+          else
+            NullOutput.open(&block)
+          end
         end
 
         private
@@ -130,6 +160,12 @@ module Groonga
                     "The max number of concurrency",
                     "[#{@n_clients}]") do |n_clients|
             @n_cilents = n_clients
+          end
+
+          parser.on("--output-requests=PATH",
+                    "Output requests to PATH",
+                    "[not output]") do |path|
+            @requests_path = path
           end
         end
       end
