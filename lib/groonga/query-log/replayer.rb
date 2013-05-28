@@ -79,6 +79,7 @@ module Groonga
       end
 
       def replay_command(client, id, command)
+        command["cache"] = "no" if @options.disable_cache?
         response = client.execute(command)
         @responses.push(response)
       end
@@ -123,6 +124,7 @@ module Groonga
           @port = 10041
           @protocol = :gqtp
           @n_clients = 8
+          @disable_cache = false
           @requests_path = nil
           @responses_path = nil
         end
@@ -152,6 +154,10 @@ module Groonga
           else
             NullOutput.open(&block)
           end
+        end
+
+        def disable_cache?
+          @disable_cache
         end
 
         private
@@ -186,6 +192,12 @@ module Groonga
                     "The max number of concurrency",
                     "[#{@n_clients}]") do |n_clients|
             @n_cilents = n_clients
+          end
+
+          parser.on("--disable-cache",
+                    "Add 'cache=no' parameter to request",
+                    "[#{@disable_cache}]") do
+            @disable_cache = true
           end
 
           parser.on("--output-requests=PATH",
