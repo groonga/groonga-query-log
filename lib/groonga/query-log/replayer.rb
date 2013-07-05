@@ -26,10 +26,10 @@ require "groonga/query-log/parser"
 module Groonga
   module QueryLog
     class Replayer
-      def initialize
+      def initialize(options)
         @queue = Queue.new
         @responses = Queue.new
-        @options = Options.new
+        @options = options
       end
 
       def parse_command_line_options(arguments)
