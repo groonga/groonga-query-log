@@ -42,7 +42,7 @@ module Groonga
         response_logger = run_response_logger
         producer.join
         consumers.each(&:join)
-        resonse_logger.join
+        response_logger.join
       end
 
       private
