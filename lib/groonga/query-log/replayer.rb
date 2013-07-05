@@ -70,7 +70,10 @@ module Groonga
             @options.create_client do |client|
               loop do
                 id, statistic = @queue.pop
-                break if id.nil?
+                if id.nil?
+                  @responses.push(nil)
+                  break
+                end
                 replay_command(client, id, statistic.command)
               end
             end
