@@ -30,6 +30,13 @@ class ReplayerTest < Test::Unit::TestCase
       replay
     end
 
+    def test_port
+      port = 2929
+      @options.port = 2929
+      mock_client_open(:port => 2929)
+      replay
+    end
+
     private
     def replay
       replayer = Groonga::QueryLog::Replayer.new(@options)
