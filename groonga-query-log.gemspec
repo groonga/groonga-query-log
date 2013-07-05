@@ -53,6 +53,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency("groonga-command")
+  spec.add_runtime_dependency("groonga-client")
 
   spec.add_development_dependency("test-unit")
   spec.add_development_dependency("test-unit-notify")
