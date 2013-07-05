@@ -17,7 +17,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "thread"
-require "optparse"
 
 require "groonga/client"
 
@@ -30,10 +29,6 @@ module Groonga
         @queue = Queue.new
         @responses = Queue.new
         @options = options
-      end
-
-      def parse_command_line_options(arguments)
-        @options.parse(arguments)
       end
 
       def replay(input)
@@ -132,10 +127,6 @@ module Groonga
           @responses_path = nil
         end
 
-        def parse(arguments)
-          create_parser.parse!(arguments)
-        end
-
         def create_client(&block)
           Groonga::Client.open(:host     => @host,
                                :port     => @port,
@@ -161,59 +152,6 @@ module Groonga
 
         def disable_cache?
           @disable_cache
-        end
-
-        private
-        def create_parser
-          parser = OptionParser.new
-          parser.banner += " QUERY_LOG"
-
-          parser.separator("")
-          parser.separator("Options:")
-
-          parser.on("--host=HOST",
-                    "Host name or IP address of groonga server",
-                    "[#{@host}]") do |host|
-            @host = host
-          end
-
-          parser.on("--port=PORT", Integer,
-                    "Port number of groonga server",
-                    "[#{@port}]") do |port|
-            @port = port
-          end
-
-          available_protocols = [:gqtp, :http]
-          available_protocols_label = "[#{available_protocols.join(', ')}]"
-          parser.on("--protocol=PROTOCOL", available_protocols,
-                    "Protocol of groonga server",
-                    available_protocols_label) do |protocol|
-            @protocol = protocol
-          end
-
-          parser.on("--n-clients=N", Integer,
-                    "The max number of concurrency",
-                    "[#{@n_clients}]") do |n_clients|
-            @n_cilents = n_clients
-          end
-
-          parser.on("--disable-cache",
-                    "Add 'cache=no' parameter to request",
-                    "[#{@disable_cache}]") do
-            @disable_cache = true
-          end
-
-          parser.on("--output-requests=PATH",
-                    "Output requests to PATH",
-                    "[not output]") do |path|
-            @requests_path = path
-          end
-
-          parser.on("--output-responses=PATH",
-                    "Output responses to PATH",
-                    "[not output]") do |path|
-            @responses_path = path
-          end
         end
       end
     end
