@@ -36,6 +36,7 @@ test_dir = base_dir + "test"
 
 require "test-unit"
 require "test/unit/notify"
+require "test/unit/rr"
 
 Test::Unit::Priority.enable
 
