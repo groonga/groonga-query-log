@@ -26,15 +26,7 @@ class ReplayerTest < Test::Unit::TestCase
     def test_host
       host = "example.com"
       @options.host = host
-      expected_open_options = {
-        :host     => host,
-        :port     => 10041,
-        :protocol => :gqtp,
-      }
-      client = Object.new
-      mock(Groonga::Client).open(expected_open_options).yields(client) do
-        client
-      end
+      mock_client_open(:host => host)
       replay
     end
 
@@ -42,6 +34,19 @@ class ReplayerTest < Test::Unit::TestCase
     def replay
       replayer = Groonga::QueryLog::Replayer.new(@options)
       replayer.replay(StringIO.new(""))
+    end
+
+    def mock_client_open(expected_options)
+      client = Object.new
+      default_options = {
+        :host     => "127.0.0.1",
+        :port     => 10041,
+        :protocol => :gqtp,
+      }
+      expected_open_options = default_options.merge(expected_options)
+      mock(Groonga::Client).open(expected_open_options).yields(client) do
+        client
+      end
     end
   end
 end
