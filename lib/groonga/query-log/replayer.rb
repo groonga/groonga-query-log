@@ -26,9 +26,9 @@ module Groonga
   module QueryLog
     class Replayer
       def initialize(options)
-        @queue = Queue.new
-        @responses = Queue.new
         @options = options
+        @queue = SizedQueue.new(@options.request_queue_size)
+        @responses = Queue.new
       end
 
       def replay(input)
@@ -117,11 +117,13 @@ module Groonga
         attr_accessor :port
         attr_accessor :protocol
         attr_accessor :n_clients
+        attr_accessor :request_queue_size
         def initialize
           @host = "127.0.0.1"
           @port = 10041
           @protocol = :gqtp
           @n_clients = 8
+          @request_queue_size = 1000
           @disable_cache = false
           @requests_path = nil
           @responses_path = nil

@@ -71,6 +71,12 @@ module Groonga
             @options.n_cilents = n_clients
           end
 
+          parser.on("--request-queue-size=SIZE", Integer,
+                    "The size of request queue",
+                    "[#{@options.request_queue_size}]") do |size|
+            @options.request_queue_size = size
+          end
+
           parser.on("--disable-cache",
                     "Add 'cache=no' parameter to request",
                     "[#{@options.disable_cache?}]") do
