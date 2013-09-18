@@ -62,6 +62,12 @@ module Groonga
       def run_consumers
         @options.n_clients.times.collect do
           Thread.new do
+            run_consumer
+          end
+        end
+      end
+
+      def run_consumer
             @options.create_client do |client|
               loop do
                 id, statistic = @queue.pop
@@ -72,8 +78,6 @@ module Groonga
                 replay_command(client, id, statistic.command)
               end
             end
-          end
-        end
       end
 
       def replay_command(client, id, command)
