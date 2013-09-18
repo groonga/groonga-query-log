@@ -68,16 +68,16 @@ module Groonga
       end
 
       def run_consumer
-            @options.create_client do |client|
-              loop do
-                id, statistic = @queue.pop
-                if id.nil?
-                  @responses.push(nil)
-                  break
-                end
-                replay_command(client, id, statistic.command)
-              end
+        @options.create_client do |client|
+          loop do
+            id, statistic = @queue.pop
+            if id.nil?
+              @responses.push(nil)
+              break
             end
+            replay_command(client, id, statistic.command)
+          end
+        end
       end
 
       def replay_command(client, id, command)
