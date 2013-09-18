@@ -73,7 +73,7 @@ module Groonga
 
           parser.on("--request-queue-size=SIZE", Integer,
                     "The size of request queue",
-                    "[#{@options.request_queue_size}]") do |size|
+                    "[auto]") do |size|
             @options.request_queue_size = size
           end
 

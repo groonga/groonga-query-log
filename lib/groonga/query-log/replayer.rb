@@ -132,13 +132,13 @@ module Groonga
         attr_accessor :port
         attr_accessor :protocol
         attr_accessor :n_clients
-        attr_accessor :request_queue_size
+        attr_writer :request_queue_size
         def initialize
           @host = "127.0.0.1"
           @port = 10041
           @protocol = :gqtp
           @n_clients = 8
-          @request_queue_size = 1000
+          @request_queue_size = nil
           @disable_cache = false
           @requests_path = nil
           @responses_path = nil
@@ -165,6 +165,10 @@ module Groonga
           else
             NullOutput.open(&block)
           end
+        end
+
+        def request_queue_size
+          @request_queue_size || @n_clients * 3
         end
 
         def disable_cache?
