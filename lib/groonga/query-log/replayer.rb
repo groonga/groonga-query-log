@@ -16,6 +16,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
+require "time"
 require "thread"
 
 require "groonga/client"
@@ -62,7 +63,9 @@ module Groonga
       def run_consumers
         @options.n_clients.times.collect do
           Thread.new do
-            run_consumer
+            loop do
+              break if run_consumer
+            end
           end
         end
       end
@@ -73,9 +76,17 @@ module Groonga
             id, statistic = @queue.pop
             if id.nil?
               @responses.push(nil)
-              break
+              return true
             end
-            replay_command(client, id, statistic.command)
+            begin
+              replay_command(client, id, statistic.command)
+            rescue Groonga::Client::Connection::Error
+              # TODO: add error log mechanism
+              $stderr.puts(Time.now.iso8601)
+              $stderr.puts($!.raw_error.message)
+              $stderr.puts($!.raw_error.backtrace)
+              return false
+            end
           end
         end
       end
