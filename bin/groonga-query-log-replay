@@ -22,5 +22,4 @@ require "groonga/query-log/command/replay"
 Thread.abort_on_exception = true
 
 replay_command = Groonga::QueryLog::Command::Replay.new
-replay_command.parse_command_line_options(ARGV)
-replay_command.run(ARGF)
+replay_command.run(*ARGV)
