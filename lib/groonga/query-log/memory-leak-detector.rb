@@ -51,24 +51,24 @@ module Groonga
       end
 
       def check_command(client, command)
-            previous_memory_usage = nil
-            @options.n_tries.times do |i|
-              client.execute(command)
-              previous_memory_usage = current_memory_usage
-              current_memory_usage = memory_usage
-              next if previous_memory_usage.nil?
-              if previous_memory_usage != current_memory_usage
-                max_n_digits = [
-                  compute_n_digits(previous_memory_usage),
-                  compute_n_digits(current_memory_usage),
-                ].max
-                puts("detect a memory leak:")
-                puts("Nth try: #{i}")
-                puts("previous: %*d" % [max_n_digits, previous_memory_usage])
-                puts(" current: %*d" % [max_n_digits, current_memory_usage])
-                puts(command.original_source)
-              end
-            end
+        previous_memory_usage = nil
+        @options.n_tries.times do |i|
+          client.execute(command)
+          previous_memory_usage = current_memory_usage
+          current_memory_usage = memory_usage
+          next if previous_memory_usage.nil?
+          if previous_memory_usage != current_memory_usage
+            max_n_digits = [
+              compute_n_digits(previous_memory_usage),
+              compute_n_digits(current_memory_usage),
+            ].max
+            puts("detect a memory leak:")
+            puts("Nth try: #{i}")
+            puts("previous: %*d" % [max_n_digits, previous_memory_usage])
+            puts(" current: %*d" % [max_n_digits, current_memory_usage])
+            puts(command.original_source)
+          end
+        end
       end
 
       def memory_usage
