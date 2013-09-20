@@ -55,7 +55,6 @@ module Groonga
       end
 
       def check_command(client, command)
-        previous_memory_usage = nil
         current_memory_usage = nil
         @options.n_tries.times do |i|
           client.execute(command)
