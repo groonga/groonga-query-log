@@ -61,7 +61,7 @@ module Groonga
           previous_memory_usage = current_memory_usage
           current_memory_usage = memory_usage
           next if previous_memory_usage.nil?
-          if previous_memory_usage != current_memory_usage
+          if current_memory_usage >= previous_memory_usage
             max_n_digits = [
               compute_n_digits(previous_memory_usage),
               compute_n_digits(current_memory_usage),
