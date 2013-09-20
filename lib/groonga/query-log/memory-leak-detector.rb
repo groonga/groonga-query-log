@@ -29,6 +29,7 @@ module Groonga
 
       def detect(input)
         each_command(input) do |command|
+          command["cache"] = "no"
           @options.create_client do |client|
             previous_memory_usage = nil
             @options.n_tries.times do |i|
