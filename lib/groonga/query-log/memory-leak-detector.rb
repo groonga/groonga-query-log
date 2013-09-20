@@ -33,6 +33,7 @@ module Groonga
         each_command(input) do |command|
           command["cache"] = "no"
           @options.create_client do |client|
+            begin
             check_command(client, command)
           rescue Groonga::Client::Connection::Error
             # TODO: add error log mechanism
