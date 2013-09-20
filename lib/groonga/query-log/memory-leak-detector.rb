@@ -31,6 +31,26 @@ module Groonga
         each_command(input) do |command|
           command["cache"] = "no"
           @options.create_client do |client|
+            check_command(client, command)
+          rescue Groonga::Client::Connection::Error
+            # TODO: add error log mechanism
+            $stderr.puts(Time.now.iso8601)
+            $stderr.puts(statistic.command.original_source)
+            $stderr.puts($!.raw_error.message)
+            $stderr.puts($!.raw_error.backtrace)
+          end
+        end
+      end
+
+      private
+      def each_command(input)
+        parser = Parser.new
+        parser.parse(input) do |statistic|
+          yield(statistic.command)
+        end
+      end
+
+      def check_command(client, command)
             previous_memory_usage = nil
             @options.n_tries.times do |i|
               client.execute(command)
@@ -49,22 +69,6 @@ module Groonga
                 puts(command.original_source)
               end
             end
-          rescue Groonga::Client::Connection::Error
-            # TODO: add error log mechanism
-            $stderr.puts(Time.now.iso8601)
-            $stderr.puts(statistic.command.original_source)
-            $stderr.puts($!.raw_error.message)
-            $stderr.puts($!.raw_error.backtrace)
-          end
-        end
-      end
-
-      private
-      def each_command(input)
-        parser = Parser.new
-        parser.parse(input) do |statistic|
-          yield(statistic.command)
-        end
       end
 
       def memory_usage
