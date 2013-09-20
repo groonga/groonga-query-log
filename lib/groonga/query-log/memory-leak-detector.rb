@@ -34,13 +34,14 @@ module Groonga
           command["cache"] = "no"
           @options.create_client do |client|
             begin
-            check_command(client, command)
-          rescue Groonga::Client::Connection::Error
-            # TODO: add error log mechanism
-            $stderr.puts(Time.now.iso8601)
-            $stderr.puts(statistic.command.original_source)
-            $stderr.puts($!.raw_error.message)
-            $stderr.puts($!.raw_error.backtrace)
+              check_command(client, command)
+            rescue Groonga::Client::Connection::Error
+              # TODO: add error log mechanism
+              $stderr.puts(Time.now.iso8601)
+              $stderr.puts(statistic.command.original_source)
+              $stderr.puts($!.raw_error.message)
+              $stderr.puts($!.raw_error.backtrace)
+            end
           end
         end
       end
