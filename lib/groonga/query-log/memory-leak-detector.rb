@@ -70,6 +70,10 @@ module Groonga
         `ps -o rss --no-header --pid #{@options.pid}`.to_i
       end
 
+      def compute_n_digits(n)
+        (Math.log10(n) + 1).floor
+      end
+
       class Options
         attr_accessor :host
         attr_accessor :port
