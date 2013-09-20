@@ -28,13 +28,14 @@ module Groonga
           @options = Replayer::Options.new
         end
 
-        def parse_command_line_options(arguments)
-          create_parser.parse!(arguments)
-        end
-
-        def run(input)
+        def run(*command_line)
+          input_paths = create_parser.parse(*command_line)
           replayer = Replayer.new(@options)
-          replayer.replay(input)
+          input_paths.each do |input_path|
+            File.open(input_path) do |input|
+              replayer.replay(input)
+            end
+          end
         end
 
         private
