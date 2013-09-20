@@ -20,4 +20,4 @@
 require "groonga/query-log/command/detect-memory-leak"
 
 detect_memory_leak_command = Groonga::QueryLog::Command::DetectMemoryLeak.new
-detect_memory_leak_command.run(*ARGF)
+detect_memory_leak_command.run(*ARGV)
