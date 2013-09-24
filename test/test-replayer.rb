@@ -57,5 +57,63 @@ class ReplayerTest < Test::Unit::TestCase
         end
       end
     end
+
+    class TargetCommandNameTest < self
+      def setup
+        @options = Groonga::QueryLog::Replayer::Options.new
+      end
+
+      def test_default
+        assert_true(@options.target_command_name?("shutdown"))
+      end
+
+      class GlobTest < self
+        def setup
+          super
+          @options.target_command_names = ["se*"]
+        end
+
+        def test_match
+          assert_true(@options.target_command_name?("select"))
+        end
+
+        def test_not_match
+          assert_false(@options.target_command_name?("status"))
+        end
+      end
+
+      class ExtGlobTest < self
+        def setup
+          super
+          @options.target_command_names = ["s{elect,tatus}"]
+          unless File.const_defined?(:FNM_EXTGLOB)
+            omit("File:::FNM_EXTGLOB (Ruby 2.0.0 or later) is required.")
+          end
+        end
+
+        def test_match
+          assert_true(@options.target_command_name?("select"))
+        end
+
+        def test_not_match
+          assert_false(@options.target_command_name?("selectX"))
+        end
+      end
+
+      class ExactMatchTest < self
+        def setup
+          super
+          @options.target_command_names = ["select"]
+        end
+
+        def test_match
+          assert_true(@options.target_command_name?("select"))
+        end
+
+        def test_not_match
+          assert_false(@options.target_command_name?("selectX"))
+        end
+      end
+    end
   end
 end
