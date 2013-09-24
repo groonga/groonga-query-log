@@ -84,6 +84,21 @@ module Groonga
             @options.disable_cache = true
           end
 
+          parser.on("--target-cmmand-name=NAME",
+                    "Add NAME to target command names",
+                    "You can specify this option zero or more times",
+                    "See also --target-command-names") do |name|
+            @options.target_command_names << name
+          end
+
+          target_command_names_label = @options.target_command_names.join(", ")
+          parser.on("--target-cmmand-names=NAME1,NAME2,...", Array
+                    "Replay only NAME1,NAME2,... commands",
+                    "You can use glob to choose command name",
+                    "[#{target_command_names_label}]") do |names|
+            @options.target_command_names = names
+          end
+
           parser.on("--output-requests=PATH",
                     "Output requests to PATH",
                     "[not output]") do |path|

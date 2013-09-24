@@ -48,6 +48,7 @@ module Groonga
           id = 0
           @options.create_request_output do |output|
             parser.parse(input) do |statistic|
+              next unless target_command?(statistic.command)
               # TODO: validate orignal_source is one line
               output.puts(statistic.command.original_source)
               @queue.push([id, statistic])
@@ -110,6 +111,10 @@ module Groonga
             end
           end
         end
+      end
+
+      def target_command?(command)
+        @options.target_command_name?(command.name)
       end
 
       class NullOutput
