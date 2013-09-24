@@ -18,6 +18,7 @@
 
 class ReplayerTest < Test::Unit::TestCase
   class OptionTest < self
+    class ClientTest < self
     def setup
       @options = Groonga::QueryLog::Replayer::Options.new
       @options.n_clients = 1
@@ -54,6 +55,7 @@ class ReplayerTest < Test::Unit::TestCase
       mock(Groonga::Client).open(expected_open_options).yields(client) do
         client
       end
+    end
     end
   end
 end
