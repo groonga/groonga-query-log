@@ -52,7 +52,7 @@ Gem::Specification.new do |spec|
   spec.licenses = ["LGPLv2.1+"]
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency("groonga-command")
+  spec.add_runtime_dependency("groonga-command-parser")
   spec.add_runtime_dependency("groonga-client")
 
   spec.add_development_dependency("test-unit")
