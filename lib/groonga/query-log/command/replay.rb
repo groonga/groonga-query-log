@@ -92,7 +92,7 @@ module Groonga
           end
 
           target_command_names_label = @options.target_command_names.join(", ")
-          parser.on("--target-cmmand-names=NAME1,NAME2,...", Array
+          parser.on("--target-cmmand-names=NAME1,NAME2,...", Array,
                     "Replay only NAME1,NAME2,... commands",
                     "You can use glob to choose command name",
                     "[#{target_command_names_label}]") do |names|
