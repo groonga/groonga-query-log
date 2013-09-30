@@ -55,28 +55,28 @@ module Groonga
 
       def check_command(client, command)
         command["cache"] = "no"
-        current_memory_usage = nil
+        current_n_allocations = nil
         @options.n_tries.times do |i|
           client.execute(command)
-          previous_memory_usage = current_memory_usage
-          current_memory_usage = memory_usage
-          next if previous_memory_usage.nil?
-          if current_memory_usage > previous_memory_usage
+          previous_n_allocations = current_n_allocations
+          current_n_allocations = n_allocations(client)
+          next if previous_n_allocations.nil?
+          if current_n_allocations > previous_n_allocations
             max_n_digits = [
-              compute_n_digits(previous_memory_usage),
-              compute_n_digits(current_memory_usage),
+              compute_n_digits(previous_n_allocations),
+              compute_n_digits(current_n_allocations),
             ].max
             puts("detect a memory leak:")
             puts("Nth try: #{i}")
-            puts("previous: %*d" % [max_n_digits, previous_memory_usage])
-            puts(" current: %*d" % [max_n_digits, current_memory_usage])
+            puts("previous: %*d" % [max_n_digits, previous_n_allocations])
+            puts(" current: %*d" % [max_n_digits, current_n_allocations])
             puts(command.original_source)
           end
         end
       end
 
-      def memory_usage
-        `ps -o rss --no-header --pid #{@options.pid}`.to_i
+      def n_allocations(client)
+        client.status.n_allocations
       end
 
       def compute_n_digits(n)
