@@ -37,7 +37,7 @@ module Groonga
             rescue Groonga::Client::Connection::Error
               # TODO: add error log mechanism
               $stderr.puts(Time.now.iso8601)
-              $stderr.puts(statistic.command.original_source)
+              $stderr.puts(command.original_source)
               $stderr.puts($!.raw_error.message)
               $stderr.puts($!.raw_error.backtrace)
             end
