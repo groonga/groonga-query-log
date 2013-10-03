@@ -77,6 +77,12 @@ module Groonga
                     "[#{@options.n_tries}]") do |n|
             @options.n_tries = n
           end
+
+          parser.on("--[no-]force-disable-cache",
+                    "Force disable cache of select command by cache=no parameter",
+                    "[#{@options.force_disable_cache?}]") do |boolean|
+            @options.force_disable_cache = boolean
+          end
         end
       end
     end

@@ -54,7 +54,7 @@ module Groonga
       end
 
       def check_command(client, command)
-        command["cache"] = "no"
+        command["cache"] = "no" if @options.force_disable_cache?
         current_n_allocations = nil
         @options.n_tries.times do |i|
           client.execute(command)
@@ -89,12 +89,18 @@ module Groonga
         attr_accessor :protocol
         attr_accessor :pid
         attr_accessor :n_tries
+        attr_writer :force_disable_cache
         def initialize
           @host = "127.0.0.1"
           @port = 10041
           @protocol = :gqtp
           @pid = guess_groonga_server_pid
           @n_tries = 10
+          @force_disable_cache = true
+        end
+
+        def force_disable_cache?
+          @force_disable_cache
         end
 
         def create_client(&block)
