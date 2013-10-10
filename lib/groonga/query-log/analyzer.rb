@@ -174,9 +174,9 @@ module Groonga
 
           parser.on("--slow-response-threshold=THRESHOLD",
                     Float,
-                    "Use THRESHOLD seconds to detect slow operations.",
-                    "(#{@options[:sloq_response_threshold]})") do |threshold|
-            @options[:sloq_response_threshold] = threshold
+                    "Use THRESHOLD seconds to detect slow responses.",
+                    "(#{@options[:slow_response_threshold]})") do |threshold|
+            @options[:slow_response_threshold] = threshold
           end
 
           available_reporters = ["console", "json", "html"]
