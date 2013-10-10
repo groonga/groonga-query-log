@@ -8,7 +8,7 @@ groonga-query-log
 
 ## Description
 
-Groonga-query-log is a collection of libarary and tools to process
+Groonga-query-log is a collection of library and tools to process
 [groonga](http://groonga.org/)'s query log. You can write a program to
 process query log by using groonga-query-log as a library. You can
 analyze your groonga's queries and test with your groonga's query log
