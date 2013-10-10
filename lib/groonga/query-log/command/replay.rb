@@ -84,7 +84,7 @@ module Groonga
             @options.disable_cache = true
           end
 
-          parser.on("--target-cmmand-name=NAME",
+          parser.on("--target-command-name=NAME",
                     "Add NAME to target command names",
                     "You can specify this option zero or more times",
                     "See also --target-command-names") do |name|
@@ -92,7 +92,7 @@ module Groonga
           end
 
           target_command_names_label = @options.target_command_names.join(", ")
-          parser.on("--target-cmmand-names=NAME1,NAME2,...", Array,
+          parser.on("--target-command-names=NAME1,NAME2,...", Array,
                     "Replay only NAME1,NAME2,... commands",
                     "You can use glob to choose command name",
                     "[#{target_command_names_label}]") do |names|
