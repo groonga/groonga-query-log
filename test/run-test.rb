@@ -31,6 +31,10 @@ groonga_client_base_dir = top_dir + "groonga-client"
 groonga_client_lib_dir = groonga_client_base_dir + "lib"
 $LOAD_PATH.unshift(groonga_client_lib_dir.to_s)
 
+groonga_command_base_dir = top_dir + "groonga-command"
+groonga_command_lib_dir = groonga_command_base_dir + "lib"
+$LOAD_PATH.unshift(groonga_command_lib_dir.to_s)
+
 lib_dir = base_dir + "lib"
 test_dir = base_dir + "test"
 
