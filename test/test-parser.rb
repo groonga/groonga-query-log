@@ -60,10 +60,11 @@ class ParserTest < Test::Unit::TestCase
 2011-06-02 16:27:04.735762|5091e5c0|:000000004077552 drilldown(2)
 2011-06-02 16:27:04.735808|5091e5c0|<000000004123726 rc=0
       LOG
+      @statistic = @statistics.first
     end
 
     def test_context
-      operations = @statistics.first.operations.collect do |operation|
+      operations = @statistic.operations.collect do |operation|
         [operation[:name], operation[:context]]
       end
       expected = [
@@ -79,7 +80,7 @@ class ParserTest < Test::Unit::TestCase
     end
 
     def test_n_records
-      operations = @statistics.first.operations.collect do |operation|
+      operations = @statistic.operations.collect do |operation|
         [operation[:name], operation[:n_records]]
       end
       expected = [
