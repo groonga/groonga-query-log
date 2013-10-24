@@ -18,21 +18,21 @@
 
 class ParserTest < Test::Unit::TestCase
   def test_load
-    statistics = parse(<<-EOL)
+    statistics = parse(<<-LOG)
 2012-12-13 11:15:21.628105|0x7fff148c8a50|>load --table Video
 2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
-EOL
+    LOG
     parsed_command = statistics.first.command
     assert_instance_of(Groonga::Command::Load, parsed_command)
   end
 
   def test_ignore_invalid_line
     garbage = "\x80"
-    statistics = parse(<<-EOL)
+    statistics = parse(<<-LOG)
 2012-12-13 11:15:20.628105|0x7fff148c8a50|>#{garbage}
 2012-12-13 11:15:21.628105|0x7fff148c8a50|>load --table Video
 2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
-EOL
+    LOG
     parsed_command = statistics.first.command
     assert_instance_of(Groonga::Command::Load, parsed_command)
   end
@@ -49,7 +49,7 @@ EOL
 
   class StatisticOperationTest < self
     def setup
-      @statistics = parse(<<-EOL)
+      @statistics = parse(<<-LOG)
 2011-06-02 16:27:04.731685|5091e5c0|>/d/select.join?table=Entries&filter=local_name+%40+%22gsub%22+%26%26+description+%40+%22string%22&sortby=_score&output_columns=_key&drilldown=name,class
 2011-06-02 16:27:04.733539|5091e5c0|:000000001849451 filter(15)
 2011-06-02 16:27:04.734978|5091e5c0|:000000003293459 filter(13)
@@ -59,7 +59,7 @@ EOL
 2011-06-02 16:27:04.735606|5091e5c0|:000000003921419 drilldown(3)
 2011-06-02 16:27:04.735762|5091e5c0|:000000004077552 drilldown(2)
 2011-06-02 16:27:04.735808|5091e5c0|<000000004123726 rc=0
-EOL
+      LOG
     end
 
     def test_context
