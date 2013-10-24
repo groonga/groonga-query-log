@@ -73,7 +73,7 @@ module Groonga
                                   :elapsed => elapsed.to_i,
                                   :n_records => n_records)
         when "<"
-          return unless /\A(\d+) rc=(\d+)/ =~ rest
+          return unless /\A(\d+) rc=(-?\d+)/ =~ rest
           elapsed = $1
           return_code = $2
           statistic = current_statistics.delete(context_id)

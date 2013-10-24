@@ -47,6 +47,11 @@ EOL
     statistics
   end
 
+  def parse(log)
+    @log = log
+    statistics
+  end
+
   def log
     @log
   end
@@ -96,6 +101,24 @@ EOL
         ["drilldown", 2],
       ]
       assert_equal(expected, operations)
+    end
+  end
+
+  class TestRC < self
+    def test_success
+      statistics = parse(<<-LOG)
+2012-12-13 11:15:21.628105|0x7fff148c8a50|>table_create --name Videos
+2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
+      LOG
+      assert_equal([0], statistics.collect(&:return_code))
+    end
+
+    def test_fialure
+      statistics = parse(<<-LOG)
+2012-12-13 11:15:21.628105|0x7fff148c8a50|>table_create --name Videos
+2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=-22
+      LOG
+      assert_equal([-22], statistics.collect(&:return_code))
     end
   end
 end
