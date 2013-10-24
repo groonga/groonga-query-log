@@ -18,7 +18,7 @@
 
 class ParserTest < Test::Unit::TestCase
   def test_load
-    @log = <<-EOL
+    statistics = parse(<<-EOL)
 2012-12-13 11:15:21.628105|0x7fff148c8a50|>load --table Video
 2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
 EOL
@@ -28,7 +28,7 @@ EOL
 
   def test_ignore_invalid_line
     garbage = "\x80"
-    @log = <<-EOL
+    statistics = parse(<<-EOL)
 2012-12-13 11:15:20.628105|0x7fff148c8a50|>#{garbage}
 2012-12-13 11:15:21.628105|0x7fff148c8a50|>load --table Video
 2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
@@ -38,7 +38,7 @@ EOL
   end
 
   private
-  def statistics
+  def parse(log)
     statistics = []
     parser = Groonga::QueryLog::Parser.new
     parser.parse(StringIO.new(log)) do |statistic|
@@ -47,18 +47,9 @@ EOL
     statistics
   end
 
-  def parse(log)
-    @log = log
-    statistics
-  end
-
-  def log
-    @log
-  end
-
   class StatisticOperationTest < self
     def setup
-      @log = <<-EOL
+      @statistics = parse(<<-EOL)
 2011-06-02 16:27:04.731685|5091e5c0|>/d/select.join?table=Entries&filter=local_name+%40+%22gsub%22+%26%26+description+%40+%22string%22&sortby=_score&output_columns=_key&drilldown=name,class
 2011-06-02 16:27:04.733539|5091e5c0|:000000001849451 filter(15)
 2011-06-02 16:27:04.734978|5091e5c0|:000000003293459 filter(13)
@@ -72,7 +63,7 @@ EOL
     end
 
     def test_context
-      operations = statistics.first.operations.collect do |operation|
+      operations = @statistics.first.operations.collect do |operation|
         [operation[:name], operation[:context]]
       end
       expected = [
@@ -88,7 +79,7 @@ EOL
     end
 
     def test_n_records
-      operations = statistics.first.operations.collect do |operation|
+      operations = @statistics.first.operations.collect do |operation|
         [operation[:name], operation[:n_records]]
       end
       expected = [
