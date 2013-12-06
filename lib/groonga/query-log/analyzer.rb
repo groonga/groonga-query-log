@@ -81,7 +81,12 @@ module Groonga
           end
         end
 
-        parse(log_paths, &process_statistic)
+        begin
+          parse(log_paths, &process_statistic)
+        rescue Interrupt
+          raise unless stream
+        end
+
         if stream
           streamer.finish
           return
