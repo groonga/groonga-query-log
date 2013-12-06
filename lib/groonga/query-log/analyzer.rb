@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -227,7 +227,7 @@ module Groonga
       end
 
       def parse(log_paths, &process_statistic)
-        parser = Groonga::QueryLog::Parser.new
+        parser = Groonga::QueryLog::Parser.new(@options)
         if log_paths.empty?
           unless log_via_stdin?
             raise(NoInputError, "Error: Please specify input log files.")

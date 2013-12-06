@@ -189,11 +189,11 @@ td.name
           <tr><th>Name</th><th>Value</th></tr>
           <tr>
             <th>Slow response threshold</th>
-            <td><%= h(@statistics.slow_response_threshold) %>sec</td>
+            <td><%= h(@slow_response_threshold) %>sec</td>
           </tr>
           <tr>
             <th>Slow operation threshold</th>
-            <td><%= h(@statistics.slow_operation_threshold) %>sec</td>
+            <td><%= h(@slow_operation_threshold) %>sec</td>
           </tr>
         </table>
       </div>

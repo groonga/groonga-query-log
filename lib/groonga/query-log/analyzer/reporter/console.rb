@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -169,8 +169,8 @@ module Groonga
         def report_summary
           write("Summary:\n")
           write("  Threshold:\n")
-          write("    slow response     : #{@statistics.slow_response_threshold}\n")
-          write("    slow operation    : #{@statistics.slow_operation_threshold}\n")
+          write("    slow response     : #{@slow_response_threshold}\n")
+          write("    slow operation    : #{@slow_operation_threshold}\n")
           write("  # of responses      : #{@statistics.n_responses}\n")
           write("  # of slow responses : #{@statistics.n_slow_responses}\n")
           write("  responses/sec       : #{@statistics.responses_per_second}\n")

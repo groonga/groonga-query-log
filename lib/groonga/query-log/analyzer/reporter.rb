@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -24,10 +24,15 @@ module Groonga
         include Enumerable
 
         attr_reader :output
+        attr_accessor :slow_operation_threshold, :slow_response_threshold
         def initialize(statistics)
           @statistics = statistics
           @report_summary = true
           @output = $stdout
+          @slow_operation_threshold =
+            Statistic::DEFAULT_SLOW_OPERATION_THRESHOLD
+          @slow_response_threshold =
+            Statistic::DEFAULT_SLOW_RESPONSE_THRESHOLD
         end
 
         def apply_options(options)
@@ -35,6 +40,10 @@ module Groonga
           unless options[:report_summary].nil?
             @report_summary = options[:report_summary]
           end
+          @slow_operation_threshold =
+            options[:slow_operation_threshold] || @slow_operation_threshold
+          @slow_response_threshold =
+            options[:slow_response_threshold] || @slow_response_threshold
         end
 
         def output=(output)

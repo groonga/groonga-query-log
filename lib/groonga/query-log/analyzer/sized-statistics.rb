@@ -29,12 +29,9 @@ module Groonga
         attr_reader :n_responses, :n_slow_responses, :n_slow_operations
         attr_reader :slow_operations, :total_elapsed
         attr_reader :start_time, :last_time
-        attr_accessor :slow_operation_threshold, :slow_response_threshold
         def initialize
           @max_size = 10
           self.order = "-elapsed"
-          @slow_operation_threshold = 0.1
-          @slow_response_threshold = 0.2
           @start_time = nil
           @last_time = nil
           @n_responses = 0
@@ -53,10 +50,6 @@ module Groonga
         def apply_options(options)
           @max_size = options[:n_entries] || @max_size
           self.order = options[:order] || @order
-          @slow_operation_threshold =
-            options[:slow_operation_threshold] || @slow_operation_threshold
-          @slow_response_threshold =
-            options[:slow_response_threshold] || @slow_response_threshold
           unless options[:report_summary].nil?
             @collect_slow_statistics = options[:report_summary]
           end
@@ -146,8 +139,6 @@ module Groonga
         end
 
         def update_statistic(statistic)
-          statistic.slow_response_threshold = @slow_response_threshold
-          statistic.slow_operation_threshold = @slow_operation_threshold
           @start_time ||= statistic.start_time
           @start_time = [@start_time, statistic.start_time].min
           @last_time ||= statistic.last_time

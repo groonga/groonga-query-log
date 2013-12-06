@@ -23,7 +23,10 @@ require "groonga/query-log/analyzer/statistic"
 module Groonga
   module QueryLog
     class Parser
-      def initialize
+      def initialize(options={})
+        @options = options
+        @slow_operation_threshold = options[:slow_operation_threshold]
+        @slow_response_threshold = options[:slow_response_threshold]
       end
 
       # Parses query-log file as stream to
@@ -59,7 +62,7 @@ module Groonga
                      time_stamp, context_id, type, rest, &block)
         case type
         when ">"
-          statistic = Analyzer::Statistic.new(context_id)
+          statistic = create_statistic(context_id)
           statistic.start(time_stamp, rest)
           current_statistics[context_id] = statistic
         when ":"
@@ -81,6 +84,17 @@ module Groonga
           statistic.finish(elapsed.to_i, return_code.to_i)
           block.call(statistic)
         end
+      end
+
+      def create_statistic(context_id)
+        statistic = Analyzer::Statistic.new(context_id)
+        if @slow_operation_threshold
+          statistic.slow_operation_threshold = @slow_operation_threshold
+        end
+        if @slow_response_threshold
+          statistic.slow_response_threshold = @slow_response_threshold
+        end
+        statistic
       end
     end
   end

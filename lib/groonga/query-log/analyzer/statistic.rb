@@ -22,6 +22,9 @@ module Groonga
   module QueryLog
     class Analyzer
       class Statistic
+        DEFAULT_SLOW_OPERATION_THRESHOLD = 0.1
+        DEFAULT_SLOW_RESPONSE_THRESHOLD = 0.2
+
         attr_reader :context_id, :start_time, :raw_command
         attr_reader :elapsed, :return_code
         attr_accessor :slow_operation_threshold, :slow_response_threshold
@@ -33,8 +36,8 @@ module Groonga
           @operations = []
           @elapsed = nil
           @return_code = 0
-          @slow_operation_threshold = 0.1
-          @slow_response_threshold = 0.2
+          @slow_operation_threshold = DEFAULT_SLOW_OPERATION_THRESHOLD
+          @slow_response_threshold = DEFAULT_SLOW_RESPONSE_THRESHOLD
         end
 
         def start(start_time, command)
