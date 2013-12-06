@@ -86,7 +86,7 @@ module Groonga
           unless log_via_stdin?
             raise(NoInputError, "Error: Please specify input log files.")
           end
-          parser.parse(ARGF, &process_statistic)
+          parser.parse($stdin, &process_statistic)
         end
 
         log_paths.each do |log_path|
