@@ -30,7 +30,7 @@ module Groonga
         end
 
         def <<(statistic)
-          @reporter.report_statistic(statistic)
+          @reporter.report_statistic(statistic) if statistic.slow?
         end
 
         def finish
