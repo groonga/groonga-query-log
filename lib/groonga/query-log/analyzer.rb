@@ -64,7 +64,6 @@ module Groonga
         dynamic_sort = @options[:dynamic_sort]
         statistics = SizedStatistics.new
         statistics.apply_options(@options)
-        parser = Groonga::QueryLog::Parser.new
         if stream
           streamer = Streamer.new(create_reporter(statistics))
           streamer.start
@@ -82,18 +81,7 @@ module Groonga
           end
         end
 
-        if log_paths.empty?
-          unless log_via_stdin?
-            raise(NoInputError, "Error: Please specify input log files.")
-          end
-          parser.parse($stdin, &process_statistic)
-        end
-
-        log_paths.each do |log_path|
-          File.open(log_path) do |log|
-            parser.parse(log, &process_statistic)
-          end
-        end
+        parse(log_paths, &process_statistic)
         if stream
           streamer.finish
           return
@@ -230,6 +218,22 @@ module Groonga
           raise UnsupportedReporter, "HTML reporter doesn't support --stream."
         else
           Groonga::QueryLog::StreamConsoleQueryLogReporter.new
+        end
+      end
+
+      def parse(log_paths, &process_statistic)
+        parser = Groonga::QueryLog::Parser.new
+        if log_paths.empty?
+          unless log_via_stdin?
+            raise(NoInputError, "Error: Please specify input log files.")
+          end
+          parser.parse($stdin, &process_statistic)
+        end
+
+        log_paths.each do |log_path|
+          File.open(log_path) do |log|
+            parser.parse(log, &process_statistic)
+          end
         end
       end
     end
