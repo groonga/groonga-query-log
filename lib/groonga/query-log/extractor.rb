@@ -91,6 +91,7 @@ module Groonga
         @options.exclude_commands = []
         @options.output_path = nil
         @option_parser = OptionParser.new do |parser|
+          parser.version = VERSION
           parser.banner += " QUERY_LOG1 ..."
 
           available_formats = ["uri", "command"]

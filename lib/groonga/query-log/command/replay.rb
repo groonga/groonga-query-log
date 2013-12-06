@@ -41,6 +41,7 @@ module Groonga
         private
         def create_parser
           parser = OptionParser.new
+          parser.version = VERSION
           parser.banner += " QUERY_LOG"
 
           parser.separator("")

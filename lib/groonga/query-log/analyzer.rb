@@ -113,6 +113,7 @@ module Groonga
         @options[:report_summary] = true
 
         @option_parser = OptionParser.new do |parser|
+          parser.version = VERSION
           parser.banner += " LOG1 ..."
 
           parser.on("-n", "--n-entries=N",
