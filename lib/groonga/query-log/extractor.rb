@@ -69,7 +69,7 @@ module Groonga
           unless log_via_stdin?
             raise(NoInputError, "Error: Please specify input log files.")
           end
-          log = ARGF
+          log = $stdin
         else
           log = log_paths
         end
