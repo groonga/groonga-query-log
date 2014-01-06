@@ -1,5 +1,17 @@
 # News
 
+## 1.0.3: 2014-01-06
+
+### Improvements
+
+  * groonga-query-log-verify-server: Added a command that verifies two
+    servers returns the same response for the same request.
+    (experimental)
+
+### Fixes
+
+  * groonga-query-log-analyzer: Fixed a bug `--stream` doesn't work.
+
 ## 1.0.2: 2013-11-01
 
 ### Improvements
