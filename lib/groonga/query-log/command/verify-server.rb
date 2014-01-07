@@ -31,9 +31,13 @@ module Groonga
         def run(*command_line)
           input_paths = create_parser.parse(*command_line)
           verifier = ServerVerifier.new(@options)
-          input_paths.each do |input_path|
-            File.open(input_path) do |input|
-              verifier.verify(input)
+          if input_paths.empty?
+            verifier.verify($stdin)
+          else
+            input_paths.each do |input_path|
+              File.open(input_path) do |input|
+                verifier.verify(input)
+              end
             end
           end
         end
