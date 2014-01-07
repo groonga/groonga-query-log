@@ -59,8 +59,15 @@ module Groonga
       def run_consumers
         @options.n_clients.times.collect do
           Thread.new do
-            loop do
-              break if run_consumer
+            begin
+              loop do
+                break if run_consumer
+              end
+            rescue Groonga::Client::Connection::Errorend
+              # TODO: add error log mechanism
+              $stderr.puts(Time.now.iso8601)
+              $stderr.puts($!.raw_error.message)
+              $stderr.puts($!.raw_error.backtrace)
             end
           end
         end
