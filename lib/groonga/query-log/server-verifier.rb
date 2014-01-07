@@ -119,7 +119,7 @@ module Groonga
 
       def report_result(output, result)
         command, response1, response2 = result
-        output.puts("command: #{command.original_format}")
+        output.puts("command: #{command.original_source}")
         output.puts("response1: #{response1.body}")
         output.puts("response2: #{response2.body}")
       end
