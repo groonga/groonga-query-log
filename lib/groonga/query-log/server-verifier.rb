@@ -129,6 +129,7 @@ module Groonga
         attr_reader :groonga2
         attr_accessor :n_clients
         attr_writer :request_queue_size
+        attr_writer :disable_cache
         attr_accessor :target_command_names
         attr_accessor :output_path
         def initialize
