@@ -64,7 +64,7 @@ module Groonga
               loop do
                 break if run_consumer
               end
-            rescue Groonga::Client::Connection::Errorend
+            rescue Groonga::Client::Connection::Error
               # TODO: add error log mechanism
               $stderr.puts(Time.now.iso8601)
               $stderr.puts($!.raw_error.message)
