@@ -134,7 +134,7 @@ module Groonga
 
           parser.on("--abort-on-exception",
                     "Abort on exception in threads") do
-            Thread.abort_on_excepption = true
+            Thread.abort_on_exception = true
           end
         end
       end
