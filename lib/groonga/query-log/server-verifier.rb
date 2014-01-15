@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,6 +22,7 @@ require "thread"
 require "groonga/client"
 
 require "groonga/query-log/parser"
+require "groonga/query-log/response-comparer"
 
 module Groonga
   module QueryLog
@@ -115,13 +116,10 @@ module Groonga
         command["cache"] = "no" if @options.disable_cache?
         response1 = groonga1_client.execute(command)
         response2 = groonga2_client.execute(command)
-        unless same_response?(response1, response2)
+        comparer = ResponseComparer(command, response1, response2)
+        unless comparer.same?
           @different_results.push([command, response1, response2])
         end
-      end
-
-      def same_response?(response1, response2)
-        response1.body == response2.body
       end
 
       def report_result(output, result)
