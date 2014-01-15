@@ -128,6 +128,14 @@ module Groonga
                     "[stdout]") do |path|
             @options.output_path = path
           end
+
+          parser.separator("Debug options:")
+          parser.separator("")
+
+          parser.on("--abort-on-exception",
+                    "Abort on exception in threads") do
+            Thread.abort_on_excepption = true
+          end
         end
       end
     end
