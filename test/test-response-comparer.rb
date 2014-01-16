@@ -67,5 +67,57 @@ class ResponseComparerTest < Test::Unit::TestCase
         end
       end
     end
+
+    class SortbyTest < self
+      class DetectScoreSortTest < self
+        private
+        def score_sort?(sortby)
+          @command["sortby"] = sortby
+          comparer([], []).send(:score_sort?)
+        end
+
+        class NoScoreTest < self
+          def test_nil
+            assert_false(score_sort?(nil))
+          end
+
+          def test_empty
+            assert_false(score_sort?(""))
+          end
+        end
+
+        class ScoreOnly < self
+          def test_no_sign
+            assert_true(score_sort?("_score"))
+          end
+
+          def test_plus
+            assert_true(score_sort?("+_score"))
+          end
+
+          def test_minus
+            assert_true(score_sort?("-_score"))
+          end
+        end
+
+        class MultipleItemsTest < self
+          def test_no_space
+            assert_true(score_sort?("_id,_score,_key"))
+          end
+
+          def test_have_space
+            assert_true(score_sort?("_id, _score, _key"))
+          end
+
+          def test_plus
+            assert_true(score_sort?("_id,+_score,_key"))
+          end
+
+          def test_minus
+            assert_true(score_sort?("_id,-_score,_key"))
+          end
+        end
+      end
+    end
   end
 end

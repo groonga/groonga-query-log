@@ -55,8 +55,15 @@ module Groonga
       end
 
       def random_sort?
-        random_score? and
-          (@command.sortby || "").split(/\s*,\s*/).include?("_score")
+        random_score? and score_sort?
+      end
+
+      def score_sort?
+        sort_items = (@command.sortby || "").split(/\s*,\s*/)
+        normalized_sort_items = sort_items.collect do |item|
+          item.gsub(/\A[+-]/, "")
+        end
+        normalized_sort_items.include?("_score")
       end
     end
   end
