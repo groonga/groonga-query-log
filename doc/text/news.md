@@ -1,5 +1,16 @@
 # News
 
+## 1.0.4: 2014-02-09
+
+### Improvements
+
+  * groonga-query-log-verify-server: Supported reading input from the
+    standard input.
+  * groonga-query-log-verify-server: Supported logging error on
+    connecting server.
+  * groonga-query-log-verify-server: Supported random sort select.
+  * groonga-query-log-verify-server: Added `--abort-on-exception` debug option.
+
 ## 1.0.3: 2014-01-06
 
 ### Improvements
