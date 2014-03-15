@@ -64,7 +64,7 @@ module Groonga
               loop do
                 break if run_consumer
               end
-            rescue Groonga::Client::Connection::Error
+            rescue Groonga::Client::Protocol::Error
               # TODO: add error log mechanism
               $stderr.puts(Time.now.iso8601)
               $stderr.puts($!.raw_error.message)
@@ -83,7 +83,7 @@ module Groonga
               begin
                 verify_command(groonga1_client, groonga2_client,
                                statistic.command)
-              rescue Groonga::Client::Connection::Error
+              rescue Groonga::Client::Protocol::Error
                 # TODO: add error log mechanism
                 $stderr.puts(Time.now.iso8601)
                 $stderr.puts(statistic.command.original_source)
