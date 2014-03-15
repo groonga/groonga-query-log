@@ -64,11 +64,8 @@ module Groonga
               loop do
                 break if run_consumer
               end
-            rescue Groonga::Client::Protocol::Error
-              # TODO: add error log mechanism
-              $stderr.puts(Time.now.iso8601)
-              $stderr.puts($!.raw_error.message)
-              $stderr.puts($!.raw_error.backtrace)
+            rescue Groonga::Client::Error
+              log_client_error($!)
             end
           end
         end
@@ -83,12 +80,10 @@ module Groonga
               begin
                 verify_command(groonga1_client, groonga2_client,
                                statistic.command)
-              rescue Groonga::Client::Protocol::Error
-                # TODO: add error log mechanism
-                $stderr.puts(Time.now.iso8601)
-                $stderr.puts(statistic.command.original_source)
-                $stderr.puts($!.raw_error.message)
-                $stderr.puts($!.raw_error.backtrace)
+              rescue Groonga::Client::Error
+                log_client_error($!) do
+                  $stderr.puts(statistic.command.original_source)
+                end
                 return false
               end
             end
@@ -127,6 +122,18 @@ module Groonga
         output.puts("command: #{command.original_source}")
         output.puts("response1: #{response1.body}")
         output.puts("response2: #{response2.body}")
+      end
+
+      def log_client_error(error)
+        $stderr.puts(Time.now.iso8601)
+        yield if block_given?
+        if error.respond_to?(:raw_error)
+          target_error = error.raw_error
+        else
+          target_error = error
+        end
+        $stderr.puts("#{target_error.class}: #{target_error.message}")
+        $stderr.puts(target_error.backtrace)
       end
 
       class Options
