@@ -44,7 +44,7 @@ module Groonga
         def run(*command_line)
           option_parser = create_option_parser
           begin
-            option_parser.parse!(*command_line)
+            option_parser.parse!(command_line)
           rescue OptionParser::ParseError => error
             $stderr.puts(error.message)
             return false
