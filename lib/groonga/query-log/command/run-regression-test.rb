@@ -17,6 +17,7 @@
 require "rbconfig"
 require "optparse"
 require "socket"
+require "fileutils"
 require "pathname"
 require "net/http"
 
