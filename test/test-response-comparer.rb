@@ -19,11 +19,31 @@
 class ResponseComparerTest < Test::Unit::TestCase
   private
   def comparer(response1, response2)
+    response1 = normalize_response(response1)
+    response2 = normalize_response(response2)
     Groonga::QueryLog::ResponseComparer.new(@command, response1, response2)
   end
 
   def same?(response1, response2)
     comparer(response1, response2).same?
+  end
+
+  def response(body)
+    header = [0, 0.0, 0.0]
+    response_class = Groonga::Client::Response.find(@command.name)
+    response_class.new(@command, header, body)
+  end
+
+  def error_response(header)
+    Groonga::Client::Response::Error.new(@command, header, [])
+  end
+
+  def normalize_response(response_or_body)
+    if response_or_body.is_a?(Groonga::Client::Response::Base)
+      response_or_body
+    else
+      response(response_or_body)
+    end
   end
 
   class SelectTest < self
@@ -63,7 +83,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         private
         def random_score?(scorer)
           @command["scorer"] = scorer
-          comparer([], []).send(:random_score?)
+          comparer([[[0]]], [[[0]]]).send(:random_score?)
         end
       end
     end
@@ -73,7 +93,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         private
         def score_sort?(sortby)
           @command["sortby"] = sortby
-          comparer([], []).send(:score_sort?)
+          comparer([[[0]]], [[[0]]]).send(:score_sort?)
         end
 
         class NoScoreTest < self
@@ -117,6 +137,27 @@ class ResponseComparerTest < Test::Unit::TestCase
             assert_true(score_sort?("_id,-_score,_key"))
           end
         end
+      end
+    end
+
+    class ErrorTest < self
+      def test_with_location
+        response1_header = [
+          -63,
+          1.0,
+          0.1,
+          "Syntax error! ()",
+          [
+            ["yy_syntax_error", "ecmascript.lemon", 24],
+          ],
+        ]
+        response2_header = JSON.parse(response1_header.to_json)
+        response2_header[4][0][2] += 1
+        assert_not_equal(response1_header, response2_header)
+
+        response1 = error_response(response1_header)
+        response2 = error_response(response2_header)
+        assert_true(same?(response1, response2))
       end
     end
   end

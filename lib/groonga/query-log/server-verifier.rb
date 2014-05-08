@@ -111,7 +111,7 @@ module Groonga
         command["cache"] = "no" if @options.disable_cache?
         response1 = groonga1_client.execute(command)
         response2 = groonga2_client.execute(command)
-        comparer = ResponseComparer.new(command, response1.body, response2.body)
+        comparer = ResponseComparer.new(command, response1, response2)
         unless comparer.same?
           @different_results.push([command, response1, response2])
         end

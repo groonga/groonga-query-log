@@ -26,23 +26,41 @@ module Groonga
       end
 
       def same?
-        case @command.name
-        when "select"
-          same_select_response?
+        if error_response?(@response1) or error_response?(@response2)
+          if error_response?(@response1) and error_response?(@response2)
+            same_error_response?
+          else
+            false
+          end
         else
-          same_response?
+          case @command.name
+          when "select"
+            same_select_response?
+          else
+            same_response?
+          end
         end
       end
 
       private
+      def error_response?(response)
+        response.is_a?(Client::Response::Error)
+      end
+
+      def same_error_response?
+        return_code1 = @response1.header[0]
+        return_code2 = @response2.header[0]
+        return_code1 == return_code2
+      end
+
       def same_response?
-        @response1 == @response2
+        @response1.body == @response2.body
       end
 
       def same_select_response?
         if random_sort?
-          records_result1 = @response1[0] || []
-          records_result2 = @response2[0] || []
+          records_result1 = @response1.body[0] || []
+          records_result2 = @response2.body[0] || []
           records_result1.size == records_result2.size and
             records_result1[0..1] == records_result2[0..1]
         else
