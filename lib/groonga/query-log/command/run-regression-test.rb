@@ -243,11 +243,16 @@ module Groonga
           def grn_files
             files = schema_files
             files += data_files if @options[:load_data]
+            files += index_files
             files
           end
 
           def schema_files
             Pathname.glob("#{@input_directory}/schema/**/*.grn").sort
+          end
+
+          def index_files
+            Pathname.glob("#{@input_directory}/indexes/**/*.grn").sort
           end
 
           def data_files
