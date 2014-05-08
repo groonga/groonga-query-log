@@ -78,6 +78,12 @@ module Groonga
           end
 
           parser.separator("")
+          parser.separator("Throughput:")
+          parser.on("--n-clients=N", Integer,
+                    "Use N clients concurrently.",
+                    "(#{@n_clients})") do |n|
+            @n_clients = n
+          end
 
           parser.separator("")
           parser.separator("Old Groonga:")
@@ -135,7 +141,10 @@ module Groonga
         end
 
         def tester_options
-          directory_options
+          options = {
+            :n_clients => @n_clients,
+          }
+          directory_options.merge(options)
         end
 
         def old_groonga_server
@@ -272,6 +281,7 @@ module Groonga
             @new = new
             @input_directory = options[:input_directory] || Pathname.new(".")
             @working_directory = options[:working_directory] || Pathname.new(".")
+            @n_clients = options[:n_clients] || 1
             @options = options
             @n_ready_waits = 2
             @clone_pids = []
@@ -339,7 +349,7 @@ module Groonga
 
           def verify_server(test_log_path, query_log_path)
             command_line = [
-              "--n-clients=1",
+              "--n-clients=#{@n_clients}",
               "--groonga1-host=#{@old.host}",
               "--groonga1-port=#{@old.port}",
               "--groonga1-protocol=http",
