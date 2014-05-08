@@ -60,12 +60,8 @@ module Groonga
       def run_consumers
         @options.n_clients.times.collect do
           Thread.new do
-            begin
-              loop do
-                break if run_consumer
-              end
-            rescue Groonga::Client::Error
-              log_client_error($!)
+            loop do
+              break if run_consumer
             end
           end
         end
