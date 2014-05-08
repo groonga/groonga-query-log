@@ -41,6 +41,7 @@ module Groonga
           @recreate_database = false
           @load_data = true
           @run_queries = true
+          @skip_finished_queries = false
         end
 
         def run(*command_line)
@@ -108,6 +109,10 @@ module Groonga
                     "Don't run queries. Just creates Groonga database") do
             @run_queries = false
           end
+          parser.on("--skip-finished-queries",
+                    "Don't run finished query logs.") do
+            @skip_finished_queries = true
+          end
 
           parser
         end
@@ -121,9 +126,10 @@ module Groonga
 
         def server_options
           options = {
-            :load_data         => @load_data,
-            :run_queries       => @run_queries,
-            :recreate_database => @recreate_database,
+            :load_data             => @load_data,
+            :run_queries           => @run_queries,
+            :recreate_database     => @recreate_database,
+            :skip_finished_queries => @skip_finished_queries,
           }
           directory_options.merge(options)
         end
@@ -301,7 +307,7 @@ module Groonga
               query_log_key = query_log_key.gsub(/\Aquery-/, "")
               test_log_base_name = "test-result-#{query_log_key}.log"
               test_log_path = @working_directory + test_log_base_name
-              if test_log_path.exist?
+              if @options[:skip_finished_queries] and test_log_path.exist?
                 puts("Skip query log: #{query_log_path}")
                 next
               else
