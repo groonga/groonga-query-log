@@ -348,7 +348,6 @@ module Groonga
               "--groonga2-protocol=http",
               "--target-command-name=select",
               "--output", test_log_path.to_s,
-              "--abort-on-exception",
               query_log_path.to_s,
             ]
             verify_serer = VerifyServer.new
