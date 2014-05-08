@@ -38,6 +38,7 @@ module Groonga
           @new_groonga = "groonga"
           @new_database = "db.new/db"
 
+          @recreate_database = false
           @load_data = true
           @run_queries = true
         end
@@ -95,6 +96,10 @@ module Groonga
 
           parser.separator("")
           parser.separator("Operations:")
+          parser.on("--recreate-database",
+                    "Always recreate Groonga database") do
+            @recreate_database = true
+          end
           parser.on("--no-load-data",
                     "Don't load data. Just loads schema to Groonga database") do
             @load_data = false
@@ -116,8 +121,9 @@ module Groonga
 
         def server_options
           options = {
-            :load_data   => @load_data,
-            :run_queries => @run_queries,
+            :load_data         => @load_data,
+            :run_queries       => @run_queries,
+            :recreate_database => @recreate_database,
           }
           directory_options.merge(options)
         end
@@ -203,6 +209,10 @@ module Groonga
           end
 
           def ensure_database
+            if @options[:recreate_database]
+              FileUtils.rm_rf(@database_path.dirname.to_s)
+            end
+
             return if @database_path.exist?
             FileUtils.mkdir_p(@database_path.dirname.to_s)
             system(@groonga, "-n", @database_path.to_s, "quit")
