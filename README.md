@@ -20,28 +20,48 @@ by using groonga-query-log as a tool.
 
 ## Usage
 
+### groonga-query-log-analyze
+
 TODO...
 
-## Examples
+### groonga-query-log-detect-memory-leak
+
+TODO...
+
+### groonga-query-log-extract
+
+TODO...
+
+### groonga-query-log-replay
+
+TODO...
+
+### groonga-query-log-run-regression-test
+
+TODO...
+
+### groonga-query-log-verify-server
 
 TODO...
 
 ## Dependencies
 
-* Ruby
+  * Ruby
+  * [groonga-command-parser](http://rubygems.org/gems/groonga-command-parser)
+  * [groonga-client](http://rubygems.org/gems/groonga-client)
 
 ## Mailing list
 
-* English: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/groonga-talk)
-* Japanese: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailman/listinfo/groonga-dev)
+  * English: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/groonga-talk)
+  * Japanese: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailman/listinfo/groonga-dev)
 
 ## Thanks
 
-* ...
+  * ...
 
 ## Authors
 
-* Kouhei Sutou \<kou@clear-code.com\>
+  * Kouhei Sutou \<kou@clear-code.com\>
 
 ## License
 
