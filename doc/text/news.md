@@ -1,5 +1,14 @@
 # News
 
+## 1.0.5: 2014-05-12
+
+### Improvements
+
+  * groonga-query-log-verify-server: Supported `groonga-client` 0.0.8.
+  * groonga-query-log-verify-server: Supported comparing errors.
+  * groonga-query-log-run-regression-test: Added a command that
+    runs regression test. It is based on groonga-query-log-verify-server.
+
 ## 1.0.4: 2014-02-09
 
 ### Improvements
