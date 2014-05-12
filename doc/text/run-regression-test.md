@@ -8,9 +8,25 @@ query logs. You can use query logs on production environment as is.
 
 ## Flow
 
-TODO
+Here is a work flow to run regression test with
+`groonga-query-log-run-regression-test`:
+
+  1. Prepare schema.
+  2. Prepare data.
+  3. Prepare query logs.
+  4. Load schema into both old Groonga and new Groonga.
+  5. Load data into both old Groonga and new Groonga.
+  6. Send a request extracted from a query log to both old Groonga and
+     new Groonga.
+  7. Compare responses from old Groonga and new Groonga.
+  8. Repeat 6. and 7. for all request in query logs.
+
+If there is any regression, you can find it by the 7. step.
 
 ## Usage
+
+This section describe how to use
+`groonga-query-log-run-regression-test`.
 
 First, you need to prepare input data. Then you can run regression
 test.
@@ -97,8 +113,75 @@ Here are pointers how to create a query log:
 
 Now, you can run regression test.
 
-TODO
+Let the followings:
 
+  * Use `~/groonga/test` as the working directory to run
+    regression test.
+  * There is the current Groonga database at `/var/lib/groonga/db`.
+  * There are the current query logs at `/var/log/groonga/query-*.log`.
+  * The current Groonga is installed at `/opt/groonga-current/bin/groonga`.
+  * The new Groonga is installed at `/opt/groonga-new/bin/groonga`.
+
+Install required packages:
+
+    % gem install rroonga groonga-query-log
+
+Prepare the working directory:
+
+    % mkdir -p ~/groonga/test/{schema,indexes,data,query-logs}
+    % cd ~/groonga/test/
+
+Extract needed data from the current database:
+
+    % grndump --no-dump-indexes --no-dump-tables /var/lib/groonga/db > schema/ddl.grn
+    % grndump --no-dump-schema --no-dump-tables /var/lib/groonga/db > indexes/indexes.grn
+    % grndump --no-dump-schema --no-dump-indexes /var/lib/groonga/db > data/data.grn
+    % cp /var/log/groonga/query-*.log query-logs/
+
+Run regression test:
+
+    % groonga-query-log-run-regression-test \
+        --old-groonga=/opt/groonga-current/bin/groonga \
+        --new-groonga=/opt/groonga-new/bin/groonga
+
+It creates new two databases from input data. One is created by the
+current Groonga. Another is created by the new Groonga.
+
+It starts to send requests in a query log to both Groonga servers
+after databases are created. If responses don't have difference, the
+request isn't a problem. If responses have any difference, the request
+may be a problem.
+
+You can find details about requests that have difference in test
+result logs. You can find test result logs under `results/`
+directory. Test result log file name is the same as input query log
+file name. If query log file is `query-logs/query-20140508.log`, test
+result log file is `results/query-20140508.log`.
+
+## Advanced usage
+
+There are some advanced usages. This section describes about them.
+
+### `--n-clients`
+
+If your machine has free resource, you can speed up a regression test.
+
+Use `--n-clients` option to send multiple requests concurrently. It
+will reduce execution time.
+
+Here is a sample command line to use `--n-clients`:
+
+    % groonga-query-log-run-regression-test \
+        --n-clients=4 \
+        --old-groonga=/opt/groonga-current/bin/groonga \
+        --new-groonga=/opt/groonga-new/bin/groonga
+
+## Conclusion
+
+You can run regression test with
+`groonga-query-log-run-regression-test`. It helps you to upgrade
+Groonga safely by confirming a new Groonga doesn't have problem with
+your data.
 
   [online index construction]: http://groonga.org/docs/reference/indexing.html#online-index-construction
   [offline index construction]: http://groonga.org/docs/reference/indexing.html#offline-index-construction
