@@ -313,18 +313,15 @@ module Groonga
             end
 
             query_log_paths.each do |query_log_path|
-              query_log_key = query_log_path.basename(".*").to_s
-              query_log_key = query_log_key.gsub(/\Aquery-/, "")
-              test_log_base_name = "test-result-#{query_log_key}.log"
-              test_log_path = @working_directory + test_log_base_name
-              if @options[:skip_finished_queries] and test_log_path.exist?
+              log_path = test_log_path(query_log_path)
+              if @options[:skip_finished_queries] and log_path.exist?
                 puts("Skip query log: #{query_log_path}")
                 next
               else
                 puts("Running test against query log...: #{query_log_path}")
               end
               pid = fork do
-                verify_server(test_log_path, query_log_path)
+                verify_server(log_path, query_log_path)
                 exit!
               end
               begin
@@ -366,6 +363,10 @@ module Groonga
 
           def query_log_paths
             Pathname.glob("#{@input_directory}/query-logs/**/*.log").sort
+          end
+
+          def test_log_path(query_log_path)
+            @working_directory + "results" + query_log_path.basename
           end
         end
       end

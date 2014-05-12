@@ -168,6 +168,7 @@ module Groonga
 
         def create_output(&block)
           if @output_path
+            FileUtils.mkdir_p(File.dirname(@output_path))
             File.open(@output_path, "w", &block)
           else
             yield($stdout)
