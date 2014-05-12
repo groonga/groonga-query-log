@@ -44,6 +44,10 @@ TODO...
 
 TODO...
 
+### groonga-query-log-run-regression-test
+
+  * [doc/text/run-regression-test.md](doc/text/run-regression-test.md)
+
 ## Dependencies
 
   * Ruby
