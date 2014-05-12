@@ -93,14 +93,14 @@ Groonga database by `grndump` command:
 Put query logs to `query-logs/` directory. Each file must have `.log`
 extension such as `query.log`.
 
-You can multiple log files like the following:
+You can put multiple log files like the following:
 
     query-logs/
     |-- query-20140506.log
     |-- query-20140507.log
     `-- query-20140508.log
 
-Here are pointers how to create a query log:
+Here are links to documents that describe how to create a query log:
 
   * Groonga server users: You can create a query log file by using
     `--query-log-path` option. See [groonga command][] documentation
@@ -152,7 +152,7 @@ after databases are created. If responses don't have difference, the
 request isn't a problem. If responses have any difference, the request
 may be a problem.
 
-You can find details about requests that have difference in test
+You can find details about requests that generate different response in test
 result logs. You can find test result logs under `results/`
 directory. Test result log file name is the same as input query log
 file name. If query log file is `query-logs/query-20140508.log`, test
