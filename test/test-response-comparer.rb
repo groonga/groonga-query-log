@@ -185,13 +185,21 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
 
       class DetectAllTest < self
-        def test_all_output_columns
+        def test_star_only
           assert_true(all_output_columns?("*"))
+        end
+
+        def test_include_star
+          assert_true(all_output_columns?("_key, _value, *"))
+        end
+
+        def test_default
+          assert_true(all_output_columns?(nil))
         end
 
         private
         def all_output_columns?(output_columns)
-          @command["output_columns"] = output_columns
+          @command["output_columns"] = output_columns if output_columns
           comparer([[[0]]], [[[0]]]).send(:all_output_columns?)
         end
       end
