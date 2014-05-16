@@ -138,6 +138,65 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class OutputColumnsTest < self
+      class AllTest < self
+        def setup
+          super
+          @command["output_columns"] = "*"
+        end
+
+        def test_different_order
+          assert_true(same?([
+                              [
+                                [3],
+                                [["_id", "UInt32"], ["_key", "ShortText"]],
+                                [1, "1"],
+                                [2, "2"],
+                                [3, "3"],
+                              ],
+                            ],
+                            [
+                              [
+                                [3],
+                                [["_key", "ShortText"], ["_id", "UInt32"]],
+                                ["1", 1],
+                                ["2", 2],
+                                ["3", 3],
+                              ],
+                            ]))
+        end
+
+        def test_different_record
+          assert_false(same?([
+                               [
+                                 [1],
+                                 [["_id", "UInt32"], ["_key", "ShortText"]],
+                                 [1, "1"],
+                               ],
+                             ],
+                             [
+                               [
+                                 [1],
+                                 [["_key", "ShortText"], ["_id", "UInt32"]],
+                                 [2, "2"],
+                               ],
+                             ]))
+        end
+      end
+
+      class DetectAllTest < self
+        def test_all_output_columns
+          assert_true(all_output_columns?("*"))
+        end
+
+        private
+        def all_output_columns?(output_columns)
+          @command["output_columns"] = output_columns
+          comparer([[[0]]], [[[0]]]).send(:all_output_columns?)
+        end
+      end
+    end
+
     class ErrorTest < self
       def test_with_location
         response1_header = [

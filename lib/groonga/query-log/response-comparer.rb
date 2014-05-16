@@ -57,10 +57,10 @@ module Groonga
 
       def same_select_response?
         if random_sort?
-          records_result1 = @response1.body[0] || []
-          records_result2 = @response2.body[0] || []
-          records_result1.size == records_result2.size and
-            records_result1[0..1] == records_result2[0..1]
+          same_random_sort_response?
+        elsif all_output_columns?
+
+          same_all_output_columns?
         else
           same_response?
         end
@@ -80,6 +80,55 @@ module Groonga
           item.gsub(/\A[+-]/, "")
         end
         normalized_sort_items.include?("_score")
+      end
+
+      def same_random_sort_response?
+        records_result1 = @response1.body[0] || []
+        records_result2 = @response2.body[0] || []
+        records_result1.size == records_result2.size and
+          records_result1[0..1] == records_result2[0..1]
+      end
+
+      def all_output_columns?
+        @command.output_columns == "*"
+      end
+
+      def same_all_output_columns?
+        records_result1 = @response1.body[0] || []
+        records_result2 = @response2.body[0] || []
+        return false if records_result1.size != records_result2.size
+
+        n_hits1 = records_result1[0]
+        n_hits2 = records_result2[0]
+        return false if n_hits1 != n_hits2
+
+        columns1 = records_result1[1]
+        columns2 = records_result2[1]
+        return false if columns1.sort_by(&:first) != columns2.sort_by(&:first)
+
+        column_to_index1 = make_column_to_index_map(columns1)
+        column_to_index2 = make_column_to_index_map(columns2)
+
+        records1 = records_result1[2..-1]
+        records2 = records_result2[2..-1]
+        records1.each_with_index do |record1, record_index|
+          record2 = records2[record_index]
+          column_to_index1.each do |name, column_index1|
+            value1 = record1[column_index1]
+            value2 = record2[column_to_index2[name]]
+            return false if value1 != value2
+          end
+        end
+
+        true
+      end
+
+      def make_column_to_index_map(columns)
+        map = {}
+        columns.each_with_index do |(name, _), i|
+          map[name] = i
+        end
+        map
       end
     end
   end
