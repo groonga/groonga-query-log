@@ -58,18 +58,42 @@ class ResponseComparerTest < Test::Unit::TestCase
         end
 
         def test_different_order
+          @command["output_columns"] = "_id"
           assert_true(same?([[[3], [["_id", "UInt32"]], [1], [2], [3]]],
                             [[[3], [["_id", "UInt32"]], [3], [2], [1]]]))
         end
 
         def test_different_attributes
+          @command["output_columns"] = "_id, age"
           assert_false(same?([[[3], [["_id", "UInt32"]], [1], [2], [3]]],
                              [[[3], [["age", "UInt32"]], [1], [2], [3]]]))
         end
 
         def test_different_n_records
+          @command["output_columns"] = "_id"
           assert_false(same?([[[3], [["_id", "UInt32"]], [1], [2]]],
                              [[[3], [["_id", "UInt32"]], [1], [2], [3]]]))
+        end
+
+        def test_all_output_columns
+          assert_true(same?([
+                              [
+                                [3],
+                                [["_id", "UInt32"], ["_key", "ShortText"]],
+                                [1, "1"],
+                                [2, "2"],
+                                [3, "3"],
+                              ],
+                            ],
+                            [
+                              [
+                                [3],
+                                [["_key", "ShortText"], ["_id", "UInt32"]],
+                                ["3", 3],
+                                ["2", 2],
+                                ["1", 1],
+                              ],
+                            ]))
         end
       end
 

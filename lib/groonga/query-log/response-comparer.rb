@@ -85,8 +85,19 @@ module Groonga
       def same_random_sort_response?
         records_result1 = @response1.body[0] || []
         records_result2 = @response2.body[0] || []
-        records_result1.size == records_result2.size and
-          records_result1[0..1] == records_result2[0..1]
+        return false if records_result1.size != records_result2.size
+
+        n_hits1 = records_result1[0]
+        n_hits2 = records_result2[0]
+        return false if n_hits1 != n_hits2
+
+        columns1 = records_result1[1]
+        columns2 = records_result2[1]
+        if all_output_columns?
+          columns1.sort_by(&:first) == columns2.sort_by(&:first)
+        else
+          columns1 == columns2
+        end
       end
 
       def all_output_columns?
