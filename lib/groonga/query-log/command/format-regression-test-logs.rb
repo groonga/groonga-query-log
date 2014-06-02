@@ -18,7 +18,10 @@ require "English"
 require "find"
 require "tempfile"
 require "pp"
+require "optparse"
 require "json"
+
+require "groonga/query-log/version"
 
 module Groonga
   module QueryLog
@@ -28,10 +31,15 @@ module Groonga
         end
 
         def run(command_line)
-          if command_line.empty?
+          parser = OptionParser.new
+          parser.banner += " PATH1 PATH2 ..."
+          parser.version = VERSION
+          paths = parser.parse!(command_line)
+
+          if paths.empty?
             format_log($stdin, "-")
           else
-            command_line.each do |path|
+            paths.each do |path|
               if File.directory?(path)
                 Find.find(path) do |sub_path|
                   next unless File.file?(sub_path)
