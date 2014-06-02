@@ -59,7 +59,6 @@ module Groonga
         if random_sort?
           same_random_sort_response?
         elsif all_output_columns?
-
           same_all_output_columns?
         else
           same_response?
