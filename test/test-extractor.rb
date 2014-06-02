@@ -45,9 +45,8 @@ EOC
     end
 
     def test_no_specified
-      assert_raise(Groonga::QueryLog::Extractor::NoInputError) do
-        run_extractor
-      end
+      assert_equal("Error: Please specify input log files.\n",
+                   run_extractor)
     end
   end
 
@@ -100,10 +99,28 @@ EOC
 
   private
   def run_extractor(*arguments)
-    Tempfile.open("extract.actual") do |output|
-      arguments << "--output" << output.path
-      @extractor.run(*arguments)
-      File.read(output.path)
+    Tempfile.open("extract.output") do |output|
+      open_error_output do |error|
+        arguments << "--output" << output.path
+        if @extractor.run(arguments)
+          File.read(output.path)
+        else
+          File.read(error.path)
+        end
+      end
+    end
+  end
+
+  def open_error_output
+    Tempfile.open("extract.error") do |error|
+      error.sync = true
+      original_stderr = $stderr.dup
+      $stderr.reopen(error)
+      begin
+        yield(error)
+      ensure
+        $stderr.reopen(original_stderr)
+      end
     end
   end
 
