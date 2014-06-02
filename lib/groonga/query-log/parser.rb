@@ -27,6 +27,7 @@ module Groonga
         @options = options
         @slow_operation_threshold = options[:slow_operation_threshold]
         @slow_response_threshold = options[:slow_response_threshold]
+        @parsing_statistics = {}
       end
 
       # Parses query-log file as stream to
@@ -39,7 +40,6 @@ module Groonga
       # @yieldparam [Groonga::QueryLog::Analyzer::Statistic] statistic
       #   statistics of each query in log files.
       def parse(input, &block)
-        current_statistics = {}
         input.each_line do |line|
           next unless line.valid_encoding?
           case line
@@ -51,26 +51,28 @@ module Groonga
             rest = $POSTMATCH.strip
             time_stamp = Time.local(year, month, day, hour, minutes, seconds,
                                     micro_seconds)
-            parse_line(current_statistics,
-                       time_stamp, context_id, type, rest, &block)
+            parse_line(time_stamp, context_id, type, rest, &block)
           end
         end
       end
 
+      def parsing_statistics
+        @parsing_statistics.values
+      end
+
       private
-      def parse_line(current_statistics,
-                     time_stamp, context_id, type, rest, &block)
+      def parse_line(time_stamp, context_id, type, rest, &block)
         case type
         when ">"
           statistic = create_statistic(context_id)
           statistic.start(time_stamp, rest)
-          current_statistics[context_id] = statistic
+          @parsing_statistics[context_id] = statistic
         when ":"
           return unless /\A(\d+) (.+)\((\d+)\)/ =~ rest
           elapsed = $1
           name = $2
           n_records = $3.to_i
-          statistic = current_statistics[context_id]
+          statistic = @parsing_statistics[context_id]
           return if statistic.nil?
           statistic.add_operation(:name => name,
                                   :elapsed => elapsed.to_i,
@@ -79,7 +81,7 @@ module Groonga
           return unless /\A(\d+) rc=(-?\d+)/ =~ rest
           elapsed = $1
           return_code = $2
-          statistic = current_statistics.delete(context_id)
+          statistic = @parsing_statistics.delete(context_id)
           return if statistic.nil?
           statistic.finish(elapsed.to_i, return_code.to_i)
           block.call(statistic)
