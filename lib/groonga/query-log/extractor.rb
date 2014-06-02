@@ -31,9 +31,6 @@ module Groonga
       class Error < StandardError
       end
 
-      class NoInputError < Error
-      end
-
       attr_accessor :options
       attr_reader :option_parser
 
@@ -58,16 +55,18 @@ module Groonga
       # @param [Array<String>] arguments arguments for
       #   groonga-query-log-extract. Please execute
       #   "groonga-query-log-extract --help" or see #setup_options.
-      def run(*arguments)
+      def run(arguments)
         begin
           log_paths = @option_parser.parse!(arguments)
         rescue OptionParser::ParseError
-          raise(ArgumentError, $!.message)
+          $stderr.puts($!.message)
+          return false
         end
 
         if log_paths.empty?
           unless log_via_stdin?
-            raise(NoInputError, "Error: Please specify input log files.")
+            $stderr.puts("Error: Please specify input log files.")
+            return false
           end
           log = $stdin
         else
@@ -81,6 +80,8 @@ module Groonga
         else
           extract(log, $stdout)
         end
+
+        true
       end
 
       private

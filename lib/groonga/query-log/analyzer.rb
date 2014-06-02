@@ -57,7 +57,7 @@ module Groonga
       # @param [Array<String>] arguments arguments for
       #   groonga-query-log-analyze. Please execute
       #   "groonga-query-log-analyze --help" or see #setup_options.
-      def run(*arguments)
+      def run(arguments)
         log_paths = @option_parser.parse!(arguments)
 
         stream = @options[:stream]
@@ -89,13 +89,15 @@ module Groonga
 
         if stream
           streamer.finish
-          return
-        end
-        statistics.replace(full_statistics) unless dynamic_sort
+        else
+          statistics.replace(full_statistics) unless dynamic_sort
 
-        reporter = create_reporter(statistics)
-        reporter.apply_options(@options)
-        reporter.report
+          reporter = create_reporter(statistics)
+          reporter.apply_options(@options)
+          reporter.report
+        end
+
+        true
       end
 
       private

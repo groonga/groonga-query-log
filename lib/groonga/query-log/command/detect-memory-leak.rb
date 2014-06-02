@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,14 +28,15 @@ module Groonga
           @options = MemoryLeakDetector::Options.new
         end
 
-        def run(*command_line)
-          input_paths = create_parser.parse(*command_line)
+        def run(command_line)
+          input_paths = create_parser.parse(command_line)
           detector = MemoryLeakDetector.new(@options)
           input_paths.each do |input_path|
             File.open(input_path) do |input|
               detector.detect(input)
             end
           end
+          true
         end
 
         private

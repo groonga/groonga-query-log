@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
+# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,9 +21,4 @@
 require "groonga/query-log"
 
 analyzer = Groonga::QueryLog::Analyzer.new
-begin
-  analyzer.run(*ARGV)
-rescue Groonga::QueryLog::Analyzer::Error
-  $stderr.puts($!.message)
-  exit(false)
-end
+exit(analyzer.run(ARGV))

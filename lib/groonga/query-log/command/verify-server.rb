@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,8 @@ module Groonga
           @options = ServerVerifier::Options.new
         end
 
-        def run(*command_line)
-          input_paths = create_parser.parse(*command_line)
+        def run(command_line)
+          input_paths = create_parser.parse(command_line)
           verifier = ServerVerifier.new(@options)
           if input_paths.empty?
             verifier.verify($stdin)
@@ -40,6 +40,7 @@ module Groonga
               end
             end
           end
+          true
         end
 
         private

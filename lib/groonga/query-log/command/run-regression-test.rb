@@ -44,7 +44,7 @@ module Groonga
           @skip_finished_queries = false
         end
 
-        def run(*command_line)
+        def run(command_line)
           option_parser = create_option_parser
           begin
             option_parser.parse!(command_line)
@@ -299,14 +299,16 @@ module Groonga
               end
             end
 
-            old_thread.join
-            new_thread.join
+            old_thread_success = old_thread.value
+            new_thread_success = new_thread.value
+
+            old_thread_success and new_thread_success
           end
 
           private
           def run_test
             @n_ready_waits -= 1
-            return unless @n_ready_waits.zero?
+            return true unless @n_ready_waits.zero?
 
             @clone_pids.each do |pid|
               Process.waitpid(pid)
@@ -358,7 +360,7 @@ module Groonga
               query_log_path.to_s,
             ]
             verify_serer = VerifyServer.new
-            verify_serer.run(*command_line)
+            verify_serer.run(command_line)
           end
 
           def query_log_paths

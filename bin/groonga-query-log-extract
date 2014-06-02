@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2014  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -20,9 +20,4 @@
 require "groonga/query-log/extractor"
 
 extracter = Groonga::QueryLog::Extractor.new
-begin
-  extracter.run(*ARGV)
-rescue Groonga::QueryLog::Extractor::Error
-  $stderr.puts($!.message)
-  exit(false)
-end
+exit(extracter.run(*ARGV))

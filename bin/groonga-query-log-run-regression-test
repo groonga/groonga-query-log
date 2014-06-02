@@ -20,4 +20,4 @@
 require "groonga/query-log/command/run-regression-test"
 
 command = Groonga::QueryLog::Command::RunRegressionTest.new
-command.run(*ARGV)
+exit(command.run(ARGV))
