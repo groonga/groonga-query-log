@@ -1,5 +1,14 @@
 # News
 
+## 1.0.6: 2014-06-02
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Supported `output_columns=*`
+    case.
+  * groonga-query-log-format-regression-test-logs: Added a command that
+    formats logs by groonga-query-log-run-regression-test.
+
 ## 1.0.5: 2014-05-12
 
 ### Improvements
