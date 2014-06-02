@@ -101,7 +101,9 @@ module Groonga
 
       def all_output_columns?
         output_columns = @command.output_columns
-        output_columns.nil? or output_columns.split(/\s*,?\s*/).include?("*")
+        output_columns.nil? or
+          /\A\s*\z/ === output_columns or
+          output_columns.split(/\s*,?\s*/).include?("*")
       end
 
       def same_all_output_columns?
