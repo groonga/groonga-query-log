@@ -1,5 +1,13 @@
 # News
 
+## 1.0.7: 2014-06-23
+
+### Improvements
+
+  * groonga-query-log-show-running-queries: Added a command that shows
+    running queries on the specified base time. It will be useful to
+    find a query that causes a problem.
+
 ## 1.0.6: 2014-06-02
 
 ### Improvements
