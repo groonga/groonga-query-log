@@ -25,7 +25,7 @@ module Groonga
     module Command
       class ShowRunningQueries
         def initialize
-          @timestamp = nil
+          @base_time = nil
         end
 
         def run(command_line)
@@ -49,8 +49,8 @@ module Groonga
           parser.on("--base-time=TIME",
                     "Show running queries at TIME",
                     "You can use popular time format for TIME such as W3C-DTF",
-                    "(now)") do |timestamp|
-            @timestamp = Time.parse(timestamp)
+                    "(now)") do |base_time|
+            @base_time = Time.parse(base_time)
           end
         end
 
@@ -60,9 +60,9 @@ module Groonga
             input_paths.each do |input_path|
               File.open(input_path) do |input|
                 parser.parse(input) do |statistic|
-                  next if @timestamp.nil?
-                  next if statistic.start_time < @timestamp
-                  if statistic.start_time == @timestamp
+                  next if @base_time.nil?
+                  next if statistic.start_time < @base_time
+                  if statistic.start_time == @base_time
                     yield(statistic)
                   end
                   throw(tag)
