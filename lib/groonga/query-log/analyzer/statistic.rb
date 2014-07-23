@@ -118,6 +118,35 @@ module Groonga
           command.name == "select"
         end
 
+        def to_hash
+          data = {
+            "start_time" => start_time.to_i,
+            "last_time" => last_time.to_i,
+            "elapsed" => elapsed_in_seconds,
+            "return_code" => return_code,
+            "slow" => slow?,
+          }
+          arguments = command.arguments.collect do |key, value|
+            {"key" => key, "value" => value}
+          end
+          data["command"] = {
+            "raw" => raw_command,
+            "name" => command.name,
+            "parameters" => arguments,
+          }
+          operations = []
+          each_operation do |operation|
+            operation_data = {}
+            operation_data["name"] = operation[:name]
+            operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
+            operation_data["context"] = operation[:context]
+            operation_data["slow"] = operation[:slow?]
+            operations << operation_data
+          end
+          data["operations"] = operations
+          data
+        end
+
         private
         def nano_seconds_to_seconds(nano_seconds)
           nano_seconds / 1000.0 / 1000.0 / 1000.0

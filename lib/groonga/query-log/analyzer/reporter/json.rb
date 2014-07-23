@@ -46,33 +46,7 @@ module Groonga
 
         private
         def format_statistic(statistic)
-          data = {
-            "start_time" => statistic.start_time.to_i,
-            "last_time" => statistic.last_time.to_i,
-            "elapsed" => statistic.elapsed_in_seconds,
-            "return_code" => statistic.return_code,
-            "slow" => statistic.slow?,
-          }
-          command = statistic.command
-          arguments = command.arguments.collect do |key, value|
-            {"key" => key, "value" => value}
-          end
-          data["command"] = {
-            "raw" => statistic.raw_command,
-            "name" => command.name,
-            "parameters" => arguments,
-          }
-          operations = []
-          statistic.each_operation do |operation|
-            operation_data = {}
-            operation_data["name"] = operation[:name]
-            operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
-            operation_data["context"] = operation[:context]
-            operation_data["slow"] = operation[:slow?]
-            operations << operation_data
-          end
-          data["operations"] = operations
-          JSON.generate(data)
+          JSON.generate(statistic.to_hash)
         end
       end
     end
