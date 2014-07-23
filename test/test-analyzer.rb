@@ -48,9 +48,9 @@ class AnalyzerTest < Test::Unit::TestCase
     end
   end
 
-  data("console" => "console",
-       "HTML"    => "html",
-       "JSON"    => "json",
+  data("console"     => "console",
+       "HTML"        => "html",
+       "JSON"        => "json",
        "JSON stream" => "json-stream")
   def test_reporter(reporter)
     actual_result = run_analyzer("--reporter", reporter, @query_log_path)
