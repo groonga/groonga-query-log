@@ -26,6 +26,7 @@ require "groonga/query-log/analyzer/sized-statistics"
 require "groonga/query-log/analyzer/reporter/console"
 require "groonga/query-log/analyzer/reporter/html"
 require "groonga/query-log/analyzer/reporter/json"
+require "groonga/query-log/analyzer/reporter/json-stream"
 
 module Groonga
   module QueryLog
@@ -178,7 +179,7 @@ module Groonga
             @options[:slow_response_threshold] = threshold
           end
 
-          available_reporters = ["console", "json", "html"]
+          available_reporters = ["console", "json", "json-stream", "html"]
           parser.on("--reporter=REPORTER",
                     available_reporters,
                     "Reports statistics by REPORTER.",
@@ -213,6 +214,8 @@ module Groonga
         case @options[:reporter]
         when "json"
           JSONReporter.new(statistics)
+        when "json-stream"
+          JSONStreamReporter.new(statistics)
         when "html"
           HTMLReporter.new(statistics)
         else
