@@ -220,7 +220,6 @@ module Groonga
       def create_stream_reporter
         case @options[:reporter]
         when "json"
-          require 'json'
           Groonga::QueryLog::StreamJSONQueryLogReporter.new
         when "html"
           raise UnsupportedReporter, "HTML reporter doesn't support --stream."
