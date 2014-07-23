@@ -18,9 +18,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "groonga/query-log/analyzer/sized-grouped-operations"
-require "groonga/query-log/analyzer/reporter/console"
-require "groonga/query-log/analyzer/reporter/html"
-require "groonga/query-log/analyzer/reporter/json"
 
 module Groonga
   module QueryLog

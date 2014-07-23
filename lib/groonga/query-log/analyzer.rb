@@ -23,6 +23,9 @@ require "groonga/query-log/command-line-utils"
 require "groonga/query-log/parser"
 require "groonga/query-log/analyzer/streamer"
 require "groonga/query-log/analyzer/sized-statistics"
+require "groonga/query-log/analyzer/reporter/console"
+require "groonga/query-log/analyzer/reporter/html"
+require "groonga/query-log/analyzer/reporter/json"
 
 module Groonga
   module QueryLog
