@@ -41,7 +41,7 @@ module Groonga
 
         private
         def format_statistic(statistic)
-          JSON.pretty_generate(statistic.to_hash)
+          JSON.generate(statistic.to_hash)
         end
       end
     end
