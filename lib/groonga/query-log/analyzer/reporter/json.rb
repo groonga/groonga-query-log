@@ -51,6 +51,7 @@ module Groonga
             "last_time" => statistic.last_time.to_i,
             "elapsed" => statistic.elapsed_in_seconds,
             "return_code" => statistic.return_code,
+            "slow" => statistic.slow?,
           }
           command = statistic.command
           arguments = command.arguments.collect do |key, value|
@@ -67,6 +68,7 @@ module Groonga
             operation_data["name"] = operation[:name]
             operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
             operation_data["context"] = operation[:context]
+            operation_data["slow"] = operation[:slow?]
             operations << operation_data
           end
           data["operations"] = operations
