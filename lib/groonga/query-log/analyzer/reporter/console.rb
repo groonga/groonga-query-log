@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2014  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -24,8 +24,16 @@ module Groonga
     class Analyzer
       class ConsoleReporter < Reporter
         class Color
-          NAMES = ["black", "red", "green", "yellow",
-                   "blue", "magenta", "cyan", "white"]
+          NAMES = [
+            "black",
+            "red",
+            "green",
+            "yellow",
+            "blue",
+            "magenta",
+            "cyan",
+            "white",
+          ]
 
           attr_reader :name
           def initialize(name, options={})
