@@ -50,10 +50,14 @@ class AnalyzerTest < Test::Unit::TestCase
 
   data("console" => "console",
        "HTML"    => "html",
-       "JSON"    => "json")
+       "JSON"    => "json",
+       "JSON stream" => "json-stream")
   def test_reporter(reporter)
     actual_result = run_analyzer("--reporter", reporter, @query_log_path)
-    actual_result = normalize_json(actual_result) if reporter == "json"
+    case reporter
+    when "json", "json-stream"
+      actual_result = normalize_json(actual_result)
+    end
 
     expected_result = expected_analyzed_query("reporter/#{reporter}.expected")
     assert_equal(expected_result, actual_result)
