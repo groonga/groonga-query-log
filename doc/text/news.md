@@ -1,5 +1,14 @@
 # News
 
+## 1.0.8: 2014-07-23
+
+### Improvements
+
+  * groonga-query-log-analyzer: Added "slow" information to query and
+    operations.
+  * groonga-query-log-analyzer: Added "json-stream" reporter. It outputs
+    a statistic as a JSON in one line.
+
 ## 1.0.7: 2014-06-23
 
 ### Improvements
