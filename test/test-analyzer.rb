@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #
+# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -47,9 +48,9 @@ class AnalyzerTest < Test::Unit::TestCase
     end
   end
 
-  data(:console => "console",
-       :html    => "html",
-       :json    => "json")
+  data("console" => "console",
+       "HTML"    => "html",
+       "JSON"    => "json")
   def test_reporter(reporter)
     actual_result = run_analyzer("--reporter", reporter, @query_log_path)
     actual_result = normalize_json(actual_result) if reporter == "json"
