@@ -1,5 +1,13 @@
 # News
 
+## 1.0.9: 2014-09-09
+
+### Improvements
+
+  * groonga-query-log-check-command-version-incompatibility: Added.
+    It parses commands in passed query logs and reports incompatible
+    items in target command version.
+
 ## 1.0.8: 2014-07-23
 
 ### Improvements
