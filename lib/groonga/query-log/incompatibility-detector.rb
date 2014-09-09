@@ -78,11 +78,17 @@ module Groonga
         def space_delimiter?(string)
           return false if string.nil?
           return false if have_function_call?(string)
-          string.split(/\s+/) != string.split(/\s*,\s*/)
+          return false if have_comma?(string)
+
+          string.strip.split(/\s+/).size > 1
         end
 
         def have_function_call?(string)
           string.include?("(")
+        end
+
+        def have_comma?(string)
+          string.include?(",")
         end
       end
     end

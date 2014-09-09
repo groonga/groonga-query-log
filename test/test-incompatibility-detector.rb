@@ -51,6 +51,14 @@ class IncompatibilityDetectorTest < Test::Unit::TestCase
             "select: output_columns: space is used as delimiter: <_id _key>"
           assert_equal([message], detect("select --output_columns '_id _key'"))
         end
+
+        def test_comma_delimiter
+          assert_equal([], detect("select --output_columns '_id, _key'"))
+        end
+
+        def test_one_element
+          assert_equal([], detect("select --output_columns '_id'"))
+        end
       end
     end
   end
