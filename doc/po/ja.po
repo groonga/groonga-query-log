@@ -7,7 +7,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: groonga-query-log 1.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-12 17:06+0900\n"
 "PO-Revision-Date: 2014-05-12 17:06+0900\n"
 "Last-Translator: Haruka Yoshihara <yoshihara@clear-code.com>\n"
 "Language-Team: Japanese\n"
@@ -17,29 +16,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../../README.md:1
 msgid "# README"
 msgstr ""
 
-#: ../../README.md:3
 msgid ""
 "[![Build Status](https://travis-ci.org/groonga/groonga-query-log.png?branch=ma"
 "ster)](https://travis-ci.org/groonga/groonga-query-log)"
 msgstr ""
 
-#: ../../README.md:5
 msgid "## Name"
 msgstr "## 名前"
 
-#: ../../README.md:7
 msgid "groonga-query-log"
 msgstr ""
 
-#: ../../README.md:9
 msgid "## Description"
 msgstr "## 説明"
 
-#: ../../README.md:11
 msgid ""
 "Groonga-query-log is a collection of library and tools to process\n"
 "[Groonga](http://groonga.org/)'s query log. You can write a program to\n"
@@ -51,67 +44,54 @@ msgstr ""
 "groonga-query-logをライブラリとして使うことでクエリログを処理するプログラムを書くことができます。ツールとして使うことで、使用しているGro"
 "ongaのクエリを解析したり、クエリログを使ったテストを行うことができます。"
 
-#: ../../README.md:17
 msgid "## Install"
 msgstr "## インストール"
 
-#: ../../README.md:19
 msgid "    % gem install groonga-query-log"
 msgstr ""
 
-#: ../../README.md:21 ../../doc/text/run-regression-test.md:26
 msgid "## Usage"
 msgstr "## 使い方"
 
-#: ../../README.md:23
 msgid "### groonga-query-log-analyze"
 msgstr ""
 
-#: ../../README.md:25 ../../README.md:29 ../../README.md:33 ../../README.md:37
-#: ../../README.md:41 ../../README.md:45
 msgid "TODO..."
 msgstr ""
 
-#: ../../README.md:27
 msgid "### groonga-query-log-detect-memory-leak"
 msgstr ""
 
-#: ../../README.md:31
 msgid "### groonga-query-log-extract"
 msgstr ""
 
-#: ../../README.md:35
+msgid "### groonga-query-log-format-regression-test-logs"
+msgstr ""
+
 msgid "### groonga-query-log-replay"
 msgstr ""
 
-#: ../../README.md:39 ../../README.md:47
-msgid "### groonga-query-log-run-regression-test"
-msgstr ""
-
-#: ../../README.md:43
 msgid "### groonga-query-log-verify-server"
 msgstr ""
 
-#: ../../README.md:49
+msgid "### groonga-query-log-run-regression-test"
+msgstr ""
+
 msgid "  * [doc/text/run-regression-test.md](doc/text/run-regression-test.md)"
 msgstr ""
 
-#: ../../README.md:51
 msgid "## Dependencies"
 msgstr "## 依存関係"
 
-#: ../../README.md:53
 msgid ""
 "  * Ruby\n"
 "  * [groonga-command-parser](http://rubygems.org/gems/groonga-command-parser)\n"
 "  * [groonga-client](http://rubygems.org/gems/groonga-client)"
 msgstr ""
 
-#: ../../README.md:57
 msgid "## Mailing list"
 msgstr "## メーリングリスト"
 
-#: ../../README.md:59
 msgid ""
 "  * English: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.ne"
 "t/lists/listinfo/groonga-talk)\n"
@@ -123,43 +103,34 @@ msgstr ""
 "  * 日本語: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailma"
 "n/listinfo/groonga-dev)"
 
-#: ../../README.md:62
 msgid "## Thanks"
 msgstr "## 感謝"
 
-#: ../../README.md:64
 msgid "  * ..."
 msgstr ""
 
-#: ../../README.md:66
 msgid "## Authors"
 msgstr "## 作者"
 
-#: ../../README.md:68
 msgid "  * Kouhei Sutou \\<kou@clear-code.com\\>"
 msgstr ""
 
-#: ../../README.md:70
 msgid "## License"
 msgstr "## ライセンス"
 
-#: ../../README.md:72
 msgid "LGPLv2.1 or later. See doc/text/lgpl-2.1.txt for details."
 msgstr "LGPLv2.1以降です。詳しくはdoc/text/lgpl-2.1.txtを見てください。"
 
-#: ../../README.md:74
 msgid ""
 "(Kouhei Sutou has a right to change the license including contributed\n"
 "patches.)"
 msgstr "（コントリビュートされたパッチなども含み、Kouhei Sutouがライセンスを変更する権利を持ちます。）"
 
-#: ../../doc/text/lgpl-2.1.txt:1
 msgid ""
 "                  GNU LESSER GENERAL PUBLIC LICENSE\n"
 "                       Version 2.1, February 1999"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:4
 msgid ""
 " Copyright (C) 1991, 1999 Free Software Foundation, Inc.\n"
 " 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n"
@@ -167,18 +138,15 @@ msgid ""
 " of this license document, but changing it is not allowed."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:9
 msgid ""
 "[This is the first released version of the Lesser GPL.  It also counts\n"
 " as the successor of the GNU Library Public License, version 2, hence\n"
 " the version number 2.1.]"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:13
 msgid "                            Preamble"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:15
 msgid ""
 "  The licenses for most software are designed to take away your\n"
 "freedom to share and change it.  By contrast, the GNU General Public\n"
@@ -186,7 +154,6 @@ msgid ""
 "free software--to make sure the software is free for all its users."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:20
 msgid ""
 "  This license, the Lesser General Public License, applies to some\n"
 "specially designated software packages--typically libraries--of the\n"
@@ -196,7 +163,6 @@ msgid ""
 "strategy to use in any particular case, based on the explanations below."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:27
 msgid ""
 "  When we speak of free software, we are referring to freedom of use,\n"
 "not price.  Our General Public Licenses are designed to make sure that\n"
@@ -207,7 +173,6 @@ msgid ""
 "these things."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:35
 msgid ""
 "  To protect your rights, we need to make restrictions that forbid\n"
 "distributors to deny you these rights or to ask you to surrender these\n"
@@ -215,7 +180,6 @@ msgid ""
 "you if you distribute copies of the library or if you modify it."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:40
 msgid ""
 "  For example, if you distribute copies of the library, whether gratis\n"
 "or for a fee, you must give the recipients all the rights that we gave\n"
@@ -226,14 +190,12 @@ msgid ""
 "it.  And you must show them these terms so they know their rights."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:48
 msgid ""
 "  We protect your rights with a two-step method: (1) we copyright the\n"
 "library, and (2) we offer you this license, which gives you legal\n"
 "permission to copy, distribute and/or modify the library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:52
 msgid ""
 "  To protect each distributor, we want to make it very clear that\n"
 "there is no warranty for the free library.  Also, if the library is\n"
@@ -243,7 +205,6 @@ msgid ""
 "introduced by others."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:59
 msgid ""
 "  Finally, software patents pose a constant threat to the existence of\n"
 "any free program.  We wish to make sure that a company cannot\n"
@@ -253,7 +214,6 @@ msgid ""
 "consistent with the full freedom of use specified in this license."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:66
 msgid ""
 "  Most GNU software, including some libraries, is covered by the\n"
 "ordinary GNU General Public License.  This license, the GNU Lesser\n"
@@ -263,7 +223,6 @@ msgid ""
 "libraries into non-free programs."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:73
 msgid ""
 "  When a program is linked with a library, whether statically or using\n"
 "a shared library, the combination of the two is legally speaking a\n"
@@ -274,7 +233,6 @@ msgid ""
 "the library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:81
 msgid ""
 "  We call this license the \"Lesser\" General Public License because it\n"
 "does Less to protect the user's freedom than the ordinary General\n"
@@ -285,7 +243,6 @@ msgid ""
 "special circumstances."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:89
 msgid ""
 "  For example, on rare occasions, there may be a special need to\n"
 "encourage the widest possible use of a certain library, so that it becomes\n"
@@ -296,7 +253,6 @@ msgid ""
 "software only, so we use the Lesser General Public License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:97
 msgid ""
 "  In other cases, permission to use a particular library in non-free\n"
 "programs enables a greater number of people to use a large body of\n"
@@ -306,7 +262,6 @@ msgid ""
 "system."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:104
 msgid ""
 "  Although the Lesser General Public License is Less protective of the\n"
 "users' freedom, it does ensure that the user of a program that is\n"
@@ -314,7 +269,6 @@ msgid ""
 "that program using a modified version of the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:109
 msgid ""
 "  The precise terms and conditions for copying, distribution and\n"
 "modification follow.  Pay close attention to the difference between a\n"
@@ -323,13 +277,11 @@ msgid ""
 "be combined with the library in order to run."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:115
 msgid ""
 "                  GNU LESSER GENERAL PUBLIC LICENSE\n"
 "   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:118
 msgid ""
 "  0. This License Agreement applies to any software library or other\n"
 "program which contains a notice placed by the copyright holder or\n"
@@ -338,14 +290,12 @@ msgid ""
 "Each licensee is addressed as \"you\"."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:124
 msgid ""
 "  A \"library\" means a collection of software functions and/or data\n"
 "prepared so as to be conveniently linked with application programs\n"
 "(which use some of those functions and data) to form executables."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:128
 msgid ""
 "  The \"Library\", below, refers to any such software library or work\n"
 "which has been distributed under these terms.  A \"work based on the\n"
@@ -356,7 +306,6 @@ msgid ""
 "included without limitation in the term \"modification\".)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:136
 msgid ""
 "  \"Source code\" for a work means the preferred form of the work for\n"
 "making modifications to it.  For a library, complete source code means\n"
@@ -365,7 +314,6 @@ msgid ""
 "and installation of the library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:142
 msgid ""
 "  Activities other than copying, distribution and modification are not\n"
 "covered by this License; they are outside its scope.  The act of\n"
@@ -376,7 +324,6 @@ msgid ""
 "and what the program that uses the Library does."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:150
 msgid ""
 "  1. You may copy and distribute verbatim copies of the Library's\n"
 "complete source code as you receive it, in any medium, provided that\n"
@@ -387,14 +334,12 @@ msgid ""
 "Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:158
 msgid ""
 "  You may charge a fee for the physical act of transferring a copy,\n"
 "and you may at your option offer warranty protection in exchange for a\n"
 "fee."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:162
 msgid ""
 "  2. You may modify your copy or copies of the Library or any portion\n"
 "of it, thus forming a work based on the Library, and copy and\n"
@@ -402,23 +347,19 @@ msgid ""
 "above, provided that you also meet all of these conditions:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:167
 msgid "    a) The modified work must itself be a software library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:169
 msgid ""
 "    b) You must cause the files modified to carry prominent notices\n"
 "    stating that you changed the files and the date of any change."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:172
 msgid ""
 "    c) You must cause the whole of the work to be licensed at no\n"
 "    charge to all third parties under the terms of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:175
 msgid ""
 "    d) If a facility in the modified Library refers to a function or a\n"
 "    table of data to be supplied by an application program that uses\n"
@@ -429,7 +370,6 @@ msgid ""
 "    its purpose remains meaningful."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:183
 msgid ""
 "    (For example, a function in a library to compute square roots has\n"
 "    a purpose that is entirely well-defined independent of the\n"
@@ -439,7 +379,6 @@ msgid ""
 "    root function must still compute square roots.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:190
 msgid ""
 "These requirements apply to the modified work as a whole.  If\n"
 "identifiable sections of that work are not derived from the Library,\n"
@@ -453,7 +392,6 @@ msgid ""
 "it."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:201
 msgid ""
 "Thus, it is not the intent of this section to claim rights or contest\n"
 "your rights to work written entirely by you; rather, the intent is to\n"
@@ -461,7 +399,6 @@ msgid ""
 "collective works based on the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:206
 msgid ""
 "In addition, mere aggregation of another work not based on the Library\n"
 "with the Library (or with a work based on the Library) on a volume of\n"
@@ -469,7 +406,6 @@ msgid ""
 "the scope of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:211
 msgid ""
 "  3. You may opt to apply the terms of the ordinary GNU General Public\n"
 "License instead of this License to a given copy of the Library.  To do\n"
@@ -481,20 +417,17 @@ msgid ""
 "these notices."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:220
 msgid ""
 "  Once this change is made in a given copy, it is irreversible for\n"
 "that copy, so the ordinary GNU General Public License applies to all\n"
 "subsequent copies and derivative works made from that copy."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:224
 msgid ""
 "  This option is useful when you wish to copy part of the code of\n"
 "the Library into a program that is not a library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:227
 msgid ""
 "  4. You may copy and distribute the Library (or a portion or\n"
 "derivative of it, under Section 2) in object code or executable form\n"
@@ -504,7 +437,6 @@ msgid ""
 "medium customarily used for software interchange."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:234
 msgid ""
 "  If distribution of object code is made by offering access to copy\n"
 "from a designated place, then offering equivalent access to copy the\n"
@@ -513,7 +445,6 @@ msgid ""
 "compelled to copy the source along with the object code."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:240
 msgid ""
 "  5. A program that contains no derivative of any portion of the\n"
 "Library, but is designed to work with the Library by being compiled or\n"
@@ -522,7 +453,6 @@ msgid ""
 "therefore falls outside the scope of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:246
 msgid ""
 "  However, linking a \"work that uses the Library\" with the Library\n"
 "creates an executable that is a derivative of the Library (because it\n"
@@ -531,7 +461,6 @@ msgid ""
 "Section 6 states terms for distribution of such executables."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:252
 msgid ""
 "  When a \"work that uses the Library\" uses material from a header file\n"
 "that is part of the Library, the object code for the work may be a\n"
@@ -541,7 +470,6 @@ msgid ""
 "threshold for this to be true is not precisely defined by law."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:259
 msgid ""
 "  If such an object file uses only numerical parameters, data\n"
 "structure layouts and accessors, and small macros and small inline\n"
@@ -551,7 +479,6 @@ msgid ""
 "Library will still fall under Section 6.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:266
 msgid ""
 "  Otherwise, if the work is a derivative of the Library, you may\n"
 "distribute the object code for the work under the terms of Section 6.\n"
@@ -559,7 +486,6 @@ msgid ""
 "whether or not they are linked directly with the Library itself."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:271
 msgid ""
 "  6. As an exception to the Sections above, you may also combine or\n"
 "link a \"work that uses the Library\" with the Library to produce a\n"
@@ -569,7 +495,6 @@ msgid ""
 "engineering for debugging such modifications."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:278
 msgid ""
 "  You must give prominent notice with each copy of the work that the\n"
 "Library is used in it and that the Library and its use are covered by\n"
@@ -580,7 +505,6 @@ msgid ""
 "of these things:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:286
 msgid ""
 "    a) Accompany the work with the complete corresponding\n"
 "    machine-readable source code for the Library including whatever\n"
@@ -595,7 +519,6 @@ msgid ""
 "    to use the modified definitions.)"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:298
 msgid ""
 "    b) Use a suitable shared library mechanism for linking with the\n"
 "    Library.  A suitable mechanism is one that (1) uses at run time a\n"
@@ -606,7 +529,6 @@ msgid ""
 "    interface-compatible with the version that the work was made with."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:306
 msgid ""
 "    c) Accompany the work with a written offer, valid for at\n"
 "    least three years, to give the same user the materials\n"
@@ -614,20 +536,17 @@ msgid ""
 "    than the cost of performing this distribution."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:311
 msgid ""
 "    d) If distribution of the work is made by offering access to copy\n"
 "    from a designated place, offer equivalent access to copy the above\n"
 "    specified materials from the same place."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:315
 msgid ""
 "    e) Verify that the user has already received a copy of these\n"
 "    materials or that you have already sent this user a copy."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:318
 msgid ""
 "  For an executable, the required form of the \"work that uses the\n"
 "Library\" must include any data and utility programs needed for\n"
@@ -639,7 +558,6 @@ msgid ""
 "the executable."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:327
 msgid ""
 "  It may happen that this requirement contradicts the license\n"
 "restrictions of other proprietary libraries that do not normally\n"
@@ -648,7 +566,6 @@ msgid ""
 "distribute."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:333
 msgid ""
 "  7. You may place library facilities that are a work based on the\n"
 "Library side-by-side in a single library together with other library\n"
@@ -658,7 +575,6 @@ msgid ""
 "permitted, and provided that you do these two things:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:340
 msgid ""
 "    a) Accompany the combined library with a copy of the same work\n"
 "    based on the Library, uncombined with any other library\n"
@@ -666,14 +582,12 @@ msgid ""
 "    Sections above."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:345
 msgid ""
 "    b) Give prominent notice with the combined library of the fact\n"
 "    that part of it is a work based on the Library, and explaining\n"
 "    where to find the accompanying uncombined form of the same work."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:349
 msgid ""
 "  8. You may not copy, modify, sublicense, link with, or distribute\n"
 "the Library except as expressly provided under this License.  Any\n"
@@ -684,7 +598,6 @@ msgid ""
 "terminated so long as such parties remain in full compliance."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:357
 msgid ""
 "  9. You are not required to accept this License, since you have not\n"
 "signed it.  However, nothing else grants you permission to modify or\n"
@@ -696,7 +609,6 @@ msgid ""
 "the Library or works based on it."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:366
 msgid ""
 "  10. Each time you redistribute the Library (or any work based on the\n"
 "Library), the recipient automatically receives a license from the\n"
@@ -707,7 +619,6 @@ msgid ""
 "this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:374
 msgid ""
 "  11. If, as a consequence of a court judgment or allegation of patent\n"
 "infringement or for any other reason (not limited to patent issues),\n"
@@ -723,14 +634,12 @@ msgid ""
 "refrain entirely from distribution of the Library."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:387
 msgid ""
 "If any portion of this section is held invalid or unenforceable under any\n"
 "particular circumstance, the balance of the section is intended to apply,\n"
 "and the section as a whole is intended to apply in other circumstances."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:391
 msgid ""
 "It is not the purpose of this section to induce you to infringe any\n"
 "patents or other property right claims or to contest validity of any\n"
@@ -744,13 +653,11 @@ msgid ""
 "impose that choice."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:402
 msgid ""
 "This section is intended to make thoroughly clear what is believed to\n"
 "be a consequence of the rest of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:405
 msgid ""
 "  12. If the distribution and/or use of the Library is restricted in\n"
 "certain countries either by patents or by copyrighted interfaces, the\n"
@@ -761,7 +668,6 @@ msgid ""
 "written in the body of this License."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:413
 msgid ""
 "  13. The Free Software Foundation may publish revised and/or new\n"
 "versions of the Lesser General Public License from time to time.\n"
@@ -769,7 +675,6 @@ msgid ""
 "but may differ in detail to address new problems or concerns."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:418
 msgid ""
 "Each version is given a distinguishing version number.  If the Library\n"
 "specifies a version number of this License which applies to it and\n"
@@ -780,7 +685,6 @@ msgid ""
 "the Free Software Foundation."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:426
 msgid ""
 "  14. If you wish to incorporate parts of the Library into other free\n"
 "programs whose distribution conditions are incompatible with these,\n"
@@ -792,11 +696,9 @@ msgid ""
 "and reuse of software generally."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:435
 msgid "                            NO WARRANTY"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:437
 msgid ""
 "  15. BECAUSE THE LIBRARY IS LICENSED FREE OF CHARGE, THERE IS NO\n"
 "WARRANTY FOR THE LIBRARY, TO THE EXTENT PERMITTED BY APPLICABLE LAW.\n"
@@ -809,7 +711,6 @@ msgid ""
 "THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:447
 msgid ""
 "  16. IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN\n"
 "WRITING WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY\n"
@@ -823,15 +724,12 @@ msgid ""
 "DAMAGES."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:458
 msgid "                     END OF TERMS AND CONDITIONS"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:460
 msgid "           How to Apply These Terms to Your New Libraries"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:462
 msgid ""
 "  If you develop a new library, and you want it to be of the greatest\n"
 "possible use to the public, we recommend making it free software that\n"
@@ -840,7 +738,6 @@ msgid ""
 "ordinary General Public License)."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:468
 msgid ""
 "  To apply these terms, attach the following notices to the library.  It is\n"
 "safest to attach them to the start of each source file to most effectively\n"
@@ -848,13 +745,11 @@ msgid ""
 "\"copyright\" line and a pointer to where the full notice is found."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:473
 msgid ""
 "    <one line to give the library's name and a brief idea of what it does.>\n"
 "    Copyright (C) <year>  <name of author>"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:476
 msgid ""
 "    This library is free software; you can redistribute it and/or\n"
 "    modify it under the terms of the GNU Lesser General Public\n"
@@ -862,7 +757,6 @@ msgid ""
 "    version 2.1 of the License, or (at your option) any later version."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:481
 msgid ""
 "    This library is distributed in the hope that it will be useful,\n"
 "    but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -870,7 +764,6 @@ msgid ""
 "    Lesser General Public License for more details."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:486
 msgid ""
 "    You should have received a copy of the GNU Lesser General Public\n"
 "    License along with this library; if not, write to the Free Software\n"
@@ -878,48 +771,84 @@ msgid ""
 " USA"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:490
 msgid "Also add information on how to contact you by electronic and paper mail."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:492
 msgid ""
 "You should also get your employer (if you work as a programmer) or your\n"
 "school, if any, to sign a \"copyright disclaimer\" for the library, if\n"
 "necessary.  Here is a sample; alter the names:"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:496
 msgid ""
 "  Yoyodyne, Inc., hereby disclaims all copyright interest in the\n"
 "  library `Frob' (a library for tweaking knobs) written by James Random Hacker"
 "."
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:499
 msgid ""
 "  <signature of Ty Coon>, 1 April 1990\n"
 "  Ty Coon, President of Vice"
 msgstr ""
 
-#: ../../doc/text/lgpl-2.1.txt:502
 msgid "That's all there is to it!"
 msgstr ""
 
-#: ../../doc/text/news.md:1
 msgid "# News"
 msgstr "# お知らせ"
 
-#: ../../doc/text/news.md:3
-msgid "## 1.0.5: 2014-05-12"
+msgid "## 1.1.0: 2014-10-31"
 msgstr ""
 
-#: ../../doc/text/news.md:5 ../../doc/text/news.md:14 ../../doc/text/news.md:25
-#: ../../doc/text/news.md:37 ../../doc/text/news.md:52
 msgid "### Improvements"
 msgstr "### 改善"
 
-#: ../../doc/text/news.md:7
+msgid ""
+"  * groonga-query-log-run-regression-test: Supported log output on\n"
+"    loading data."
+msgstr ""
+
+msgid "## 1.0.9: 2014-09-09"
+msgstr ""
+
+msgid ""
+"  * groonga-query-log-check-command-version-incompatibility: Added.\n"
+"    It parses commands in passed query logs and reports incompatible\n"
+"    items in target command version."
+msgstr ""
+
+msgid "## 1.0.8: 2014-07-23"
+msgstr ""
+
+msgid ""
+"  * groonga-query-log-analyzer: Added \"slow\" information to query and\n"
+"    operations.\n"
+"  * groonga-query-log-analyzer: Added \"json-stream\" reporter. It outputs\n"
+"    a statistic as a JSON in one line."
+msgstr ""
+
+msgid "## 1.0.7: 2014-06-23"
+msgstr ""
+
+msgid ""
+"  * groonga-query-log-show-running-queries: Added a command that shows\n"
+"    running queries on the specified base time. It will be useful to\n"
+"    find a query that causes a problem."
+msgstr ""
+
+msgid "## 1.0.6: 2014-06-02"
+msgstr ""
+
+msgid ""
+"  * groonga-query-log-run-regression-test: Supported `output_columns=*`\n"
+"    case.\n"
+"  * groonga-query-log-format-regression-test-logs: Added a command that\n"
+"    formats logs by groonga-query-log-run-regression-test."
+msgstr ""
+
+msgid "## 1.0.5: 2014-05-12"
+msgstr ""
+
 msgid ""
 "  * groonga-query-log-verify-server: Supported `groonga-client` 0.0.8.\n"
 "  * groonga-query-log-verify-server: Supported comparing errors.\n"
@@ -927,11 +856,9 @@ msgid ""
 "    runs regression test. It is based on groonga-query-log-verify-server."
 msgstr ""
 
-#: ../../doc/text/news.md:12
 msgid "## 1.0.4: 2014-02-09"
 msgstr ""
 
-#: ../../doc/text/news.md:16
 msgid ""
 "  * groonga-query-log-verify-server: Supported reading input from the\n"
 "    standard input.\n"
@@ -942,30 +869,24 @@ msgid ""
 "."
 msgstr ""
 
-#: ../../doc/text/news.md:23
 msgid "## 1.0.3: 2014-01-06"
 msgstr ""
 
-#: ../../doc/text/news.md:27
 msgid ""
 "  * groonga-query-log-verify-server: Added a command that verifies two\n"
 "    servers returns the same response for the same request.\n"
 "    (experimental)"
 msgstr ""
 
-#: ../../doc/text/news.md:31
 msgid "### Fixes"
 msgstr "### 修正"
 
-#: ../../doc/text/news.md:33
 msgid "  * groonga-query-log-analyzer: Fixed a bug `--stream` doesn't work."
 msgstr ""
 
-#: ../../doc/text/news.md:35
 msgid "## 1.0.2: 2013-11-01"
 msgstr ""
 
-#: ../../doc/text/news.md:39
 msgid ""
 "  * [GitHub#1] Add Travis CI status image to README.\n"
 "    Patch by Kengo Suzuki. Thanks!!!\n"
@@ -975,19 +896,15 @@ msgid ""
 "    a memory leak by executing each query in query log."
 msgstr ""
 
-#: ../../doc/text/news.md:46
 msgid "### Thanks"
 msgstr "### 感謝"
 
-#: ../../doc/text/news.md:48
 msgid "  * Kengo Suzuki"
 msgstr ""
 
-#: ../../doc/text/news.md:50
 msgid "## 1.0.1: 2012-12-21"
 msgstr ""
 
-#: ../../doc/text/news.md:54
 msgid ""
 " * Added \"groonga-query-log-extract\" command and classes implementing it.\n"
 "   \"groonga-query-log-extract\" is the command to extract commands\n"
@@ -998,11 +915,9 @@ msgstr ""
 "   \"groonga-query-log-extract\"コマンドはクエリログからコマンド（table_create..., load..., selec"
 "t... など）を抽出します。使い方は\"groonga-query-log-extract --help\"を実行すると表示されます。"
 
-#: ../../doc/text/news.md:59
 msgid "### Changes"
 msgstr "### 変更"
 
-#: ../../doc/text/news.md:61
 msgid ""
 " * Rename groonga-query-log-analyzer to groonga-query-log-analyze\n"
 "   (removed trailing \"r\").\n"
@@ -1012,19 +927,15 @@ msgstr ""
 " * groonga-query-log-analyzerをgroonga-query-log-analyzeにリネーム（後ろの\"r\"を削除）。\n"
 " * 各コマンドに対して、入力ファイル、リダイレクト、パイプによりクエリログが入力されない場合はエラーを出して終了するようにした。"
 
-#: ../../doc/text/news.md:66
 msgid "## 1.0.0: 2012-12-14"
 msgstr ""
 
-#: ../../doc/text/news.md:68
 msgid "The first release!!!"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:1
 msgid "# `groonga-query-log-run-regression-test`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:3
 msgid ""
 "`groonga-query-log-run-regression-test` is a regression test tool for\n"
 "Groonga. It is useful when you upgrade Groonga. You can compare search\n"
@@ -1036,17 +947,14 @@ msgstr ""
 "レードするときに便利です。 `groonga-query-log-run-regression-test` を使って、古いGroongaと新しいGroong"
 "aで検索結果に差がないか調べることができます。テストに使うクエリーはクエリーログから読み込みます。本番環境のクエリーログをそのまま使うことができます。"
 
-#: ../../doc/text/run-regression-test.md:9
 msgid "## Flow"
 msgstr "## 流れ"
 
-#: ../../doc/text/run-regression-test.md:11
 msgid ""
 "Here is a work flow to run regression test with\n"
 "`groonga-query-log-run-regression-test`:"
 msgstr "`groonga-query-log-run-regression-test` を使ってリグレッションテストを実行するときの作業は次のようになります。"
 
-#: ../../doc/text/run-regression-test.md:14
 msgid ""
 "  1. Prepare schema.\n"
 "  2. Prepare data.\n"
@@ -1067,35 +975,28 @@ msgstr ""
 "  7. 古いGroongaからのレスポンスと新しいGroongaからのレスポンスを比較する。\n"
 "  8. クエリーログの中のすべてのリクエストに対して6.と7.を繰り返す。"
 
-#: ../../doc/text/run-regression-test.md:24
 msgid "If there is any regression, you can find it by the 7. step."
 msgstr "もしリグレッションがあった場合は、7.のステップで気づくことができます。"
 
-#: ../../doc/text/run-regression-test.md:28
 msgid ""
 "This section describe how to use\n"
 "`groonga-query-log-run-regression-test`."
 msgstr "このセクションでは `groonga-query-log-run-regression-test` の使い方を説明します。"
 
-#: ../../doc/text/run-regression-test.md:31
 msgid ""
 "First, you need to prepare input data. Then you can run regression\n"
 "test."
 msgstr "はじめに、入力データを準備します。それからリグレッションテストを実行します。"
 
-#: ../../doc/text/run-regression-test.md:34
 msgid "### Prepare"
 msgstr "### 準備"
 
-#: ../../doc/text/run-regression-test.md:36
 msgid "This section describes how to prepare to run regression test."
 msgstr "このセクションはリグレッションテストを実行するためにどのように準備すればよいかを説明します。"
 
-#: ../../doc/text/run-regression-test.md:38
 msgid "Create a directory that has the following structure:"
 msgstr "次の構成のディレクトリーを作ります。"
 
-#: ../../doc/text/run-regression-test.md:40
 msgid ""
 "    .\n"
 "    |-- schema/\n"
@@ -1104,15 +1005,12 @@ msgid ""
 "    `-- query-logs/"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:46
 msgid "The following sections describe how to prepare the directories."
 msgstr "以降のセクションではこのディレクトリーをどうやって準備するかを説明します。"
 
-#: ../../doc/text/run-regression-test.md:48
 msgid "#### `schema/`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:50
 msgid ""
 "Put database schema definitions to `schema/` directory. Each file must\n"
 "have `.grn` extension such as `ddl.grn`."
@@ -1120,31 +1018,25 @@ msgstr ""
 "データベーススキーマの定義を `schema/` ディレクトリーに入れます。各ファイルは `ddl.grn` のように拡張子を `.grn` としなければい"
 "けません。"
 
-#: ../../doc/text/run-regression-test.md:53
 msgid ""
 "You can generate a file to be placed into `schema/` from an existing\n"
 "Groonga database by `grndump` command:"
 msgstr "`grndump` コマンドを使うと、 `schema/` に入れるためのファイルを既存のGroongaデータベースから生成することができます。"
 
-#: ../../doc/text/run-regression-test.md:56
 msgid "    % grndump --no-dump-indexes --no-dump-tables /groonga/db > schema/ddl.grn"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:58
 msgid ""
 "Note that `grndump` command is provided by Rroonga. You can install\n"
 "Rroonga by the following command:"
 msgstr "`grndump` コマンドはRroongaが提供していることに注意してください。Rroongaは次のコマンドでインストールできます。"
 
-#: ../../doc/text/run-regression-test.md:61
 msgid "    % gem install rroonga"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:63
 msgid "#### `indexes/`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:65
 msgid ""
 "Put index definitions to `indexes/` directory. Each file must have\n"
 "`.grn` extension such as `indexes.grn`."
@@ -1152,7 +1044,6 @@ msgstr ""
 "インデックス定義は `indexes/` ディレクトリーに入れてください。 `indexes.grn` のように、各ファイルの拡張子は `.grn` としな"
 "ければいけません。"
 
-#: ../../doc/text/run-regression-test.md:68
 msgid ""
 "You can put index definitions to `schema/` directory. But it is better\n"
 "that put index definitions to `indexes/` directory rather than\n"
@@ -1161,7 +1052,6 @@ msgstr ""
 "インデックス定義は `schema/` ディレクトリーに入れることもできます。しかし、 `schema/` ディレクトリーに入れるよりも、 `indexes"
 "/` ディレクトリーに入れる方がよいです。なぜなら `indexes/` ディレクトリーに入れたほうが速いからです。"
 
-#: ../../doc/text/run-regression-test.md:72
 msgid ""
 "If you use `indexes/` directory, you can use\n"
 "[offline index construction][]. Offline index construction is 10 times\n"
@@ -1170,43 +1060,35 @@ msgstr ""
 "`indexes/` ディレクトリーを使った場合は、[静的インデックス構築][] を使います。静的インデックス構築は [動的インデックス構築][] よりも1"
 "0倍以上高速です。"
 
-#: ../../doc/text/run-regression-test.md:76
 msgid ""
 "You can generate a file to be placed into `indexes/` from an existing\n"
 "Groonga database by `grndump` command:"
 msgstr "`grndump` コマンドを使うと、既存のGroongaデータベースから `indexes/` に置くためのファイルを生成できます。"
 
-#: ../../doc/text/run-regression-test.md:79
 msgid ""
 "    % grndump --no-dump-schema --no-dump-tables /groonga/db > indexes/indexes."
 "grn"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:81
 msgid "#### `data/`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:83
 msgid ""
 "Put data to `data/` directory. Each file must have `.grn` extension\n"
 "such as `data.grn`."
 msgstr "データは `data/` ディレクトリーに置いてください。各ファイルは `data.grn` のように拡張子を `.grn` にしなければいけません。"
 
-#: ../../doc/text/run-regression-test.md:86
 msgid ""
 "You can generate a file to be placed into `data/` from an existing\n"
 "Groonga database by `grndump` command:"
 msgstr "`grndump` コマンドを使うと、既存のGroongaデータベースから `data/` に置くためのファイルを生成できます。"
 
-#: ../../doc/text/run-regression-test.md:89
 msgid "    % grndump --no-dump-schema --no-dump-indexes /groonga/db > data/data.grn"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:91
 msgid "#### `query-logs/`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:93
 msgid ""
 "Put query logs to `query-logs/` directory. Each file must have `.log`\n"
 "extension such as `query.log`."
@@ -1214,11 +1096,9 @@ msgstr ""
 "クエリーログを `query-logs/` ディレクトリーに置いてください。各ファイルは `query.log` のように拡張子を `.log` にしなけれ"
 "ばいけません。"
 
-#: ../../doc/text/run-regression-test.md:96
 msgid "You can put multiple log files like the following:"
 msgstr "次のように複数のログファイルを置くこともできます。"
 
-#: ../../doc/text/run-regression-test.md:98
 msgid ""
 "    query-logs/\n"
 "    |-- query-20140506.log\n"
@@ -1226,11 +1106,9 @@ msgid ""
 "    `-- query-20140508.log"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:103
 msgid "Here are links to documents that describe how to create a query log:"
 msgstr "クエリーログを作るためのドキュメントへのリンクは次の通りです。"
 
-#: ../../doc/text/run-regression-test.md:105
 msgid ""
 "  * Groonga server users: You can create a query log file by using\n"
 "    `--query-log-path` option. See [groonga command][] documentation\n"
@@ -1245,19 +1123,15 @@ msgstr ""
 "  * Groonga HTTPDユーザー向け: `groonga_query_log_path` ディレクティブを使うとクエリーログを作れます。詳細は ["
 "groonga_query_log_path][] のドキュメントを見てください。"
 
-#: ../../doc/text/run-regression-test.md:112
 msgid "### Run"
 msgstr "### 実行"
 
-#: ../../doc/text/run-regression-test.md:114
 msgid "Now, you can run regression test."
 msgstr "準備が終わったらリグレッションテストを実行できます。"
 
-#: ../../doc/text/run-regression-test.md:116
 msgid "Let the followings:"
 msgstr "ここでは次のことを仮定します。"
 
-#: ../../doc/text/run-regression-test.md:118
 msgid ""
 "  * Use `~/groonga/test` as the working directory to run\n"
 "    regression test.\n"
@@ -1272,29 +1146,23 @@ msgstr ""
 "  * 現在のGroongaは `/opt/groonga-current/bin/groonga` にインストールされているとします。\n"
 "  * 新しいGroongaは `/opt/groonga-new/bin/groonga` にインストールされているとします。"
 
-#: ../../doc/text/run-regression-test.md:125
 msgid "Install required packages:"
 msgstr "必要なパッケージをインストールします。"
 
-#: ../../doc/text/run-regression-test.md:127
 msgid "    % gem install rroonga groonga-query-log"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:129
 msgid "Prepare the working directory:"
 msgstr "ワーキングディレクトリーを準備します。"
 
-#: ../../doc/text/run-regression-test.md:131
 msgid ""
 "    % mkdir -p ~/groonga/test/{schema,indexes,data,query-logs}\n"
 "    % cd ~/groonga/test/"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:134
 msgid "Extract needed data from the current database:"
 msgstr "現在のデータベースから必要なデータを抽出します。"
 
-#: ../../doc/text/run-regression-test.md:136
 msgid ""
 "    % grndump --no-dump-indexes --no-dump-tables /var/lib/groonga/db > schema/"
 "ddl.grn\n"
@@ -1305,24 +1173,20 @@ msgid ""
 "    % cp /var/log/groonga/query-*.log query-logs/"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:141
 msgid "Run regression test:"
 msgstr "リグレッションテストを実行します。"
 
-#: ../../doc/text/run-regression-test.md:143
 msgid ""
 "    % groonga-query-log-run-regression-test \\\n"
 "        --old-groonga=/opt/groonga-current/bin/groonga \\\n"
 "        --new-groonga=/opt/groonga-new/bin/groonga"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:147
 msgid ""
 "It creates new two databases from input data. One is created by the\n"
 "current Groonga. Another is created by the new Groonga."
 msgstr "実行すると、入力データから2つのデータベースを作成します。1つは現在のGroongaで作ります。もう1つは古いGroongaで作ります。"
 
-#: ../../doc/text/run-regression-test.md:150
 msgid ""
 "It starts to send requests in a query log to both Groonga servers\n"
 "after databases are created. If responses don't have difference, the\n"
@@ -1332,7 +1196,6 @@ msgstr ""
 "データベースを作成したら、クエリーログの中のリクエストを両方のGroongaサーバーへ送ります。もし、レスポンスに違いがなかったらそのリクエストには問題があ"
 "りません。もし、レスポンスに違いがあれば、そのリクエストには問題があるかもしれません。"
 
-#: ../../doc/text/run-regression-test.md:155
 msgid ""
 "You can find details about requests that generate different response in test\n"
 "result logs. You can find test result logs under `results/`\n"
@@ -1344,33 +1207,26 @@ msgstr ""
 "ルのファイル名は入力のクエリーログのファイル名と同じです。もし、クエリーログが `query-logs/query-20140508.log` なら、テスト"
 "結果ログのファイル名は `results/query-20140508.log` になります。"
 
-#: ../../doc/text/run-regression-test.md:161
 msgid "## Advanced usage"
 msgstr "## 高度な使い方"
 
-#: ../../doc/text/run-regression-test.md:163
 msgid "There are some advanced usages. This section describes about them."
 msgstr "いくつか高度な使い方があります。このセクションではそれらについて説明します。"
 
-#: ../../doc/text/run-regression-test.md:165
 msgid "### `--n-clients`"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:167
 msgid "If your machine has free resource, you can speed up a regression test."
 msgstr "マシンのリソースに余裕があるときは、リグレッションテストを高速化できます。"
 
-#: ../../doc/text/run-regression-test.md:169
 msgid ""
 "Use `--n-clients` option to send multiple requests concurrently. It\n"
 "will reduce execution time."
 msgstr "`--n-clients` オプションを使うと複数のリクエストを並行して送ります。これにより実行時間が短くなります。"
 
-#: ../../doc/text/run-regression-test.md:172
 msgid "Here is a sample command line to use `--n-clients`:"
 msgstr "`--n-clients` を使ったサンプルのコマンドラインは次の通りです。"
 
-#: ../../doc/text/run-regression-test.md:174
 msgid ""
 "    % groonga-query-log-run-regression-test \\\n"
 "        --n-clients=4 \\\n"
@@ -1378,19 +1234,18 @@ msgid ""
 "        --new-groonga=/opt/groonga-new/bin/groonga"
 msgstr ""
 
-#: ../../doc/text/run-regression-test.md:179
 msgid "## Conclusion"
 msgstr "## まとめ"
 
-#: ../../doc/text/run-regression-test.md:181
 msgid ""
 "You can run regression test with\n"
 "`groonga-query-log-run-regression-test`. It helps you to upgrade\n"
 "Groonga safely by confirming a new Groonga doesn't have problem with\n"
 "your data."
-msgstr "`groonga-query-log-run-regression-test` を使えばリグレッションテストができます。自分のデータで新しいGroongaには問題がないことを確認できるので、Groongaを安全にアップグレードするときの役に立ちます。"
+msgstr ""
+"`groonga-query-log-run-regression-test` を使えばリグレッションテストができます。自分のデータで新しいGroongaに"
+"は問題がないことを確認できるので、Groongaを安全にアップグレードするときの役に立ちます。"
 
-#: ../../doc/text/run-regression-test.md:186
 msgid ""
 "  [online index construction]: http://groonga.org/docs/reference/indexing.html"
 "#online-index-construction\n"
@@ -1411,52 +1266,10 @@ msgstr ""
 "roonga-httpd.html#groonga-query-log-path"
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:3
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:3
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:3
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:3
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:3
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:3
-#: ../../lib/groonga/query-log/command-line-utils.rb:3
-#: ../../lib/groonga/query-log/command/detect-memory-leak.rb:3
-#: ../../lib/groonga/query-log/command/replay.rb:3
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:3
-#: ../../lib/groonga/query-log/command/verify-server.rb:3
-#: ../../lib/groonga/query-log/extractor.rb:3
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:3
-#: ../../lib/groonga/query-log/parser.rb:3
-#: ../../lib/groonga/query-log/replayer.rb:3
-#: ../../lib/groonga/query-log/response-comparer.rb:3
-#: ../../lib/groonga/query-log/server-verifier.rb:3
-#: ../../lib/groonga/query-log/version.rb:3
 msgid "Copyright (C) 2012-2014  Kouhei Sutou <kou@clear-code.com>"
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:5
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:5
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:5
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:5
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:5
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:5
-#: ../../lib/groonga/query-log/command-line-utils.rb:5
-#: ../../lib/groonga/query-log/command/detect-memory-leak.rb:5
-#: ../../lib/groonga/query-log/command/replay.rb:5
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:5
-#: ../../lib/groonga/query-log/command/verify-server.rb:5
-#: ../../lib/groonga/query-log/extractor.rb:5
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:5
-#: ../../lib/groonga/query-log/parser.rb:5
-#: ../../lib/groonga/query-log/replayer.rb:5
-#: ../../lib/groonga/query-log/response-comparer.rb:5
-#: ../../lib/groonga/query-log/server-verifier.rb:5
-#: ../../lib/groonga/query-log/version.rb:5
 msgid ""
 "This library is free software; you can redistribute it and/or\n"
 "modify it under the terms of the GNU Lesser General Public\n"
@@ -1465,27 +1278,6 @@ msgid ""
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:10
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:10
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:10
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:10
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:10
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:10
-#: ../../lib/groonga/query-log/command-line-utils.rb:10
-#: ../../lib/groonga/query-log/command/detect-memory-leak.rb:10
-#: ../../lib/groonga/query-log/command/replay.rb:10
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:10
-#: ../../lib/groonga/query-log/command/verify-server.rb:10
-#: ../../lib/groonga/query-log/extractor.rb:10
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:10
-#: ../../lib/groonga/query-log/parser.rb:10
-#: ../../lib/groonga/query-log/replayer.rb:10
-#: ../../lib/groonga/query-log/response-comparer.rb:10
-#: ../../lib/groonga/query-log/server-verifier.rb:10
-#: ../../lib/groonga/query-log/version.rb:10
 msgid ""
 "This library is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1494,27 +1286,6 @@ msgid ""
 msgstr ""
 
 # Groonga
-#: ../../lib/groonga/query-log/analyzer.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/html.rb:15
-#: ../../lib/groonga/query-log/analyzer/reporter/json.rb:15
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:15
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:15
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:15
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:15
-#: ../../lib/groonga/query-log/command-line-utils.rb:15
-#: ../../lib/groonga/query-log/command/detect-memory-leak.rb:15
-#: ../../lib/groonga/query-log/command/replay.rb:15
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:15
-#: ../../lib/groonga/query-log/command/verify-server.rb:15
-#: ../../lib/groonga/query-log/extractor.rb:15
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:15
-#: ../../lib/groonga/query-log/parser.rb:15
-#: ../../lib/groonga/query-log/replayer.rb:15
-#: ../../lib/groonga/query-log/response-comparer.rb:15
-#: ../../lib/groonga/query-log/server-verifier.rb:15
-#: ../../lib/groonga/query-log/version.rb:15
 msgid ""
 "You should have received a copy of the GNU Lesser General Public\n"
 "License along with this library; if not, write to the Free Software\n"
@@ -1522,32 +1293,26 @@ msgid ""
 msgstr ""
 
 # @return [Analyzer]
-#: ../../lib/groonga/query-log/analyzer.rb:41
 msgid "a new instance of Analyzer"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer#run
-#: ../../lib/groonga/query-log/analyzer.rb:46
 msgid ""
 "Executes analyzer for groonga's query logs.\n"
 "\"groonga-query-log-analyze\" command run this method."
 msgstr "groongaのクエリログの解析を実行します。\"groonga-query-log-analyze\"コマンドはこのメソッドを実行します。"
 
 # Groonga::QueryLog::Analyzer#run
-#: ../../lib/groonga/query-log/analyzer.rb:49
 msgid ""
 "If only paths of query log files are specified,\n"
 "this method prints a result of them to console with coloring."
 msgstr "もし入力となるログファイルだけ指定した場合は、端末上に色付けした結果を表示します。"
 
 # @param
-#: ../../lib/groonga/query-log/analyzer.rb:60
-#: ../../lib/groonga/query-log/extractor.rb:61
 msgid "tag|param|arguments"
 msgstr ""
 
 # @example
-#: ../../lib/groonga/query-log/analyzer.rb:60
 msgid ""
 "analyzer = Groonga::QueryLog::Analyzer.new\n"
 "analyzer.run(\"--output\", \"statistics.html\",\n"
@@ -1560,7 +1325,6 @@ msgstr ""
 "             \"query.log\")"
 
 # @param [Array<String>] arguments
-#: ../../lib/groonga/query-log/analyzer.rb:60
 msgid ""
 "arguments for\n"
 "groonga-query-log-analyze. Please execute\n"
@@ -1569,279 +1333,243 @@ msgstr ""
 "groonga-query-log-analyzeに渡すオプション。詳細は\"groonga-query-log-analyze --help\"を実行するか#"
 "setup_optionsをご覧ください。"
 
-# @param value
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:30
-msgid "the value to set the attribute slow_operation_threshold to."
-msgstr ""
-
-# @param value
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:30
-msgid "the value to set the attribute slow_response_threshold to."
-msgstr ""
-
-# @param
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:30
-#: ../../lib/groonga/query-log/extractor.rb:37
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:87
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:88
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:89
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:90
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:91
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:92
-#: ../../lib/groonga/query-log/replayer.rb:137
-#: ../../lib/groonga/query-log/replayer.rb:138
-#: ../../lib/groonga/query-log/replayer.rb:139
-#: ../../lib/groonga/query-log/replayer.rb:140
-#: ../../lib/groonga/query-log/replayer.rb:141
-#: ../../lib/groonga/query-log/replayer.rb:142
-#: ../../lib/groonga/query-log/server-verifier.rb:138
-#: ../../lib/groonga/query-log/server-verifier.rb:139
-#: ../../lib/groonga/query-log/server-verifier.rb:140
-#: ../../lib/groonga/query-log/server-verifier.rb:141
-#: ../../lib/groonga/query-log/server-verifier.rb:142
-#: ../../lib/groonga/query-log/server-verifier.rb:180
-#: ../../lib/groonga/query-log/server-verifier.rb:181
-#: ../../lib/groonga/query-log/server-verifier.rb:182
-msgid "tag|param|value"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::Reporter#output
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:27
 msgid "Returns the value of attribute output"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold
-# Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:28
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:31
-msgid "Returns the value of attribute slow_operation_threshold"
+# @param value
+msgid "the value to set the attribute slow_operation_threshold to."
 msgstr ""
 
-# @return [Reporter]
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:28
-msgid "a new instance of Reporter"
+# @param
+msgid "tag|param|value"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute slow_response_threshold to."
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold
 # Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:28
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:31
 msgid "Returns the value of attribute slow_response_threshold"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold
+# Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold
+msgid "Returns the value of attribute slow_operation_threshold"
+msgstr ""
+
+# @return [Reporter]
+msgid "a new instance of Reporter"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_response_threshold=
 # Groonga::QueryLog::Analyzer::Statistic#slow_response_threshold=
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:28
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:31
 msgid "Sets the attribute slow_response_threshold"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold=
 # Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold=
-#: ../../lib/groonga/query-log/analyzer/reporter.rb:28
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:31
 msgid "Sets the attribute slow_operation_threshold"
 msgstr ""
 
 # @return [Color]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:31
 msgid "a new instance of Color"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::ConsoleReporter::Color#name
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:31
 msgid "Returns the value of attribute name"
 msgstr ""
 
-# @return [MixColor]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:96
-msgid "a new instance of MixColor"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::ConsoleReporter::MixColor#colors
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:96
 msgid "Returns the value of attribute colors"
 msgstr ""
 
+# @return [MixColor]
+msgid "a new instance of MixColor"
+msgstr ""
+
 # @return [ConsoleReporter]
-#: ../../lib/groonga/query-log/analyzer/reporter/console.rb:119
 msgid "a new instance of ConsoleReporter"
 msgstr ""
 
 # @return [SizedGroupedOperations]
-#: ../../lib/groonga/query-log/analyzer/sized-grouped-operations.rb:24
 msgid "a new instance of SizedGroupedOperations"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_responses
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
-msgid "Returns the value of attribute n_slow_responses"
-msgstr ""
-
-# Groonga::QueryLog::Analyzer::SizedStatistics#n_responses
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
-msgid "Returns the value of attribute n_responses"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_operations
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:30
 msgid "Returns the value of attribute n_slow_operations"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operations
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:31
-msgid "Returns the value of attribute slow_operations"
+# Groonga::QueryLog::Analyzer::SizedStatistics#n_responses
+msgid "Returns the value of attribute n_responses"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::SizedStatistics#n_slow_responses
+msgid "Returns the value of attribute n_slow_responses"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#total_elapsed
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:31
 msgid "Returns the value of attribute total_elapsed"
 msgstr ""
 
-# @return [SizedStatistics]
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-msgid "a new instance of SizedStatistics"
+# Groonga::QueryLog::Analyzer::SizedStatistics#slow_operations
+msgid "Returns the value of attribute slow_operations"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#start_time
 # Groonga::QueryLog::Analyzer::Statistic#start_time
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:29
 msgid "Returns the value of attribute start_time"
 msgstr ""
 
+# @return [SizedStatistics]
+msgid "a new instance of SizedStatistics"
+msgstr ""
+
 # Groonga::QueryLog::Analyzer::SizedStatistics#last_time
-#: ../../lib/groonga/query-log/analyzer/sized-statistics.rb:32
 msgid "Returns the value of attribute last_time"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#raw_command
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:29
 msgid "Returns the value of attribute raw_command"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#context_id
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:29
 msgid "Returns the value of attribute context_id"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#return_code
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:30
 msgid "Returns the value of attribute return_code"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#elapsed
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:30
 msgid "Returns the value of attribute elapsed"
 msgstr ""
 
 # @return [Statistic]
-#: ../../lib/groonga/query-log/analyzer/statistic.rb:31
 msgid "a new instance of Statistic"
 msgstr ""
 
 # @return [Streamer]
-#: ../../lib/groonga/query-log/analyzer/streamer.rb:24
 msgid "a new instance of Streamer"
 msgstr ""
 
+# @return [CommandVersionCompatibilityChecker]
+msgid "a new instance of CommandVersionCompatibilityChecker"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute target_version to."
+msgstr ""
+
+# Groonga::QueryLog::CommandVersionCompatibilityChecker::Options#target_version
+msgid "Returns the value of attribute target_version"
+msgstr ""
+
+# Groonga::QueryLog::CommandVersionCompatibilityChecker::Options#target_version=
+msgid "Sets the attribute target_version"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute output_path to."
+msgstr ""
+
+# @return [Options]
+msgid "a new instance of Options"
+msgstr ""
+
+# Groonga::QueryLog::ServerVerifier::Options#output_path
+msgid "Returns the value of attribute output_path"
+msgstr ""
+
+# Groonga::QueryLog::ServerVerifier::Options#output_path=
+msgid "Sets the attribute output_path"
+msgstr ""
+
+# @return [CheckCommandVersionCompatibility]
+msgid "a new instance of CheckCommandVersionCompatibility"
+msgstr ""
+
 # @return [DetectMemoryLeak]
-#: ../../lib/groonga/query-log/command/detect-memory-leak.rb:27
 msgid "a new instance of DetectMemoryLeak"
 msgstr ""
 
+# @return [FormatRegressionTestLogs]
+msgid "a new instance of FormatRegressionTestLogs"
+msgstr ""
+
 # @return [Replay]
-#: ../../lib/groonga/query-log/command/replay.rb:27
 msgid "a new instance of Replay"
 msgstr ""
 
 # @return [RunRegressionTest]
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:31
 msgid "a new instance of RunRegressionTest"
 msgstr ""
 
 # @return [GroongaServer]
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:164
 msgid "a new instance of GroongaServer"
-msgstr ""
-
-# Groonga::QueryLog::Command::RunRegressionTest::GroongaServer#host
-# Groonga::QueryLog::MemoryLeakDetector::Options#host
-# Groonga::QueryLog::Replayer::Options#host
-# Groonga::QueryLog::ServerVerifier::GroongaOptions#host
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:164
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:88
-#: ../../lib/groonga/query-log/replayer.rb:138
-#: ../../lib/groonga/query-log/server-verifier.rb:181
-msgid "Returns the value of attribute host"
 msgstr ""
 
 # Groonga::QueryLog::Command::RunRegressionTest::GroongaServer#port
 # Groonga::QueryLog::MemoryLeakDetector::Options#port
 # Groonga::QueryLog::Replayer::Options#port
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#port
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:164
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:89
-#: ../../lib/groonga/query-log/replayer.rb:139
-#: ../../lib/groonga/query-log/server-verifier.rb:182
 msgid "Returns the value of attribute port"
 msgstr ""
 
+# Groonga::QueryLog::Command::RunRegressionTest::GroongaServer#host
+# Groonga::QueryLog::MemoryLeakDetector::Options#host
+# Groonga::QueryLog::Replayer::Options#host
+# Groonga::QueryLog::ServerVerifier::GroongaOptions#host
+msgid "Returns the value of attribute host"
+msgstr ""
+
 # @return [Tester]
-#: ../../lib/groonga/query-log/command/run-regression-test.rb:279
 msgid "a new instance of Tester"
 msgstr ""
 
+# @return [ShowRunningQueries]
+msgid "a new instance of ShowRunningQueries"
+msgstr ""
+
 # @return [VerifyServer]
-#: ../../lib/groonga/query-log/command/verify-server.rb:27
 msgid "a new instance of VerifyServer"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/extractor.rb:37
 msgid "the value to set the attribute options to."
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#slow_operation_threshold=
 # Groonga::QueryLog::Analyzer::Statistic#slow_operation_threshold=
-#: ../../lib/groonga/query-log/extractor.rb:38
 msgid "Sets the attribute options"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Reporter#output
-#: ../../lib/groonga/query-log/extractor.rb:38
 msgid "Returns the value of attribute options"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::SizedStatistics#total_elapsed
-#: ../../lib/groonga/query-log/extractor.rb:39
 msgid "Returns the value of attribute option_parser"
 msgstr ""
 
 # @return [Streamer]
-#: ../../lib/groonga/query-log/extractor.rb:40
 msgid "a new instance of Extractor"
 msgstr ""
 
 # Groonga::QueryLog::Extractor#run
-#: ../../lib/groonga/query-log/extractor.rb:47
 msgid ""
 "Executes extractor for groonga's query logs.\n"
 "\"groonga-query-log-extract\" command runs this method."
 msgstr "クエリログからのコマンドの抽出を実行します。\"groonga-query-log-extract\"はこのメソッドを実行します。"
 
 # Groonga::QueryLog::Extractor#run
-#: ../../lib/groonga/query-log/extractor.rb:50
 msgid ""
 "If only paths of query log files are specified,\n"
 "this method prints command(s) of them to console."
 msgstr "もし入力となるログファイルだけが指定された場合は、このメソッドは抽出したコマンドを端末上に表示します。"
 
 # @example
-#: ../../lib/groonga/query-log/extractor.rb:61
 msgid ""
 "extractor = Groonga::QueryLog::Extractor.new\n"
 "extractor.run(\"--output\", \"commands.output\",\n"
@@ -1854,7 +1582,6 @@ msgstr ""
 "              \"query.log\")"
 
 # @param [Array<String>] arguments
-#: ../../lib/groonga/query-log/extractor.rb:61
 msgid ""
 "arguments for\n"
 "groonga-query-log-extract. Please execute\n"
@@ -1863,122 +1590,99 @@ msgstr ""
 "groonga-query-log-extractに渡すオプション。詳細は\"groonga-query-log-extract --help\"を実行するか#"
 "setup_optionsをご覧ください。"
 
+# @return [IncompatibilityDetector]
+msgid "a new instance of IncompatibilityDetector"
+msgstr ""
+
+# Groonga::QueryLog::IncompatibilityDetector#version
+msgid "Returns the value of attribute version"
+msgstr ""
+
+# @return [Version1]
+msgid "a new instance of Version1"
+msgstr ""
+
+# @return [Version2]
+msgid "a new instance of Version2"
+msgstr ""
+
 # @return [MemoryLeakDetector]
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:28
 msgid "a new instance of MemoryLeakDetector"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:87
-#: ../../lib/groonga/query-log/replayer.rb:137
-#: ../../lib/groonga/query-log/server-verifier.rb:180
 msgid "the value to set the attribute host to."
-msgstr ""
-
-# @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:88
-#: ../../lib/groonga/query-log/replayer.rb:138
-#: ../../lib/groonga/query-log/server-verifier.rb:181
-msgid "the value to set the attribute port to."
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#host=
 # Groonga::QueryLog::Replayer::Options#host=
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#host=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:88
-#: ../../lib/groonga/query-log/replayer.rb:138
-#: ../../lib/groonga/query-log/server-verifier.rb:181
 msgid "Sets the attribute host"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute port to."
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute protocol to."
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#port=
 # Groonga::QueryLog::Replayer::Options#port=
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#port=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:89
-#: ../../lib/groonga/query-log/replayer.rb:139
-#: ../../lib/groonga/query-log/server-verifier.rb:182
 msgid "Sets the attribute port"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:89
-#: ../../lib/groonga/query-log/replayer.rb:139
-#: ../../lib/groonga/query-log/server-verifier.rb:182
-msgid "the value to set the attribute protocol to."
-msgstr ""
-
-# @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:90
 msgid "the value to set the attribute pid to."
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#protocol=
 # Groonga::QueryLog::Replayer::Options#protocol=
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#protocol=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:90
-#: ../../lib/groonga/query-log/replayer.rb:140
-#: ../../lib/groonga/query-log/server-verifier.rb:183
 msgid "Sets the attribute protocol"
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#protocol
 # Groonga::QueryLog::Replayer::Options#protocol
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#protocol
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:90
-#: ../../lib/groonga/query-log/replayer.rb:140
-#: ../../lib/groonga/query-log/server-verifier.rb:183
 msgid "Returns the value of attribute protocol"
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#pid
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:91
 msgid "Returns the value of attribute pid"
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#pid=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:91
 msgid "Sets the attribute pid"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:91
 msgid "the value to set the attribute n_tries to."
 msgstr ""
 
-# Groonga::QueryLog::MemoryLeakDetector::Options#n_tries
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:92
-msgid "Returns the value of attribute n_tries"
-msgstr ""
-
 # @param value
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:92
 msgid "the value to set the attribute force_disable_cache to."
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#n_tries=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:92
 msgid "Sets the attribute n_tries"
 msgstr ""
 
+# Groonga::QueryLog::MemoryLeakDetector::Options#n_tries
+msgid "Returns the value of attribute n_tries"
+msgstr ""
+
 # Groonga::QueryLog::MemoryLeakDetector::Options#force_disable_cache=
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:93
 msgid "Sets the attribute force_disable_cache"
 msgstr ""
 
-# @return [Options]
-#: ../../lib/groonga/query-log/memory-leak-detector.rb:93
-#: ../../lib/groonga/query-log/replayer.rb:143
-#: ../../lib/groonga/query-log/server-verifier.rb:143
-msgid "a new instance of Options"
-msgstr ""
-
 # @return [Parser]
-#: ../../lib/groonga/query-log/parser.rb:26
 msgid "a new instance of Parser"
 msgstr ""
 
 # Groonga::QueryLog::Parser#parse
-#: ../../lib/groonga/query-log/parser.rb:33
 msgid ""
 "Parses query-log file as stream to\n"
 "{Groonga::QueryLog::Analyzer::Statistics} including some\n"
@@ -1987,137 +1691,93 @@ msgstr ""
 "クエリログファイルをクエリに対する情報をもつ {Groonga::QueryLog::Analyzer::Statistics} オブジェクトの配列にパース"
 "します。"
 
+# @param
+msgid "tag|param|input"
+msgstr ""
+
+# @yieldparam [Groonga::QueryLog::Analyzer::Statistic] Statistic
+msgid "statistics of each query in log files."
+msgstr "ログファイル内の各クエリに対応したStatisticsオブジェクト。"
+
+# @param [IO] input
+msgid "IO for input query log file."
+msgstr "クエリログファイルを示すIOオブジェクト。"
+
+# @yieldparam [Groonga::QueryLog::Analyzer::Statistic]
+msgid "tag|yieldparam|statistic"
+msgstr ""
+
 # @yield [statistics]
-#: ../../lib/groonga/query-log/parser.rb:41
 msgid ""
 "if a block is specified, it is called\n"
 "every time a query is finished parsing."
 msgstr "もしブロックが指定された場合は、1つのクエリがパースし終わるごとにブロックが実行されます。"
 
-# @param
-#: ../../lib/groonga/query-log/parser.rb:41
-msgid "tag|param|input"
-msgstr ""
-
-# @param [IO] input
-#: ../../lib/groonga/query-log/parser.rb:41
-msgid "IO for input query log file."
-msgstr "クエリログファイルを示すIOオブジェクト。"
-
-# @yieldparam [Groonga::QueryLog::Analyzer::Statistic] Statistic
-#: ../../lib/groonga/query-log/parser.rb:41
-msgid "statistics of each query in log files."
-msgstr "ログファイル内の各クエリに対応したStatisticsオブジェクト。"
-
-# @yieldparam [Groonga::QueryLog::Analyzer::Statistic]
-#: ../../lib/groonga/query-log/parser.rb:41
-msgid "tag|yieldparam|statistic"
-msgstr ""
-
 # @return [Replayer]
-#: ../../lib/groonga/query-log/replayer.rb:29
 msgid "a new instance of Replayer"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/replayer.rb:140
-#: ../../lib/groonga/query-log/server-verifier.rb:138
 msgid "the value to set the attribute n_clients to."
 msgstr ""
 
 # Groonga::QueryLog::Replayer::Options#n_clients
 # Groonga::QueryLog::ServerVerifier::Options#n_clients
-#: ../../lib/groonga/query-log/replayer.rb:141
-#: ../../lib/groonga/query-log/server-verifier.rb:139
 msgid "Returns the value of attribute n_clients"
 msgstr ""
 
 # Groonga::QueryLog::Replayer::Options#n_clients=
 # Groonga::QueryLog::ServerVerifier::Options#n_clients=
-#: ../../lib/groonga/query-log/replayer.rb:141
-#: ../../lib/groonga/query-log/server-verifier.rb:139
 msgid "Sets the attribute n_clients"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/replayer.rb:141
-#: ../../lib/groonga/query-log/server-verifier.rb:139
 msgid "the value to set the attribute request_queue_size to."
-msgstr ""
-
-# @param value
-#: ../../lib/groonga/query-log/replayer.rb:142
-#: ../../lib/groonga/query-log/server-verifier.rb:141
-msgid "the value to set the attribute target_command_names to."
 msgstr ""
 
 # Groonga::QueryLog::Replayer::Options#request_queue_size=
 # Groonga::QueryLog::ServerVerifier::Options#request_queue_size=
-#: ../../lib/groonga/query-log/replayer.rb:142
-#: ../../lib/groonga/query-log/server-verifier.rb:140
 msgid "Sets the attribute request_queue_size"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute target_command_names to."
 msgstr ""
 
 # Groonga::QueryLog::Replayer::Options#target_command_names
 # Groonga::QueryLog::ServerVerifier::Options#target_command_names
-#: ../../lib/groonga/query-log/replayer.rb:143
-#: ../../lib/groonga/query-log/server-verifier.rb:142
 msgid "Returns the value of attribute target_command_names"
 msgstr ""
 
 # Groonga::QueryLog::Replayer::Options#target_command_names=
 # Groonga::QueryLog::ServerVerifier::Options#target_command_names=
-#: ../../lib/groonga/query-log/replayer.rb:143
-#: ../../lib/groonga/query-log/server-verifier.rb:142
 msgid "Sets the attribute target_command_names"
 msgstr ""
 
 # @return [ResponseComparer]
-#: ../../lib/groonga/query-log/response-comparer.rb:20
 msgid "a new instance of ResponseComparer"
 msgstr ""
 
 # @return [ServerVerifier]
-#: ../../lib/groonga/query-log/server-verifier.rb:30
 msgid "a new instance of ServerVerifier"
 msgstr ""
 
 # Groonga::QueryLog::ServerVerifier::Options#groonga1
-#: ../../lib/groonga/query-log/server-verifier.rb:137
 msgid "Returns the value of attribute groonga1"
 msgstr ""
 
 # Groonga::QueryLog::ServerVerifier::Options#groonga2
-#: ../../lib/groonga/query-log/server-verifier.rb:138
 msgid "Returns the value of attribute groonga2"
 msgstr ""
 
 # @param value
-#: ../../lib/groonga/query-log/server-verifier.rb:140
 msgid "the value to set the attribute disable_cache to."
 msgstr ""
 
 # Groonga::QueryLog::ServerVerifier::Options#disable_cache=
-#: ../../lib/groonga/query-log/server-verifier.rb:141
 msgid "Sets the attribute disable_cache"
 msgstr ""
 
-# @param value
-#: ../../lib/groonga/query-log/server-verifier.rb:142
-msgid "the value to set the attribute output_path to."
-msgstr ""
-
-# Groonga::QueryLog::ServerVerifier::Options#output_path
-#: ../../lib/groonga/query-log/server-verifier.rb:143
-msgid "Returns the value of attribute output_path"
-msgstr ""
-
-# Groonga::QueryLog::ServerVerifier::Options#output_path=
-#: ../../lib/groonga/query-log/server-verifier.rb:143
-msgid "Sets the attribute output_path"
-msgstr ""
-
 # @return [GroongaOptions]
-#: ../../lib/groonga/query-log/server-verifier.rb:183
 msgid "a new instance of GroongaOptions"
 msgstr ""
