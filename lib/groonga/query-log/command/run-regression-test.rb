@@ -232,7 +232,11 @@ module Groonga
             FileUtils.mkdir_p(@database_path.dirname.to_s)
             system(@groonga, "-n", @database_path.to_s, "quit")
             grn_files.each do |grn_file|
-              command = [@groonga, @database_path.to_s]
+              command = [
+                @groonga,
+                "--log-path", log_path.to_s,
+                @database_path.to_s,
+              ]
               command_line = "#{command.join(' ')} < #{grn_file}"
               puts("Running...: #{command_line}")
               pid = spawn(*command, :in => grn_file.to_s)
