@@ -1,6 +1,6 @@
 # -*- mode: ruby; coding: utf-8 -*-
 #
-# Copyright (C) 2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2012-2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -37,7 +37,9 @@ Packnga::DocumentTask.new(spec) do |task|
   task.translate_languages = ["ja"]
 end
 
-Packnga::ReleaseTask.new(spec) do
+groonga_org_dir = Dir.glob("{..,../../www}/groonga.org").first
+Packnga::ReleaseTask.new(spec) do |task|
+  task.index_html_dir = groonga_org_dir
 end
 
 desc "Run tests"
