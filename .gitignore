@@ -1,6 +1,7 @@
 /pkg/
 /doc/reference/
 /doc/po/*.pot
+/doc/po/*/
 /.yardoc/
 /test/.test-result/
 /Gemfile.lock
