@@ -1,5 +1,12 @@
 # News
 
+## 1.1.0: 2014-10-31
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Supported log output on
+    loading data.
+
 ## 1.0.9: 2014-09-09
 
 ### Improvements
