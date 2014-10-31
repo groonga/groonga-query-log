@@ -76,42 +76,50 @@ module Groonga
               response1 = $POSTMATCH.chomp
             when /\Aresponse2: /
               response2 = $POSTMATCH.chomp
-              parse_failed = false
-              begin
-                JSON.parse(response1)
-              rescue JSON::ParserError
-                puts(command)
-                puts("failed to parse response1: #{$!.message}")
-                puts(response1)
-                parse_failed = true
-              end
+              next unless valid_entry?(command, response1, response2)
+              report_diff(command, repsponse1, response2)
+            end
+          end
+        end
 
-              begin
-                JSON.parse(response2)
-              rescue JSON::ParserError
-                puts(command)
-                puts("failed to parse response2: #{$!.message}")
-                puts(response2)
-                parse_failed = true
-              end
+        def valid_entry?(command, response1, response2)
+          valid = true
 
-              next if parse_failed
+          begin
+            JSON.parse(response1)
+          rescue JSON::ParserError
+            puts(command)
+            puts("failed to parse response1: #{$!.message}")
+            puts(response1)
+            valid = false
+          end
 
-              next if response1 == response2
+          begin
+            JSON.parse(response2)
+          rescue JSON::ParserError
+            puts(command)
+            puts("failed to parse response2: #{$!.message}")
+            puts(response2)
+            valid = false
+          end
 
-              base_name = File.basename(path, ".*")
-              Tempfile.open("response1-#{base_name}") do |response1_file|
-                PP.pp(JSON.parse(response1), response1_file)
-                response1_file.flush
-                Tempfile.open("response2-#{base_name}") do |response2_file|
-                  PP.pp(JSON.parse(response2), response2_file)
-                  response2_file.flush
-                  puts(command)
-                  system("diff",
-                         "-u",
-                         response1_file.path, response2_file.path)
-                end
-              end
+          valid
+        end
+
+        def report_diff(command, response1, response2)
+          return if response1 == response2
+
+          base_name = File.basename(path, ".*")
+          Tempfile.open("response1-#{base_name}") do |response1_file|
+            PP.pp(JSON.parse(response1), response1_file)
+            response1_file.flush
+            Tempfile.open("response2-#{base_name}") do |response2_file|
+              PP.pp(JSON.parse(response2), response2_file)
+              response2_file.flush
+              puts(command)
+              system("diff",
+                     "-u",
+                     response1_file.path, response2_file.path)
             end
           end
         end
