@@ -105,6 +105,7 @@ module Groonga
 
       def verify_command(groonga1_client, groonga2_client, command)
         command["cache"] = "no" if @options.disable_cache?
+        command["output_type"] = :json
         response1 = groonga1_client.execute(command)
         response2 = groonga2_client.execute(command)
         comparer = ResponseComparer.new(command, response1, response2)
