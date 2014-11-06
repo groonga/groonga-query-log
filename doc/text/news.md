@@ -1,5 +1,13 @@
 # News
 
+## 1.1.1: 2014-11-06
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Forced to use JSON output
+    type because XML output type and TSV output type for select
+    command aren't supported yet.
+
 ## 1.1.0: 2014-10-31
 
 ### Improvements
