@@ -77,7 +77,7 @@ module Groonga
             when /\Aresponse2: /
               response2 = $POSTMATCH.chomp
               next unless valid_entry?(command, response1, response2)
-              report_diff(command, repsponse1, response2)
+              report_diff(command, response1, response2)
             end
           end
         end
