@@ -62,8 +62,8 @@ module Groonga
         private
         def format_log(input, path)
           command = nil
-          response1 = nil
-          response2 = nil
+          response_old = nil
+          response_new = nil
 
           input.each_line do |line|
             unless line.valid_encoding?
@@ -75,32 +75,32 @@ module Groonga
             when /\Acommand: /
               command = $POSTMATCH.chomp
             when /\Aresponse1: /
-              response1 = $POSTMATCH.chomp
+              response_old = $POSTMATCH.chomp
             when /\Aresponse2: /
-              response2 = $POSTMATCH.chomp
-              next unless valid_entry?(command, response1, response2)
-              report_diff(command, response1, response2)
+              response_new = $POSTMATCH.chomp
+              next unless valid_entry?(command, response_old, response_new)
+              report_diff(command, response_old, response_new)
             end
           end
         end
 
-        def valid_entry?(command, response1, response2)
+        def valid_entry?(command, response_old, response_new)
           valid = true
 
           begin
-            JSON.parse(response1)
+            JSON.parse(response_old)
           rescue JSON::ParserError
             puts(command)
-            puts("failed to parse response1: #{$!.message}")
+            puts("failed to parse old response: #{$!.message}")
             puts(response1)
             valid = false
           end
 
           begin
-            JSON.parse(response2)
+            JSON.parse(response_new)
           rescue JSON::ParserError
             puts(command)
-            puts("failed to parse response2: #{$!.message}")
+            puts("failed to parse new response: #{$!.message}")
             puts(response2)
             valid = false
           end
@@ -108,21 +108,21 @@ module Groonga
           valid
         end
 
-        def report_diff(command, response1, response2)
-          return if response1 == response2
+        def report_diff(command, response_old, response_new)
+          return if response_old == response_new
 
-          Tempfile.open("response1") do |response1_file|
-            PP.pp(JSON.parse(response1), response1_file)
-            response1_file.flush
-            Tempfile.open("response2") do |response2_file|
-              PP.pp(JSON.parse(response2), response2_file)
-              response2_file.flush
+          Tempfile.open("response-old") do |response_old_file|
+            PP.pp(JSON.parse(response_old), response_old_file)
+            response_old_file.flush
+            Tempfile.open("response-new") do |response_new_file|
+              PP.pp(JSON.parse(response_new), response_new_file)
+              response_new_file.flush
               report_command(command)
               system("diff",
                      "--label=old",
                      "--label=new",
                      "-u",
-                     response1_file.path, response2_file.path)
+                     response_old_file.path, response_new_file.path)
             end
           end
         end
