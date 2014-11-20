@@ -22,3 +22,9 @@ require "stringio"
 require "groonga/command"
 
 require "groonga/query-log"
+
+module Fixture
+  def fixture_path(*components)
+    File.join(File.dirname(__FILE__), "fixtures", *components)
+  end
+end

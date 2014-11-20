@@ -1,0 +1,3 @@
+command: select Logs
+response1: [[[2], [["_id", "UInt32"], ["message", "Text"]], [1, "log message1"], [2, "log message2"]]]
+response2: [[[2], [["_id", "UInt32"], ["message", "Text"]], [1, "log message1"], [3, "log message3"]]]
