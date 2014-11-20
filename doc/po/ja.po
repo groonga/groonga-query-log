@@ -797,11 +797,20 @@ msgstr ""
 msgid "# News"
 msgstr "# お知らせ"
 
-msgid "## 1.1.0: 2014-10-31"
+msgid "## 1.1.1: 2014-11-06"
 msgstr ""
 
 msgid "### Improvements"
 msgstr "### 改善"
+
+msgid ""
+"  * groonga-query-log-run-regression-test: Forced to use JSON output\n"
+"    type because XML output type and TSV output type for select\n"
+"    command aren't supported yet."
+msgstr ""
+
+msgid "## 1.1.0: 2014-10-31"
+msgstr ""
 
 msgid ""
 "  * groonga-query-log-run-regression-test: Supported log output on\n"
@@ -1381,12 +1390,12 @@ msgstr ""
 msgid "Returns the value of attribute name"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::ConsoleReporter::MixColor#colors
-msgid "Returns the value of attribute colors"
-msgstr ""
-
 # @return [MixColor]
 msgid "a new instance of MixColor"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::ConsoleReporter::MixColor#colors
+msgid "Returns the value of attribute colors"
 msgstr ""
 
 # @return [ConsoleReporter]
@@ -1430,12 +1439,12 @@ msgstr ""
 msgid "Returns the value of attribute last_time"
 msgstr ""
 
-# Groonga::QueryLog::Analyzer::Statistic#raw_command
-msgid "Returns the value of attribute raw_command"
-msgstr ""
-
 # Groonga::QueryLog::Analyzer::Statistic#context_id
 msgid "Returns the value of attribute context_id"
+msgstr ""
+
+# Groonga::QueryLog::Analyzer::Statistic#raw_command
+msgid "Returns the value of attribute raw_command"
 msgstr ""
 
 # Groonga::QueryLog::Analyzer::Statistic#return_code
@@ -1462,28 +1471,28 @@ msgstr ""
 msgid "the value to set the attribute target_version to."
 msgstr ""
 
-# Groonga::QueryLog::CommandVersionCompatibilityChecker::Options#target_version
-msgid "Returns the value of attribute target_version"
-msgstr ""
-
 # Groonga::QueryLog::CommandVersionCompatibilityChecker::Options#target_version=
 msgid "Sets the attribute target_version"
+msgstr ""
+
+# Groonga::QueryLog::CommandVersionCompatibilityChecker::Options#target_version
+msgid "Returns the value of attribute target_version"
 msgstr ""
 
 # @param value
 msgid "the value to set the attribute output_path to."
 msgstr ""
 
-# @return [Options]
-msgid "a new instance of Options"
+# Groonga::QueryLog::ServerVerifier::Options#output_path=
+msgid "Sets the attribute output_path"
 msgstr ""
 
 # Groonga::QueryLog::ServerVerifier::Options#output_path
 msgid "Returns the value of attribute output_path"
 msgstr ""
 
-# Groonga::QueryLog::ServerVerifier::Options#output_path=
-msgid "Sets the attribute output_path"
+# @return [Options]
+msgid "a new instance of Options"
 msgstr ""
 
 # @return [CheckCommandVersionCompatibility]
@@ -1506,6 +1515,13 @@ msgstr ""
 msgid "a new instance of RunRegressionTest"
 msgstr ""
 
+# Groonga::QueryLog::Command::RunRegressionTest::GroongaServer#host
+# Groonga::QueryLog::MemoryLeakDetector::Options#host
+# Groonga::QueryLog::Replayer::Options#host
+# Groonga::QueryLog::ServerVerifier::GroongaOptions#host
+msgid "Returns the value of attribute host"
+msgstr ""
+
 # @return [GroongaServer]
 msgid "a new instance of GroongaServer"
 msgstr ""
@@ -1515,13 +1531,6 @@ msgstr ""
 # Groonga::QueryLog::Replayer::Options#port
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#port
 msgid "Returns the value of attribute port"
-msgstr ""
-
-# Groonga::QueryLog::Command::RunRegressionTest::GroongaServer#host
-# Groonga::QueryLog::MemoryLeakDetector::Options#host
-# Groonga::QueryLog::Replayer::Options#host
-# Groonga::QueryLog::ServerVerifier::GroongaOptions#host
-msgid "Returns the value of attribute host"
 msgstr ""
 
 # @return [Tester]
@@ -1590,12 +1599,12 @@ msgstr ""
 "groonga-query-log-extractに渡すオプション。詳細は\"groonga-query-log-extract --help\"を実行するか#"
 "setup_optionsをご覧ください。"
 
-# @return [IncompatibilityDetector]
-msgid "a new instance of IncompatibilityDetector"
-msgstr ""
-
 # Groonga::QueryLog::IncompatibilityDetector#version
 msgid "Returns the value of attribute version"
+msgstr ""
+
+# @return [IncompatibilityDetector]
+msgid "a new instance of IncompatibilityDetector"
 msgstr ""
 
 # @return [Version1]
@@ -1624,14 +1633,20 @@ msgstr ""
 msgid "the value to set the attribute port to."
 msgstr ""
 
-# @param value
-msgid "the value to set the attribute protocol to."
-msgstr ""
-
 # Groonga::QueryLog::MemoryLeakDetector::Options#port=
 # Groonga::QueryLog::Replayer::Options#port=
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#port=
 msgid "Sets the attribute port"
+msgstr ""
+
+# @param value
+msgid "the value to set the attribute protocol to."
+msgstr ""
+
+# Groonga::QueryLog::MemoryLeakDetector::Options#protocol
+# Groonga::QueryLog::Replayer::Options#protocol
+# Groonga::QueryLog::ServerVerifier::GroongaOptions#protocol
+msgid "Returns the value of attribute protocol"
 msgstr ""
 
 # @param value
@@ -1642,12 +1657,6 @@ msgstr ""
 # Groonga::QueryLog::Replayer::Options#protocol=
 # Groonga::QueryLog::ServerVerifier::GroongaOptions#protocol=
 msgid "Sets the attribute protocol"
-msgstr ""
-
-# Groonga::QueryLog::MemoryLeakDetector::Options#protocol
-# Groonga::QueryLog::Replayer::Options#protocol
-# Groonga::QueryLog::ServerVerifier::GroongaOptions#protocol
-msgid "Returns the value of attribute protocol"
 msgstr ""
 
 # Groonga::QueryLog::MemoryLeakDetector::Options#pid
