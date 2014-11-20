@@ -19,7 +19,7 @@
 require "groonga/query-log/command/format-regression-test-logs"
 
 class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
-  include Fixture
+  include Path
 
   def setup
     @command = Groonga::QueryLog::Command::FormatRegressionTestLogs.new

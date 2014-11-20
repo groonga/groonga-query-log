@@ -23,7 +23,7 @@ require "groonga/command"
 
 require "groonga/query-log"
 
-module Fixture
+module Path
   def fixture_path(*components)
     File.join(File.dirname(__FILE__), "fixtures", *components)
   end
