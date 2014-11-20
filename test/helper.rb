@@ -22,6 +22,3 @@ require "stringio"
 require "groonga/command"
 
 require "groonga/query-log"
-
-module GroongaQueryLogTestUtils
-end

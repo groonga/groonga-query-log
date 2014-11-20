@@ -47,7 +47,7 @@ Test::Unit::Priority.enable
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 $LOAD_PATH.unshift(test_dir.to_s)
-require "groonga-query-log-test-utils"
+require "helper"
 
 Dir.glob("#{base_dir}/test/**/test{_,-}*.rb") do |file|
   require file.sub(/\.rb\z/, '')
