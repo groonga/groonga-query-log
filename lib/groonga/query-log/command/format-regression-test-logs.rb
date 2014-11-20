@@ -109,15 +109,16 @@ module Groonga
         def report_diff(command, response1, response2)
           return if response1 == response2
 
-          base_name = File.basename(path, ".*")
-          Tempfile.open("response1-#{base_name}") do |response1_file|
+          Tempfile.open("response1") do |response1_file|
             PP.pp(JSON.parse(response1), response1_file)
             response1_file.flush
-            Tempfile.open("response2-#{base_name}") do |response2_file|
+            Tempfile.open("response2") do |response2_file|
               PP.pp(JSON.parse(response2), response2_file)
               response2_file.flush
               puts(command)
               system("diff",
+                     "--label=old",
+                     "--label=new",
                      "-u",
                      response1_file.path, response2_file.path)
             end
