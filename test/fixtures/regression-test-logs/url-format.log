@@ -1,0 +1,3 @@
+command: /d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+response1: [[[2], [["_id", "UInt32"], ["message", "Text"]], [1, "log message1: 焼肉"], [2, "log message2: 焼肉"]]]
+response2: [[[2], [["_id", "UInt32"], ["message", "Text"]], [1, "log message1: 焼肉"], [3, "log message3: 焼肉"]]]

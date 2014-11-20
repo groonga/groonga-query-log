@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -47,6 +49,9 @@ class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
   def test_command_format
     output = <<-OUTPUT
 select Logs
+Name: select
+Arguments:
+  table: Logs
 --- old
 +++ new
 @@ -1,4 +1,4 @@
@@ -55,8 +60,29 @@ select Logs
    [1, \"log message1\"],
 -  [2, \"log message2\"]]]
 +  [3, \"log message3\"]]]
-OUTPUT
+    OUTPUT
     assert_equal([true, output],
                  run_command([fixture_path("command-format.log")]))
+  end
+
+  def test_url_format
+    output = <<-OUTPUT
+/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+Name: select
+Arguments:
+  match_columns: message
+  query: 焼肉
+  table: Logs
+--- old
++++ new
+@@ -1,4 +1,4 @@
+ [[[2],
+   [[\"_id\", \"UInt32\"], [\"message\", \"Text\"]],
+   [1, \"log message1: 焼肉\"],
+-  [2, \"log message2: 焼肉\"]]]
++  [3, \"log message3: 焼肉\"]]]
+    OUTPUT
+    assert_equal([true, output],
+                 run_command([fixture_path("url-format.log")]))
   end
 end

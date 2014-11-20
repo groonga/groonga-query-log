@@ -21,6 +21,8 @@ require "pp"
 require "optparse"
 require "json"
 
+require "groonga/command/parser"
+
 require "groonga/query-log/version"
 
 module Groonga
@@ -115,13 +117,26 @@ module Groonga
             Tempfile.open("response2") do |response2_file|
               PP.pp(JSON.parse(response2), response2_file)
               response2_file.flush
-              puts(command)
+              report_command(command)
               system("diff",
                      "--label=old",
                      "--label=new",
                      "-u",
                      response1_file.path, response2_file.path)
             end
+          end
+        end
+
+        def report_command(command)
+          puts(command)
+          parsed_command = Groonga::Command::Parser.parse(command)
+          puts("Name: #{parsed_command.name}")
+          puts("Arguments:")
+          sorted_arguments = parsed_command.arguments.sort_by do |key, value|
+            key
+          end
+          sorted_arguments.each do |key, value|
+            puts("  #{key}: #{value}")
           end
         end
       end
