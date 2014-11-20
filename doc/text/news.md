@@ -1,5 +1,12 @@
 # News
 
+## 1.1.2: 2014-11-20
+
+### Fixes
+
+  * groonga-query-log-format-regression-test-logs: Fixed a bug
+    that the command doesn't work in normal usage.
+
 ## 1.1.1: 2014-11-06
 
 ### Improvements
