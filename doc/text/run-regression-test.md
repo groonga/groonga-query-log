@@ -158,6 +158,30 @@ directory. Test result log file name is the same as input query log
 file name. If query log file is `query-logs/query-20140508.log`, test
 result log file is `results/query-20140508.log`.
 
+### Confirm
+
+You can show details of different between the current Groonga and the
+new Groonga by `groonga-query-log-format-regression-test-logs` command:
+
+    % groonga-query-log-format-regression-test-logs results/*.log
+
+Here is a sample output:
+
+    select Logs
+    Name: select
+    Arguments:
+      table: Logs
+    --- old
+    +++ new
+    @@ -1,4 +1,5 @@
+    -[[[2],
+    +[[[3],
+       [["_id", "UInt32"], ["message", "Text"]],
+       [1, "log message1"],
+    -  [2, "log message2"]]]
+    +  [2, "log message2"],
+    +  [3, "log message3"]]]
+
 ## Advanced usage
 
 There are some advanced usages. This section describes about them.
