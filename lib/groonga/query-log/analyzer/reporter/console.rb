@@ -137,7 +137,7 @@ module Groonga
 
         def apply_options(options)
           super
-          @color = options[:color] || @color
+          @color = options[:color] unless options[:color].nil?
         end
 
         def report_statistics
