@@ -225,17 +225,6 @@ module Groonga
         end
       end
 
-      def create_stream_reporter
-        case @options[:reporter]
-        when "json"
-          Groonga::QueryLog::StreamJSONQueryLogReporter.new
-        when "html"
-          raise UnsupportedReporter, "HTML reporter doesn't support --stream."
-        else
-          Groonga::QueryLog::StreamConsoleQueryLogReporter.new
-        end
-      end
-
       def parse(log_paths, &process_statistic)
         parser = Groonga::QueryLog::Parser.new(@options)
         if log_paths.empty?
