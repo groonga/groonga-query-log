@@ -69,7 +69,9 @@ module Groonga
         statistics = SizedStatistics.new
         statistics.apply_options(@options)
         if stream
-          streamer = Streamer.new(create_reporter(statistics))
+          reporter = create_reporter(statistics)
+          reporter.apply_options(@options)
+          streamer = Streamer.new(reporter)
           streamer.start
           process_statistic = lambda do |statistic|
             streamer << statistic
