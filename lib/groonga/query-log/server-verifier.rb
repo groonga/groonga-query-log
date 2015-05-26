@@ -160,6 +160,8 @@ module Groonga
         end
 
         def target_command_name?(name)
+          return false if name.nil?
+
           @target_command_names.any? do |name_pattern|
             flags = 0
             flags |= File::FNM_EXTGLOB if File.const_defined?(:FNM_EXTGLOB)
