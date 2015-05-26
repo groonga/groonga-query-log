@@ -1,5 +1,23 @@
 # News
 
+## 1.1.3: 2015-05-26
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Ignored no command request
+    such as `/`.
+
+### Fixes
+
+  * groonga-query-log-analyzer: Fixed a bug that `--no-color` option
+    is ignored. [Reported by Gurunavi, Inc.]
+  * groonga-query-log-analyzer: Fixed a bug that options aren't
+    applied when `--stream` is given.
+
+### Thanks
+
+  * Gurunavi, Inc.
+
 ## 1.1.2: 2014-11-20
 
 ### Fixes
