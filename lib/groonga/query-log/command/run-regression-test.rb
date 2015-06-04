@@ -42,6 +42,7 @@ module Groonga
           @load_data = true
           @run_queries = true
           @skip_finished_queries = false
+          @output_query_log = false
         end
 
         def run(command_line)
@@ -119,6 +120,10 @@ module Groonga
                     "Don't run finished query logs.") do
             @skip_finished_queries = true
           end
+          parser.on("--output-query-log",
+                    "Output query log in verified target Groonga servers") do
+            @output_query_log = true
+          end
 
           parser
         end
@@ -136,6 +141,7 @@ module Groonga
             :run_queries           => @run_queries,
             :recreate_database     => @recreate_database,
             :skip_finished_queries => @skip_finished_queries,
+            :output_query_log      => @output_query_log,
           }
           directory_options.merge(options)
         end
@@ -175,14 +181,18 @@ module Groonga
             ensure_database
             return unless @options[:run_queries]
 
-            @pid = spawn(@groonga,
-                         "--bind-address", @host,
-                         "--port", @port.to_s,
-                         "--log-path", log_path.to_s,
-                         "--query-log-path", query_log_path.to_s,
-                         "--protocol", "http",
-                         "-s",
-                         @database_path.to_s)
+            arguments = [
+              "--bind-address", @host,
+              "--port", @port.to_s,
+              "--protocol", "http",
+              "--log-path", log_path.to_s,
+            ]
+            if @options[:output_query_log]
+              arguments.concat(["--query-log-path", query_log_path.to_s])
+            end
+            arguments << "-s"
+            arguments << @database_path.to_s
+            @pid = spawn(@groonga, *arguments)
 
             n_retries = 10
             begin
