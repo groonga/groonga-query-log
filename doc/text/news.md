@@ -1,5 +1,12 @@
 # News
 
+## 1.1.4: 2015-06-11
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Stopped to output query log
+    by default. Use `--output-query-log` option to output query log.
+
 ## 1.1.3: 2015-05-26
 
 ### Improvements
