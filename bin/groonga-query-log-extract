@@ -20,4 +20,4 @@
 require "groonga/query-log"
 
 extracter = Groonga::QueryLog::Extractor.new
-exit(extracter.run(*ARGV))
+exit(extracter.run(ARGV))
