@@ -18,7 +18,6 @@
 
 require "groonga/query-log/version"
 require "groonga/query-log/analyzer"
-require "groonga/query-log/extractor"
 require "groonga/query-log/parser"
 require "groonga/query-log/replayer"
 require "groonga/query-log/server-verifier"

@@ -20,12 +20,14 @@
 require "ostruct"
 require "optparse"
 require "pathname"
+
+require "groonga/query-log"
 require "groonga/query-log/command-line-utils"
-require "groonga/query-log/parser"
 
 module Groonga
   module QueryLog
-    class Extractor
+    module Command
+    class Extract
       include CommandLineUtils
 
       class Error < StandardError
@@ -44,7 +46,7 @@ module Groonga
       # "groonga-query-log-extract" command runs this method.
       #
       # @example
-      #   extractor = Groonga::QueryLog::Extractor.new
+      #   extractor = Groonga::QueryLog::Command::Extract.new
       #   extractor.run("--output", "commands.output",
       #                 "--command", "select",
       #                 "query.log")
@@ -185,6 +187,7 @@ module Groonga
 
         true
       end
+    end
     end
   end
 end
