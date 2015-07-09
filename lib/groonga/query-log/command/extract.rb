@@ -99,19 +99,19 @@ module Groonga
 
           available_formats = ["uri", "command"]
           parser.on("--unify-format=FORMAT",
-                 available_formats,
-                 "Unify command format to FORMAT.",
-                 "(#{available_formats.join(', ')})",
-                 "[not unify]") do |format|
+                    available_formats,
+                    "Unify command format to FORMAT.",
+                    "(#{available_formats.join(', ')})",
+                    "[not unify]") do |format|
             @options.unify_format = format
           end
 
           parser.on("--command=COMMAND",
-                 "Extract only COMMAND.",
-                 "To extract one or more commands,",
-                 "specify this command a number of times.",
-                 "Use /.../ as COMMAND to match command with regular expression.",
-                 "[all commands]") do |command|
+                    "Extract only COMMAND.",
+                    "To extract one or more commands,",
+                    "specify this command a number of times.",
+                    "Use /.../ as COMMAND to match command with regular expression.",
+                    "[all commands]") do |command|
             case command
             when /\A\/(.*)\/(i)?\z/
               @options.commands << Regexp.new($1, $2 == "i")
@@ -121,11 +121,11 @@ module Groonga
           end
 
           parser.on("--exclude-command=COMMAND",
-                 "Don't extract COMMAND.",
-                 "To ignore one or more commands,",
-                 "specify this command a number of times.",
-                 "Use /.../ as COMMAND to match command with regular expression.",
-                 "[no commands]") do |command|
+                    "Don't extract COMMAND.",
+                    "To ignore one or more commands,",
+                    "specify this command a number of times.",
+                    "Use /.../ as COMMAND to match command with regular expression.",
+                    "[no commands]") do |command|
             case command
             when /\A\/(.*)\/(i)?\z/
               @options.exclude_commands << Regexp.new($1, $2 == "i")
@@ -135,8 +135,8 @@ module Groonga
           end
 
           parser.on("--output=PATH",
-                 "Output to PATH.",
-                 "[standard output]") do |path|
+                    "Output to PATH.",
+                    "[standard output]") do |path|
             @options.output_path = path
           end
         end
