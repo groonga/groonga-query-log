@@ -245,11 +245,12 @@ module Groonga
               command = [
                 @groonga,
                 "--log-path", log_path.to_s,
+                "--file", grn_file.to_s,
                 @database_path.to_s,
               ]
-              command_line = "#{command.join(' ')} < #{grn_file}"
+              command_line = command.join(" ")
               puts("Running...: #{command_line}")
-              pid = spawn(*command, :in => grn_file.to_s)
+              pid = spawn(*command)
               begin
                 pid, status = Process.waitpid2(pid)
               rescue Interrupt
