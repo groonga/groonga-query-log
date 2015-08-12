@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
+# Copyright (C) 2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,17 +19,17 @@
 
 require "stringio"
 require "groonga/command"
-require "groonga/query-log/extractor"
+require "groonga/query-log/command/extract"
 
-class TestExtractor < Test::Unit::TestCase
+class ExtractCommandTest < Test::Unit::TestCase
   setup
   def setup_fixtures
-    @fixtures_path = File.join(File.dirname(__FILE__), "fixtures")
+    @fixtures_path = File.join(File.dirname(__FILE__), "..", "fixtures")
     @query_log_path = File.join(@fixtures_path, "query.log")
   end
 
   def setup
-    @extractor = Groonga::QueryLog::Extractor.new
+    @extract_command = Groonga::QueryLog::Command::Extract.new
   end
 
   class TestInputFile < self
@@ -102,7 +103,7 @@ EOC
     Tempfile.open("extract.output") do |output|
       open_error_output do |error|
         arguments << "--output" << output.path
-        if @extractor.run(arguments)
+        if @extract_command.run(arguments)
           File.read(output.path)
         else
           File.read(error.path)
@@ -137,7 +138,7 @@ EOL
     end
 
     def test_command_format
-      @extractor.options.unify_format = "command"
+      @extract_command.options.unify_format = "command"
       expected_formatted_command = "select --output_columns \"_key,name\""+
                                      " --query \"follower:@groonga\"" +
                                      " --table \"Users\"\n"
@@ -145,7 +146,7 @@ EOL
     end
 
     def test_uri_format
-      @extractor.options.unify_format = "uri"
+      @extract_command.options.unify_format = "uri"
       expected_formatted_command = "/d/select?output_columns=_key%2Cname" +
                                      "&query=follower%3A%40groonga" +
                                      "&table=Users\n"
@@ -153,7 +154,7 @@ EOL
     end
 
     def test_not_unify
-      @extractor.options.unify_format = nil
+      @extract_command.options.unify_format = nil
       expected_formatted_command = "select --table Users" +
                                      " --query follower:@groonga" +
                                      " --output_columns _key,name\n"
@@ -163,20 +164,20 @@ EOL
     private
     def extract
       output = StringIO.new
-      @extractor.send(:extract, @log, output)
+      @extract_command.send(:extract, @log, output)
       output.string
     end
   end
 
   class TestTarget < self
     def test_include
-      @extractor.options.commands = ["register"]
+      @extract_command.options.commands = ["register"]
       assert_true(target?("register"))
       assert_false(target?("dump"))
     end
 
     def test_exclude
-      @extractor.options.exclude_commands = ["dump"]
+      @extract_command.options.exclude_commands = ["dump"]
       assert_true(target?("register"))
       assert_false(target?("dump"))
     end
@@ -187,13 +188,13 @@ EOL
     end
 
     def test_regular_expression_include
-      @extractor.options.commands = [/table/]
+      @extract_command.options.commands = [/table/]
       assert_true(target?("table_create"))
       assert_false(target?("dump"))
     end
 
     def test_regular_expression_exclude
-      @extractor.options.exclude_commands = [/table/]
+      @extract_command.options.exclude_commands = [/table/]
       assert_false(target?("table_create"))
       assert_true(target?("dump"))
     end
@@ -202,7 +203,7 @@ EOL
     def target?(name)
       command_class = Groonga::Command.find(name)
       command = command_class.new(name, [])
-      @extractor.send(:target?, command)
+      @extract_command.send(:target?, command)
     end
   end
 end
