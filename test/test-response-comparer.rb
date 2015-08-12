@@ -105,7 +105,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         private
         def random_score?(scorer)
           @command["scorer"] = scorer
-          comparer([[[0]]], [[[0]]]).send(:random_score?)
+          comparer([[[0], []]], [[[0], []]]).send(:random_score?)
         end
       end
     end
@@ -115,7 +115,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         private
         def score_sort?(sortby)
           @command["sortby"] = sortby
-          comparer([[[0]]], [[[0]]]).send(:score_sort?)
+          comparer([[[0], []]], [[[0], []]]).send(:score_sort?)
         end
 
         class NoScoreTest < self
@@ -224,7 +224,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         private
         def all_output_columns?(output_columns)
           @command["output_columns"] = output_columns if output_columns
-          comparer([[[0]]], [[[0]]]).send(:all_output_columns?)
+          comparer([[[0], []]], [[[0], []]]).send(:all_output_columns?)
         end
       end
     end
