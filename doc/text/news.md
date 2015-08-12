@@ -1,5 +1,17 @@
 # News
 
+## 1.1.5: 2015-08-12
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Changed to use `--file`
+    command line option of `groonga` instead of redirect to specify
+    input.
+
+### Fixes
+
+  * groonga-query-log-extract: Fixed a bug that it fails to boot.
+
 ## 1.1.4: 2015-06-11
 
 ### Improvements
