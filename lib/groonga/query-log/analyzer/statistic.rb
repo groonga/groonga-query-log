@@ -120,8 +120,8 @@ module Groonga
 
         def to_hash
           data = {
-            "start_time" => start_time.to_i,
-            "last_time" => last_time.to_i,
+            "start_time" => start_time.to_f,
+            "last_time" => last_time.to_f,
             "elapsed" => elapsed_in_seconds,
             "return_code" => return_code,
             "slow" => slow?,
