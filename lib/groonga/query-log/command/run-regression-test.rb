@@ -379,7 +379,7 @@ module Groonga
               "--target-command-name=select",
               "--output", test_log_path.to_s,
             ]
-            command_line << "--no-care-order" if @otions[:care_order] == false
+            command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
             verify_serer = VerifyServer.new
             verify_serer.run(command_line)
