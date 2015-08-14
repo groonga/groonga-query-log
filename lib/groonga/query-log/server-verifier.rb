@@ -153,7 +153,12 @@ module Groonga
           @request_queue_size = nil
           @disable_cache = false
           @output_path = nil
-          @target_command_names = ["select"]
+          @target_command_names = [
+            "logical_count",
+            "logical_range_filter",
+            "logical_select",
+            "select",
+          ]
           @care_order = true
         end
 
