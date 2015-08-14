@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -108,7 +108,11 @@ module Groonga
         command["output_type"] = :json
         response1 = groonga1_client.execute(command)
         response2 = groonga2_client.execute(command)
-        comparer = ResponseComparer.new(command, response1, response2)
+        compare_options = {
+          :care_order => @options.care_order,
+        }
+        comparer = ResponseComparer.new(command, response1, response2,
+                                        compare_options)
         unless comparer.same?
           @different_results.push([command, response1, response2])
         end
@@ -141,6 +145,7 @@ module Groonga
         attr_writer :disable_cache
         attr_accessor :target_command_names
         attr_accessor :output_path
+        attr_accessor :care_order
         def initialize
           @groonga1 = GroongaOptions.new
           @groonga2 = GroongaOptions.new
@@ -149,6 +154,7 @@ module Groonga
           @disable_cache = false
           @output_path = nil
           @target_command_names = ["select"]
+          @care_order = true
         end
 
         def request_queue_size

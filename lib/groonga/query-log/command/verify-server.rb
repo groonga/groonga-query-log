@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -122,6 +122,11 @@ module Groonga
                     "You can use glob to choose command name",
                     "[#{target_command_names_label}]") do |names|
             @options.target_command_names = names
+          end
+
+          parser.on("--no-care-order",
+                    "Don't care order of select response records") do
+            @options.care_order = false
           end
 
           parser.on("--output=PATH",

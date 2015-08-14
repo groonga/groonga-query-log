@@ -1,4 +1,4 @@
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,14 +16,15 @@
 
 class ResponseComparerTest < Test::Unit::TestCase
   private
-  def comparer(response1, response2)
+  def comparer(response1, response2, options={})
     response1 = normalize_response(response1)
     response2 = normalize_response(response2)
-    Groonga::QueryLog::ResponseComparer.new(@command, response1, response2)
+    Groonga::QueryLog::ResponseComparer.new(@command, response1, response2,
+                                            options)
   end
 
-  def same?(response1, response2)
-    comparer(response1, response2).same?
+  def same?(response1, response2, options={})
+    comparer(response1, response2, options).same?
   end
 
   def response(body)
@@ -226,6 +227,15 @@ class ResponseComparerTest < Test::Unit::TestCase
           @command["output_columns"] = output_columns if output_columns
           comparer([[[0], []]], [[[0], []]]).send(:all_output_columns?)
         end
+      end
+    end
+
+    class ForceNoCareOrderTest < self
+      def test_different_order
+        @command["output_columns"] = "_id"
+        assert_true(same?([[[3], [["_id", "UInt32"]], [1], [2], [3]]],
+                          [[[3], [["_id", "UInt32"]], [3], [2], [1]]],
+                          :care_order => false))
       end
     end
 

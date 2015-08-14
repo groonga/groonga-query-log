@@ -1,4 +1,4 @@
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -43,6 +43,7 @@ module Groonga
           @run_queries = true
           @skip_finished_queries = false
           @output_query_log = false
+          @care_order = true
         end
 
         def run(command_line)
@@ -124,6 +125,10 @@ module Groonga
                     "Output query log in verified target Groonga servers") do
             @output_query_log = true
           end
+          parser.on("--no-care-order",
+                    "Don't care order of select response records") do
+            @care_order = false
+          end
 
           parser
         end
@@ -148,7 +153,8 @@ module Groonga
 
         def tester_options
           options = {
-            :n_clients => @n_clients,
+            :n_clients  => @n_clients,
+            :care_order => @care_order,
           }
           directory_options.merge(options)
         end
@@ -372,8 +378,9 @@ module Groonga
               "--groonga2-protocol=http",
               "--target-command-name=select",
               "--output", test_log_path.to_s,
-              query_log_path.to_s,
             ]
+            command_line << "--no-care-order" if @otions[:care_order] == false
+            command_line << query_log_path.to_s
             verify_serer = VerifyServer.new
             verify_serer.run(command_line)
           end

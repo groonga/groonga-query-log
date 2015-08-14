@@ -1,4 +1,4 @@
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -17,10 +17,12 @@
 module Groonga
   module QueryLog
     class ResponseComparer
-      def initialize(command, response1, response2)
+      def initialize(command, response1, response2, options={})
         @command = command
         @response1 = response1
         @response2 = response2
+        @options = options
+        @options[:care_order] = true if @options[:care_order].nil?
       end
 
       def same?
@@ -56,13 +58,22 @@ module Groonga
       end
 
       def same_select_response?
-        if random_sort?
-          same_random_sort_response?
-        elsif all_output_columns?
-          same_all_output_columns?
+        if care_order?
+          if all_output_columns?
+            same_all_output_columns?
+          else
+            same_response?
+          end
         else
-          same_response?
+          same_size_response?
         end
+      end
+
+      def care_order?
+        return false unless @options[:care_order]
+        return false if random_sort?
+
+        true
       end
 
       def random_score?
@@ -81,7 +92,7 @@ module Groonga
         normalized_sort_items.include?("_score")
       end
 
-      def same_random_sort_response?
+      def same_size_response?
         records_result1 = @response1.body[0] || []
         records_result2 = @response2.body[0] || []
         return false if records_result1.size != records_result2.size
