@@ -77,6 +77,7 @@ module Groonga
       end
 
       def random_score?
+        return false unless @command.respond_to?(:scorer)
         @command.scorer == "_score=rand()"
       end
 
