@@ -34,7 +34,7 @@ module Groonga
           end
         else
           case @command.name
-          when "select"
+          when "select", "logical_select"
             same_select_response?
           else
             same_response?
