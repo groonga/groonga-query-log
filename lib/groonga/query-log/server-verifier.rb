@@ -76,7 +76,7 @@ module Groonga
               begin
                 verify_command(groonga1_client, groonga2_client,
                                statistic.command)
-              rescue Groonga::Client::Error
+              rescue
                 log_client_error($!) do
                   $stderr.puts(statistic.command.original_source)
                 end
