@@ -1,5 +1,19 @@
 # News
 
+## 1.1.6: 2015-08-19
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Added `--no-care-order`
+    option that doesn't care order of records in response.
+  * groonga-query-log-verify-server: Added `--no-care-order`
+    option that doesn't care order of records in response.
+  * groonga-query-log-verify-server: Added the following commands to
+    the default target command names:
+    * `logical_count`
+    * `logical_range_filter`
+    * `logical_select`
+
 ## 1.1.5: 2015-08-12
 
 ### Improvements
