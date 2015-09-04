@@ -305,7 +305,6 @@ module Groonga
             @n_clients = options[:n_clients] || 1
             @options = options
             @n_ready_waits = 2
-            @clone_pids = []
           end
 
           def run
@@ -330,10 +329,6 @@ module Groonga
           def run_test
             @n_ready_waits -= 1
             return true unless @n_ready_waits.zero?
-
-            @clone_pids.each do |pid|
-              Process.waitpid(pid)
-            end
 
             query_log_paths.each do |query_log_path|
               log_path = test_log_path(query_log_path)
