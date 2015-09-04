@@ -366,7 +366,6 @@ module Groonga
               "--groonga2-host=#{@new.host}",
               "--groonga2-port=#{@new.port}",
               "--groonga2-protocol=http",
-              "--target-command-name=select",
               "--output", test_log_path.to_s,
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
