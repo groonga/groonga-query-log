@@ -1,5 +1,14 @@
 # News
 
+## 1.1.7: 2015-09-04
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Supported Windows.
+  * groonga-query-log-run-regression-test: Supported `logical_select`,
+    `logical_range_filter` and `logical_count` as the test target
+    commands.
+
 ## 1.1.6: 2015-08-19
 
 ### Improvements
