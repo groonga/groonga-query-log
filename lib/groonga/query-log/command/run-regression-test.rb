@@ -338,15 +338,10 @@ module Groonga
               else
                 puts("Running test against query log...: #{query_log_path}")
               end
-              pid = fork do
-                verify_server(log_path, query_log_path)
-                exit!
-              end
               begin
-                Process.waitpid(pid)
+                verify_server(log_path, query_log_path)
               rescue Interrupt
-                Process.kill(:TERM, pid)
-                Process.waitpid(pid)
+                puts("Interrupt: #{query_log_path}")
               end
             end
 
