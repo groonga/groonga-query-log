@@ -184,7 +184,6 @@ module Groonga
           end
 
           def run
-            ensure_database
             return unless @options[:run_queries]
 
             arguments = [
@@ -211,32 +210,6 @@ module Groonga
             end
 
             yield
-          end
-
-          def shutdown
-            begin
-              send_command("shutdown")
-            rescue SystemCallError
-            end
-            Process.waitpid(@pid)
-          end
-
-          private
-          def find_unused_port
-            server = TCPServer.new(@host, 0)
-            begin
-              server.addr[1]
-            ensure
-              server.close
-            end
-          end
-
-          def log_path
-            @database_path.dirname + "groonga.log"
-          end
-
-          def query_log_path
-            @database_path.dirname + "query.log"
           end
 
           def ensure_database
@@ -267,6 +240,32 @@ module Groonga
                 raise "Failed to run: #{command_line}"
               end
             end
+          end
+
+          def shutdown
+            begin
+              send_command("shutdown")
+            rescue SystemCallError
+            end
+            Process.waitpid(@pid)
+          end
+
+          private
+          def find_unused_port
+            server = TCPServer.new(@host, 0)
+            begin
+              server.addr[1]
+            ensure
+              server.close
+            end
+          end
+
+          def log_path
+            @database_path.dirname + "groonga.log"
+          end
+
+          def query_log_path
+            @database_path.dirname + "query.log"
           end
 
           def send_command(name)
@@ -308,6 +307,9 @@ module Groonga
           end
 
           def run
+            @old.ensure_database
+            @new.ensure_database
+
             old_thread = Thread.new do
               @old.run do
                 run_test
