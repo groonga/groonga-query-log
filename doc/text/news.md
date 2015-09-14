@@ -1,5 +1,12 @@
 # News
 
+## 1.1.8: 2015-09-14
+
+### Improvements
+
+  * groonga-query-log-run-regression-test: Stopped to loading data in
+    parallel. It's too high load for large data.
+
 ## 1.1.7: 2015-09-04
 
 ### Improvements
