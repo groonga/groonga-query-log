@@ -1,5 +1,12 @@
 # News
 
+## 1.1.9: 2016-01-22
+
+### Fixes
+
+  * Fixed an error when parsing query log that includes
+    `logical_select` and `logical_range_filter`.
+
 ## 1.1.8: 2015-09-14
 
 ### Improvements
