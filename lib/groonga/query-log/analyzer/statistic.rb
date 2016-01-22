@@ -153,6 +153,8 @@ module Groonga
         end
 
         def operation_context(label, context)
+          return nil if @select_command.nil?
+
           case label
           when "filter"
             if @select_command.query and context[:query_used].nil?
