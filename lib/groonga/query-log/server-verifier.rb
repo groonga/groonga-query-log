@@ -154,11 +154,13 @@ module Groonga
           @disable_cache = false
           @output_path = nil
           @target_command_names = [
+            "io_flush",
             "logical_count",
             "logical_range_filter",
             "logical_shard_list",
             "logical_select",
             "normalize",
+            "object_exist",
             "select",
           ]
           @care_order = true
