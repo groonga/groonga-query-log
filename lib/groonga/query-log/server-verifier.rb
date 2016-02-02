@@ -156,6 +156,7 @@ module Groonga
           @target_command_names = [
             "logical_count",
             "logical_range_filter",
+            "logical_shard_list",
             "logical_select",
             "normalize",
             "select",
