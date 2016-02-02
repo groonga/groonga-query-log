@@ -158,6 +158,7 @@ module Groonga
             "logical_range_filter",
             "logical_select",
             "select",
+            "normalize",
           ]
           @care_order = true
         end
