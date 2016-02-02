@@ -157,8 +157,8 @@ module Groonga
             "logical_count",
             "logical_range_filter",
             "logical_select",
-            "select",
             "normalize",
+            "select",
           ]
           @care_order = true
         end
