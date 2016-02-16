@@ -92,7 +92,7 @@ module Groonga
           rescue JSON::ParserError
             puts(command)
             puts("failed to parse old response: #{$!.message}")
-            puts(response1)
+            puts(response_old)
             valid = false
           end
 
@@ -101,7 +101,7 @@ module Groonga
           rescue JSON::ParserError
             puts(command)
             puts("failed to parse new response: #{$!.message}")
-            puts(response2)
+            puts(response_new)
             valid = false
           end
 
