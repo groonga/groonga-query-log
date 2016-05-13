@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2016  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -115,6 +113,8 @@ module Groonga
         @options[:output] = "-"
         @options[:slow_operation_threshold] = 0.1
         @options[:slow_response_threshold] = 0.2
+        @options[:target_commands] = nil
+        @options[:target_tables] = nil
         @options[:reporter] = "console"
         @options[:dynamic_sort] = true
         @options[:stream] = false
@@ -179,6 +179,22 @@ module Groonga
                     "Use THRESHOLD seconds to detect slow responses.",
                     "(#{@options[:slow_response_threshold]})") do |threshold|
             @options[:slow_response_threshold] = threshold
+          end
+
+          parser.on("--target-commands=COMMAND1,COMMAND2,...",
+                    Array,
+                    "Process only COMMANDS.",
+                    "Example: --target-commands=select,logical_select",
+                    "Process all commands by default") do |commands|
+            @options[:target_commands] = commands
+          end
+
+          parser.on("--target-tables=TABLE1,TABLE2,...",
+                    Array,
+                    "Process only TABLES.",
+                    "Example: --target-tables=Items,Users",
+                    "Process all tables by default") do |tables|
+            @options[:target_tables] = tables
           end
 
           available_reporters = ["console", "json", "json-stream", "html"]

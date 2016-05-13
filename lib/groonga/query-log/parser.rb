@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2016  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,6 +25,8 @@ module Groonga
         @options = options
         @slow_operation_threshold = options[:slow_operation_threshold]
         @slow_response_threshold = options[:slow_response_threshold]
+        @target_commands = options[:target_commands]
+        @target_tables = options[:target_tables]
         @parsing_statistics = {}
       end
 
@@ -84,6 +84,7 @@ module Groonga
           statistic = @parsing_statistics.delete(context_id)
           return if statistic.nil?
           statistic.finish(elapsed.to_i, return_code.to_i)
+          return unless target_statistic?(statistic)
           block.call(statistic)
         end
       end
@@ -97,6 +98,25 @@ module Groonga
           statistic.slow_response_threshold = @slow_response_threshold
         end
         statistic
+      end
+
+      def target_statistic?(statistic)
+        if @target_commands
+          unless @target_commands.include?(statistic.command.name)
+            return false
+          end
+        end
+
+        if @target_tables
+          table = statistic.command["table"]
+          return false if table.nil?
+
+          unless @target_tables.include?(table)
+            return false
+          end
+        end
+
+        true
       end
     end
   end

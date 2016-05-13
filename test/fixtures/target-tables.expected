@@ -1,0 +1,19 @@
+Summary:
+  Threshold:
+    slow response     : 0.2
+    slow operation    : 0.1
+  # of responses      : 1
+  # of slow responses : 0
+  responses/sec       : 319.6056322182932
+  start time          : 2012-12-12 17:39:17.3
+  last time           : 2012-12-12 17:39:17.3
+  period(sec)         : 0.003128856
+  slow response ratio : 0.000%
+  total response time : 0.003128856
+  Slow Operations:
+
+Slow Queries:
+1) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00312886)](0): load --table Video  name: <load>
+  parameters:
+    <table>: <Video>
+

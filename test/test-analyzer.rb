@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2016  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -77,6 +75,20 @@ class AnalyzerTest < Test::Unit::TestCase
     actual_result = run_analyzer("--order=#{order}", @query_log_path)
 
     expected_result = expected_analyzed_query("order/#{order}.expected")
+    assert_equal(expected_result, actual_result)
+  end
+
+  def test_target_commands
+    actual_result = run_analyzer("--target-commands=select",
+                                 @query_log_path)
+    expected_result = expected_analyzed_query("target-commands.expected")
+    assert_equal(expected_result, actual_result)
+  end
+
+  def test_target_tables
+    actual_result = run_analyzer("--target-tables=Video",
+                                 @query_log_path)
+    expected_result = expected_analyzed_query("target-tables.expected")
     assert_equal(expected_result, actual_result)
   end
 
