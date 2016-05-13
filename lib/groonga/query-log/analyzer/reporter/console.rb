@@ -148,7 +148,7 @@ module Groonga
 
         def report_statistic(statistic)
           @index += 1
-          write("%*d) %s" % [@digit, @index, format_heading(statistic)])
+          write("%*d) %s\n" % [@digit, @index, format_heading(statistic)])
           report_parameters(statistic)
           report_operations(statistic)
         end
