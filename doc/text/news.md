@@ -1,5 +1,12 @@
 # News
 
+## 1.2.1: 2016-05-27
+
+### Fixes
+
+  * groonga-query-log-verify-server: Fixed a bug that responses aren't
+    saved as JSON.
+
 ## 1.2.0: 2016-05-27
 
 ### Improvements
