@@ -1,5 +1,31 @@
 # News
 
+## 1.2.0: 2016-05-27
+
+### Improvements
+
+  * groonga-query-log-verify-server: Added `normalize` command to the
+    default check target commands.
+
+  * groonga-query-log-verify-server: Added `logical_shard_list`
+    command to the default check target commands.
+
+  * groonga-query-log-verify-server: Added `io_flush` command to the
+    default check target commands.
+
+  * groonga-query-log-verify-server: Added `object_exist` command to the
+    default check target commands.
+
+  * groonga-query-log-analyzer: Added `--target-commands` option.
+
+  * groonga-query-log-analyzer: Added `--target-tables` option.
+
+### Fixes
+
+  * Fixed undefined variable name error.
+
+  * groonga-query-log-analyzer: Fixed console output format
+
 ## 1.1.9: 2016-01-22
 
 ### Fixes
