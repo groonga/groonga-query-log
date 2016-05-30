@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2016  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -101,6 +101,10 @@ class ResponseComparerTest < Test::Unit::TestCase
       class DetectRandTest < self
         def test_rand_only
           assert_true(random_score?("_score=rand()"))
+        end
+
+        def test_with_spaces
+          assert_true(random_score?("_score = rand()"))
         end
 
         private
