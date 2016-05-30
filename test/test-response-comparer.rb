@@ -263,5 +263,41 @@ class ResponseComparerTest < Test::Unit::TestCase
         assert_true(same?(response1, response2))
       end
     end
+
+    class RecordsTest < self
+      def setup
+        super
+        @command["output_columns"] = "_id, -value"
+      end
+
+      def test_more_columns
+        response1 = [
+          [
+            [3],
+            [
+              ["_id", "UInt32"],
+            ],
+            [1],
+            [2],
+            [3],
+          ],
+        ]
+        response2 = [
+          [
+            [3],
+            [
+              ["_id", "UInt32"],
+              ["value", nil],
+            ],
+            [1, -11],
+            [2, -12],
+            [3, -13],
+          ],
+        ]
+        assert do
+          same?(response1, response2)
+        end
+      end
+    end
   end
 end

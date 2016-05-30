@@ -132,14 +132,15 @@ module Groonga
           end
         end
 
-        column_to_index1 = make_column_to_index_map(columns1)
-        column_to_index2 = make_column_to_index_map(columns2)
-
         records1.each_with_index do |record1, record_index|
           record2 = records2[record_index]
-          column_to_index1.each do |name, column_index1|
-            column_index2 = column_to_index2[name]
-            next if column_index2.nil?
+          column_offset2 = 0
+          columns1.each_with_index do |name, column_index1|
+            column_index2 = column_offset2 + column_index1
+            if name != columns2[column_index2]
+              column_offset2 -= 1
+              next
+            end
             value1 = record1[column_index1]
             value2 = record2[column_index2]
             return false if value1 != value2
