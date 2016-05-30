@@ -61,8 +61,10 @@ module Groonga
         if care_order?
           if all_output_columns?
             same_records_all_output_columns?
+          elsif have_unary_minus_output_column?
+            same_records_unary_minus_output_column?
           else
-            same_records?
+            same_response?
           end
         else
           same_size_response?
@@ -111,7 +113,13 @@ module Groonga
         end
       end
 
-      def same_records?
+      def have_unary_minus_output_column?
+        output_columns = @command.output_columns
+        return false if output_columns.nil?
+        output_columns.split(/\s*,?\s*/).any? {|column| column.start_with?("-")}
+      end
+
+      def same_records_unary_minus_output_column?
         records_result1 = @response1.body[0] || []
         records_result2 = @response2.body[0] || []
         return false if records_result1.size != records_result2.size

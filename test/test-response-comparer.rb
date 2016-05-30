@@ -232,6 +232,69 @@ class ResponseComparerTest < Test::Unit::TestCase
           comparer([[[0], []]], [[[0], []]]).send(:all_output_columns?)
         end
       end
+
+      class UnaryMinusTest < self
+        def setup
+          super
+          @command["output_columns"] = "_id, -value"
+        end
+
+        def test_ignore
+          response1 = [
+            [
+              [3],
+              [
+                ["_id", "UInt32"],
+              ],
+              [1],
+              [2],
+              [3],
+            ],
+          ]
+          response2 = [
+            [
+              [3],
+              [
+                ["_id", "UInt32"],
+                ["value", nil],
+              ],
+              [1, -11],
+              [2, -12],
+              [3, -13],
+            ],
+          ]
+          assert do
+            same?(response1, response2)
+          end
+        end
+      end
+
+      class DetectUnaryMinusTest < self
+        def test_unary_minus_column_only
+          assert do
+            have_unary_minus_output_column?("-value")
+          end
+        end
+
+        def test_include_unary_minus_column
+          assert do
+            have_unary_minus_output_column?("_id, -value")
+          end
+        end
+
+        def test_nonexistent
+          assert do
+            not have_unary_minus_output_column?("_id, _key")
+          end
+        end
+
+        private
+        def have_unary_minus_output_column?(output_columns)
+          @command["output_columns"] = output_columns if output_columns
+          comparer([[[0], []]],
+                   [[[0], []]]).send(:have_unary_minus_output_column?)
+        end
+      end
     end
 
     class ForceNoCareOrderTest < self
@@ -261,42 +324,6 @@ class ResponseComparerTest < Test::Unit::TestCase
         response1 = error_response(response1_header)
         response2 = error_response(response2_header)
         assert_true(same?(response1, response2))
-      end
-    end
-
-    class RecordsTest < self
-      def setup
-        super
-        @command["output_columns"] = "_id, -value"
-      end
-
-      def test_more_columns
-        response1 = [
-          [
-            [3],
-            [
-              ["_id", "UInt32"],
-            ],
-            [1],
-            [2],
-            [3],
-          ],
-        ]
-        response2 = [
-          [
-            [3],
-            [
-              ["_id", "UInt32"],
-              ["value", nil],
-            ],
-            [1, -11],
-            [2, -12],
-            [3, -13],
-          ],
-        ]
-        assert do
-          same?(response1, response2)
-        end
       end
     end
   end
