@@ -78,7 +78,7 @@ module Groonga
 
       def random_score?
         return false unless @command.respond_to?(:scorer)
-        @command.scorer == "_score=rand()"
+        /\A_score\s*=\s*rand\(\)\z/ === @command.scorer
       end
 
       def random_sort?
