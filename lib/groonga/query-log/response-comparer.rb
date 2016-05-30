@@ -60,9 +60,9 @@ module Groonga
       def same_select_response?
         if care_order?
           if all_output_columns?
-            same_all_output_columns?
+            same_records_all_output_columns?
           else
-            same_response?
+            same_records?
           end
         else
           same_size_response?
@@ -111,6 +111,44 @@ module Groonga
         end
       end
 
+      def same_records?
+        records_result1 = @response1.body[0] || []
+        records_result2 = @response2.body[0] || []
+        return false if records_result1.size != records_result2.size
+
+        n_hits1 = records_result1[0]
+        n_hits2 = records_result2[0]
+        return false if n_hits1 != n_hits2
+
+        columns1 = records_result1[1]
+        columns2 = records_result2[1]
+        records1 = records_result1[2..-1]
+        records2 = records_result2[2..-1]
+
+        if columns1.size != columns2.size
+          if columns2.size > columns1.size
+            columns1, columns2 = columns2, columns1
+            records1, records2 = records2, records1
+          end
+        end
+
+        column_to_index1 = make_column_to_index_map(columns1)
+        column_to_index2 = make_column_to_index_map(columns2)
+
+        records1.each_with_index do |record1, record_index|
+          record2 = records2[record_index]
+          column_to_index1.each do |name, column_index1|
+            column_index2 = column_to_index2[name]
+            next if column_index2.nil?
+            value1 = record1[column_index1]
+            value2 = record2[column_index2]
+            return false if value1 != value2
+          end
+        end
+
+        true
+      end
+
       def all_output_columns?
         output_columns = @command.output_columns
         output_columns.nil? or
@@ -118,7 +156,7 @@ module Groonga
           output_columns.split(/\s*,?\s*/).include?("*")
       end
 
-      def same_all_output_columns?
+      def same_records_all_output_columns?
         records_result1 = @response1.body[0] || []
         records_result2 = @response2.body[0] || []
         return false if records_result1.size != records_result2.size
