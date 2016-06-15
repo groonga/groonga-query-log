@@ -1,5 +1,15 @@
 # News
 
+## 1.2.2: 2016-06-15
+
+### Improvements
+
+  * groonga-query-log-verify-server: Relaxed random score detect condition.
+
+  * groonga-query-log-verify-server: Supported the case that only one
+    response has outputs for `--output_columns "-column"`. The
+    `-column` outputs are ignored.
+
 ## 1.2.1: 2016-05-27
 
 ### Fixes
