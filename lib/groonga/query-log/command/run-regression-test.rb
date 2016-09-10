@@ -145,7 +145,6 @@ module Groonga
             :load_data             => @load_data,
             :run_queries           => @run_queries,
             :recreate_database     => @recreate_database,
-            :skip_finished_queries => @skip_finished_queries,
             :output_query_log      => @output_query_log,
           }
           directory_options.merge(options)
@@ -155,6 +154,7 @@ module Groonga
           options = {
             :n_clients  => @n_clients,
             :care_order => @care_order,
+            :skip_finished_queries => @skip_finished_queries,
           }
           directory_options.merge(options)
         end
