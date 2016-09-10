@@ -37,6 +37,14 @@ class ParserTest < Test::Unit::TestCase
     assert_instance_of(Groonga::Command::Load, parsed_command)
   end
 
+  def test_no_command_name_path
+    statistics = parse(<<-LOG)
+2012-12-13 11:15:20.628105|0x7fff148c8a50|>/
+2012-12-13 11:15:21.645119|0x7fff148c8a50|<000000017041150 rc=0
+    LOG
+    assert_equal([nil], statistics.collect(&:command))
+  end
+
   private
   def parse(log)
     statistics = []

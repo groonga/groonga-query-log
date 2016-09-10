@@ -48,7 +48,9 @@ module Groonga
         Thread.new do
           parser = Parser.new
           parser.parse(input) do |statistic|
-            next unless target_command?(statistic.command)
+            command = statistic.command
+            next if command.nil?
+            next unless target_command?(command)
             @queue.push(statistic)
           end
           @options.n_clients.times do
