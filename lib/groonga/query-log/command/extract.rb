@@ -172,7 +172,7 @@ module Groonga
         end
 
         def target?(command)
-          name = command.name
+          name = command.command_name
           target_commands = @options.commands
           exclude_commands = @options.exclude_commands
 

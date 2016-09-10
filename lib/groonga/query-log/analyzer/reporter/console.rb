@@ -216,7 +216,7 @@ module Groonga
 
         def report_parameters(statistic)
           command = statistic.command
-          write("  name: <#{command.name}>\n")
+          write("  name: <#{command.command_name}>\n")
           write("  parameters:\n")
           command.arguments.each do |key, value|
             write("    <#{key}>: <#{value}>\n")
