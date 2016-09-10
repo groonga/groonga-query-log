@@ -102,7 +102,7 @@ module Groonga
       end
 
       def target_command?(command)
-        @options.target_command_name?(command.name)
+        @options.target_command_name?(command.command_name)
       end
 
       def verify_command(groonga1_client, groonga2_client, command)
