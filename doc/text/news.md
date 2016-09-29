@@ -1,5 +1,18 @@
 # News
 
+## 1.2.3: 2016-09-29
+
+### Improvements
+
+  * groonga-query-log-verify-server: Supported file content return
+    request (it means that request to server is '/').
+
+### Fixes
+
+  * run-regression-test: Fixed a bug that `--skip-finished-queries` doesn't work.
+
+  * groonga-query-log-analyzer: Fixed to work with groonga-command 1.2.3 or later.
+
 ## 1.2.2: 2016-06-15
 
 ### Improvements
