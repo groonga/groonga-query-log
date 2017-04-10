@@ -34,9 +34,11 @@ module Groonga
 
           @old_groonga = "groonga"
           @old_database = "db.old/db"
+          @old_groonga_options = []
 
           @new_groonga = "groonga"
           @new_database = "db.new/db"
+          @new_groonga_options = []
 
           @recreate_database = false
           @load_data = true
@@ -96,11 +98,27 @@ module Groonga
           end
 
           parser.separator("")
+          parser.separator("Old Groonga Option:")
+          parser.on("--old-groonga-option=GROONGA_OPTION",
+                    "Old groonga option",
+                    "(#{@old_groonga_options})") do |groonga_option|
+            @old_groonga_options << groonga_option
+          end
+
+          parser.separator("")
           parser.separator("New Groonga:")
           parser.on("--new-groonga=GROONGA",
                     "New groonga command",
                     "(#{@new_groonga})") do |groonga|
             @new_groonga = groonga
+          end
+
+          parser.separator("")
+          parser.separator("New Groonga Option:")
+          parser.on("--new-groonga-option=GROONGA_OPTION",
+                    "New groonga option",
+                    "(#{@new_groonga_options})") do |groonga_option|
+            @new_groonga_options << groonga_option
           end
 
           parser.separator("")
@@ -161,22 +179,25 @@ module Groonga
 
         def old_groonga_server
           GroongaServer.new(@old_groonga,
+                            @old_groonga_options,
                             @old_database,
                             server_options)
         end
 
         def new_groonga_server
           GroongaServer.new(@new_groonga,
+                            @new_groonga_options,
                             @new_database,
                             server_options)
         end
 
         class GroongaServer
           attr_reader :host, :port
-          def initialize(groonga, database_path, options)
+          def initialize(groonga, groonga_options, database_path, options)
             @input_directory = options[:input_directory] || Pathname.new(".")
             @working_directory = options[:working_directory] || Pathname.new(".")
             @groonga = groonga
+            @groonga_options = groonga_options
             @database_path = @working_directory + database_path
             @host = "127.0.0.1"
             @port = find_unused_port
@@ -192,6 +213,11 @@ module Groonga
               "--protocol", "http",
               "--log-path", log_path.to_s,
             ]
+
+            @groonga_options.each{|groonga_option|
+              arguments << groonga_option
+            }
+
             if @options[:output_query_log]
               arguments.concat(["--query-log-path", query_log_path.to_s])
             end
