@@ -177,16 +177,37 @@ module Groonga
           directory_options.merge(options)
         end
 
+        def groonga_options(options)
+          groonga_options = Hash[*options]
+
+          filter = %w[
+            --server-id
+            --document-root
+            --cache-limit
+            --max-threads
+            --default-request-timeout
+            --memcached-column
+            --cache-base-path
+            --log-level
+            --log-rotate-threshold
+            --query-log-rotate-threshold
+            --config-path
+            --default-command-version
+            --default-match-escalation-threshold
+          ]
+          groonga_options.keep_if{|k,v| filter.include?(k)}
+        end
+
         def old_groonga_server
           GroongaServer.new(@old_groonga,
-                            @old_groonga_options,
+                            groonga_options(@old_groonga_options),
                             @old_database,
                             server_options)
         end
 
         def new_groonga_server
           GroongaServer.new(@new_groonga,
-                            @new_groonga_options,
+                            groonga_options(@new_groonga_options),
                             @new_database,
                             server_options)
         end
@@ -213,11 +234,9 @@ module Groonga
               "--protocol", "http",
               "--log-path", log_path.to_s,
             ]
-
-            @groonga_options.each{|groonga_option|
-              arguments << groonga_option
+            @groonga_options.each{|name, value|
+              arguments.concat([name, value])
             }
-
             if @options[:output_query_log]
               arguments.concat(["--query-log-path", query_log_path.to_s])
             end
