@@ -206,7 +206,6 @@ module Groonga
             return unless @options[:run_queries]
 
             arguments = @groonga_options.dup
-            
             arguments.concat(["--bind-address", @host])
             arguments.concat(["--port", @port.to_s])
             arguments.concat(["--protocol", "http"])
