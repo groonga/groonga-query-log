@@ -97,11 +97,10 @@ module Groonga
             @old_groonga = groonga
           end
 
-          parser.separator("")
-          parser.separator("Old Groonga Option:")
-          parser.on("--old-groonga-option=GROONGA_OPTION",
-                    "Old groonga option",
-                    "(#{@old_groonga_options})") do |groonga_option|
+          parser.on("--old-groonga-option=OPTION",
+                    "Add an additional old groonga option",
+                    "You can specify this option multiple times to specify multiple groonga options",
+                    "(no options)") do |groonga_option|
             @old_groonga_options << groonga_option
           end
 
@@ -113,11 +112,10 @@ module Groonga
             @new_groonga = groonga
           end
 
-          parser.separator("")
-          parser.separator("New Groonga Option:")
-          parser.on("--new-groonga-option=GROONGA_OPTION",
-                    "New groonga option",
-                    "(#{@new_groonga_options})") do |groonga_option|
+          parser.on("--new-groonga-option=OPTION",
+                    "Add an additional new groonga option",
+                    "You can specify this option multiple times to specify multiple groonga options",
+                    "(no options)") do |groonga_option|
             @new_groonga_options << groonga_option
           end
 
@@ -177,37 +175,16 @@ module Groonga
           directory_options.merge(options)
         end
 
-        def groonga_options(options)
-          groonga_options = Hash[*options]
-
-          filter = %w[
-            --server-id
-            --document-root
-            --cache-limit
-            --max-threads
-            --default-request-timeout
-            --memcached-column
-            --cache-base-path
-            --log-level
-            --log-rotate-threshold
-            --query-log-rotate-threshold
-            --config-path
-            --default-command-version
-            --default-match-escalation-threshold
-          ]
-          groonga_options.keep_if{|k,v| filter.include?(k)}
-        end
-
         def old_groonga_server
           GroongaServer.new(@old_groonga,
-                            groonga_options(@old_groonga_options),
+                            @old_groonga_options,
                             @old_database,
                             server_options)
         end
 
         def new_groonga_server
           GroongaServer.new(@new_groonga,
-                            groonga_options(@new_groonga_options),
+                            @new_groonga_options,
                             @new_database,
                             server_options)
         end
@@ -228,15 +205,12 @@ module Groonga
           def run
             return unless @options[:run_queries]
 
-            arguments = [
-              "--bind-address", @host,
-              "--port", @port.to_s,
-              "--protocol", "http",
-              "--log-path", log_path.to_s,
-            ]
-            @groonga_options.each{|name, value|
-              arguments.concat([name, value])
-            }
+            arguments = @groonga_options.dup
+            
+            arguments.concat(["--bind-address", @host])
+            arguments.concat(["--port", @port.to_s])
+            arguments.concat(["--protocol", "http"])
+            arguments.concat(["--log-path", log_path.to_s])
             if @options[:output_query_log]
               arguments.concat(["--query-log-path", query_log_path.to_s])
             end
