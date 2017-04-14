@@ -390,8 +390,8 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
-            verify_serer = VerifyServer.new
-            verify_serer.run(command_line)
+            verify_server = VerifyServer.new
+            verify_server.run(command_line)
           end
 
           def query_log_paths
