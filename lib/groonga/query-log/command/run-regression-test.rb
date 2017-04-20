@@ -217,6 +217,7 @@ module Groonga
             arguments << "-s"
             arguments << @database_path.to_s
             @pid = spawn(@groonga, *arguments)
+
             n_retries = 10
             begin
               send_command("status")
