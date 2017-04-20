@@ -164,6 +164,7 @@ module Groonga
             "normalize",
             "object_exist",
             "select",
+            "status",
           ]
           @care_order = true
         end
