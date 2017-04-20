@@ -54,6 +54,7 @@ module Groonga
 
           available_protocols = [:gqtp, :http]
           available_protocols_label = "[#{available_protocols.join(', ')}]"
+
           parser.on("--groonga1-host=HOST",
                     "Host name or IP address of Groonga server 1",
                     "[#{@options.groonga1.host}]") do |host|
