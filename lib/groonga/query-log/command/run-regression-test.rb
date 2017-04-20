@@ -146,10 +146,6 @@ module Groonga
                     "Don't care order of select response records") do
             @care_order = false
           end
-          parser.on("--verify-cachehit-mode",
-                    "Verify cachehit rate. After execute all query, 'status' command execute.") do
-            @verify_cachehit_mode = true
-          end
 
           parser
         end
