@@ -109,7 +109,7 @@ module Groonga
       end
 
       def verify_command(groonga1_client, groonga2_client, command)
-        if command == Groonga::Command::Status
+        if command.instance_of?(Groonga::Command::Status)
           return unless @options.verify_cachehit_mode
         end
         command["cache"] = "no" if @options.disable_cache?
