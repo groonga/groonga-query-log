@@ -46,6 +46,7 @@ module Groonga
           @skip_finished_queries = false
           @output_query_log = false
           @care_order = true
+          @verify_cachehit_mode = false
         end
 
         def run(command_line)
@@ -145,6 +146,10 @@ module Groonga
                     "Don't care order of select response records") do
             @care_order = false
           end
+          parser.on("--verify-cachehit-mode",
+                    "Verify cachehit rate. After execute all query, 'status' command execute.") do
+            @verify_cachehit_mode = true
+          end
 
           parser
         end
@@ -216,7 +221,6 @@ module Groonga
             arguments << "-s"
             arguments << @database_path.to_s
             @pid = spawn(@groonga, *arguments)
-
             n_retries = 10
             begin
               send_command("status")
@@ -408,6 +412,7 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
+            command_line << "--verify-cachehit-mode" if @new.use_persistent_cache? or @old.use_persistent_cache?
             verify_server = VerifyServer.new
             verify_server.run(command_line)
           end

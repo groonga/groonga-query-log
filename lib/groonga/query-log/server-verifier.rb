@@ -78,6 +78,9 @@ module Groonga
               begin
                 verify_command(groonga1_client, groonga2_client,
                                statistic.command)
+
+                verify_command(groonga1_client, groonga2_client,
+                               Groonga::Command::Status.new)
               rescue
                 log_client_error($!) do
                   $stderr.puts(statistic.command.original_source)
@@ -106,6 +109,9 @@ module Groonga
       end
 
       def verify_command(groonga1_client, groonga2_client, command)
+        if command == Groonga::Command::Status
+          return unless @options.verify_cachehit_mode
+        end
         command["cache"] = "no" if @options.disable_cache?
         command["output_type"] = :json
         response1 = groonga1_client.execute(command)
@@ -148,6 +154,7 @@ module Groonga
         attr_accessor :target_command_names
         attr_accessor :output_path
         attr_accessor :care_order
+        attr_accessor :verify_cachehit_mode
         def initialize
           @groonga1 = GroongaOptions.new
           @groonga2 = GroongaOptions.new
@@ -167,6 +174,7 @@ module Groonga
             "status",
           ]
           @care_order = true
+          @verify_cahehit_mode = false
         end
 
         def request_queue_size

@@ -54,7 +54,6 @@ module Groonga
 
           available_protocols = [:gqtp, :http]
           available_protocols_label = "[#{available_protocols.join(', ')}]"
-
           parser.on("--groonga1-host=HOST",
                     "Host name or IP address of Groonga server 1",
                     "[#{@options.groonga1.host}]") do |host|
@@ -133,6 +132,12 @@ module Groonga
                     "Output results to PATH",
                     "[stdout]") do |path|
             @options.output_path = path
+          end
+
+          parser.on("--verify-cachehit-mode",
+                    "Verify cachehit rate. After execute query, 'status' command execute.",
+                    "[#{@options.verify_cachehit_mode}]") do
+            @options.verify_cachehit_mode = true
           end
 
           parser.separator("Debug options:")
