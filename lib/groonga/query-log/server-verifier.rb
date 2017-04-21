@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -110,7 +108,7 @@ module Groonga
 
       def verify_command(groonga1_client, groonga2_client, command)
         if command.instance_of?(Groonga::Command::Status)
-          return unless @options.verify_cachehit_mode
+          return unless @options.verify_cache?
         end
         command["cache"] = "no" if @options.disable_cache?
         command["output_type"] = :json
@@ -154,7 +152,7 @@ module Groonga
         attr_accessor :target_command_names
         attr_accessor :output_path
         attr_accessor :care_order
-        attr_accessor :verify_cachehit_mode
+        attr_writer :verify_cache
         def initialize
           @groonga1 = GroongaOptions.new
           @groonga2 = GroongaOptions.new
@@ -174,7 +172,7 @@ module Groonga
             "status",
           ]
           @care_order = true
-          @verify_cahehit_mode = false
+          @verify_cache = false
         end
 
         def request_queue_size
@@ -183,6 +181,10 @@ module Groonga
 
         def disable_cache?
           @disable_cache
+        end
+
+        def verify_cache?
+          @verify_cache
         end
 
         def target_command_name?(name)

@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -135,10 +133,10 @@ module Groonga
             @options.output_path = path
           end
 
-          parser.on("--verify-cachehit-mode",
-                    "Verify cachehit rate. After execute query, 'status' command execute.",
-                    "[#{@options.verify_cachehit_mode}]") do
-            @options.verify_cachehit_mode = true
+          parser.on("--[no-]verify-cache",
+                    "Verify cache for each query.",
+                    "[#{@options.verify_cache?}]") do |verify_cache|
+            @options.verify_cache = verify_cache
           end
 
           parser.separator("Debug options:")

@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -409,7 +409,7 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
-            command_line << "--verify-cachehit-mode" if @new.use_persistent_cache? or @old.use_persistent_cache?
+            command_line << "--verify-cache" if @new.use_persistent_cache? or @old.use_persistent_cache?
             verify_server = VerifyServer.new
             verify_server.run(command_line)
           end
