@@ -135,6 +135,12 @@ module Groonga
             @options.output_path = path
           end
 
+          parser.on("--verify-cachehit-mode",
+                    "Verify cachehit rate. After execute query, 'status' command execute.",
+                    "[#{@options.verify_cachehit_mode}]") do
+            @options.verify_cachehit_mode = true
+          end
+
           parser.separator("Debug options:")
           parser.separator("")
 

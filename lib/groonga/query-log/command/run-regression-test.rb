@@ -46,6 +46,7 @@ module Groonga
           @skip_finished_queries = false
           @output_query_log = false
           @care_order = true
+          @verify_cachehit_mode = false
         end
 
         def run(command_line)
@@ -260,12 +261,24 @@ module Groonga
             end
           end
 
+          def use_persistent_cache?
+            @groonga_options.include?("--cache-base-path")
+          end
+
           def shutdown
             begin
               send_command("shutdown")
             rescue SystemCallError
             end
             Process.waitpid(@pid)
+          end
+
+          def restart
+            self.shutdown
+            run_thread = Thread.new do
+              self.run{}
+            end
+            run_thread.join
           end
 
           private
@@ -363,6 +376,12 @@ module Groonga
               rescue Interrupt
                 puts("Interrupt: #{query_log_path}")
               end
+              if @new.use_persistent_cache?
+                @new.restart
+              end
+              if @old.use_persistent_cache?
+                @old.restart
+              end
             end
 
             old_thread = Thread.new do
@@ -390,6 +409,7 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
+            command_line << "--verify-cachehit-mode" if @new.use_persistent_cache? or @old.use_persistent_cache?
             verify_server = VerifyServer.new
             verify_server.run(command_line)
           end

@@ -36,6 +36,8 @@ module Groonga
           case @command.name
           when "select", "logical_select"
             same_select_response?
+          when "status"
+            same_cache_hit_rate?
           else
             same_response?
           end
@@ -69,6 +71,10 @@ module Groonga
         else
           same_size_response?
         end
+      end
+
+      def same_cache_hit_rate?
+        @response1.body["cache_hit_rate"] == @response2.body["cache_hit_rate"]
       end
 
       def care_order?
