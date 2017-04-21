@@ -73,17 +73,27 @@ module Groonga
             loop do
               statistic = @queue.pop
               return true if statistic.nil?
+
+              original_source = statistic.command.original_source
               begin
                 verify_command(groonga1_client, groonga2_client,
                                statistic.command)
-
-                verify_command(groonga1_client, groonga2_client,
-                               Groonga::Command::Status.new)
               rescue
                 log_client_error($!) do
-                  $stderr.puts(statistic.command.original_source)
+                  $stderr.puts(original_source)
                 end
                 return false
+              end
+              if @options.verify_cache?
+                begin
+                  verify_command(groonga1_client, groonga2_client,
+                                 Groonga::Command::Status.new)
+                rescue
+                  log_client_error($!) do
+                    $stderr.puts("status after #{original_source}")
+                  end
+                  return false
+                end
               end
             end
           end
@@ -107,9 +117,6 @@ module Groonga
       end
 
       def verify_command(groonga1_client, groonga2_client, command)
-        if command.instance_of?(Groonga::Command::Status)
-          return unless @options.verify_cache?
-        end
         command["cache"] = "no" if @options.disable_cache?
         command["output_type"] = :json
         response1 = groonga1_client.execute(command)
