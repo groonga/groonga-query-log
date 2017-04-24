@@ -4,16 +4,15 @@
 
 ### Improvements
 
-  * groonga-query-log-run-regression-test: Added `--old-groonga-option`
-    and `--new-groonga-option` options.
-    They add an additional old or new groonga option.
-    You can specify these options multiple times to specify multiple groonga
-    options.
+  * groonga-query-log-run-regression-test: Added
+    `--old-groonga-option` and `--new-groonga-option` options.  They
+    add an additional old or new groonga option.  You can specify
+    these options multiple times to specify multiple groonga options.
 
-  * groonga-query-log-run-regression-test: Added a persistent cache verification
-    feature.
-    It verifies `cache_hit_rate` in `status` command results automatically when you
-    specify `--old-groonga-option=--cache-base-path` or
+  * groonga-query-log-run-regression-test: Added a persistent cache
+    verification feature.  It verifies `cache_hit_rate` in `status`
+    command results automatically when you specify
+    `--old-groonga-option=--cache-base-path` or
     `--new-groonga-option=--cache-base-path`.
 
 ## 1.2.3: 2016-09-29
