@@ -1,0 +1,2 @@
+table_create Entries TABLE_HASH_KEY ShortText
+column_create Entries description COLUMN_SCALAR Text

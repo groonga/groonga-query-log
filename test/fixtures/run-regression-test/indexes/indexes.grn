@@ -1,0 +1,6 @@
+table_create Bigram \
+  TABLE_PAT_KEY ShortText \
+  --default_tokenizer TokenBigram \
+  --normalizer NormalizerAuto
+column_create Bigram Entries_description \
+  COLUMN_INDEX|WITH_POSITION Entries description

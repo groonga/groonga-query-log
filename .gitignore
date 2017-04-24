@@ -4,4 +4,7 @@
 /doc/po/*/
 /.yardoc/
 /test/.test-result/
+/test/fixtures/run-regression-test/db.old/
+/test/fixtures/run-regression-test/db.new/
+/test/fixtures/run-regression-test/results/
 /Gemfile.lock

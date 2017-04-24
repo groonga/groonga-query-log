@@ -1,0 +1,6 @@
+load --table Entries
+[
+{"_key": "table_create", "description": "table_create creates a new table in the current database. You need to create one or more tables to store and search data."},
+{"_key": "column_create", "description": "column_create creates a new column in a table."},
+{"_key": "select", "description": "select searches records that are matched to specified conditions from a table and then outputs them."}
+]
