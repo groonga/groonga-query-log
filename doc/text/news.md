@@ -12,7 +12,7 @@
 
   * groonga-query-log-run-regression-test: Added a persistent cache verification
     feature.
-    If verifies cache_hit_rate in status command results automatically when you
+    It verifies `cache_hit_rate` in `status` command results automatically when you
     specify `--old-groonga-option=--cache-base-path` or
     `--new-groonga-option=--cache-base-path`.
 
