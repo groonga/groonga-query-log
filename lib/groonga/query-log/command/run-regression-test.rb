@@ -409,7 +409,7 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
-            if @new.use_persistent_cache? or @old.use_persistent_cache?
+            if @old.use_persistent_cache? or @new.use_persistent_cache?
               command_line << "--verify-cache"
             end
             verify_server = VerifyServer.new
