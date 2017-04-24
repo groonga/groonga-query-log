@@ -26,15 +26,15 @@ module Groonga
           @options = ServerVerifier::Options.new
         end
 
-        def run(command_line)
+        def run(command_line, &callback)
           input_paths = create_parser.parse(command_line)
           verifier = ServerVerifier.new(@options)
           if input_paths.empty?
-            verifier.verify($stdin)
+            verifier.verify($stdin, &callback)
           else
             input_paths.each do |input_path|
               File.open(input_path) do |input|
-                verifier.verify(input)
+                verifier.verify(input, &callback)
               end
             end
           end

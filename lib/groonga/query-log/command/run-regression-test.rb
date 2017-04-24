@@ -228,7 +228,7 @@ module Groonga
               retry
             end
 
-            yield
+            yield if block_given?
           end
 
           def ensure_database
@@ -271,14 +271,6 @@ module Groonga
             rescue SystemCallError
             end
             Process.waitpid(@pid)
-          end
-
-          def restart
-            self.shutdown
-            run_thread = Thread.new do
-              self.run{}
-            end
-            run_thread.join
           end
 
           private
@@ -372,15 +364,23 @@ module Groonga
                 puts("Running test against query log...: #{query_log_path}")
               end
               begin
-                verify_server(log_path, query_log_path)
+                if @old.use_persistent_cache? or @new.use_persistent_cache?
+                  callback = lambda do
+                    if @old.use_persistent_cache?
+                      @old.shutdown
+                      @old.run
+                    end
+                    if @new.use_persistent_cache?
+                      @new.shutdown
+                      @new.run
+                    end
+                  end
+                else
+                  callback = nil
+                end
+                verify_server(log_path, query_log_path, &callback)
               rescue Interrupt
                 puts("Interrupt: #{query_log_path}")
-              end
-              if @new.use_persistent_cache?
-                @new.restart
-              end
-              if @old.use_persistent_cache?
-                @old.restart
               end
             end
 
@@ -396,7 +396,7 @@ module Groonga
             true
           end
 
-          def verify_server(test_log_path, query_log_path)
+          def verify_server(test_log_path, query_log_path, &callback)
             command_line = [
               "--n-clients=#{@n_clients}",
               "--groonga1-host=#{@old.host}",
@@ -413,7 +413,7 @@ module Groonga
               command_line << "--verify-cache"
             end
             verify_server = VerifyServer.new
-            verify_server.run(command_line)
+            verify_server.run(command_line, &callback)
           end
 
           def query_log_paths

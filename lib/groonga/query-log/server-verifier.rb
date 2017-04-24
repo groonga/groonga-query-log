@@ -31,29 +31,42 @@ module Groonga
         @different_results = Queue.new
       end
 
-      def verify(input)
-        producer = run_producer(input)
-        consumers = run_consumers
+      def verify(input, &callback)
+        producer = run_producer(input, &callback)
         reporter = run_reporter
         producer.join
-        consumers.each(&:join)
         @different_results.push(nil)
         reporter.join
       end
 
       private
-      def run_producer(input)
+      def run_producer(input, &callback)
         Thread.new do
+          consumers = run_consumers
+
           parser = Parser.new
+          n_commands = 0
+          callback_per_n_commands = 100
           parser.parse(input) do |statistic|
             command = statistic.command
             next if command.nil?
             next unless target_command?(command)
+            n_commands += 1
             @queue.push(statistic)
+
+            if callback and (n_commands % callback_per_n_commands).zero?
+              @options.n_clients.times do
+                @queue.push(nil)
+              end
+              consumers.each(&:join)
+              callback.call
+              consumers = run_consumers
+            end
           end
           @options.n_clients.times do
             @queue.push(nil)
           end
+          consumers.each(&:join)
         end
       end
 
