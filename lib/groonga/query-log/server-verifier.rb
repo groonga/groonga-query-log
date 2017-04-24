@@ -131,7 +131,7 @@ module Groonga
 
       def verify_command(groonga1_client, groonga2_client, command)
         command["cache"] = "no" if @options.disable_cache?
-        command["output_type"] = :json
+        command["output_type"] = "json"
         response1 = groonga1_client.execute(command)
         response2 = groonga2_client.execute(command)
         compare_options = {
@@ -146,7 +146,8 @@ module Groonga
 
       def report_result(output, result)
         command, response1, response2 = result
-        output.puts("command: #{command.original_source}")
+        command_source = command.original_source || command.to_uri_format
+        output.puts("command: #{command_source}")
         output.puts("response1: #{response1.body.to_json}")
         output.puts("response2: #{response2.body.to_json}")
       end
