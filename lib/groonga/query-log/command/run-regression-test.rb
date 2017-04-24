@@ -364,7 +364,7 @@ module Groonga
                 puts("Running test against query log...: #{query_log_path}")
               end
               begin
-                if @old.use_persistent_cache? or @new.use_persistent_cache?
+                if use_persistent_cache?
                   callback = lambda do
                     if @old.use_persistent_cache?
                       @old.shutdown
@@ -409,7 +409,7 @@ module Groonga
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
             command_line << query_log_path.to_s
-            if @old.use_persistent_cache? or @new.use_persistent_cache?
+            if use_persistent_cache?
               command_line << "--verify-cache"
             end
             verify_server = VerifyServer.new
@@ -422,6 +422,10 @@ module Groonga
 
           def test_log_path(query_log_path)
             @working_directory + "results" + query_log_path.basename
+          end
+
+          def use_persistent_cache?
+            @old.use_persistent_cache? or @new.use_persistent_cache?
           end
         end
       end
