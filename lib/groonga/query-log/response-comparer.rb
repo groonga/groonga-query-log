@@ -74,7 +74,9 @@ module Groonga
       end
 
       def same_cache_hit_rate?
-        @response1.body["cache_hit_rate"] == @response2.body["cache_hit_rate"]
+        cache_hit_rate1 = @response1.body["cache_hit_rate"]
+        cache_hit_rate2 = @response2.body["cache_hit_rate"]
+        (cache_hit_rate1 - cache_hit_rate2).abs <= (Float::EPSILON * 10)
       end
 
       def care_order?
