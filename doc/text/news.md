@@ -1,5 +1,13 @@
 # News
 
+## 1.2.5: 2017-05-08
+
+### Fixes
+
+  * groonga-query-log-run-regression-test: Fixed a bug that the
+    command doesn't care about error in calculation when compare
+    cache hit rate.
+
 ## 1.2.4: 2017-04-24
 
 ### Improvements
