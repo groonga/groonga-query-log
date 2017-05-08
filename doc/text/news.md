@@ -5,7 +5,7 @@
 ### Fixes
 
   * groonga-query-log-run-regression-test: Fixed a bug that the
-    command doesn't care about error in calculation when compare
+    command doesn't care about error in calculation when it compares
     cache hit rate.
 
 ## 1.2.4: 2017-04-24
