@@ -124,7 +124,7 @@ class ParserTest < Test::Unit::TestCase
 
   class FormatCompatibilityTest < self
     class DynamicColumnsTest < self
-      def test_labeled_columns_v0
+      def test_no_labeled_columns
         statistics = parse(<<-LOG)
 2017-05-30 19:11:37.932576|0x7ffc6ae1ba20|>select Items   --columns[price_with_tax].stage initial   --columns[price_with_tax].type UInt32   --columns[price_with_tax].flags COLUMN_SCALAR   --columns[price_with_tax].value 'price * 1.08'   --filter 'price_with_tax > 550'
 2017-05-30 19:11:37.976349|0x7ffc6ae1ba20|:000000043784801 filter(3)
@@ -143,7 +143,7 @@ class ParserTest < Test::Unit::TestCase
         assert_equal(expected, operations)
       end
 
-      def test_labeled_columns_v1
+      def test_labeled_columns
         statistics = parse(<<-LOG)
 2017-05-30 19:11:38.036856|0x7fffb7d8d9b0|>select Items   --columns[price_with_tax].stage initial   --columns[price_with_tax].type UInt32   --columns[price_with_tax].flags COLUMN_SCALAR   --columns[price_with_tax].value 'price * 1.08'   --filter 'price_with_tax > 550'
 2017-05-30 19:11:38.037234|0x7fffb7d8d9b0|:000000000381368 columns[price_with_tax](6)
@@ -166,7 +166,7 @@ class ParserTest < Test::Unit::TestCase
     end
 
     class DrilldownTest < self
-      def test_drilldown_v0
+      def test_no_output_drilldown
         statistics = parse(<<-LOG)
 2017-05-31 11:22:19.928613|0x7ffe470b0cc0|>select Memos --drilldown tag
 2017-05-31 11:22:19.928705|0x7ffe470b0cc0|:000000000095083 select(4)
@@ -185,7 +185,7 @@ class ParserTest < Test::Unit::TestCase
         assert_equal(expected, operations)
       end
 
-      def test_drilldown_v1
+      def test_output_drilldown
         statistics = parse(<<-LOG)
 2017-05-31 11:22:19.977081|0x7ffec4a59cd0|>select Memos --drilldown tag
 2017-05-31 11:22:19.977214|0x7ffec4a59cd0|:000000000138164 select(4)
