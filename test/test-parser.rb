@@ -164,5 +164,47 @@ class ParserTest < Test::Unit::TestCase
         assert_equal(expected, operations)
       end
     end
+
+    class DrilldownTest < self
+      def test_drilldown_v0
+        statistics = parse(<<-LOG)
+2017-05-31 11:22:19.928613|0x7ffe470b0cc0|>select Memos --drilldown tag
+2017-05-31 11:22:19.928705|0x7ffe470b0cc0|:000000000095083 select(4)
+2017-05-31 11:22:19.929002|0x7ffe470b0cc0|:000000000393647 output(4)
+2017-05-31 11:22:19.929040|0x7ffe470b0cc0|:000000000428917 drilldown(3)
+2017-05-31 11:22:19.929109|0x7ffe470b0cc0|<000000000498630 rc=0
+        LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["select", 4],
+          ["output", 4],
+          ["drilldown", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+
+      def test_drilldown_v1
+        statistics = parse(<<-LOG)
+2017-05-31 11:22:19.977081|0x7ffec4a59cd0|>select Memos --drilldown tag
+2017-05-31 11:22:19.977214|0x7ffec4a59cd0|:000000000138164 select(4)
+2017-05-31 11:22:19.977381|0x7ffec4a59cd0|:000000000304772 drilldown(3)
+2017-05-31 11:22:19.977572|0x7ffec4a59cd0|:000000000495092 output(4)
+2017-05-31 11:22:19.977615|0x7ffec4a59cd0|:000000000535908 output.drilldown(3)
+2017-05-31 11:22:19.977701|0x7ffec4a59cd0|<000000000623964 rc=0
+        LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["select", 4],
+          ["drilldown", 3],
+          ["output", 4],
+          ["output.drilldown", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+    end
   end
 end
