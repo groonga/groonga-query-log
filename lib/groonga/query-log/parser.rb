@@ -64,6 +64,7 @@ module Groonga
       def parse_line(time_stamp, context_id, type, rest, &block)
         case type
         when ">"
+          return if rest.empty?
           statistic = create_statistic(context_id)
           statistic.start(time_stamp, rest)
           @parsing_statistics[context_id] = statistic
