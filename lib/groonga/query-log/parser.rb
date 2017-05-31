@@ -68,9 +68,13 @@ module Groonga
           statistic.start(time_stamp, rest)
           @parsing_statistics[context_id] = statistic
         when ":"
-          return unless /\A(\d+) (.+)\((\d+)\)/ =~ rest
+          return unless /\A(\d+) (.+)\((\d+)\)(\[.+\])?/ =~ rest
           elapsed = $1
-          name = $2
+          unless $4
+            name = $2
+          else
+            name = $2 + $4
+          end
           n_records = $3.to_i
           statistic = @parsing_statistics[context_id]
           return if statistic.nil?

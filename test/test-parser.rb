@@ -206,5 +206,55 @@ class ParserTest < Test::Unit::TestCase
         assert_equal(expected, operations)
       end
     end
+
+    class LabeledDrilldownTest < self
+      def test_no_output_drilldown
+        statistics = parse(<<-LOG)
+2017-05-31 11:22:19.683806|0x7ffc1ee41940|>select Shops   --drilldown[item].keys items   --drilldown[item].sortby price   --drilldown[item].output_columns _key,_nsubrecs,price,price_with_tax   --drilldown[item].columns[price_with_tax].stage initial   --drilldown[item].columns[price_with_tax].type UInt32   --drilldown[item].columns[price_with_tax].flags COLUMN_SCALAR   --drilldown[item].columns[price_with_tax].value 'price * 1.08'   --drilldown[real_price].table item   --drilldown[real_price].keys price_with_tax
+2017-05-31 11:22:19.683980|0x7ffc1ee41940|:000000000176192 select(3)
+2017-05-31 11:22:19.684356|0x7ffc1ee41940|:000000000553162 output(3)
+2017-05-31 11:22:19.684468|0x7ffc1ee41940|:000000000665698 drilldown(6)[item]
+2017-05-31 11:22:19.684488|0x7ffc1ee41940|:000000000683901 drilldown(3)[real_price]
+2017-05-31 11:22:19.684558|0x7ffc1ee41940|<000000000754417 rc=0
+        LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["select", 3],
+          ["output", 3],
+          ["drilldown[item]", 6],
+          ["drilldown[real_price]", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+
+      def test_output_drilldown
+        statistics = parse(<<-LOG)
+2017-05-31 11:22:19.758189|0x7ffd1fc97890|>select Shops   --drilldown[item].keys items   --drilldown[item].sortby price   --drilldown[item].output_columns _key,_nsubrecs,price,price_with_tax   --drilldown[item].columns[price_with_tax].stage initial   --drilldown[item].columns[price_with_tax].type UInt32   --drilldown[item].columns[price_with_tax].flags COLUMN_SCALAR   --drilldown[item].columns[price_with_tax].value 'price * 1.08'   --drilldown[real_price].table item   --drilldown[real_price].keys price_with_tax
+2017-05-31 11:22:19.758462|0x7ffd1fc97890|:000000000276579 select(3)
+2017-05-31 11:22:19.758727|0x7ffd1fc97890|:000000000542224 columns[price_with_tax](6)
+2017-05-31 11:22:19.758738|0x7ffd1fc97890|:000000000550409 drilldowns[item](6)
+2017-05-31 11:22:19.758806|0x7ffd1fc97890|:000000000619409 drilldowns[real_price](3)
+2017-05-31 11:22:19.758915|0x7ffd1fc97890|:000000000729209 output(3)
+2017-05-31 11:22:19.759015|0x7ffd1fc97890|:000000000829476 output.drilldowns[item](6)
+2017-05-31 11:22:19.759034|0x7ffd1fc97890|:000000000847090 output.drilldowns[real_price](3)
+2017-05-31 11:22:19.759103|0x7ffd1fc97890|<000000000916234 rc=0
+        LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["select", 3],
+          ["columns[price_with_tax]", 6],
+          ["drilldowns[item]", 6],
+          ["drilldowns[real_price]", 3],
+          ["output", 3],
+          ["output.drilldowns[item]", 6],
+          ["output.drilldowns[real_price]", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+    end
   end
 end
