@@ -1,5 +1,20 @@
 # News
 
+## 1.2.6: 2017-05-31
+
+### Improvements
+
+  * Supported changed query log format since Groonga 7.0.1. The output
+    format is changed about dynamic columns, drilldown, labeled
+    drilldown, but groonga-query-log still supports previous format.
+
+  * groonga-query-log-extract: Fixed to ignore empty command not to
+    raise exception error.
+
+  * groonga-query-log-detect-memory-leak
+    groonga-query-log-replay: Fixed uninitialized constant error when
+    executing command.
+
 ## 1.2.5: 2017-05-08
 
 ### Fixes
