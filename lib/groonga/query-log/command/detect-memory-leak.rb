@@ -18,6 +18,7 @@
 
 require "optparse"
 
+require "groonga/query-log/version"
 require "groonga/query-log/memory-leak-detector"
 
 module Groonga
