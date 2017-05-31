@@ -70,10 +70,10 @@ module Groonga
         when ":"
           return unless /\A(\d+) (.+)\((\d+)\)(\[.+\])?/ =~ rest
           elapsed = $1
-          unless $4
-            name = $2
-          else
+          if $4
             name = $2 + $4
+          else
+            name = $2
           end
           n_records = $3.to_i
           statistic = @parsing_statistics[context_id]
