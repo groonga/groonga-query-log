@@ -131,7 +131,7 @@ class ParserTest < Test::Unit::TestCase
 2017-05-30 19:11:37.976383|0x7ffc6ae1ba20|:000000043808671 select(3)
 2017-05-30 19:11:37.976534|0x7ffc6ae1ba20|:000000043961723 output(3)
 2017-05-30 19:11:37.976650|0x7ffc6ae1ba20|<000000044078013 rc=0
-      LOG
+        LOG
         operations = statistics.first.operations.collect do |operation|
           [operation[:name], operation[:n_records]]
         end
@@ -151,7 +151,7 @@ class ParserTest < Test::Unit::TestCase
 2017-05-30 19:11:38.085691|0x7fffb7d8d9b0|:000000048837085 select(3)
 2017-05-30 19:11:38.085825|0x7fffb7d8d9b0|:000000048972310 output(3)
 2017-05-30 19:11:38.085929|0x7fffb7d8d9b0|<000000049076026 rc=0
-      LOG
+        LOG
         operations = statistics.first.operations.collect do |operation|
           [operation[:name], operation[:n_records]]
         end
