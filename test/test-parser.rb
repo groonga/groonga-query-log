@@ -121,4 +121,48 @@ class ParserTest < Test::Unit::TestCase
       assert_equal([-22], statistics.collect(&:return_code))
     end
   end
+
+  class FormatCompatibilityTest < self
+    class DynamicColumnsTest < self
+      def test_labeled_columns_v0
+        statistics = parse(<<-LOG)
+2017-05-30 19:11:37.932576|0x7ffc6ae1ba20|>select Items   --columns[price_with_tax].stage initial   --columns[price_with_tax].type UInt32   --columns[price_with_tax].flags COLUMN_SCALAR   --columns[price_with_tax].value 'price * 1.08'   --filter 'price_with_tax > 550'
+2017-05-30 19:11:37.976349|0x7ffc6ae1ba20|:000000043784801 filter(3)
+2017-05-30 19:11:37.976383|0x7ffc6ae1ba20|:000000043808671 select(3)
+2017-05-30 19:11:37.976534|0x7ffc6ae1ba20|:000000043961723 output(3)
+2017-05-30 19:11:37.976650|0x7ffc6ae1ba20|<000000044078013 rc=0
+      LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["filter", 3],
+          ["select", 3],
+          ["output", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+
+      def test_labeled_columns_v1
+        statistics = parse(<<-LOG)
+2017-05-30 19:11:38.036856|0x7fffb7d8d9b0|>select Items   --columns[price_with_tax].stage initial   --columns[price_with_tax].type UInt32   --columns[price_with_tax].flags COLUMN_SCALAR   --columns[price_with_tax].value 'price * 1.08'   --filter 'price_with_tax > 550'
+2017-05-30 19:11:38.037234|0x7fffb7d8d9b0|:000000000381368 columns[price_with_tax](6)
+2017-05-30 19:11:38.085663|0x7fffb7d8d9b0|:000000048816481 filter(3)
+2017-05-30 19:11:38.085691|0x7fffb7d8d9b0|:000000048837085 select(3)
+2017-05-30 19:11:38.085825|0x7fffb7d8d9b0|:000000048972310 output(3)
+2017-05-30 19:11:38.085929|0x7fffb7d8d9b0|<000000049076026 rc=0
+      LOG
+        operations = statistics.first.operations.collect do |operation|
+          [operation[:name], operation[:n_records]]
+        end
+        expected = [
+          ["columns[price_with_tax]", 6],
+          ["filter", 3],
+          ["select", 3],
+          ["output", 3]
+        ]
+        assert_equal(expected, operations)
+      end
+    end
+  end
 end
