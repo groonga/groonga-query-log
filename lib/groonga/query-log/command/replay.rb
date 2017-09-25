@@ -72,7 +72,7 @@ module Groonga
           parser.on("--n-clients=N", Integer,
                     "The max number of concurrency",
                     "[#{@options.n_clients}]") do |n_clients|
-            @options.n_cilents = n_clients
+            @options.n_clients = n_clients
           end
 
           parser.on("--request-queue-size=SIZE", Integer,
