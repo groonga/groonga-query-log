@@ -82,7 +82,7 @@ module Groonga
             end
             begin
               replay_command(client, id, statistic.command)
-            rescue Groonga::Client::Connection::Error
+            rescue Groonga::Client::Error
               # TODO: add error log mechanism
               $stderr.puts(Time.now.iso8601)
               $stderr.puts(statistic.command.original_source)
