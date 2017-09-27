@@ -1,5 +1,17 @@
 # News
 
+## 1.2.7: 2017-09-27
+
+### Improvements
+
+  * groonga-query-log-replay: Improved error handling correctly for
+    unexpected file serving query or `groonga-client` errors.
+
+### Fixes
+
+  * groonga-query-log-replay: Fixed a bug that specified value to
+    `--n-clients` option is ignored.
+
 ## 1.2.6: 2017-05-31
 
 ### Improvements
