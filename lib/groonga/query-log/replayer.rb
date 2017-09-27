@@ -48,6 +48,7 @@ module Groonga
           id = 0
           @options.create_request_output do |output|
             parser.parse(input) do |statistic|
+              next if statistic.command.nil?
               next unless target_command?(statistic.command)
               # TODO: validate orignal_source is one line
               output.puts(statistic.command.original_source)
