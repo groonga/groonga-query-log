@@ -89,6 +89,13 @@ module Groonga
               $stderr.puts($!.raw_error.message)
               $stderr.puts($!.raw_error.backtrace)
               return false
+            rescue
+              # TODO: add error log mechanism
+              $stderr.puts(Time.now.iso8601)
+              $stderr.puts(statistic.command.original_source)
+              $stderr.puts($!.message)
+              $stderr.puts($!.backtrace)
+              return false
             end
           end
         end
