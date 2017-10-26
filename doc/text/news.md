@@ -1,5 +1,14 @@
 # News
 
+## 1.2.8: 2017-10-26
+
+### Fixes
+
+  * `groonga-query-log-replay`: Fixed a request error related bug.
+
+  * `groonga-query-log-replay`: Fixed a bug that `--target-command` is
+    ignored.
+
 ## 1.2.7: 2017-09-27
 
 ### Improvements
