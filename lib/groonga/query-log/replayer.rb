@@ -157,7 +157,7 @@ module Groonga
           @disable_cache = false
           @requests_path = nil
           @responses_path = nil
-          @target_command_names = ["*"]
+          @target_command_names = []
         end
 
         def create_client(&block)
@@ -192,6 +192,7 @@ module Groonga
         end
 
         def target_command_name?(name)
+          return true if @target_command_names.empty?
           @target_command_names.any? do |name_pattern|
             flags = 0
             flags |= File::FNM_EXTGLOB if File.const_defined?(:FNM_EXTGLOB)
