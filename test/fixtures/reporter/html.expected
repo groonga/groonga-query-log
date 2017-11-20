@@ -39,7 +39,8 @@ div.statistics
 
 td.elapsed,
 td.ratio,
-td.n
+td.n,
+td.n-records
 {
   text-align: right;
 }
@@ -144,8 +145,19 @@ td.name
       </div>
       <div class="statistic-operations">
         <h3>Operations</h3>
-        <ol>
-        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>Nth</th>
+              <th>Elapsed(sec)</th>
+              <th>Name</th>
+              <th>N records</th>
+              <th>Context</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
       <div class="statistic-heading">
         <h3>Command</h3>
@@ -173,23 +185,46 @@ td.name
       </div>
       <div class="statistic-operations">
         <h3>Operations</h3>
-        <ol>
-          <li>
-            <span class="elapsed">0.00084295</span>:
-            <span class="name">filter</span>:
-            <span class="context">query: follower:@groonga</span>
-          </li>
-          <li>
-            <span class="elapsed">0.00002795</span>:
-            <span class="name">select</span>:
-            <span class="context"></span>
-          </li>
-          <li>
-            <span class="elapsed">0.00019585</span>:
-            <span class="name">output</span>:
-            <span class="context">_key,name</span>
-          </li>
-        </ol>
+        <table>
+          <thead>
+            <tr>
+              <th>Nth</th>
+              <th>Elapsed(sec)</th>
+              <th>Name</th>
+              <th>N records</th>
+              <th>Context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="n">1</td>
+              <td class="elapsed">
+                <span class="elapsed">0.00084295</span>
+              </td>
+              <td class="name">filter</td>
+              <td class="n-records">2</td>
+              <td class="context">query: follower:@groonga</td>
+            </tr>
+            <tr>
+              <td class="n">2</td>
+              <td class="elapsed">
+                <span class="elapsed">0.00002795</span>
+              </td>
+              <td class="name">select</td>
+              <td class="n-records">2</td>
+              <td class="context"></td>
+            </tr>
+            <tr>
+              <td class="n">3</td>
+              <td class="elapsed">
+                <span class="elapsed">0.00019585</span>
+              </td>
+              <td class="name">output</td>
+              <td class="n-records">2</td>
+              <td class="context">_key,name</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </body>
