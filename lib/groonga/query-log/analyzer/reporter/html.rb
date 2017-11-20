@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -81,16 +79,31 @@ module Groonga
       </div>
       <div class="statistic-operations">
         <h3>Operations</h3>
-        <ol>
-<% statistic.each_operation do |operation| %>
-          <li>
-            <%= format_elapsed(operation[:relative_elapsed_in_seconds],
-                               :slow? => operation[:slow?]) %>:
-            <%= span({:class => "name"}, h(operation[:name])) %>:
-            <%= span({:class => "context"}, h(operation[:context])) %>
-          </li>
+        <table>
+          <thead>
+            <tr>
+              <th>Nth</th>
+              <th>Elapsed(sec)</th>
+              <th>Name</th>
+              <th>N records</th>
+              <th>Context</th>
+            </tr>
+          </thead>
+          <tbody>
+<% statistic.each_operation.with_index do |operation, i| %>
+            <tr>
+              <td class="n"><%= h(i + 1) %></td>
+              <td class="elapsed">
+                <%= format_elapsed(operation[:relative_elapsed_in_seconds],
+                                   :slow? => operation[:slow?]) %>
+              </td>
+              <td class="name"><%= h(operation[:name]) %></td>
+              <td class="n-records"><%= h(operation[:n_records]) %></td>
+              <td class="context"><%= h(operation[:context]) %></td>
+            </tr>
 <% end %>
-        </ol>
+          </tbody>
+        </table>
       </div>
           EOH
           write(statistic_html)
@@ -145,7 +158,8 @@ div.statistics
 
 td.elapsed,
 td.ratio,
-td.n
+td.n,
+td.n-records
 {
   text-align: right;
 }
