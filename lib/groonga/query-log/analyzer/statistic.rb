@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -76,6 +74,8 @@ module Groonga
         end
 
         def each_operation
+          return to_enum(__method__) unless block_given?
+
           previous_elapsed = 0
           ensure_parse_command
           operation_context_context = {
