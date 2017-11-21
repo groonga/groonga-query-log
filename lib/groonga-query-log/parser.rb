@@ -14,8 +14,6 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "English"
-
 require "groonga-query-log/statistic"
 
 module GroongaQueryLog
@@ -29,6 +27,12 @@ module GroongaQueryLog
         @parsing_statistics = {}
       end
 
+      PATTERN =
+        /\A(?<year>\d{4})-(?<month>\d\d)-(?<day>\d\d)
+           \ (?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)\.(?<microsecond>\d+)
+           \|(?<context_id>.+?)
+           \|(?<type>[>:<])/x
+
       # Parses query-log file as stream to
       # {GroongaQueryLog::Analyzer::Statistic}s including some
       # informations for each query.
@@ -41,17 +45,28 @@ module GroongaQueryLog
       def parse(input, &block)
         input.each_line do |line|
           next unless line.valid_encoding?
-          case line
-          when /\A(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)\.(\d+)\|(.+?)\|([>:<])/
-            year, month, day, hour, minutes, seconds, micro_seconds =
-              $1, $2, $3, $4, $5, $6, $7
-            context_id = $8
-            type = $9
-            rest = $POSTMATCH.strip
-            time_stamp = Time.local(year, month, day, hour, minutes, seconds,
-                                    micro_seconds)
-            parse_line(time_stamp, context_id, type, rest, &block)
-          end
+
+          match_data = PATTERN.match(line)
+          next if match_data.nil?
+
+          year = match_data[:year].to_i
+          month = match_data[:month].to_i
+          day = match_data[:day].to_i
+          hour = match_data[:hour].to_i
+          minute = match_data[:minute].to_i
+          second = match_data[:second].to_i
+          microsecond = match_data[:microsecond].to_i
+          context_id = match_data[:context_id]
+          type = match_data[:type]
+          rest = match_data.post_match.strip
+          time_stamp = Time.local(year,
+                                  month,
+                                  day,
+                                  hour,
+                                  minute,
+                                  second,
+                                  microsecond)
+          parse_line(time_stamp, context_id, type, rest, &block)
         end
       end
 
