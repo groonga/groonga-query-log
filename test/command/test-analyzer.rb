@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2016  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -17,17 +17,17 @@
 
 require "tempfile"
 require "pathname"
-require "groonga/query-log/analyzer"
+require "groonga/query-log/command/analyzer"
 
-class AnalyzerTest < Test::Unit::TestCase
+class AnalyzerCommandTest < Test::Unit::TestCase
   setup
   def setup_fixtures
-    @fixtures_path = File.join(File.dirname(__FILE__), "fixtures")
+    @fixtures_path = File.join(__dir__, "..", "fixtures")
     @query_log_path = File.join(@fixtures_path, "query.log")
   end
 
   def setup
-    @analyzer = Groonga::QueryLog::Analyzer.new
+    @analyzer = Groonga::QueryLog::Command::Analyzer.new
   end
 
   class TestInputFile < self
@@ -40,7 +40,7 @@ class AnalyzerTest < Test::Unit::TestCase
     end
 
     def test_no_specified
-      assert_raise(Groonga::QueryLog::Analyzer::NoInputError) do
+      assert_raise(Groonga::QueryLog::Command::Analyzer::NoInputError) do
         run_analyzer
       end
     end

@@ -16,7 +16,7 @@
 
 require "English"
 
-require "groonga/query-log/analyzer/statistic"
+require "groonga/query-log/statistic"
 
 module Groonga
   module QueryLog
@@ -92,7 +92,7 @@ module Groonga
       end
 
       def create_statistic(context_id)
-        statistic = Analyzer::Statistic.new(context_id)
+        statistic = Statistic.new(context_id)
         if @slow_operation_threshold
           statistic.slow_operation_threshold = @slow_operation_threshold
         end

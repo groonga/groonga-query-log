@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -17,10 +15,11 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga/query-log/analyzer/reporter"
+require "groonga/query-log/command/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    module Command
     class Analyzer
       class ConsoleReporter < Reporter
         class Color
@@ -294,6 +293,7 @@ module Groonga
           "%s%s%s" % [color.escape_sequence, text, @reset_color.escape_sequence]
         end
       end
+    end
     end
   end
 end

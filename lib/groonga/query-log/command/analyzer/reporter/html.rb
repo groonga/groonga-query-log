@@ -16,10 +16,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "erb"
-require "groonga/query-log/analyzer/reporter"
+require "groonga/query-log/command/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    module Command
     class Analyzer
       class HTMLReporter < Reporter
         include ERB::Util
@@ -335,6 +336,7 @@ td.name
           tag("div", attributes, content)
         end
       end
+    end
     end
   end
 end

@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,10 +14,11 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga/query-log/analyzer/reporter"
+require "groonga/query-log/command/analyzer/reporter"
 
 module Groonga
   module QueryLog
+    module Command
     class Analyzer
       class JSONStreamReporter < Reporter
         def report_statistic(statistic)
@@ -44,6 +43,7 @@ module Groonga
           JSON.generate(statistic.to_hash)
         end
       end
+    end
     end
   end
 end

@@ -19,6 +19,7 @@
 
 module Groonga
   module QueryLog
+    module Command
     class Analyzer
       class Reporter
         include Enumerable
@@ -105,6 +106,7 @@ module Groonga
           end
         end
       end
+    end
     end
   end
 end

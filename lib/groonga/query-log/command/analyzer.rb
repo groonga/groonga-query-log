@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2016  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -19,15 +19,16 @@ require "optparse"
 require "json"
 require "groonga/query-log/command-line-utils"
 require "groonga/query-log/parser"
-require "groonga/query-log/analyzer/streamer"
-require "groonga/query-log/analyzer/sized-statistics"
-require "groonga/query-log/analyzer/reporter/console"
-require "groonga/query-log/analyzer/reporter/html"
-require "groonga/query-log/analyzer/reporter/json"
-require "groonga/query-log/analyzer/reporter/json-stream"
+require "groonga/query-log/command/analyzer/streamer"
+require "groonga/query-log/command/analyzer/sized-statistics"
+require "groonga/query-log/command/analyzer/reporter/console"
+require "groonga/query-log/command/analyzer/reporter/html"
+require "groonga/query-log/command/analyzer/reporter/json"
+require "groonga/query-log/command/analyzer/reporter/json-stream"
 
 module Groonga
   module QueryLog
+    module Command
     class Analyzer
       include CommandLineUtils
 
@@ -256,6 +257,7 @@ module Groonga
           end
         end
       end
+    end
     end
   end
 end
