@@ -19,8 +19,8 @@ class ResponseComparerTest < Test::Unit::TestCase
   def comparer(response1, response2, options={})
     response1 = normalize_response(response1)
     response2 = normalize_response(response2)
-    Groonga::QueryLog::ResponseComparer.new(@command, response1, response2,
-                                            options)
+    GroongaQueryLog::ResponseComparer.new(@command, response1, response2,
+                                          options)
   end
 
   def same?(response1, response2, options={})

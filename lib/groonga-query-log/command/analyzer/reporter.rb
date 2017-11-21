@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -17,9 +15,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-module Groonga
-  module QueryLog
-    module Command
+module GroongaQueryLog
+  module Command
     class Analyzer
       class Reporter
         include Enumerable
@@ -106,7 +103,6 @@ module Groonga
           end
         end
       end
-    end
     end
   end
 end

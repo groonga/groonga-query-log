@@ -16,13 +16,13 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga/query-log/command/format-regression-test-logs"
+require "groonga-query-log/command/format-regression-test-logs"
 
 class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
   include Path
 
   def setup
-    @command = Groonga::QueryLog::Command::FormatRegressionTestLogs.new
+    @command = GroongaQueryLog::Command::FormatRegressionTestLogs.new
   end
 
   def run_command(command_line)

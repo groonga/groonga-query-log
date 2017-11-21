@@ -15,28 +15,38 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-module Groonga
-  module QueryLog
-    module Command
+require "groonga-query-log/command/analyzer/reporter"
+
+module GroongaQueryLog
+  module Command
     class Analyzer
-      class Streamer
-        def initialize(reporter)
-          @reporter = reporter
+      class JSONReporter < Reporter
+        def report_statistic(statistic)
+          write(",") if @index > 0
+          write("\n")
+          write(format_statistic(statistic))
+          @index += 1
         end
 
         def start
-          @reporter.start
-        end
-
-        def <<(statistic)
-          @reporter.report_statistic(statistic) if statistic.slow?
+          @index = 0
+          write("[")
         end
 
         def finish
-          @reporter.finish
+          write("\n")
+          write("]\n")
+        end
+
+        def report_summary
+          # TODO
+        end
+
+        private
+        def format_statistic(statistic)
+          JSON.generate(statistic.to_hash)
         end
       end
-    end
     end
   end
 end

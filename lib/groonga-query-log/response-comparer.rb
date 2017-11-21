@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -14,8 +14,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
     class ResponseComparer
       def initialize(command, response1, response2, options={})
         @command = command
@@ -46,7 +45,7 @@ module Groonga
 
       private
       def error_response?(response)
-        response.is_a?(Client::Response::Error)
+        response.is_a?(Groonga::Client::Response::Error)
       end
 
       def same_error_response?
@@ -211,5 +210,4 @@ module Groonga
         map
       end
     end
-  end
 end

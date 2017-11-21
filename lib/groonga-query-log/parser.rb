@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2016  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,10 +16,9 @@
 
 require "English"
 
-require "groonga/query-log/statistic"
+require "groonga-query-log/statistic"
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
     class Parser
       def initialize(options={})
         @options = options
@@ -31,13 +30,13 @@ module Groonga
       end
 
       # Parses query-log file as stream to
-      # {Groonga::QueryLog::Analyzer::Statistics} including some
+      # {GroongaQueryLog::Analyzer::Statistic}s including some
       # informations for each query.
       #
       # @param [IO] input IO for input query log file.
       # @yield [statistics] if a block is specified, it is called
       #   every time a query is finished parsing.
-      # @yieldparam [Groonga::QueryLog::Analyzer::Statistic] statistic
+      # @yieldparam [GroongaQueryLog::Statistic] statistic
       #   statistics of each query in log files.
       def parse(input, &block)
         input.each_line do |line|
@@ -121,5 +120,4 @@ module Groonga
         true
       end
     end
-  end
 end

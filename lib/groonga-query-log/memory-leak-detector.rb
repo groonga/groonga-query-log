@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,10 +18,9 @@ require "time"
 
 require "groonga/client"
 
-require "groonga/query-log/parser"
+require "groonga-query-log/parser"
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
     class MemoryLeakDetector
       def initialize(options)
         @options = options
@@ -122,5 +119,4 @@ module Groonga
         end
       end
     end
-  end
 end

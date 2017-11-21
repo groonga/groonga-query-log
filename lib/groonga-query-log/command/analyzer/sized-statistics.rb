@@ -15,11 +15,10 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga/query-log/command/analyzer/sized-grouped-operations"
+require "groonga-query-log/command/analyzer/sized-grouped-operations"
 
-module Groonga
-  module QueryLog
-    module Command
+module GroongaQueryLog
+  module Command
     class Analyzer
       class SizedStatistics < Array
         attr_reader :n_responses, :n_slow_responses, :n_slow_operations
@@ -154,7 +153,6 @@ module Groonga
           end
         end
       end
-    end
     end
   end
 end

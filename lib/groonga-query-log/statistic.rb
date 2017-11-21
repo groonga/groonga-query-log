@@ -16,8 +16,7 @@
 
 require "groonga/command/parser"
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
       class Statistic
         DEFAULT_SLOW_OPERATION_THRESHOLD = 0.1
         DEFAULT_SLOW_RESPONSE_THRESHOLD = 0.2
@@ -188,5 +187,4 @@ module Groonga
           elapsed >= @slow_operation_threshold
         end
       end
-  end
 end

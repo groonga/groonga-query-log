@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2012  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +19,7 @@ require "stringio"
 
 require "groonga/command"
 
-require "groonga/query-log"
+require "groonga-query-log"
 
 module Path
   def fixture_path(*components)

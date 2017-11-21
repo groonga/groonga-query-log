@@ -1,4 +1,4 @@
-# Copyright (C) 2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2012-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -14,23 +14,27 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga-query-log"
+require "groonga-query-log/version"
+require "groonga-query-log/parser"
+require "groonga-query-log/replayer"
+require "groonga-query-log/server-verifier"
+require "groonga-query-log/command-version-compatibility-checker"
 
 module GroongaQueryLog
-  module NamespaceBackwardCompatibility
+  module AnalyzerNamespaceBackwardCompatibility
     def const_missing(name)
       case name
-      when :QueryLog
-        warn("Groonga::QueryLog is deprecated. Use GroongaQueryLog instead:\n" +
+      when :Analyzer
+        warn("GroongaQueryLog::Analyzer is deprecated. " +
+             "Use GroongaQueryLog::Command::Analyzer instead:\n" +
              caller.join("\n"))
-        const_set(name, GroongaQueryLog)
+        require "groonga-query-log/command/analyzer"
+        const_set(name, Command::Analyzer)
       else
         super
       end
     end
   end
-end
 
-module Groonga
-  extend GroongaQueryLog::NamespaceBackwardCompatibility
+  extend AnalyzerNamespaceBackwardCompatibility
 end

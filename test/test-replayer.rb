@@ -20,7 +20,7 @@ class ReplayerTest < Test::Unit::TestCase
   class OptionTest < self
     class ClientTest < self
       def setup
-        @options = Groonga::QueryLog::Replayer::Options.new
+        @options = GroongaQueryLog::Replayer::Options.new
         @options.n_clients = 1
       end
 
@@ -40,7 +40,7 @@ class ReplayerTest < Test::Unit::TestCase
 
       private
       def replay
-        replayer = Groonga::QueryLog::Replayer.new(@options)
+        replayer = GroongaQueryLog::Replayer.new(@options)
         replayer.replay(StringIO.new(""))
       end
 
@@ -60,7 +60,7 @@ class ReplayerTest < Test::Unit::TestCase
 
     class TargetCommandNameTest < self
       def setup
-        @options = Groonga::QueryLog::Replayer::Options.new
+        @options = GroongaQueryLog::Replayer::Options.new
       end
 
       def test_default

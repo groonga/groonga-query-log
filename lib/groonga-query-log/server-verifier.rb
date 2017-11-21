@@ -19,11 +19,10 @@ require "thread"
 
 require "groonga/client"
 
-require "groonga/query-log/parser"
-require "groonga/query-log/response-comparer"
+require "groonga-query-log/parser"
+require "groonga-query-log/response-comparer"
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
     class ServerVerifier
       def initialize(options)
         @options = options
@@ -246,5 +245,4 @@ module Groonga
         end
       end
     end
-  end
 end

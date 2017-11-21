@@ -17,7 +17,7 @@
 
 require "tempfile"
 require "pathname"
-require "groonga/query-log/command/analyzer"
+require "groonga-query-log/command/analyzer"
 
 class AnalyzerCommandTest < Test::Unit::TestCase
   setup
@@ -27,7 +27,7 @@ class AnalyzerCommandTest < Test::Unit::TestCase
   end
 
   def setup
-    @analyzer = Groonga::QueryLog::Command::Analyzer.new
+    @analyzer = GroongaQueryLog::Command::Analyzer.new
   end
 
   class TestInputFile < self
@@ -40,7 +40,7 @@ class AnalyzerCommandTest < Test::Unit::TestCase
     end
 
     def test_no_specified
-      assert_raise(Groonga::QueryLog::Command::Analyzer::NoInputError) do
+      assert_raise(GroongaQueryLog::Command::Analyzer::NoInputError) do
         run_analyzer
       end
     end

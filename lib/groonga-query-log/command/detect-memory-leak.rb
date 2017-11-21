@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013-2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,23 +16,22 @@
 
 require "optparse"
 
-require "groonga/query-log/version"
-require "groonga/query-log/replayer"
+require "groonga-query-log/version"
+require "groonga-query-log/memory-leak-detector"
 
-module Groonga
-  module QueryLog
+module GroongaQueryLog
     module Command
-      class Replay
+      class DetectMemoryLeak
         def initialize
-          @options = Replayer::Options.new
+          @options = MemoryLeakDetector::Options.new
         end
 
         def run(command_line)
           input_paths = create_parser.parse(command_line)
-          replayer = Replayer.new(@options)
+          detector = MemoryLeakDetector.new(@options)
           input_paths.each do |input_path|
             File.open(input_path) do |input|
-              replayer.replay(input)
+              detector.detect(input)
             end
           end
           true
@@ -69,52 +66,24 @@ module Groonga
             @options.protocol = protocol
           end
 
-          parser.on("--n-clients=N", Integer,
-                    "The max number of concurrency",
-                    "[#{@options.n_clients}]") do |n_clients|
-            @options.n_clients = n_clients
+          parser.on("--pid=PID",
+                    "The PID of groonga server",
+                    "[#{@options.pid}]") do |pid|
+            @options.pid = pid
           end
 
-          parser.on("--request-queue-size=SIZE", Integer,
-                    "The size of request queue",
-                    "[auto]") do |size|
-            @options.request_queue_size = size
+          parser.on("--n-tries=N", Integer,
+                    "The number of the same request tries",
+                    "[#{@options.n_tries}]") do |n|
+            @options.n_tries = n
           end
 
-          parser.on("--disable-cache",
-                    "Add 'cache=no' parameter to request",
-                    "[#{@options.disable_cache?}]") do
-            @options.disable_cache = true
-          end
-
-          parser.on("--target-command-name=NAME",
-                    "Add NAME to target command names",
-                    "You can specify this option zero or more times",
-                    "See also --target-command-names") do |name|
-            @options.target_command_names << name
-          end
-
-          target_command_names_label = @options.target_command_names.join(", ")
-          parser.on("--target-command-names=NAME1,NAME2,...", Array,
-                    "Replay only NAME1,NAME2,... commands",
-                    "You can use glob to choose command name",
-                    "[#{target_command_names_label}]") do |names|
-            @options.target_command_names = names
-          end
-
-          parser.on("--output-requests=PATH",
-                    "Output requests to PATH",
-                    "[not output]") do |path|
-            @options.requests_path = path
-          end
-
-          parser.on("--output-responses=PATH",
-                    "Output responses to PATH",
-                    "[not output]") do |path|
-            @options.responses_path = path
+          parser.on("--[no-]force-disable-cache",
+                    "Force disable cache of select command by cache=no parameter",
+                    "[#{@options.force_disable_cache?}]") do |boolean|
+            @options.force_disable_cache = boolean
           end
         end
       end
     end
-  end
 end

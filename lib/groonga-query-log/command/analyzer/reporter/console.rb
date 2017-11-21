@@ -15,11 +15,10 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "groonga/query-log/command/analyzer/reporter"
+require "groonga-query-log/command/analyzer/reporter"
 
-module Groonga
-  module QueryLog
-    module Command
+module GroongaQueryLog
+  module Command
     class Analyzer
       class ConsoleReporter < Reporter
         class Color
@@ -293,7 +292,6 @@ module Groonga
           "%s%s%s" % [color.escape_sequence, text, @reset_color.escape_sequence]
         end
       end
-    end
     end
   end
 end

@@ -48,7 +48,7 @@ class ParserTest < Test::Unit::TestCase
   private
   def parse(log)
     statistics = []
-    parser = Groonga::QueryLog::Parser.new
+    parser = GroongaQueryLog::Parser.new
     parser.parse(StringIO.new(log)) do |statistic|
       statistics << statistic
     end

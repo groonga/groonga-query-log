@@ -25,7 +25,7 @@ class IncompatibilityDetectorTest < Test::Unit::TestCase
   end
 
   def parse_query_log(query_log)
-    parser = Groonga::QueryLog::Parser.new
+    parser = GroongaQueryLog::Parser.new
     parser.parse(query_log) do |statistic|
       return statistic
     end
@@ -33,13 +33,13 @@ class IncompatibilityDetectorTest < Test::Unit::TestCase
 
   sub_test_case("version1") do
     def setup
-      @detector = Groonga::QueryLog::IncompatibilityDetector::Version1.new
+      @detector = GroongaQueryLog::IncompatibilityDetector::Version1.new
     end
   end
 
   sub_test_case("version2") do
     def setup
-      @detector = Groonga::QueryLog::IncompatibilityDetector::Version2.new
+      @detector = GroongaQueryLog::IncompatibilityDetector::Version2.new
     end
 
     sub_test_case("select") do

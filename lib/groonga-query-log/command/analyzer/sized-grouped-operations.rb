@@ -15,9 +15,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-module Groonga
-  module QueryLog
-    module Command
+module GroongaQueryLog
+  module Command
     class Analyzer
       class SizedGroupedOperations < Array
         def initialize
@@ -78,7 +77,6 @@ module Groonga
           end
         end
       end
-    end
     end
   end
 end

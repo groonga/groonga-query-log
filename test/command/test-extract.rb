@@ -19,7 +19,7 @@
 
 require "stringio"
 require "groonga/command"
-require "groonga/query-log/command/extract"
+require "groonga-query-log/command/extract"
 
 class ExtractCommandTest < Test::Unit::TestCase
   setup
@@ -29,7 +29,7 @@ class ExtractCommandTest < Test::Unit::TestCase
   end
 
   def setup
-    @extract_command = Groonga::QueryLog::Command::Extract.new
+    @extract_command = GroongaQueryLog::Command::Extract.new
   end
 
   class TestInputFile < self
