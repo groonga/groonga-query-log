@@ -28,7 +28,7 @@ end
 
 Gem::Specification.new do |spec|
   spec.name = "groonga-query-log"
-  spec.version = Groonga::QueryLog::VERSION.dup
+  spec.version = GroongaQueryLog::VERSION.dup
 
   spec.authors = ["Kouhei Sutou"]
   spec.email = ["kou@clear-code.com"]
