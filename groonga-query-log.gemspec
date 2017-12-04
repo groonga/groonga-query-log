@@ -20,7 +20,7 @@ base_dir = File.dirname(__FILE__)
 lib_dir = File.join(base_dir, "lib")
 
 $LOAD_PATH.unshift(lib_dir)
-require "groonga/query-log/version"
+require "groonga-query-log/version"
 
 clean_white_space = lambda do |entry|
   entry.gsub(/(\A\n+|\n+\z)/, '') + "\n"
