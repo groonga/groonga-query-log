@@ -145,6 +145,8 @@ module GroongaQueryLog
         attr_accessor :n_clients
         attr_writer :request_queue_size
         attr_accessor :target_command_names
+        attr_accessor :requests_path
+        attr_accessor :responses_path
         def initialize
           @host = "127.0.0.1"
           @port = 10041
