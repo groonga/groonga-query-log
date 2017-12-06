@@ -49,7 +49,7 @@ class ReplayerTest < Test::Unit::TestCase
         default_options = {
           :host     => "127.0.0.1",
           :port     => 10041,
-          :protocol => :gqtp,
+          :protocol => :http,
         }
         expected_open_options = default_options.merge(expected_options)
         mock(Groonga::Client).open(expected_open_options).yields(client) do
