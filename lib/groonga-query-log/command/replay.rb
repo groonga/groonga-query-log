@@ -47,13 +47,13 @@ module GroongaQueryLog
           parser.separator("Options:")
 
           parser.on("--host=HOST",
-                    "Host name or IP address of groonga server",
+                    "Host name or IP address of Groonga server",
                     "[#{@options.host}]") do |host|
             @options.host = host
           end
 
           parser.on("--port=PORT", Integer,
-                    "Port number of groonga server",
+                    "Port number of Groonga server",
                     "[#{@options.port}]") do |port|
             @options.port = port
           end
@@ -61,7 +61,7 @@ module GroongaQueryLog
           available_protocols = [:gqtp, :http]
           available_protocols_label = "(#{available_protocols.join(', ')})"
           parser.on("--protocol=PROTOCOL", available_protocols,
-                    "Protocol of groonga server",
+                    "Protocol of Groonga server",
                     "[#{@options.protocol}]",
                     available_protocols_label) do |protocol|
             @options.protocol = protocol
