@@ -19,7 +19,5 @@
 
 require "groonga-query-log/command/replay"
 
-Thread.abort_on_exception = true
-
 replay_command = GroongaQueryLog::Command::Replay.new
 exit(replay_command.run(ARGV))

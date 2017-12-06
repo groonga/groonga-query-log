@@ -70,13 +70,13 @@ module GroongaQueryLog
       end
 
       def run_consumer
-        @options.create_client do |client|
-          loop do
-            id, statistic = @queue.pop
-            if id.nil?
-              @responses.push(nil)
-              return true
-            end
+        loop do
+          id, statistic = @queue.pop
+          if id.nil?
+            @responses.push(nil)
+            return true
+          end
+          @options.create_client do |client|
             begin
               replay_command(client, id, statistic.command)
             rescue Groonga::Client::Error
@@ -85,14 +85,14 @@ module GroongaQueryLog
               $stderr.puts(statistic.command.original_source)
               $stderr.puts($!.raw_error.message)
               $stderr.puts($!.raw_error.backtrace)
-              return false
+              return false unless @options.ignore_error?
             rescue
               # TODO: add error log mechanism
               $stderr.puts(Time.now.iso8601)
               $stderr.puts(statistic.command.original_source)
               $stderr.puts($!.message)
               $stderr.puts($!.backtrace)
-              return false
+              return false unless @options.ignore_error?
             end
           end
         end
@@ -148,6 +148,7 @@ module GroongaQueryLog
         attr_accessor :target_command_names
         attr_accessor :requests_path
         attr_accessor :responses_path
+        attr_writer :ignore_error
         def initialize
           @host = "127.0.0.1"
           @port = 10041
@@ -158,6 +159,7 @@ module GroongaQueryLog
           @requests_path = nil
           @responses_path = nil
           @target_command_names = []
+          @ignore_error = false
         end
 
         def create_client(&block)
@@ -189,6 +191,10 @@ module GroongaQueryLog
 
         def disable_cache?
           @disable_cache
+        end
+
+        def ignore_error?
+          @ignore_error
         end
 
         def target_command_name?(name)
