@@ -111,12 +111,6 @@ module GroongaQueryLog
                   "[not output]") do |path|
           @options.responses_path = path
         end
-
-        parser.on("--ignore-error",
-                  "Ignore error",
-                  "[#{@options.ignore_error?}]") do
-          @options.ignore_error = true
-        end
       end
     end
   end
