@@ -144,6 +144,7 @@ module GroongaQueryLog
         attr_accessor :protocol
         attr_accessor :n_clients
         attr_writer :request_queue_size
+        attr_writer :disable_cache
         attr_accessor :target_command_names
         attr_accessor :requests_path
         attr_accessor :responses_path
