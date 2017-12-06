@@ -59,9 +59,10 @@ module GroongaQueryLog
           end
 
           available_protocols = [:gqtp, :http]
-          available_protocols_label = "[#{available_protocols.join(', ')}]"
+          available_protocols_label = "(#{available_protocols.join(', ')})"
           parser.on("--protocol=PROTOCOL", available_protocols,
                     "Protocol of groonga server",
+                    "[#{@options.protocol}]",
                     available_protocols_label) do |protocol|
             @options.protocol = protocol
           end

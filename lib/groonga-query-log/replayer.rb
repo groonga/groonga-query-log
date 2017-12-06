@@ -152,7 +152,7 @@ module GroongaQueryLog
         def initialize
           @host = "127.0.0.1"
           @port = 10041
-          @protocol = :gqtp
+          @protocol = :http
           @n_clients = 8
           @request_queue_size = nil
           @disable_cache = false
