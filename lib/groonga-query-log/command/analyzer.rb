@@ -17,8 +17,9 @@
 
 require "optparse"
 require "json"
+
+require "groonga-query-log"
 require "groonga-query-log/command-line-utils"
-require "groonga-query-log/parser"
 require "groonga-query-log/command/analyzer/streamer"
 require "groonga-query-log/command/analyzer/sized-statistics"
 require "groonga-query-log/command/analyzer/reporter/console"
