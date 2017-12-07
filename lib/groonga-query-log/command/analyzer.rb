@@ -61,7 +61,12 @@ module GroongaQueryLog
       #   groonga-query-log-analyze. Please execute
       #   "groonga-query-log-analyze --help" or see #setup_options.
       def run(arguments)
-        log_paths = @option_parser.parse!(arguments)
+        begin
+          log_paths = @option_parser.parse!(arguments)
+        rescue OptionParser::InvalidOption => error
+          $stderr.puts(error)
+          return false
+        end
 
         stream = @options[:stream]
         dynamic_sort = @options[:dynamic_sort]
