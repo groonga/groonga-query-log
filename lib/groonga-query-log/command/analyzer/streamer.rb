@@ -28,7 +28,7 @@ module GroongaQueryLog
         end
 
         def <<(statistic)
-          @reporter.report_statistic(statistic) if statistic.slow?
+          @reporter.report_statistic(statistic)
         end
 
         def finish

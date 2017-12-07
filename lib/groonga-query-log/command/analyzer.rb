@@ -78,7 +78,9 @@ module GroongaQueryLog
           streamer = Streamer.new(reporter)
           streamer.start
           process_statistic = lambda do |statistic|
-            streamer << statistic
+            if @options[:stream_all] or statistic.slow?
+              streamer << statistic
+            end
           end
         elsif dynamic_sort
           process_statistic = lambda do |statistic|
@@ -124,6 +126,7 @@ module GroongaQueryLog
         @options[:reporter] = "console"
         @options[:dynamic_sort] = true
         @options[:stream] = false
+        @options[:stream_all] = false
         @options[:report_summary] = true
 
         @option_parser = OptionParser.new do |parser|
@@ -224,6 +227,14 @@ module GroongaQueryLog
                     "NOTE: --n-entries and --order are ignored.",
                     "(#{@options[:stream]})") do |stream|
             @options[:stream] = stream
+          end
+
+          parser.on("--[no-]stream-all",
+                    "Outputs all analyzed queries in stream mode.",
+                    "NOTE: This implies --stream.",
+                    "(#{@options[:stream_all]})") do |stream_all|
+            @options[:stream] = stream_all
+            @options[:stream_all] = stream_all
           end
 
           parser.on("--[no-]report-summary",
