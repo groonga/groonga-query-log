@@ -93,8 +93,9 @@ module GroongaQueryLog
           :relative_elapsed_in_seconds => relative_elapsed_in_seconds,
           :name => operation[:name],
           :context => operation_context(operation[:name],
-                                operation_context_context),
+                                        operation_context_context),
           :n_records => operation[:n_records],
+          :extra => operation[:extra],
           :slow? => slow_operation?(relative_elapsed_in_seconds),
         }
         yield parsed_operation

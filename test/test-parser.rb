@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -255,6 +253,23 @@ class ParserTest < Test::Unit::TestCase
         ]
         assert_equal(expected, operations)
       end
+    end
+  end
+
+  class ExtraFieldTest < self
+    def test_load
+      statistics = parse(<<-LOG)
+2017-12-11 09:37:04.516938|0x7fffc430dff0|>load --table Numbers
+2017-12-11 09:37:04.517993|0x7fffc430dff0|:000000001056310 load(3): [1][2][3]
+2017-12-11 09:37:04.517999|0x7fffc430dff0|<000000001061996 rc=-22
+      LOG
+      operations = statistics.first.operations.collect do |operation|
+        [operation[:name], operation[:n_records], operation[:extra]]
+      end
+      expected = [
+        ["load", 3, "[1][2][3]"],
+      ]
+      assert_equal(expected, operations)
     end
   end
 end
