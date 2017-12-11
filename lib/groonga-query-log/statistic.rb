@@ -28,6 +28,7 @@ module GroongaQueryLog
       @context_id = context_id
       @start_time = nil
       @command = nil
+      @select_command = nil
       @raw_command = nil
       @operations = []
       @elapsed = nil
