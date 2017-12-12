@@ -32,6 +32,7 @@ module GroongaQueryLog
 
       def initialize
         setup_options
+        @pending_entry = nil
       end
 
       # Executes load command analyzer for Groonga's query logs.
@@ -62,6 +63,10 @@ module GroongaQueryLog
             parse(log_paths) do |statistic|
               report_statistic(output, statistic)
             end
+            if @pending_entry
+              report_entry(output, @pending_entry)
+              @pending_entry = nil
+            end
           end
         rescue Interrupt
         end
@@ -73,7 +78,7 @@ module GroongaQueryLog
       def setup_options
         @options = {}
         @options[:output] = "-"
-        @options[:target_commands] = ["load"]
+        @options[:target_commands] = ["select", "load"]
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
@@ -115,7 +120,34 @@ module GroongaQueryLog
       end
 
       def report_statistic(output, statistic)
-        load_command = statistic.command
+        command = statistic.command
+        if command.name == "select"
+          process_select_statistic(output, statistic, command)
+        else
+          process_load_statistic(output, statistic, command)
+        end
+      end
+
+      def process_select_statistic(output, statistic, select_command)
+        return if @pending_entry.nil?
+
+        operations = statistic.operations
+        if operations.any? {|operation| operation[:name] == "filter"}
+          return
+        end
+        select_operation = operations.find do |operation|
+          operation[:name] == "select"
+        end
+        return if select_operation.nil?
+
+        return if @pending_entry[1] != select_command[:table]
+
+        @pending_entry[5] = select_operation[:n_records]
+        report_entry(output, @pending_entry)
+        @pending_entry = nil
+      end
+
+      def process_load_statistic(output, statistic, load_command)
         operation = statistic.operations.first
         if operation and operation[:extra]
           extra = operation[:extra]
@@ -138,6 +170,18 @@ module GroongaQueryLog
           n_column_errors,
           total,
         ]
+        if @pending_entry
+          report_entry(output, @pending_entry)
+          @pending_entry = nil
+        end
+        if total.nil?
+          @pending_entry = entry
+        else
+          report_entry(output, entry)
+        end
+      end
+
+      def report_entry(output, entry)
         output.puts(entry.join(","))
       end
     end
