@@ -117,15 +117,23 @@ module GroongaQueryLog
       def report_statistic(output, statistic)
         load_command = statistic.command
         operation = statistic.operations.first
-        extra = operation[:extra] || ""
-        extra_counts = extra.scan(/\[(\d+)\]/).flatten.collect(&:to_i)
-        n_record_errors = extra_counts[0]
-        n_column_errors = extra_counts[1]
-        total = extra_counts[2]
+        if operation and operation[:extra]
+          extra = operation[:extra]
+          extra_counts = extra.scan(/\[(\d+)\]/).flatten.collect(&:to_i)
+          n_loaded_records = operation[:n_records]
+          n_record_errors = extra_counts[0]
+          n_column_errors = extra_counts[1]
+          total = extra_counts[2]
+        else
+          n_loaded_records = nil
+          n_record_errors = nil
+          n_column_errors = nil
+          total = nil
+        end
         entry = [
           statistic.elapsed_in_seconds,
           load_command.table,
-          operation[:n_records],
+          n_loaded_records,
           n_record_errors,
           n_column_errors,
           total,
