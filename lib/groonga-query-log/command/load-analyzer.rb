@@ -112,11 +112,7 @@ module GroongaQueryLog
           parser.parse($stdin, &process_statistic)
         end
 
-        log_paths.each do |log_path|
-          File.open(log_path) do |log|
-            parser.parse(log, &process_statistic)
-          end
-        end
+        parser.parse_paths(log_paths, &process_statistic)
       end
 
       def report_statistic(output, statistic)

@@ -70,11 +70,45 @@ module GroongaQueryLog
       end
     end
 
+    def parse_paths(paths, &block)
+      target_paths = sort_paths(filter_paths(paths))
+      target_paths.each do |path|
+        File.open(path) do |log|
+          parse(log, &block)
+        end
+      end
+    end
+
     def parsing_statistics
       @parsing_statistics.values
     end
 
     private
+    def filter_paths(paths)
+      paths.reject do |path|
+        case File.extname(path).downcase
+        when ".zip", ".gz" # Or support decompress?
+          true
+        else
+          false
+        end
+      end
+    end
+
+    TIMESTAMP_PATTERN = /(\d{4})-(\d{2})-(\d{2})-
+                         (\d{2})-(\d{2})-(\d{2})-(\d{6})\z/x
+    def sort_paths(paths)
+      paths.sort_by do |path|
+        match_data = TIMESTAMP_PATTERN.match(File.basename(path))
+        if match_data
+          values = match_data.to_a[1..-1].collect(&:to_i)
+          Time.local(*values)
+        else
+          Time.now
+        end
+      end
+    end
+
     def parse_line(time_stamp, context_id, type, rest, &block)
       case type
       when ">"
