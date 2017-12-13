@@ -160,7 +160,7 @@ module GroongaQueryLog
           total = nil
         end
         entry = [
-          statistic.last_time.iso8601,
+          statistic.start_time.iso8601,
           statistic.elapsed_in_seconds,
           load_command.table,
           n_loaded_records,
@@ -181,7 +181,7 @@ module GroongaQueryLog
 
       def report_header(output)
         header = [
-          "timestamp",
+          "start_time",
           "elapsed",
           "table",
           "n_loaded_records",
