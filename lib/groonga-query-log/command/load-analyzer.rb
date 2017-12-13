@@ -60,6 +60,7 @@ module GroongaQueryLog
 
         begin
           open_output do |output|
+            report_header(output)
             parse(log_paths) do |statistic|
               report_statistic(output, statistic)
             end
@@ -136,9 +137,9 @@ module GroongaQueryLog
         end
         return if select_operation.nil?
 
-        return if @pending_entry[1] != select_command[:table]
+        return if @pending_entry[2] != select_command[:table]
 
-        @pending_entry[5] = select_operation[:n_records]
+        @pending_entry[6] = select_operation[:n_records]
         report_entry(output, @pending_entry)
         @pending_entry = nil
       end
@@ -159,6 +160,7 @@ module GroongaQueryLog
           total = nil
         end
         entry = [
+          statistic.last_time.iso8601,
           statistic.elapsed_in_seconds,
           load_command.table,
           n_loaded_records,
@@ -175,6 +177,19 @@ module GroongaQueryLog
         else
           report_entry(output, entry)
         end
+      end
+
+      def report_header(output)
+        header = [
+          "timestamp",
+          "elapsed",
+          "table",
+          "n_loaded_records",
+          "n_record_errors",
+          "n_column_errors",
+          "n_total_records",
+        ]
+        output.puts(header.join(","))
       end
 
       def report_entry(output, entry)
