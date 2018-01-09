@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@ require "groonga-query-log/command-line-utils"
 require "groonga-query-log/command/analyzer/streamer"
 require "groonga-query-log/command/analyzer/sized-statistics"
 require "groonga-query-log/command/analyzer/reporter/console"
+require "groonga-query-log/command/analyzer/reporter/csv"
 require "groonga-query-log/command/analyzer/reporter/html"
 require "groonga-query-log/command/analyzer/reporter/json"
 require "groonga-query-log/command/analyzer/reporter/json-stream"
@@ -206,7 +207,13 @@ module GroongaQueryLog
             @options[:target_tables] = tables
           end
 
-          available_reporters = ["console", "json", "json-stream", "html"]
+          available_reporters = [
+            "console",
+            "csv",
+            "html",
+            "json",
+            "json-stream",
+          ]
           parser.on("--reporter=REPORTER",
                     available_reporters,
                     "Reports statistics by REPORTER.",
@@ -247,12 +254,14 @@ module GroongaQueryLog
 
       def create_reporter(statistics)
         case @options[:reporter]
+        when "csv"
+          CSVReporter.new(statistics)
+        when "html"
+          HTMLReporter.new(statistics)
         when "json"
           JSONReporter.new(statistics)
         when "json-stream"
           JSONStreamReporter.new(statistics)
-        when "html"
-          HTMLReporter.new(statistics)
         else
           ConsoleReporter.new(statistics)
         end
