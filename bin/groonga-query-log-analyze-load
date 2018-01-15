@@ -18,5 +18,5 @@
 
 require "groonga-query-log/command/analyze-load"
 
-analyzer = GroongaQueryLog::Command::AnalyzeLoad.new
-exit(analyzer.run(ARGV))
+analyze_load = GroongaQueryLog::Command::AnalyzeLoad.new
+exit(analyze_load.run(ARGV))

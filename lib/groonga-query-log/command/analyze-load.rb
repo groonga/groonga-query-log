@@ -28,19 +28,19 @@ module GroongaQueryLog
       end
 
       # Executes load command analyzer for Groonga's query logs.
-      # "groonga-query-log-load-analyze" command run this method.
+      # "groonga-query-log-analyze-load" command run this method.
       #
       # @example
-      #   analyzer = GroongaQueryLog::Command::LoadAnalyzer.new
-      #   analyzer.run("--output", "statistics.csv",
-      #                "query.log")
+      #   analyze_load = GroongaQueryLog::Command::AnalyzeLoad.new
+      #   analyze_load.run("--output", "statistics.csv",
+      #                    "query.log")
       #
       # If only paths of query log files are specified,
       # this method prints a result of them to console.
       #
       # @param [Array<String>] arguments arguments for
-      #   groonga-query-log-load-analyze. Please execute
-      #   `groonga-query-log-load-analyze --help` or see
+      #   groonga-query-log-analyze-load. Please execute
+      #   `groonga-query-log-analyze-load --help` or see
       #   #setup_options.
       def run(arguments)
         begin
