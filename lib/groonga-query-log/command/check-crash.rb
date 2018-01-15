@@ -151,6 +151,10 @@ module GroongaQueryLog
           when "io_flush"
             @flushed = true
             @unflushed_statistics.clear
+          when "database_unmap"
+            @unflushed_statistics.reject! do |statistic|
+              statistic.command.name == "load"
+            end
           when /\Atable_/
             @flushed = false
             @unflushed_statistics << statistic
