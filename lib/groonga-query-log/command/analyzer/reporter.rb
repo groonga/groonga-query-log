@@ -23,25 +23,20 @@ module GroongaQueryLog
 
         attr_reader :output
         attr_accessor :slow_operation_threshold, :slow_response_threshold
-        def initialize(statistics)
+        def initialize(statistics, options={})
           @statistics = statistics
-          @report_summary = true
-          @output = $stdout
+          @options = options
+          self.output = @options[:output] || $stdout
+          @report_summary = @options[:report_summary]
+          @report_summary = true if @report_summary.nil?
+          @report_command_line = @options[:report_command_line]
+          @report_command_line = true if @report_command_line.nil?
           @slow_operation_threshold =
+            @options[:slow_operation_threshold] ||
             Statistic::DEFAULT_SLOW_OPERATION_THRESHOLD
           @slow_response_threshold =
+            @options[:slow_response_threshold] ||
             Statistic::DEFAULT_SLOW_RESPONSE_THRESHOLD
-        end
-
-        def apply_options(options)
-          self.output = options[:output] || @output
-          unless options[:report_summary].nil?
-            @report_summary = options[:report_summary]
-          end
-          @slow_operation_threshold =
-            options[:slow_operation_threshold] || @slow_operation_threshold
-          @slow_response_threshold =
-            options[:slow_response_threshold] || @slow_response_threshold
         end
 
         def output=(output)

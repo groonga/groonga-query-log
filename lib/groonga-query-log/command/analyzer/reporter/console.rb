@@ -122,20 +122,16 @@ module GroongaQueryLog
           end
         end
 
-        def initialize(statistics)
+        def initialize(statistics, options)
           super
-          @color = :auto
+          @color = @options[:color]
+          @color = :auto if @color.nil?
           @reset_color = Color.new("reset")
           @color_schema = {
             :elapsed => {:foreground => :white, :background => :green},
             :time => {:foreground => :white, :background => :cyan},
             :slow => {:foreground => :white, :background => :red},
           }
-        end
-
-        def apply_options(options)
-          super
-          @color = options[:color] unless options[:color].nil?
         end
 
         def report_statistics
@@ -268,11 +264,18 @@ module GroongaQueryLog
         def format_heading(statistic)
           formatted_elapsed = colorize("%8.8f" % statistic.elapsed_in_seconds,
                                        :elapsed)
-          "[%s-%s (%s)](%d): %s" % [format_time(statistic.start_time),
-                                    format_time(statistic.last_time),
-                                    formatted_elapsed,
-                                    statistic.return_code,
-                                    statistic.raw_command]
+          data = [
+            format_time(statistic.start_time),
+            format_time(statistic.last_time),
+            formatted_elapsed,
+            statistic.return_code,
+          ]
+          if @report_command_line
+            data << statistic.raw_command
+          else
+            data << statistic.command.name
+          end
+          "[%s-%s (%s)](%d): %s" % data
         end
 
         def format_time(time)

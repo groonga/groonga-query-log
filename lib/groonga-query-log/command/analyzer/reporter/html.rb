@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -64,7 +64,9 @@ module GroongaQueryLog
                                :slow? => statistic.slow?) %>)]
           (<%= span({:class => "return-code"}, h(statistic.return_code)) %>)
         </div>
+<% if @report_command_line %>
         <%= div({:class => "raw-command"}, h(statistic.raw_command)) %>
+<% end %>
       </div>
       <div class="statistic-parameters">
         <h3>Parameters</h3>

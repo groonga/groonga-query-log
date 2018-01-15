@@ -23,29 +23,38 @@ module GroongaQueryLog
   module Command
     class Analyzer
       class CSVReporter < Reporter
+        def initialize(statistics, options)
+          super
+          if @options[:report_command_line].nil?
+            @report_command_line = false
+          end
+        end
+
         def start
           @csv = CSV.new(@output)
-          @csv << [
+          header = [
             "start_time",
             "last_time",
             "elapsed",
             "return_code",
             "slow",
             "command_name",
-            "command_line",
           ]
+          header << "command_line" if @report_command_line
+          @csv << header
         end
 
         def report_statistic(statistic)
-          @csv << [
+          record = [
             statistic.start_time.iso8601,
             statistic.last_time.iso8601,
             statistic.elapsed_in_seconds,
             statistic.return_code,
             statistic.slow?,
             statistic.command.name,
-            statistic.raw_command,
           ]
+          record << statistic.raw_command if @report_command_line
+          @csv << record
         end
 
         def finish

@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -44,7 +44,9 @@ module GroongaQueryLog
 
         private
         def format_statistic(statistic)
-          JSON.generate(statistic.to_hash)
+          hash = statistic.to_hash
+          hash.delete("command") unless @report_command_line
+          JSON.generate(hash)
         end
       end
     end

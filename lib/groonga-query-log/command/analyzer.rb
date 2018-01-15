@@ -75,7 +75,6 @@ module GroongaQueryLog
         statistics.apply_options(@options)
         if stream
           reporter = create_reporter(statistics)
-          reporter.apply_options(@options)
           streamer = Streamer.new(reporter)
           streamer.start
           process_statistic = lambda do |statistic|
@@ -106,7 +105,6 @@ module GroongaQueryLog
           statistics.replace(full_statistics) unless dynamic_sort
 
           reporter = create_reporter(statistics)
-          reporter.apply_options(@options)
           reporter.report
         end
 
@@ -129,6 +127,7 @@ module GroongaQueryLog
         @options[:stream] = false
         @options[:stream_all] = false
         @options[:report_summary] = true
+        @options[:report_command_line] = nil
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
@@ -249,21 +248,27 @@ module GroongaQueryLog
                     "(#{@options[:report_summary]})") do |report_summary|
             @options[:report_summary] = report_summary
           end
+
+          parser.on("--[no-]report-command-line",
+                    "Reports command line.",
+                    "(false for CSV reporter, true otherwise)") do |report|
+            @options[:report_command_line] = report
+          end
         end
       end
 
       def create_reporter(statistics)
         case @options[:reporter]
         when "csv"
-          CSVReporter.new(statistics)
+          CSVReporter.new(statistics, @options)
         when "html"
-          HTMLReporter.new(statistics)
+          HTMLReporter.new(statistics, @options)
         when "json"
-          JSONReporter.new(statistics)
+          JSONReporter.new(statistics, @options)
         when "json-stream"
-          JSONStreamReporter.new(statistics)
+          JSONStreamReporter.new(statistics, @options)
         else
-          ConsoleReporter.new(statistics)
+          ConsoleReporter.new(statistics, @options)
         end
       end
 
