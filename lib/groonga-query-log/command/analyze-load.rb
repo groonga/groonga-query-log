@@ -1,4 +1,4 @@
-# Copyright (C) 2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2017-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@ require "groonga-query-log/command-line-utils"
 
 module GroongaQueryLog
   module Command
-    class LoadAnalyzer
+    class AnalyzeLoad
       include CommandLineUtils
 
       class Error < StandardError
