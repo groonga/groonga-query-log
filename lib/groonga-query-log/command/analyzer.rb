@@ -19,26 +19,11 @@ require "optparse"
 require "json"
 
 require "groonga-query-log"
-require "groonga-query-log/command-line-utils"
-require "groonga-query-log/command/analyzer/streamer"
-require "groonga-query-log/command/analyzer/sized-statistics"
-require "groonga-query-log/command/analyzer/reporter/console"
-require "groonga-query-log/command/analyzer/reporter/csv"
-require "groonga-query-log/command/analyzer/reporter/html"
-require "groonga-query-log/command/analyzer/reporter/json"
-require "groonga-query-log/command/analyzer/reporter/json-stream"
+require "groonga-query-log/command-line"
 
 module GroongaQueryLog
   module Command
-    class Analyzer
-      include CommandLineUtils
-
-      class Error < StandardError
-      end
-
-      class NoInputError < Error
-      end
-
+    class Analyzer < CommandLine
       class UnsupportedReporter < Error
       end
 
@@ -274,15 +259,16 @@ module GroongaQueryLog
 
       def parse(log_paths, &process_statistic)
         parser = Parser.new(@options)
-        if log_paths.empty?
-          unless log_via_stdin?
-            raise(NoInputError, "Error: Please specify input log files.")
-          end
-          parser.parse($stdin, &process_statistic)
-        end
-
-        parser.parse_paths(log_paths, &process_statistic)
+        parse_log(parser, log_paths, &process_statistic)
       end
     end
   end
 end
+
+require "groonga-query-log/command/analyzer/streamer"
+require "groonga-query-log/command/analyzer/sized-statistics"
+require "groonga-query-log/command/analyzer/reporter/console"
+require "groonga-query-log/command/analyzer/reporter/csv"
+require "groonga-query-log/command/analyzer/reporter/html"
+require "groonga-query-log/command/analyzer/reporter/json"
+require "groonga-query-log/command/analyzer/reporter/json-stream"

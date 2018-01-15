@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -19,16 +19,11 @@ require "optparse"
 require "pathname"
 
 require "groonga-query-log"
-require "groonga-query-log/command-line-utils"
+require "groonga-query-log/command-line"
 
 module GroongaQueryLog
     module Command
-      class Extract
-        include CommandLineUtils
-
-        class Error < StandardError
-        end
-
+      class Extract < CommandLine
         attr_accessor :options
         attr_reader :option_parser
 
@@ -61,22 +56,12 @@ module GroongaQueryLog
             return false
           end
 
-          if log_paths.empty?
-            unless log_via_stdin?
-              $stderr.puts("Error: Please specify input log files.")
-              return false
-            end
-            log = $stdin
-          else
-            log = log_paths
-          end
-
           if @options.output_path
             File.open(@options.output_path, "w") do |output|
-              extract(log, output)
+              extract(log_paths, output)
             end
           else
-            extract(log, $stdout)
+            extract(log_paths, $stdout)
           end
 
           true
@@ -138,34 +123,26 @@ module GroongaQueryLog
           end
         end
 
-        def extract(log, output)
-          if log.instance_of?(Array)
-            log.each do |log_path|
-              File.open(log_path) do |log_file|
-                extract_command(log_file, output)
-              end
-            end
-          else
-            extract_command(log, output)
+        def extract(log_paths, output)
+          parser = Parser.new
+          parse_log(parser, log_paths) do |statistic|
+            extract_command(statistic, output)
           end
         end
 
-        def extract_command(log, output)
-          parser = Parser.new
-          parser.parse(log) do |statistic|
-            command = statistic.command
-            next unless target?(command)
-            command_text = nil
-            case @options.unify_format
-            when "uri"
-              command_text = command.to_uri_format
-            when "command"
-              command_text = command.to_command_format
-            else
-              command_text = statistic.raw_command
-            end
-            output.puts(command_text)
+        def extract_command(statistic, output)
+          command = statistic.command
+          return unless target?(command)
+          command_text = nil
+          case @options.unify_format
+          when "uri"
+            command_text = command.to_uri_format
+          when "command"
+            command_text = command.to_command_format
+          else
+            command_text = statistic.raw_command
           end
+          output.puts(command_text)
         end
 
         def target?(command)

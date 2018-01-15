@@ -17,19 +17,11 @@
 require "optparse"
 
 require "groonga-query-log"
-require "groonga-query-log/command-line-utils"
+require "groonga-query-log/command-line"
 
 module GroongaQueryLog
   module Command
-    class AnalyzeLoad
-      include CommandLineUtils
-
-      class Error < StandardError
-      end
-
-      class NoInputError < Error
-      end
-
+    class AnalyzeLoad < CommandLine
       def initialize
         setup_options
         @pending_entry = nil
@@ -106,14 +98,7 @@ module GroongaQueryLog
 
       def parse(log_paths, &process_statistic)
         parser = Parser.new(@options)
-        if log_paths.empty?
-          unless log_via_stdin?
-            raise(NoInputError, "Error: Please specify input log files.")
-          end
-          parser.parse($stdin, &process_statistic)
-        end
-
-        parser.parse_paths(log_paths, &process_statistic)
+        parse_log(parser, log_paths, &process_statistic)
       end
 
       def report_statistic(output, statistic)

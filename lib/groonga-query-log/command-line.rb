@@ -15,9 +15,24 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 module GroongaQueryLog
-  module CommandLineUtils
-    def log_via_stdin?
-      stdin_with_pipe? or stdin_with_redirect?
+  class CommandLine
+    class Error < StandardError
+    end
+
+    class NoInputError < Error
+    end
+
+    private
+    def parse_log(parser, log_paths, &process_statistic)
+      if log_paths.empty?
+        if stdin_with_pipe? or stdin_with_redirect?
+          parser.parse($stdin, &process_statistic)
+        else
+          raise NoInputError, "Error: Please specify input log files."
+        end
+      else
+        parser.parse_paths(log_paths, &process_statistic)
+      end
     end
 
     def stdin_with_pipe?
