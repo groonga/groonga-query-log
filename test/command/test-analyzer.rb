@@ -1,5 +1,5 @@
-# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
+# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -20,6 +20,8 @@ require "pathname"
 require "groonga-query-log/command/analyzer"
 
 class AnalyzerCommandTest < Test::Unit::TestCase
+  include Helper::Command
+
   setup
   def setup_fixtures
     @fixtures_path = File.join(__dir__, "..", "fixtures")
@@ -40,9 +42,8 @@ class AnalyzerCommandTest < Test::Unit::TestCase
     end
 
     def test_no_specified
-      assert_raise(GroongaQueryLog::Command::Analyzer::NoInputError) do
-        run_analyzer
-      end
+      assert_equal("Error: Please specify input log files.\n",
+                   run_analyzer)
     end
   end
 
@@ -101,9 +102,14 @@ class AnalyzerCommandTest < Test::Unit::TestCase
   private
   def run_analyzer(*arguments)
     Tempfile.open("output.actual") do |output|
-      arguments << "--output" << output.path
-      @analyzer.run(arguments)
-      File.read(output.path)
+      open_error_output do |error|
+        arguments << "--output" << output.path
+        if @analyzer.run(arguments)
+          File.read(output.path)
+        else
+          File.read(error.path)
+        end
+      end
     end
   end
 

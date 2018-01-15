@@ -21,8 +21,25 @@ require "groonga/command"
 
 require "groonga-query-log"
 
-module Path
-  def fixture_path(*components)
-    File.join(File.dirname(__FILE__), "fixtures", *components)
+module Helper
+  module Path
+    def fixture_path(*components)
+      File.join(File.dirname(__FILE__), "fixtures", *components)
+    end
+  end
+
+  module Command
+    def open_error_output
+      Tempfile.open("groonga-query-log.error") do |error|
+        error.sync = true
+        original_stderr = $stderr.dup
+        $stderr.reopen(error)
+        begin
+          yield(error)
+        ensure
+          $stderr.reopen(original_stderr)
+        end
+      end
+    end
   end
 end

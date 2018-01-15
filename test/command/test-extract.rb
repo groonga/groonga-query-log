@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
-# Copyright (C) 2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2015-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,6 +21,8 @@ require "groonga/command"
 require "groonga-query-log/command/extract"
 
 class ExtractCommandTest < Test::Unit::TestCase
+  include Helper::Command
+
   setup
   def setup_fixtures
     @fixtures_path = File.join(File.dirname(__FILE__), "..", "fixtures")
@@ -112,19 +113,6 @@ EOC
     end
   end
 
-  def open_error_output
-    Tempfile.open("extract.error") do |error|
-      error.sync = true
-      original_stderr = $stderr.dup
-      $stderr.reopen(error)
-      begin
-        yield(error)
-      ensure
-        $stderr.reopen(original_stderr)
-      end
-    end
-  end
-
   class TestExtract < self
     def setup
       super
@@ -163,8 +151,11 @@ EOL
 
     private
     def extract
+      input = Tempfile.new(["groonga-query", ".log"])
+      input.puts(@log)
+      input.close
       output = StringIO.new
-      @extract_command.send(:extract, @log, output)
+      @extract_command.send(:extract, [input.path], output)
       output.string
     end
   end

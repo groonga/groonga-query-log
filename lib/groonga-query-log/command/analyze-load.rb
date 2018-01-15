@@ -62,6 +62,9 @@ module GroongaQueryLog
             end
           end
         rescue Interrupt
+        rescue Error
+          $stderr.puts($!.message)
+          return false
         end
 
         true

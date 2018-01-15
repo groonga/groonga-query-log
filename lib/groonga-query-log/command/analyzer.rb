@@ -82,6 +82,9 @@ module GroongaQueryLog
           parse(log_paths, &process_statistic)
         rescue Interrupt
           raise unless stream
+        rescue Error
+          $stderr.puts($!.message)
+          return false
         end
 
         if stream

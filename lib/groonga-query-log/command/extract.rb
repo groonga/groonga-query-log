@@ -56,12 +56,18 @@ module GroongaQueryLog
             return false
           end
 
-          if @options.output_path
-            File.open(@options.output_path, "w") do |output|
-              extract(log_paths, output)
+          begin
+            if @options.output_path
+              File.open(@options.output_path, "w") do |output|
+                extract(log_paths, output)
+              end
+            else
+              extract(log_paths, $stdout)
             end
-          else
-            extract(log_paths, $stdout)
+          rescue Interrupt
+          rescue Error
+            $stderr.puts($!.message)
+            return false
           end
 
           true
