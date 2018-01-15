@@ -66,24 +66,62 @@ module GroongaQueryLog
       end
 
       def check(log_paths)
-        general_log_parser = GroongaLog::Parser.new
-        query_log_parser = Parser.new
-        general_log_paths = []
-        query_log_paths = []
-        log_paths.each do |log_path|
-          sample_lines = File.open(log_path) do |log_file|
-            log_file.each_line.take(10)
+        checker = Checker.new(log_paths)
+        checker.check
+      end
+
+      class Checker
+        def initialize(log_paths)
+          @general_log_parser = GroongaLog::Parser.new
+          @query_log_parser = Parser.new
+          split_log_paths(log_paths)
+
+          @running = nil
+          @crash_sessions = []
+          @session_start = nil
+        end
+
+        def check
+          @general_log_parser.parse_paths(@general_log_paths) do |entry|
+            check_general_log_entry(@general_log_parser.current_path,
+                                    entry)
           end
-          if sample_lines.any? {|line| Parser.target_line?(line)}
-            query_log_paths << log_path
-          elsif sample_lines.any? {|line| GroongaLog::Parser.target_line?(line)}
-            general_log_paths << log_path
+          @crash_sessions.each do |start, last|
+            @flushed = nil
+            @unflushed_statistics = []
+            @query_log_parser.parse_paths(@query_log_paths) do |statistic|
+              next if statistic.start_time < start
+              break if statistic.start_time > last
+              check_query_log_statistic(@query_log_parser.current_path,
+                                        statistic)
+            end
+            unless @unflushed_statistics.empty?
+              puts("Unflushed statistics in #{start.iso8601}/#{last.iso8601}")
+              @unflushed_statistics.each do |statistic|
+                puts("#{statistic.start_time.iso8601}: #{statistic.raw_command}")
+              end
+            end
           end
         end
 
-        running = true
-        general_log_parser.parse_paths(general_log_paths) do |entry|
-          # p entry
+        private
+        def split_log_paths(log_paths)
+          @general_log_paths = []
+          @query_log_paths = []
+          log_paths.each do |log_path|
+            sample_lines = GroongaLog::Input.open(log_path) do |log_file|
+              log_file.each_line.take(10)
+            end
+            if sample_lines.any? {|line| Parser.target_line?(line)}
+              @query_log_paths << log_path
+            elsif sample_lines.any? {|line| GroongaLog::Parser.target_line?(line)}
+              @general_log_paths << log_path
+            end
+          end
+        end
+
+        def check_general_log_entry(path, entry)
+          # p [path, entry]
           case entry.log_level
           when :emergency, :alert, :critical, :error, :warning
             p [entry.log_level, entry.message, entry.timestamp.iso8601]
@@ -91,16 +129,35 @@ module GroongaQueryLog
 
           case entry.message
           when /\Agrn_init:/
-            p [:crashed, entry.timestamp.iso8601] if running
-            running = true
+            if @running
+              @crash_sessions << [@session_start, entry.timestamp]
+              p [:crashed, entry.timestamp.iso8601, path]
+            end
+            @running = true
+            @session_start = entry.timestamp
           when /\Agrn_fin \(\d+\)\z/
             n_leaks = $1.to_i
-            running = false
+            @running = false
+            @session_start = nil
             p [:leak, n_leask, entry.timestamp.iso8601] unless n_leaks.zero?
           end
         end
-        query_log_parser.parse_paths(query_log_paths) do |statistic|
-          # p statistic
+
+        def check_query_log_statistic(path, statistic)
+          case statistic.command.command_name
+          when "load"
+            @flushed = false
+            @unflushed_statistics << statistic
+          when "io_flush"
+            @flushed = true
+            @unflushed_statistics.clear
+          when /\Atable_/
+            @flushed = false
+            @unflushed_statistics << statistic
+          when /\Acolumn_/
+            @flushed = false
+            @unflushed_statistics << statistic
+          end
         end
       end
     end
