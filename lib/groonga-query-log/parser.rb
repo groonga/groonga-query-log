@@ -36,6 +36,7 @@ module GroongaQueryLog
       end
     end
 
+    attr_reader :current_path
     def initialize(options={})
       @options = options
       @slow_operation_threshold = options[:slow_operation_threshold]
@@ -43,6 +44,8 @@ module GroongaQueryLog
       @target_commands = options[:target_commands]
       @target_tables = options[:target_tables]
       @parsing_statistics = {}
+
+      @current_path = nil
     end
 
     # Parses query-log file as stream to
@@ -90,7 +93,12 @@ module GroongaQueryLog
       target_paths = GroongaLog::Parser.sort_paths(paths)
       target_paths.each do |path|
         GroongaLog::Input.open(path) do |log|
-          parse(log, &block)
+          @current_path = path
+          begin
+            parse(log, &block)
+          ensure
+            @current_path = nil
+          end
         end
       end
     end
