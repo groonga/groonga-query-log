@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,24 @@ require "groonga-query-log/statistic"
 
 module GroongaQueryLog
   class Parser
+    PATTERN =
+      /\A(?<year>\d{4})-(?<month>\d\d)-(?<day>\d\d)
+         \ (?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)\.(?<microsecond>\d+)
+         \|(?<context_id>.+?)
+         \|(?<type>[>:<])/x
+
+    class << self
+      def target_line?(line)
+        if line.respond_to?(:valid_encoding?)
+          return false unless line.valid_encoding?
+        end
+
+        return false unless PATTERN.match(line)
+
+        true
+      end
+    end
+
     def initialize(options={})
       @options = options
       @slow_operation_threshold = options[:slow_operation_threshold]
@@ -26,12 +44,6 @@ module GroongaQueryLog
       @target_tables = options[:target_tables]
       @parsing_statistics = {}
     end
-
-    PATTERN =
-      /\A(?<year>\d{4})-(?<month>\d\d)-(?<day>\d\d)
-         \ (?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)\.(?<microsecond>\d+)
-         \|(?<context_id>.+?)
-         \|(?<type>[>:<])/x
 
     # Parses query-log file as stream to
     # {GroongaQueryLog::Analyzer::Statistic}s including some
@@ -43,6 +55,8 @@ module GroongaQueryLog
     # @yieldparam [GroongaQueryLog::Statistic] statistic
     #   statistics of each query in log files.
     def parse(input, &block)
+      return to_enum(__method__, input) unless block_given?
+
       input.each_line do |line|
         next unless line.valid_encoding?
 
@@ -71,9 +85,11 @@ module GroongaQueryLog
     end
 
     def parse_paths(paths, &block)
-      target_paths = sort_paths(filter_paths(paths))
+      return to_enum(__method__, paths) unless block_given?
+
+      target_paths = GroongaLog::Parser.sort_paths(paths)
       target_paths.each do |path|
-        File.open(path) do |log|
+        GroongaLog::Input.open(path) do |log|
           parse(log, &block)
         end
       end
@@ -84,31 +100,6 @@ module GroongaQueryLog
     end
 
     private
-    def filter_paths(paths)
-      paths.reject do |path|
-        case File.extname(path).downcase
-        when ".zip", ".gz" # Or support decompress?
-          true
-        else
-          false
-        end
-      end
-    end
-
-    TIMESTAMP_PATTERN = /(\d{4})-(\d{2})-(\d{2})-
-                         (\d{2})-(\d{2})-(\d{2})-(\d{6})\z/x
-    def sort_paths(paths)
-      paths.sort_by do |path|
-        match_data = TIMESTAMP_PATTERN.match(File.basename(path))
-        if match_data
-          values = match_data.to_a[1..-1].collect(&:to_i)
-          Time.local(*values)
-        else
-          Time.now
-        end
-      end
-    end
-
     def parse_line(time_stamp, context_id, type, rest, &block)
       case type
       when ">"
