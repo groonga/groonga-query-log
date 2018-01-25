@@ -15,7 +15,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "csv"
-require "time"
 
 require "groonga-query-log/command/analyzer/reporter"
 
@@ -46,8 +45,8 @@ module GroongaQueryLog
 
         def report_statistic(statistic)
           record = [
-            statistic.start_time.iso8601,
-            statistic.last_time.iso8601,
+            format_time(statistic.start_time),
+            format_time(statistic.last_time),
             statistic.elapsed_in_seconds,
             statistic.return_code,
             statistic.slow?,
@@ -62,6 +61,15 @@ module GroongaQueryLog
         end
 
         def report_summary
+        end
+
+        private
+        def format_time(time)
+          if time.nil?
+            ""
+          else
+            super
+          end
         end
       end
     end

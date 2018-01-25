@@ -124,7 +124,7 @@ module GroongaQueryLog
           # p [path, entry]
           case entry.log_level
           when :emergency, :alert, :critical, :error, :warning
-            p [entry.log_level, entry.message, entry.timestamp.iso8601]
+            # p [entry.log_level, entry.message, entry.timestamp.iso8601]
           end
 
           case entry.message

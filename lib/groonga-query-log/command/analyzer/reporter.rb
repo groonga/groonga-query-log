@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -14,6 +14,8 @@
 # You should have received a copy of the GNU Lesser General Public
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+require "time"
 
 module GroongaQueryLog
   module Command
@@ -94,7 +96,7 @@ module GroongaQueryLog
           if time.nil?
             "NaN"
           else
-            time.strftime("%Y-%m-%d %H:%M:%S.%u")
+            time.iso8601(6)
           end
         end
       end
