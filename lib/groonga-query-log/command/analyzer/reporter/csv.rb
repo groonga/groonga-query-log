@@ -50,7 +50,7 @@ module GroongaQueryLog
             statistic.elapsed_in_seconds,
             statistic.return_code,
             statistic.slow?,
-            statistic.command.name,
+            statistic.command.command_name,
           ]
           record << statistic.raw_command if @report_command_line
           @csv << record
