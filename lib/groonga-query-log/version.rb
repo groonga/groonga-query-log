@@ -1,4 +1,4 @@
-# Copyright (C) 2012-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2012-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -15,5 +15,5 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 module GroongaQueryLog
-    VERSION = "1.2.9"
+  VERSION = "1.3.0"
 end
