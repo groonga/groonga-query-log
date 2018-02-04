@@ -5,22 +5,22 @@ Summary:
   # of responses      : 4
   # of slow responses : 0
   responses/sec       : 9.468517046370479e-06
-  start time          : 2012-12-12 17:39:17.3
-  last time           : 2012-12-17 15:00:10.1
+  start time          : 2012-12-12T17:39:17.624896+09:00
+  last time           : 2012-12-17T15:00:10.262453+09:00
   period(sec)         : 422452.637557779
   slow response ratio : 0.000%
   total response time : 0.10129859499999999
   Slow Operations:
 
 Slow Queries:
-1) [2012-12-17 15:00:10.1-2012-12-17 15:00:10.1 (0.05231682)](0): table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32
+1) [2012-12-17T15:00:10.165344+09:00-2012-12-17T15:00:10.217660+09:00 (0.05231682)](0): table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32
   name: <table_create>
   parameters:
     <name>: <Comments>
     <flags>: <TABLE_HASH_KEY>
     <key_type>: <UInt32>
 
-2) [2012-12-17 15:00:10.1-2012-12-17 15:00:10.1 (0.04463578)](0): column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText
+2) [2012-12-17T15:00:10.217818+09:00-2012-12-17T15:00:10.262453+09:00 (0.04463578)](0): column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText
   name: <column_create>
   parameters:
     <table>: <Comments>
@@ -28,12 +28,12 @@ Slow Queries:
     <flags>: <COLUMN_SCALAR>
     <type>: <ShortText>
 
-3) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00312886)](0): load --table Video
+3) [2012-12-12T17:39:17.624896+09:00-2012-12-12T17:39:17.628024+09:00 (0.00312886)](0): load --table Video
   name: <load>
   parameters:
     <table>: <Video>
 
-4) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00121714)](0): select --table Users --query follower:@groonga --output_columns _key,name
+4) [2012-12-12T17:39:17.628846+09:00-2012-12-12T17:39:17.630063+09:00 (0.00121714)](0): select --table Users --query follower:@groonga --output_columns _key,name
   name: <select>
   parameters:
     <table>: <Users>

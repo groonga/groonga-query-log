@@ -1,11 +1,11 @@
 
 Slow Queries:
-1) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00312886)](0): load --table Video
+1) [2012-12-12T17:39:17.624896+09:00-2012-12-12T17:39:17.628024+09:00 (0.00312886)](0): load --table Video
   name: <load>
   parameters:
     <table>: <Video>
 
-2) [2012-12-12 17:39:17.3-2012-12-12 17:39:17.3 (0.00121714)](0): select --table Users --query follower:@groonga --output_columns _key,name
+2) [2012-12-12T17:39:17.628846+09:00-2012-12-12T17:39:17.630063+09:00 (0.00121714)](0): select --table Users --query follower:@groonga --output_columns _key,name
   name: <select>
   parameters:
     <table>: <Users>
