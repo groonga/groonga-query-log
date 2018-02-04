@@ -18,6 +18,8 @@
 
 $VERBOSE = true
 
+ENV["TZ"] = "Asia/Tokyo"
+
 require "pathname"
 
 base_dir = Pathname.new(__FILE__).dirname.parent.expand_path
