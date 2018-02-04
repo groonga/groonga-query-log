@@ -1,5 +1,36 @@
 # News
 
+## 1.2.9: 2018-02-04
+
+### Improvements
+
+  * `GroongaQueryLog`: Renamed from
+    `Groonga::QueryLog`. `Groonga::QueryLog` is deprecated but still
+    usable.
+
+  * `GroongaQueryLog::Analyzer::Statistic#each_operation`: Added
+    enumerator support.
+
+  * `groonga-query-log-analyze`: Added "N records" support in HTML report.
+
+  * `groonga-query-log-replay`: Changed the default protocol to HTTP
+    from GQTP.
+
+  * `groonga-query-log-analyze`: Added `--stream-all` option.
+
+  * `GroongaQueryLog::Parser`: Added extra information support in
+    `load` and `delete` commands' query log.
+
+  * `groonga-query-log-analyze-load`: Added.
+
+  * `groonga-query-log-analyze`: Added CSV reporter.
+
+  * `groonga-query-log-check-crash`: Added.
+
+  * `GroongaQueryLog::Parser#current_path`: Added.
+
+  * Required groonga-log 0.1.2 or later.
+
 ## 1.2.8: 2017-10-26
 
 ### Fixes
