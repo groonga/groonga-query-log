@@ -203,7 +203,7 @@ td.name
               </td>
               <td class="name">filter</td>
               <td class="n-records">2</td>
-              <td class="context">query: follower:@groonga</td>
+              <td class="context">Users.follower match &quot;groonga&quot;</td>
             </tr>
             <tr>
               <td class="n">2</td>

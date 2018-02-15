@@ -92,7 +92,7 @@ module GroongaQueryLog
           :relative_elapsed => relative_elapsed,
           :relative_elapsed_in_seconds => relative_elapsed_in_seconds,
           :name => operation[:name],
-          :context => operation_context(operation[:name],
+          :context => operation_context(operation,
                                         operation_context_context),
           :n_records => operation[:n_records],
           :extra => operation[:extra],
@@ -152,9 +152,13 @@ module GroongaQueryLog
       nano_seconds / 1000.0 / 1000.0 / 1000.0
     end
 
-    def operation_context(label, context)
+    def operation_context(operation, context)
       return nil if @select_command.nil?
 
+      extra = operation[:extra]
+      return extra if extra
+
+      label = operation[:name]
       case label
       when "filter"
         if @select_command.query and context[:query_used].nil?

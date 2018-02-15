@@ -11,7 +11,7 @@ Slow Queries:
     <table>: <Users>
     <query>: <follower:@groonga>
     <output_columns>: <_key,name>
-  1) 0.00084295:     filter(     2) query: follower:@groonga
+  1) 0.00084295:     filter(     2) Users.follower match "groonga"
   2) 0.00002795:     select(     2)
   3) 0.00019585:     output(     2) _key,name
 
