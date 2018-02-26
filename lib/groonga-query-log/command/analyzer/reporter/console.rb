@@ -245,7 +245,7 @@ module GroongaQueryLog
         def guess_color_availability(output)
           return false unless output.tty?
           case ENV["TERM"]
-          when /term(?:-color)?\z/, "screen"
+          when /term(?:-(?:256)?color)?\z/, "screen"
             true
           else
             return true if ENV["EMACS"] == "t"
