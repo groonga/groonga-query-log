@@ -70,15 +70,25 @@ module GroongaQueryLog
         checker.check
       end
 
+      class GroongaProcess
+        attr_reader :pid
+        attr_reader :start_time
+        attr_reader :log_path
+        def initialize(pid, start_time, log_path)
+          @pid = pid
+          @start_time = start_time
+          @log_path = log_path
+        end
+      end
+
       class Checker
         def initialize(log_paths)
           @general_log_parser = GroongaLog::Parser.new
           @query_log_parser = Parser.new
           split_log_paths(log_paths)
 
-          @running = nil
+          @running_processes = {}
           @crash_sessions = []
-          @session_start = nil
         end
 
         def check
@@ -86,7 +96,13 @@ module GroongaQueryLog
             check_general_log_entry(@general_log_parser.current_path,
                                     entry)
           end
-          @crash_sessions.each do |start, last|
+          @crash_sessions.each do |process, last|
+            p [:crashed,
+               process.start_time.iso8601,
+               process.pid,
+               process.log_path]
+
+            start = process.start_time
             @flushed = nil
             @unflushed_statistics = []
             @query_log_parser.parse_paths(@query_log_paths) do |statistic|
@@ -129,16 +145,15 @@ module GroongaQueryLog
 
           case entry.message
           when /\Agrn_init:/
-            if @running
-              @crash_sessions << [@session_start, entry.timestamp]
-              p [:crashed, entry.timestamp.iso8601, path]
+            process = @running_processes[entry.pid]
+            if process
+              @crash_sessions << [process, entry.timestamp]
             end
-            @running = true
-            @session_start = entry.timestamp
+            process = GroongaProcess.new(entry.pid, entry.timestamp, path)
+            @running_processes[entry.pid] = process
           when /\Agrn_fin \(\d+\)\z/
             n_leaks = $1.to_i
-            @running = false
-            @session_start = nil
+            @running_processes.delete(entry.pid)
             p [:leak, n_leask, entry.timestamp.iso8601] unless n_leaks.zero?
           end
         end
