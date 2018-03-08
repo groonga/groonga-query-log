@@ -66,13 +66,13 @@ module GroongaQueryLog
         match_data = PATTERN.match(line)
         next if match_data.nil?
 
-        year = match_data[:year].to_i
-        month = match_data[:month].to_i
-        day = match_data[:day].to_i
-        hour = match_data[:hour].to_i
-        minute = match_data[:minute].to_i
-        second = match_data[:second].to_i
-        microsecond = match_data[:microsecond].to_i
+        year = Integer(match_data[:year], 10)
+        month = Integer(match_data[:month], 10)
+        day = Integer(match_data[:day], 10)
+        hour = Integer(match_data[:hour], 10)
+        minute = Integer(match_data[:minute], 10)
+        second = Integer(match_data[:second], 10)
+        microsecond = Integer(match_data[:microsecond], 10)
         context_id = match_data[:context_id]
         type = match_data[:type]
         rest = match_data.post_match.strip
