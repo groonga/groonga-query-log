@@ -104,6 +104,7 @@ module GroongaQueryLog
           @crash_processess.each do |process|
             p [:crashed,
                process.start_time.iso8601,
+               process.last_time.iso8601,
                process.pid,
                process.log_path]
 
