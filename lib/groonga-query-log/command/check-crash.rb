@@ -74,9 +74,11 @@ module GroongaQueryLog
         attr_reader :pid
         attr_reader :start_time
         attr_reader :log_path
+        attr_accessor :last_time
         def initialize(pid, start_time, log_path)
           @pid = pid
           @start_time = start_time
+          @last_time = @start_time
           @log_path = log_path
         end
       end
@@ -88,7 +90,7 @@ module GroongaQueryLog
           split_log_paths(log_paths)
 
           @running_processes = {}
-          @crash_sessions = []
+          @crash_processess = []
         end
 
         def check
@@ -96,13 +98,17 @@ module GroongaQueryLog
             check_general_log_entry(@general_log_parser.current_path,
                                     entry)
           end
-          @crash_sessions.each do |process, last|
+          @running_processes.each_value do |process|
+            @crash_processess << process
+          end
+          @crash_processess.each do |process|
             p [:crashed,
                process.start_time.iso8601,
                process.pid,
                process.log_path]
 
             start = process.start_time
+            last = process.last_time
             @flushed = nil
             @unflushed_statistics = []
             @query_log_parser.parse_paths(@query_log_paths) do |statistic|
@@ -147,7 +153,8 @@ module GroongaQueryLog
           when /\Agrn_init:/
             process = @running_processes[entry.pid]
             if process
-              @crash_sessions << [process, entry.timestamp]
+              @crash_processess << process
+              @running_processes.delete(entry.pid)
             end
             process = GroongaProcess.new(entry.pid, entry.timestamp, path)
             @running_processes[entry.pid] = process
@@ -155,6 +162,9 @@ module GroongaQueryLog
             n_leaks = $1.to_i
             @running_processes.delete(entry.pid)
             p [:leak, n_leask, entry.timestamp.iso8601] unless n_leaks.zero?
+          else
+            process = @running_processes[entry.pid]
+            process.last_time = entry.timestamp if process
           end
         end
 
