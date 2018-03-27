@@ -164,8 +164,10 @@ module GroongaQueryLog
             @running_processes.delete(entry.pid)
             p [:leak, n_leask, entry.timestamp.iso8601] unless n_leaks.zero?
           else
+            @running_processes[entry.pid] ||=
+              GroongaProcess.new(entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
-            process.last_time = entry.timestamp if process
+            process.last_time = entry.timestamp
           end
         end
 
