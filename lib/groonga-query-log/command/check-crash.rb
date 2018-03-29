@@ -75,33 +75,40 @@ module GroongaQueryLog
         attr_reader :start_time
         attr_reader :log_path
         attr_accessor :last_time
+        attr_accessor :n_leaks
+        attr_writer :crashed
         def initialize(pid, start_time, log_path)
           @pid = pid
           @start_time = start_time
           @last_time = @start_time
           @log_path = log_path
+          @n_leaks = 0
+          @crashed = false
+        end
+
+        def crashed?
+          @crashed
         end
       end
 
       class Checker
         def initialize(log_paths)
-          @general_log_parser = GroongaLog::Parser.new
           @query_log_parser = Parser.new
           split_log_paths(log_paths)
-
-          @running_processes = {}
-          @crash_processess = []
         end
 
         def check
-          @general_log_parser.parse_paths(@general_log_paths) do |entry|
-            check_general_log_entry(@general_log_parser.current_path,
-                                    entry)
-          end
-          @running_processes.each_value do |process|
-            @crash_processess << process
-          end
-          @crash_processess.each do |process|
+          processes = ProcessEnumerator.new(@general_log_paths)
+          processes.each do |process|
+            p process
+            unless process.n_leaks.zero?
+              p [:leak,
+                 process.n_leaks,
+                 process.last_time.iso8601,
+                 process.log_path]
+            end
+            next unless process.crashed?
+
             p [:crashed,
                process.start_time.iso8601,
                process.last_time.iso8601,
@@ -143,34 +150,6 @@ module GroongaQueryLog
           end
         end
 
-        def check_general_log_entry(path, entry)
-          # p [path, entry]
-          case entry.log_level
-          when :emergency, :alert, :critical, :error, :warning
-            # p [entry.log_level, entry.message, entry.timestamp.iso8601]
-          end
-
-          case entry.message
-          when /\Agrn_init:/
-            process = @running_processes[entry.pid]
-            if process
-              @crash_processess << process
-              @running_processes.delete(entry.pid)
-            end
-            process = GroongaProcess.new(entry.pid, entry.timestamp, path)
-            @running_processes[entry.pid] = process
-          when /\Agrn_fin \(\d+\)\z/
-            n_leaks = $1.to_i
-            @running_processes.delete(entry.pid)
-            p [:leak, n_leask, entry.timestamp.iso8601] unless n_leaks.zero?
-          else
-            @running_processes[entry.pid] ||=
-              GroongaProcess.new(entry.pid, Time.at(0), path)
-            process = @running_processes[entry.pid]
-            process.last_time = entry.timestamp
-          end
-        end
-
         def check_query_log_statistic(path, statistic)
           case statistic.command.command_name
           when "load"
@@ -189,6 +168,56 @@ module GroongaQueryLog
           when /\Acolumn_/
             @flushed = false
             @unflushed_statistics << statistic
+          end
+        end
+      end
+
+      class ProcessEnumerator
+        def initialize(general_log_paths)
+          @general_log_paths = general_log_paths
+          @running_processes = {}
+        end
+
+        def each(&block)
+          general_log_parser = GroongaLog::Parser.new
+          general_log_parser.parse_paths(@general_log_paths) do |entry|
+            check_general_log_entry(general_log_parser.current_path,
+                                    entry,
+                                    &block)
+          end
+          @running_processes.each_value do |process|
+            yield(process)
+          end
+        end
+
+        private
+        def check_general_log_entry(path, entry, &block)
+          # p [path, entry]
+          case entry.log_level
+          when :emergency, :alert, :critical, :error, :warning
+            # p [entry.log_level, entry.message, entry.timestamp.iso8601]
+          end
+
+          case entry.message
+          when /\Agrn_init:/
+            process = @running_processes[entry.pid]
+            if process
+              process.crashed = true
+              yield(process)
+              @running_processes.delete(entry.pid)
+            end
+            process = GroongaProcess.new(entry.pid, entry.timestamp, path)
+            @running_processes[entry.pid] = process
+          when /\Agrn_fin \(\d+\)\z/
+            n_leaks = $1.to_i
+            process.n_leaks = n_leaks
+            yield(process)
+            @running_processes.delete(entry.pid)
+          else
+            @running_processes[entry.pid] ||=
+              GroongaProcess.new(entry.pid, Time.at(0), path)
+            process = @running_processes[entry.pid]
+            process.last_time = entry.timestamp
           end
         end
       end
