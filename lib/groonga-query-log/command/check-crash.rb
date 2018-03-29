@@ -100,7 +100,6 @@ module GroongaQueryLog
         def check
           processes = ProcessEnumerator.new(@general_log_paths)
           processes.each do |process|
-            p process
             unless process.n_leaks.zero?
               p [:leak,
                  process.n_leaks,
