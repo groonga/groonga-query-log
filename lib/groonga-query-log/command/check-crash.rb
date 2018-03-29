@@ -210,6 +210,7 @@ module GroongaQueryLog
             @running_processes[entry.pid] = process
           when /\Agrn_fin \(\d+\)\z/
             n_leaks = $1.to_i
+            process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
             yield(process)
             @running_processes.delete(entry.pid)
