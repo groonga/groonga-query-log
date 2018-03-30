@@ -218,6 +218,15 @@ module GroongaQueryLog
               GroongaProcess.new(entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
             process.last_time = entry.timestamp
+            case entry.message
+            when "-- CRASHED!!! --"
+              process.crashed = true
+            when "----------------"
+              if process.crashed?
+                yield(process)
+                @running_processes.delete(entry.pid)
+              end
+            end
           end
         end
       end
