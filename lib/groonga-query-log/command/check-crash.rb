@@ -129,7 +129,7 @@ module GroongaQueryLog
               puts("Running queries:")
               parsing_statistics.each do |statistic|
                 puts("#{statistic.start_time.iso8601}:")
-                puts(statistic.command.to_command_format(pretty_preint: true))
+                puts(statistic.command.to_command_format(pretty_print: true))
               end
             end
             unless @unflushed_statistics.empty?
