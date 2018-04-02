@@ -93,7 +93,6 @@ module GroongaQueryLog
 
       class Checker
         def initialize(log_paths)
-          @query_log_parser = Parser.new
           split_log_paths(log_paths)
         end
 
@@ -118,11 +117,20 @@ module GroongaQueryLog
             last = process.last_time
             @flushed = nil
             @unflushed_statistics = []
-            @query_log_parser.parse_paths(@query_log_paths) do |statistic|
+            query_log_parser = Parser.new
+            query_log_parser.parse_paths(@query_log_paths) do |statistic|
               next if statistic.start_time < start
               break if statistic.start_time > last
-              check_query_log_statistic(@query_log_parser.current_path,
+              check_query_log_statistic(query_log_parser.current_path,
                                         statistic)
+            end
+            parsing_statistics = query_log_parser.parsing_statistics
+            unless parsing_statistics.empty?
+              puts("Running queries:")
+              parsing_statistics.each do |statistic|
+                puts("#{statistic.start_time.iso8601}:")
+                puts(statistic.command.to_command_format(pretty_preint: true))
+              end
             end
             unless @unflushed_statistics.empty?
               puts("Unflushed statistics in #{start.iso8601}/#{last.iso8601}")
