@@ -77,6 +77,7 @@ module GroongaQueryLog
         attr_accessor :last_time
         attr_accessor :n_leaks
         attr_writer :crashed
+        attr_reader :important_entries
         def initialize(pid, start_time, log_path)
           @pid = pid
           @start_time = start_time
@@ -84,6 +85,7 @@ module GroongaQueryLog
           @log_path = log_path
           @n_leaks = 0
           @crashed = false
+          @important_entries = []
         end
 
         def crashed?
@@ -99,19 +101,31 @@ module GroongaQueryLog
         def check
           processes = ProcessEnumerator.new(@general_log_paths)
           processes.each do |process|
-            unless process.n_leaks.zero?
+            if process.crashed?
+              p [:crashed,
+                 process.start_time.iso8601,
+                 process.last_time.iso8601,
+                 process.pid,
+                 process.log_path]
+            end
+
+            unless process.important_entries.empty?
+              puts("Important entries:")
+              process.important_entries.each_with_index do |entry, i|
+                puts("#{entry.timestamp.iso8601}: " +
+                     "#{entry.log_level}: " +
+                     "#{entry.message}")
+              end
+            end
+
+            if process.n_leaks.zero?
               p [:leak,
                  process.n_leaks,
                  process.last_time.iso8601,
                  process.log_path]
             end
-            next unless process.crashed?
 
-            p [:crashed,
-               process.start_time.iso8601,
-               process.last_time.iso8601,
-               process.pid,
-               process.log_path]
+            next unless process.crashed?
 
             start = process.start_time
             last = process.last_time
@@ -225,6 +239,10 @@ module GroongaQueryLog
             @running_processes[entry.pid] ||=
               GroongaProcess.new(entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
+            case entry.log_level
+            when :emergency, :alert, :critical, :error
+              process.important_entries << entry
+            end
             process.last_time = entry.timestamp
             case entry.message
             when "-- CRASHED!!! --"
