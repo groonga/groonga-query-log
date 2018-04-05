@@ -118,7 +118,7 @@ module GroongaQueryLog
               end
             end
 
-            if process.n_leaks.zero?
+            unless process.n_leaks.zero?
               p [:leak,
                  process.n_leaks,
                  process.last_time.iso8601,
