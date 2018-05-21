@@ -67,6 +67,12 @@ module GroongaQueryLog
           @options.protocol = protocol
         end
 
+        parser.on("--read-timeout=TIMEOUT", Integer,
+                  "Read timeout",
+                  "[#{@options.read_timeout}]") do |read_timeout|
+          @options.read_timeout = read_timeout
+        end
+
         parser.on("--n-clients=N", Integer,
                   "The max number of concurrency",
                   "[#{@options.n_clients}]") do |n_clients|

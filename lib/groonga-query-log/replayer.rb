@@ -142,6 +142,7 @@ module GroongaQueryLog
         attr_accessor :host
         attr_accessor :port
         attr_accessor :protocol
+        attr_accessor :read_timeout
         attr_accessor :n_clients
         attr_writer :request_queue_size
         attr_writer :disable_cache
@@ -152,6 +153,7 @@ module GroongaQueryLog
           @host = "127.0.0.1"
           @port = 10041
           @protocol = :http
+          @read_timeout = Groonga::Client::Default::READ_TIMEOUT
           @n_clients = 8
           @request_queue_size = nil
           @disable_cache = false
@@ -164,6 +166,7 @@ module GroongaQueryLog
           Groonga::Client.open(:host     => @host,
                                :port     => @port,
                                :protocol => @protocol,
+                               :read_timeout => @read_timeout,
                                &block)
         end
 
