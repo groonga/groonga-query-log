@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-#
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 # Copyright (C) 2015-2018  Kouhei Sutou <kou@clear-code.com>
 #
@@ -37,12 +35,12 @@ class ExtractCommandTest < Test::Unit::TestCase
     def test_multi
       other_query_log_path = File.join(@fixtures_path, "other-query.log")
       actual_commands = run_extractor(@query_log_path, other_query_log_path)
-      expected_commands = <<-EOC
-load --table Video
-select --table Users --query follower:@groonga --output_columns _key,name
-table_create --name Comments --flags TABLE_HASH_KEY --key_type UInt32
-column_create --table Comments --name title --flags COLUMN_SCALAR --type ShortText
-EOC
+      expected_commands = <<-COMMAND
+load --table "Video"
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+table_create --flags "TABLE_HASH_KEY" --key_type "UInt32" --name "Comments"
+column_create --flags "COLUMN_SCALAR" --name "title" --table "Comments" --type "ShortText"
+      COMMAND
       assert_equal(expected_commands, actual_commands)
     end
 
@@ -57,44 +55,47 @@ EOC
       actual_commands = run_extractor(@query_log_path,
                                       "--unify-format", "command")
 
-      expected_commands = <<-EOC
+      expected_commands = <<-COMMAND
 load --table "Video"
 select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
-EOC
+      COMMAND
       assert_equal(expected_commands, actual_commands)
     end
 
     def test_uri
       actual_commands = run_extractor(@query_log_path,
                                       "--unify-format", "uri")
-      expected_commands =  <<-EOC
+      expected_commands = <<-COMMAND
 /d/load?table=Video
 /d/select?output_columns=_key%2Cname&query=follower%3A%40groonga&table=Users
-EOC
+      COMMAND
       assert_equal(expected_commands, actual_commands)
     end
 
     def test_not_unify
       actual_commands = run_extractor(@query_log_path)
-      expected_commands = <<-EOC
-load --table Video
-select --table Users --query follower:@groonga --output_columns _key,name
-EOC
+      expected_commands = <<-COMMAND
+load --table "Video"
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+      COMMAND
       assert_equal(expected_commands, actual_commands)
     end
   end
 
   def test_command
     actual_command = run_extractor(@query_log_path, "--command", "load")
-    expected_command = "load --table Video\n"
+    expected_command = <<-COMMAND
+load --table "Video"
+    COMMAND
 
     assert_equal(expected_command, actual_command)
   end
 
   def test_exclude_command
     actual_command = run_extractor(@query_log_path, "--exclude-command", "load")
-    expected_command = "select --table Users --query follower:@groonga" +
-                         " --output_columns _key,name\n"
+    expected_command = <<-COMMAND
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+    COMMAND
 
     assert_equal(expected_command, actual_command)
   end
@@ -116,20 +117,21 @@ EOC
   class TestExtract < self
     def setup
       super
-      @log = <<-EOL
+      @log = <<-LOG
 2012-12-12 17:39:17.628846|0x7fff786aa2b0|>select --table Users --query follower:@groonga --output_columns _key,name
 2012-12-12 17:39:17.629676|0x7fff786aa2b0|:000000000842953 filter(2)
 2012-12-12 17:39:17.629709|0x7fff786aa2b0|:000000000870900 select(2)
 2012-12-12 17:39:17.629901|0x7fff786aa2b0|:000000001066752 output(2)
 2012-12-12 17:39:17.630052|0x7fff786aa2b0|<000000001217140 rc=0
-EOL
+     LOG
     end
 
     def test_command_format
       @extract_command.options.unify_format = "command"
-      expected_formatted_command = "select --output_columns \"_key,name\""+
-                                     " --query \"follower:@groonga\"" +
-                                     " --table \"Users\"\n"
+      expected_formatted_command = <<-COMMAND
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+      COMMAND
+
       assert_equal(expected_formatted_command, extract)
     end
 
@@ -143,9 +145,10 @@ EOL
 
     def test_not_unify
       @extract_command.options.unify_format = nil
-      expected_formatted_command = "select --table Users" +
-                                     " --query follower:@groonga" +
-                                     " --output_columns _key,name\n"
+      expected_formatted_command = <<-COMMAND
+select --output_columns "_key,name" --query "follower:@groonga" --table "Users"
+      COMMAND
+
       assert_equal(expected_formatted_command, extract)
     end
 
