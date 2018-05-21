@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -50,6 +48,7 @@ class ReplayerTest < Test::Unit::TestCase
           :host     => "127.0.0.1",
           :port     => 10041,
           :protocol => :http,
+          :read_timeout => 60,
         }
         expected_open_options = default_options.merge(expected_options)
         mock(Groonga::Client).open(expected_open_options).yields(client) do
