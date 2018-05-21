@@ -79,6 +79,7 @@ module GroongaQueryLog
           @options.unify_format = nil
           @options.commands = []
           @options.exclude_commands = []
+          @options.include_arguments = true
           @options.output_path = nil
           @option_parser = OptionParser.new do |parser|
             parser.version = VERSION
@@ -121,6 +122,12 @@ module GroongaQueryLog
               end
             end
 
+            parser.on("--[no-]include-arguments",
+                      "Whether include command arguments",
+                      "[#{@options.include_arguments}]") do |include_arguments|
+              @options.include_arguments = include_arguments
+            end
+
             parser.on("--output=PATH",
                       "Output to PATH.",
                       "[standard output]") do |path|
@@ -139,6 +146,9 @@ module GroongaQueryLog
         def extract_command(statistic, output)
           command = statistic.command
           return unless target?(command)
+          unless @options.include_arguments
+            command.arguments.clear
+          end
           command_text = nil
           case @options.unify_format
           when "uri"
@@ -146,7 +156,7 @@ module GroongaQueryLog
           when "command"
             command_text = command.to_command_format
           else
-            command_text = statistic.raw_command
+            command_text = command.to_s
           end
           output.puts(command_text)
         end
