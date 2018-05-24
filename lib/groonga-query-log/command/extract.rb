@@ -64,7 +64,7 @@ module GroongaQueryLog
             else
               extract(log_paths, $stdout)
             end
-          rescue Interrupt
+          rescue Interrupt, Errno::EPIPE
           rescue Error
             $stderr.puts($!.message)
             return false
