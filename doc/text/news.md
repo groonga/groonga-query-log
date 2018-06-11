@@ -1,5 +1,33 @@
 # News
 
+## 1.3.0: 2018-06-11
+
+### Improvements
+
+  * Added support for filter context.
+
+  * Added `xterm-256color` as a colorable terminal.
+
+  * `groonga-query-log-check-crash`:
+
+    * Added support for multiple process logs.
+
+    * Added more crash detection patterns.
+
+    * Added support for showing running queries on crash.
+
+    * Added support for showing important messages.
+
+  * `groonga-query-log-extract`:
+
+    * Added `--no-include-arguments` option.
+
+    * Improved pipe support.
+
+  * `groonga-query-log-replay`:
+
+    * Added `--read-timeout` option.
+
 ## 1.2.9: 2018-02-04
 
 ### Improvements
