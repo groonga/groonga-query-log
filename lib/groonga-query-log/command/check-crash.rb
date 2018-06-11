@@ -186,6 +186,8 @@ module GroongaQueryLog
             @unflushed_statistics.reject! do |statistic|
               statistic.command.name == "load"
             end
+          when "table_list", "column_list"
+            # ignore
           when /\Atable_/
             @flushed = false
             @unflushed_statistics << statistic
