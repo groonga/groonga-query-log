@@ -176,6 +176,9 @@ module GroongaQueryLog
           when "load"
             @flushed = false
             @unflushed_statistics << statistic
+          when "delete"
+            @flushed = false
+            @unflushed_statistics << statistic
           when "io_flush"
             @flushed = true
             @unflushed_statistics.clear
