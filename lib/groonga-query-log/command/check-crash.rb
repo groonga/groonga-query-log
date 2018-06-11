@@ -180,6 +180,7 @@ module GroongaQueryLog
             @flushed = false
             @unflushed_statistics << statistic
           when "io_flush"
+            # TODO: Improve flushed target detection.
             @flushed = true
             @unflushed_statistics.clear
           when "database_unmap"
