@@ -65,7 +65,7 @@ module GroongaQueryLog
         elsif have_unary_minus_output_column?
           same_records_unary_minus_output_column?
         else
-          same_response?
+          same_records?
         end
       else
         same_size_response?
@@ -200,6 +200,35 @@ module GroongaQueryLog
           column_index2 = column_to_index2[name]
           value2 = record2[column_index2]
           value2 = normalize_value(value2, columns2[column_index2])
+          return false if value1 != value2
+        end
+      end
+
+      true
+    end
+
+    def same_records?
+      records_result1 = @response1.body[0] || []
+      records_result2 = @response2.body[0] || []
+      return false if records_result1.size != records_result2.size
+
+      n_hits1 = records_result1[0]
+      n_hits2 = records_result2[0]
+      return false if n_hits1 != n_hits2
+
+      columns1 = records_result1[1]
+      columns2 = records_result2[1]
+      return false if columns1 != columns2
+
+      records1 = records_result1[2..-1]
+      records2 = records_result2[2..-1]
+      records1.each_with_index do |record1, record_index|
+        record2 = records2[record_index]
+        columns1.each_with_index do |column1, column_index|
+          value1 = record1[column_index]
+          value1 = normalize_value(value1, column1)
+          value2 = record2[column_index]
+          value2 = normalize_value(value2, column1)
           return false if value1 != value2
         end
       end
