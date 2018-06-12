@@ -68,7 +68,11 @@ module GroongaQueryLog
           same_response?
         end
       else
-        same_size_response?
+        if same_location_information?
+          same_size_response?
+        else
+          false
+        end
       end
     end
 
@@ -117,6 +121,19 @@ module GroongaQueryLog
         columns1.sort_by(&:first) == columns2.sort_by(&:first)
       else
         columns1 == columns2
+      end
+    end
+
+    def same_location_information?
+      if @response1.body[0][1].flatten.include?("float")
+        location_information1 =
+          @response1.body.flatten.select {|e| e.class == Float}
+        location_information2 =
+          @response2.body.flatten.select {|e| e.class == Float}
+
+        location_information1[0].round(12) == location_information2[0].round(12)
+      else
+        true
       end
     end
 

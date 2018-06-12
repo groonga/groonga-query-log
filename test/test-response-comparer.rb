@@ -306,6 +306,14 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class CareDifferencesInAccuracyOfPosition < self
+      def test_different_accurancy_of_postion
+        assert_true(same?([[[1], [["_id", "UInt32"],["location", "float"]], [1, 139.763570507358]]],
+                          [[[1], [["_id", "UInt32"],["location", "float"]], [1, 139.7635705073576]]],
+                          :care_order => false))
+      end
+    end
+
     class ErrorTest < self
       def test_with_location
         response1_header = [
