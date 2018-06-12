@@ -311,7 +311,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         [
           [
             [1],
-            [["_id", "UInt32"], ["location", "float"]],
+            [["_id", "UInt32"], ["location", "Float"]],
             [1, value],
           ]
         ]
