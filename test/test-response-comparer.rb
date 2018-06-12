@@ -306,7 +306,7 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
-    class CareDifferencesInAccuracyOfPosition < self
+    class FloatAccurancy < self
       def create_response(value)
         [
           [
@@ -317,7 +317,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         ]
       end
 
-      def test_different_accurancy_of_postion
+      def test_no_care_order
         response1 = create_response(139.763570507358)
         response2 = create_response(139.7635705073576)
         assert do
