@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2016  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -307,21 +307,21 @@ class ResponseComparerTest < Test::Unit::TestCase
     end
 
     class FloatAccurancy < self
-      def create_response(value)
+      def create_response(latitude, longitude)
         [
           [
             [1],
-            [["_id", "UInt32"], ["location", "Float"]],
-            [1, value],
+            [["_id", "UInt32"], ["latitude", "Float"], ["longitude", "Float"]],
+            [1, latitude, longitude],
           ]
         ]
       end
 
-      def test_no_care_order
-        response1 = create_response(139.763570507358)
-        response2 = create_response(139.7635705073576)
+      def test_all_output_columns
+        response1 = create_response(35.6562002690605,  139.763570507358)
+        response2 = create_response(35.65620026906051, 139.7635705073576)
         assert do
-          same?(response1, response2, :care_order => false)
+          same?(response1, response2)
         end
       end
     end
