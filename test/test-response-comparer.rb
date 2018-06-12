@@ -307,21 +307,19 @@ class ResponseComparerTest < Test::Unit::TestCase
     end
 
     class CareDifferencesInAccuracyOfPosition < self
-      def test_different_accurancy_of_postion
-        response1 = [
+      def create_response(value)
+        [
           [
             [1],
             [["_id", "UInt32"], ["location", "float"]],
-            [1, 139.763570507358],
+            [1, value],
           ]
         ]
-        response2 = [
-          [
-            [1],
-            [["_id", "UInt32"], ["location", "float"]],
-            [1, 139.7635705073576],
-          ],
-        ]
+      end
+
+      def test_different_accurancy_of_postion
+        response1 = create_response(139.763570507358)
+        response2 = create_response(139.7635705073576)
         assert do
           same?(response1, response2, :care_order => false)
         end
