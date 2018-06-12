@@ -157,7 +157,9 @@ module GroongaQueryLog
             next
           end
           value1 = record1[column_index1]
+          value1 = normalize_value(value1, columns1[column_index1])
           value2 = record2[column_index2]
+          value2 = normalize_value(value2, columns2[column_index2])
           return false if value1 != value2
         end
       end
