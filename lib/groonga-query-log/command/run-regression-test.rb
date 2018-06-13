@@ -361,6 +361,7 @@ module GroongaQueryLog
             @n_ready_waits -= 1
             return true unless @n_ready_waits.zero?
 
+            same = true
             query_log_paths.each do |query_log_path|
               log_path = test_log_path(query_log_path)
               if @options[:skip_finished_queries] and log_path.exist?
@@ -384,7 +385,9 @@ module GroongaQueryLog
                 else
                   callback = nil
                 end
-                verify_server(log_path, query_log_path, &callback)
+                unless verify_server(log_path, query_log_path, &callback)
+                  same = false
+                end
               rescue Interrupt
                 puts("Interrupt: #{query_log_path}")
               end
@@ -399,7 +402,7 @@ module GroongaQueryLog
             old_thread.join
             new_thread.join
 
-            true
+            same
           end
 
           def verify_server(test_log_path, query_log_path, &callback)
