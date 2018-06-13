@@ -393,6 +393,49 @@ class ResponseComparerTest < Test::Unit::TestCase
           not same?(response1, response2)
         end
       end
+
+      class IgnoreDrilldownKeysTest < self
+        def create_response(drilldown1, drilldown2)
+          [
+            [
+              [10],
+              [["_id", "UInt32"]],
+            ],
+            [
+              [drilldown1.size * 2],
+              [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+              *drilldown1,
+            ],
+            [
+              [drilldown2.size * 2],
+              [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+              *drilldown2,
+            ],
+          ]
+        end
+
+        def test_same
+          @command["drilldown"] = "column1, column2"
+          response1 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 11], ["b", 10]])
+          response2 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 99], ["b", 20]])
+          assert do
+            same?(response1, response2, ignored_drilldown_keys: ["column2"])
+          end
+        end
+
+        def test_not_same
+          @command["drilldown"] = "column1, column2"
+          response1 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 11], ["b", 10]])
+          response2 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 99], ["b", 20]])
+          assert do
+            not same?(response1, response2)
+          end
+        end
+      end
     end
 
     class ErrorTest < self

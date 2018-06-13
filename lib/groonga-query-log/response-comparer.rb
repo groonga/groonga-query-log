@@ -20,8 +20,9 @@ module GroongaQueryLog
       @command = command
       @response1 = response1
       @response2 = response2
-      @options = options
+      @options = options.dup
       @options[:care_order] = true if @options[:care_order].nil?
+      @options[:ignored_drilldown_keys] ||= []
     end
 
     def same?
@@ -255,7 +256,11 @@ module GroongaQueryLog
       drilldowns2 = @response2.body[1..-1] || []
       return false if drilldowns1.size != drilldowns2.size
 
+      drilldown_keys = @command.drilldowns
+      ignored_drilldown_keys = @options[:ignored_drilldown_keys]
       drilldowns1.each_with_index do |drilldown1, drilldown_index|
+        drilldown_key = drilldown_keys[drilldown_index]
+        next if ignored_drilldown_keys.include?(drilldown_key)
         drilldown2 = drilldowns2[drilldown_index]
         return false unless same_record_set?(drilldown1, drilldown2)
       end
