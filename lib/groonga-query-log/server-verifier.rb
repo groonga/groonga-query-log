@@ -31,11 +31,13 @@ module GroongaQueryLog
       end
 
       def verify(input, &callback)
+        @same = true
         producer = run_producer(input, &callback)
         reporter = run_reporter
         producer.join
         @different_results.push(nil)
         reporter.join
+        @same
       end
 
       private
@@ -145,6 +147,7 @@ module GroongaQueryLog
       end
 
       def report_result(output, result)
+        @same = false
         command, response1, response2 = result
         command_source = command.original_source || command.to_uri_format
         output.puts("command: #{command_source}")

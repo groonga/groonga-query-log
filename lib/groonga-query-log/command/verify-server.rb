@@ -27,17 +27,20 @@ module GroongaQueryLog
 
         def run(command_line, &callback)
           input_paths = create_parser.parse(command_line)
+          same = true
           verifier = ServerVerifier.new(@options)
           if input_paths.empty?
-            verifier.verify($stdin, &callback)
+            same = verifier.verify($stdin, &callback)
           else
             input_paths.each do |input_path|
               File.open(input_path) do |input|
-                verifier.verify(input, &callback)
+                unless verifier.verify(input, &callback)
+                  same = false
+                end
               end
             end
           end
-          true
+          same
         end
 
         private
