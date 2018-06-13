@@ -115,12 +115,31 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
-    class SortbyTest < self
+    class SortKeysTest < self
       class DetectScoreSortTest < self
         private
-        def score_sort?(sortby)
-          @command["sortby"] = sortby
+        def score_sort?(sort_keys)
+          @command[:sort_keys] = sort_keys
           comparer([[[0], []]], [[[0], []]]).send(:score_sort?)
+        end
+
+        class ParameterNameTest < self
+          def score_sort?(parameter_name)
+            @command[parameter_name] = "_score"
+            comparer([[[0], []]], [[[0], []]]).send(:score_sort?)
+          end
+
+          def test_sortby
+            assert do
+              score_sort?(:sortby)
+            end
+          end
+
+          def test_sort_keys
+            assert do
+              score_sort?(:sort_keys)
+            end
+          end
         end
 
         class NoScoreTest < self

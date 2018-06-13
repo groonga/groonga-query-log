@@ -95,7 +95,7 @@ module GroongaQueryLog
     end
 
     def score_sort?
-      sort_items = (@command.sortby || "").split(/\s*,\s*/)
+      sort_items = @command.sort_keys
       normalized_sort_items = sort_items.collect do |item|
         item.gsub(/\A[+-]/, "")
       end
