@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -135,6 +135,7 @@ module GroongaQueryLog
         response2 = groonga2_client.execute(command)
         compare_options = {
           :care_order => @options.care_order,
+          :ignored_drilldown_keys => @options.ignored_drilldown_keys,
         }
         comparer = ResponseComparer.new(command, response1, response2,
                                         compare_options)
@@ -173,6 +174,7 @@ module GroongaQueryLog
         attr_accessor :output_path
         attr_accessor :care_order
         attr_writer :verify_cache
+        attr_accessor :ignored_drilldown_keys
         def initialize
           @groonga1 = GroongaOptions.new
           @groonga2 = GroongaOptions.new
@@ -193,6 +195,7 @@ module GroongaQueryLog
           ]
           @care_order = true
           @verify_cache = false
+          @ignored_drilldown_keys = []
         end
 
         def request_queue_size

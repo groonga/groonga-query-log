@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -136,6 +136,13 @@ module GroongaQueryLog
                     "Verify cache for each query.",
                     "[#{@options.verify_cache?}]") do |verify_cache|
             @options.verify_cache = verify_cache
+          end
+
+          parser.on("--ignore-drilldown-key=KEY",
+                    "Don't compare drilldown result for KEY",
+                    "You can specify multiple drilldown keys by",
+                    "specifying this option multiple times") do |key|
+            @options.ignored_drilldown_keys << key
           end
 
           parser.separator("Debug options:")
