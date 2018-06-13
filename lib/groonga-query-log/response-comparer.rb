@@ -209,15 +209,15 @@ module GroongaQueryLog
     end
 
     def same_records?
-      records_result1 = @response1.body[0] || []
-      records_result2 = @response2.body[0] || []
-      return false if records_result1.size != records_result2.size
-
-      same_record_set?(records_result1,
-                       records_result2)
+      record_set1 = @response1.body[0] || []
+      record_set2 = @response2.body[0] || []
+      same_record_set?(record_set1,
+                       record_set2)
     end
 
     def same_record_set?(record_set1, record_set2)
+      return false if record_set1.size != record_set2.size
+
       n_hits1 = record_set1[0]
       n_hits2 = record_set2[0]
       return false if n_hits1 != n_hits2
