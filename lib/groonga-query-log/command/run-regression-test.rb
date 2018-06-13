@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -45,6 +45,7 @@ module GroongaQueryLog
           @skip_finished_queries = false
           @output_query_log = false
           @care_order = true
+          @ignored_drilldown_keys = []
         end
 
         def run(command_line)
@@ -144,6 +145,12 @@ module GroongaQueryLog
                     "Don't care order of select response records") do
             @care_order = false
           end
+          parser.on("--ignore-drilldown-key=KEY",
+                    "Don't compare drilldown result for KEY",
+                    "You can specify multiple drilldown keys by",
+                    "specifying this option multiple times") do |key|
+            @ignored_drilldown_keys << key
+          end
 
           parser
         end
@@ -170,6 +177,7 @@ module GroongaQueryLog
             :n_clients  => @n_clients,
             :care_order => @care_order,
             :skip_finished_queries => @skip_finished_queries,
+            :ignored_drilldown_keys => @ignored_drilldown_keys,
           }
           directory_options.merge(options)
         end
@@ -406,6 +414,9 @@ module GroongaQueryLog
               "--output", test_log_path.to_s,
             ]
             command_line << "--no-care-order" if @options[:care_order] == false
+            @options[:ignored_drilldown_keys].each do |key|
+              command_line.concat(["--ignore-drilldown-key", key])
+            end
             command_line << query_log_path.to_s
             if use_persistent_cache?
               command_line << "--verify-cache"
