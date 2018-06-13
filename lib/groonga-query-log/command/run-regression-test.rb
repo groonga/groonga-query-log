@@ -45,7 +45,6 @@ module GroongaQueryLog
           @skip_finished_queries = false
           @output_query_log = false
           @care_order = true
-          @verify_cachehit_mode = false
         end
 
         def run(command_line)
