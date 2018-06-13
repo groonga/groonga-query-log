@@ -363,6 +363,38 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class DrilldownTest < self
+      def create_response(drilldown)
+        [
+          [
+            [10],
+            [["_id", "UInt32"]],
+          ],
+          [
+            [drilldown.size * 2],
+            [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+            *drilldown,
+          ]
+        ]
+      end
+
+      def test_same
+        response1 = create_response([["A", 10], ["B", 2]])
+        response2 = create_response([["A", 10], ["B", 2]])
+        assert do
+          same?(response1, response2)
+        end
+      end
+
+      def test_not_same
+        response1 = create_response([["A", 11], ["B", 2]])
+        response2 = create_response([["A", 10], ["B", 2]])
+        assert do
+          not same?(response1, response2)
+        end
+      end
+    end
+
     class ErrorTest < self
       def test_with_location
         response1_header = [

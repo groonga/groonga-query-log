@@ -61,12 +61,13 @@ module GroongaQueryLog
     def same_select_response?
       if care_order?
         if all_output_columns?
-          same_records_all_output_columns?
+          return false unless same_records_all_output_columns?
         elsif have_unary_minus_output_column?
-          same_records_unary_minus_output_column?
+          return false unless same_records_unary_minus_output_column?
         else
-          same_records?
+          return false unless same_records?
         end
+        same_drilldowns?
       else
         same_size_response?
       end
@@ -212,16 +213,21 @@ module GroongaQueryLog
       records_result2 = @response2.body[0] || []
       return false if records_result1.size != records_result2.size
 
-      n_hits1 = records_result1[0]
-      n_hits2 = records_result2[0]
+      same_record_set(records_result1,
+                      records_result2)
+    end
+
+    def same_record_set?(record_set1, record_set2)
+      n_hits1 = record_set1[0]
+      n_hits2 = record_set2[0]
       return false if n_hits1 != n_hits2
 
-      columns1 = records_result1[1]
-      columns2 = records_result2[1]
+      columns1 = record_set1[1]
+      columns2 = record_set2[1]
       return false if columns1 != columns2
 
-      records1 = records_result1[2..-1]
-      records2 = records_result2[2..-1]
+      records1 = record_set1[2..-1]
+      records2 = record_set2[2..-1]
       records1.each_with_index do |record1, record_index|
         record2 = records2[record_index]
         columns1.each_with_index do |column1, column_index|
@@ -242,6 +248,18 @@ module GroongaQueryLog
         map[name] = i
       end
       map
+    end
+
+    def same_drilldowns?
+      drilldowns1 = @response1.body[1..-1] || []
+      drilldowns2 = @response2.body[1..-1] || []
+      return false if drilldowns1.size != drilldowns2.size
+
+      drilldowns1.each_with_index do |drilldown1, drilldown_index|
+        drilldown2 = drilldowns2[drilldown_index]
+        return false unless same_record_set?(drilldown1, drilldown2)
+      end
+      true
     end
 
     def normalize_value(value, column)
