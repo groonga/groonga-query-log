@@ -46,6 +46,7 @@ module GroongaQueryLog
           @output_query_log = false
           @care_order = true
           @ignored_drilldown_keys = []
+          @stop_on_failure = false
         end
 
         def run(command_line)
@@ -151,6 +152,11 @@ module GroongaQueryLog
                     "specifying this option multiple times") do |key|
             @ignored_drilldown_keys << key
           end
+          parser.on("--[no-]stop-on-failure",
+                    "Stop execution on the first failure",
+                    "(#{@stop_on_failure})") do |boolean|
+            @stop_on_failure = boolean
+          end
 
           parser
         end
@@ -178,6 +184,7 @@ module GroongaQueryLog
             :care_order => @care_order,
             :skip_finished_queries => @skip_finished_queries,
             :ignored_drilldown_keys => @ignored_drilldown_keys,
+            :stop_on_failure => @stop_on_failure,
           }
           directory_options.merge(options)
         end
@@ -331,6 +338,7 @@ module GroongaQueryLog
             @input_directory = options[:input_directory] || Pathname.new(".")
             @working_directory = options[:working_directory] || Pathname.new(".")
             @n_clients = options[:n_clients] || 1
+            @stop_on_failure = options[:stop_on_failure]
             @options = options
             @n_ready_waits = 2
           end
@@ -387,6 +395,7 @@ module GroongaQueryLog
                 end
                 unless verify_server(log_path, query_log_path, &callback)
                   same = false
+                  break if @stop_on_failure
                 end
               rescue Interrupt
                 puts("Interrupt: #{query_log_path}")
@@ -423,6 +432,9 @@ module GroongaQueryLog
             command_line << query_log_path.to_s
             if use_persistent_cache?
               command_line << "--verify-cache"
+            end
+            if @stop_on_failure
+              command_line << "--stop-on-failure"
             end
             verify_server = VerifyServer.new
             verify_server.run(command_line, &callback)
