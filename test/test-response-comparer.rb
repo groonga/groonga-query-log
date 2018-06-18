@@ -337,8 +337,8 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
 
       def test_all_output_columns
-        response1 = create_response(35.6562002690605,  139.763570507358)
-        response2 = create_response(35.65620026906051, 139.7635705073576)
+        response1 = create_response(35.6705996342355,  139.683422370535)
+        response2 = create_response(35.67059963423547, 139.6834223705349)
         assert do
           same?(response1, response2)
         end
@@ -346,8 +346,8 @@ class ResponseComparerTest < Test::Unit::TestCase
 
       def test_unary_minus_output_column
         @command["output_columns"] = "_id, -value, latitude, longitude"
-        response1 = create_response(35.6562002690605,  139.763570507358)
-        response2 = create_response(35.65620026906051, 139.7635705073576)
+        response1 = create_response(35.6705996342355,  139.683422370535)
+        response2 = create_response(35.67059963423547, 139.6834223705349)
         assert do
           same?(response1, response2)
         end
@@ -355,8 +355,8 @@ class ResponseComparerTest < Test::Unit::TestCase
 
       def test_specific_output_columns
         @command["output_columns"] = "_id, latitude, longitude"
-        response1 = create_response(35.6562002690605,  139.763570507358)
-        response2 = create_response(35.65620026906051, 139.7635705073576)
+        response1 = create_response(35.6705996342355,  139.683422370535)
+        response2 = create_response(35.67059963423547, 139.6834223705349)
         assert do
           same?(response1, response2)
         end

@@ -271,7 +271,7 @@ module GroongaQueryLog
       type = column[1]
       case type
       when "Float"
-        value.round(12)
+        value.round(10)
       else
         value
       end
