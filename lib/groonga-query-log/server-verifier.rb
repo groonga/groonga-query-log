@@ -49,6 +49,8 @@ module GroongaQueryLog
         n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
+          break if !@same and @options.stop_on_failure?
+
           command = statistic.command
           next if command.nil?
           next unless target_command?(command)
@@ -178,6 +180,7 @@ module GroongaQueryLog
       attr_accessor :care_order
       attr_writer :verify_cache
       attr_accessor :ignored_drilldown_keys
+      attr_writer :stop_on_failure
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -199,6 +202,7 @@ module GroongaQueryLog
         @care_order = true
         @verify_cache = false
         @ignored_drilldown_keys = []
+        @stop_on_failure = false
       end
 
       def request_queue_size
@@ -211,6 +215,10 @@ module GroongaQueryLog
 
       def verify_cache?
         @verify_cache
+      end
+
+      def stop_on_failure?
+        @stop_on_failure
       end
 
       def target_command_name?(name)

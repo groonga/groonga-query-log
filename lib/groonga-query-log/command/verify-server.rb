@@ -148,6 +148,12 @@ module GroongaQueryLog
           @options.ignored_drilldown_keys << key
         end
 
+        parser.on("--[no-]stop-on-failure",
+                  "Stop execution on the first failure",
+                  "(#{@options.stop_on_failure})") do |boolean|
+          @options.stop_on_failure = boolean
+        end
+
         parser.separator("Debug options:")
         parser.separator("")
 
