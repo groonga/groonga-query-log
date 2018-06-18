@@ -150,7 +150,7 @@ module GroongaQueryLog
 
         parser.on("--[no-]stop-on-failure",
                   "Stop execution on the first failure",
-                  "(#{@options.stop_on_failure})") do |boolean|
+                  "(#{@options.stop_on_failure?})") do |boolean|
           @options.stop_on_failure = boolean
         end
 
