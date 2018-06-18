@@ -1,5 +1,36 @@
 # News
 
+## 1.3.1: 2018-06-18
+
+### Improvements
+
+  * `groonga-query-log-check-crash`:
+
+    * Added more crash detection patterns.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for floating number accuracy difference since
+      Groonga 6.0.4.
+
+    * Added support for `sort_keys` parameter.
+
+    * Added support for drilldown.
+
+    * Added `--ignore-drilldown-key` option.
+
+    * Changed to return non-zero on failure.
+
+    * Added `--stop-on-failure` option.
+
+  * `groonga-query-log-verify-server`:
+
+    * Added `--ignore-drilldown-key` option.
+
+    * Changed to return non-zero on failure.
+
+    * Added `--stop-on-failure` option.
+
 ## 1.3.0: 2018-06-11
 
 ### Improvements
