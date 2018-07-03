@@ -49,6 +49,8 @@ module GroongaQueryLog
         @care_order = true
         @ignored_drilldown_keys = []
         @target_command_names = ServerVerifier::Options.new.target_command_names
+
+        @read_timeout = Groonga::Client::Default::READ_TIMEOUT
       end
 
       def run(command_line)
@@ -170,6 +172,15 @@ module GroongaQueryLog
           @target_command_names = names
         end
 
+        parser.separator("")
+        parser.separator("Network:")
+        parser.on("--read-timeout=TIMEOUT", Integer,
+                  "Timeout on reading response from Groonga servers.",
+                  "You can disable timeout by specifying -1.",
+                  "[#{@read_timeout}]") do |timeout|
+          @read_timeout = timeout
+        end
+
         parser
       end
 
@@ -198,6 +209,7 @@ module GroongaQueryLog
           :ignored_drilldown_keys => @ignored_drilldown_keys,
           :stop_on_failure => @stop_on_failure,
           :target_command_names => @target_command_names,
+          :read_timeout => @read_timeout,
         }
         directory_options.merge(options)
       end
@@ -452,6 +464,10 @@ module GroongaQueryLog
           if @options[:target_command_names]
             command_line << "--target-command-names"
             command_line << @options[:target_command_names].join(",")
+          end
+          if @options[:read_timeout]
+            command_line << "--read-timeout"
+            command_line << @options[:read_timeout].to_s
           end
           verify_server = VerifyServer.new
           verify_server.run(command_line, &callback)
