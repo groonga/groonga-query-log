@@ -142,6 +142,14 @@ module GroongaQueryLog
                   "Output query log in verified target Groonga servers") do
           @output_query_log = true
         end
+        parser.on("--[no-]stop-on-failure",
+                  "Stop execution on the first failure",
+                  "(#{@stop_on_failure})") do |boolean|
+          @stop_on_failure = boolean
+        end
+
+        parser.separator("")
+        parser.separator("Comparisons")
         parser.on("--no-care-order",
                   "Don't care order of select response records") do
           @care_order = false
@@ -151,11 +159,6 @@ module GroongaQueryLog
                   "You can specify multiple drilldown keys by",
                   "specifying this option multiple times") do |key|
           @ignored_drilldown_keys << key
-        end
-        parser.on("--[no-]stop-on-failure",
-                  "Stop execution on the first failure",
-                  "(#{@stop_on_failure})") do |boolean|
-          @stop_on_failure = boolean
         end
 
         parser
