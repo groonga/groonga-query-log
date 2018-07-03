@@ -73,6 +73,13 @@ module GroongaQueryLog
           @options.groonga1.protocol = protocol
         end
 
+        parser.on("--groonga1-read-timeout=TIMEOUT", Integer,
+                  "Timeout on reading response from Groonga server 1.",
+                  "You can disable timeout by specifying -1.",
+                  "(#{@options.groonga1.read_timeout})") do |timeout|
+          @options.groonga1.read_timeout = timeout
+        end
+
         parser.on("--groonga2-host=HOST",
                   "Host name or IP address of Groonga server 2",
                   "[#{@options.groonga2.host}]") do |host|
@@ -89,6 +96,20 @@ module GroongaQueryLog
                   "Protocol of Groonga server 2",
                   available_protocols_label) do |protocol|
           @options.groonga2.protocol = protocol
+        end
+
+        parser.on("--groonga2-read-timeout=TIMEOUT", Integer,
+                  "Timeout on reading response from Groonga server 2.",
+                  "You can disable timeout by specifying -1.",
+                  "(#{@options.groonga2.read_timeout})") do |timeout|
+          @options.groonga2.read_timeout = timeout
+        end
+
+        parser.on("--read-timeout=TIMEOUT", Integer,
+                  "Timeout on reading response from both Groonga servers.",
+                  "You can disable timeout by specifying -1.") do |timeout|
+          @options.groonga1.read_timeout = timeout
+          @options.groonga2.read_timeout = timeout
         end
 
         parser.on("--n-clients=N", Integer,

@@ -245,16 +245,19 @@ module GroongaQueryLog
       attr_accessor :host
       attr_accessor :port
       attr_accessor :protocol
+      attr_accessor :read_timeout
       def initialize
-        @host     = "127.0.0.1"
-        @port     = 10041
-        @protocol = :gqtp
+        @host         = "127.0.0.1"
+        @port         = 10041
+        @protocol     = :gqtp
+        @read_timeout = Groonga::Client::Default::READ_TIMEOUT
       end
 
       def create_client(&block)
-        Groonga::Client.open(:host     => @host,
-                             :port     => @port,
-                             :protocol => @protocol,
+        Groonga::Client.open(:host         => @host,
+                             :port         => @port,
+                             :protocol     => @protocol,
+                             :read_timeout => @read_timeout,
                              &block)
       end
     end
