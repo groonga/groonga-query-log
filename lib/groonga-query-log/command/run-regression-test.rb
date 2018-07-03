@@ -44,9 +44,11 @@ module GroongaQueryLog
         @run_queries = true
         @skip_finished_queries = false
         @output_query_log = false
+        @stop_on_failure = false
+
         @care_order = true
         @ignored_drilldown_keys = []
-        @stop_on_failure = false
+        @target_command_names = ServerVerifier::Options.new.target_command_names
       end
 
       def run(command_line)
@@ -160,6 +162,13 @@ module GroongaQueryLog
                   "specifying this option multiple times") do |key|
           @ignored_drilldown_keys << key
         end
+        target_command_names_label = @target_command_names.join(",")
+        parser.on("--target-command-names=NAME1,NAME2,...", Array,
+                  "Test only NAME1,NAME2,... commands",
+                  "You can use glob to choose command name",
+                  "[#{target_command_names_label}]") do |names|
+          @target_command_names = names
+        end
 
         parser
       end
@@ -188,6 +197,7 @@ module GroongaQueryLog
           :skip_finished_queries => @skip_finished_queries,
           :ignored_drilldown_keys => @ignored_drilldown_keys,
           :stop_on_failure => @stop_on_failure,
+          :target_command_names => @target_command_names,
         }
         directory_options.merge(options)
       end
@@ -438,6 +448,10 @@ module GroongaQueryLog
           end
           if @stop_on_failure
             command_line << "--stop-on-failure"
+          end
+          if @options[:target_command_names]
+            command_line << "--target-command-names"
+            command_line << @options[:target_command_names].join(",")
           end
           verify_server = VerifyServer.new
           verify_server.run(command_line, &callback)
