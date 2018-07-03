@@ -1,5 +1,23 @@
 # News
 
+## 1.3.2: 2018-07-03
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added `--target-command-names` option.
+
+    * Added `--read-timeout` option.
+
+  * `groonga-query-log-verify-server`:
+
+    * Added `--groonga1-read-timeout` option.
+
+    * Added `--groonga2-read-timeout` option.
+
+    * Added `--read-timeout` option.
+
 ## 1.3.1: 2018-06-18
 
 ### Improvements
