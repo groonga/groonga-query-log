@@ -116,7 +116,7 @@ module GroongaQueryLog
           @options.target_command_names << name
         end
 
-        target_command_names_label = @options.target_command_names.join(", ")
+        target_command_names_label = @options.target_command_names.join(",")
         parser.on("--target-command-names=NAME1,NAME2,...", Array,
                   "Replay only NAME1,NAME2,... commands",
                   "You can use glob to choose command name",
