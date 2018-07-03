@@ -149,7 +149,7 @@ module GroongaQueryLog
         end
 
         parser.separator("")
-        parser.separator("Comparisons")
+        parser.separator("Comparisons:")
         parser.on("--no-care-order",
                   "Don't care order of select response records") do
           @care_order = false
