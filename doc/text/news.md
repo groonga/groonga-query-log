@@ -1,5 +1,17 @@
 # News
 
+## 1.3.3: 2018-07-05
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for tar.gz.
+
+  * `groonga-query-log-verify-server`:
+
+    * Added support for tar.gz.
+
 ## 1.3.2: 2018-07-03
 
 ### Improvements
