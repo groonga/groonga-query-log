@@ -474,11 +474,11 @@ module GroongaQueryLog
         end
 
         def query_log_paths
-          Pathname.glob("#{@input_directory}/query-logs/**/*.log").sort
+          Pathname.glob("#{@input_directory}/query-logs/**/*.{log,tar.gz}").sort
         end
 
         def test_log_path(query_log_path)
-          @working_directory + "results" + query_log_path.basename
+          @working_directory + "results" + "#{query_log_path.basename}.log"
         end
 
         def use_persistent_cache?

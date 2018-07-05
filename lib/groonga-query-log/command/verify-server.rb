@@ -15,6 +15,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "optparse"
+require "rubygems/package"
 
 require "groonga-query-log"
 
@@ -33,9 +34,18 @@ module GroongaQueryLog
           same = verifier.verify($stdin, &callback)
         else
           input_paths.each do |input_path|
-            File.open(input_path) do |input|
-              unless verifier.verify(input, &callback)
+            case input_path
+            when /\.tar\.gz\z/
+              unless verify_tar_gz(verifier, input_path)
                 same = false
+                return false if @options.stop_on_failure?
+              end
+            else
+              File.open(input_path) do |input|
+                unless verifier.verify(input, &callback)
+                  same = false
+                  return false if @options.stop_on_failure?
+                end
               end
             end
           end
@@ -44,6 +54,22 @@ module GroongaQueryLog
       end
 
       private
+      def verify_tar_gz(verifier, tar_gz_path, &callback)
+        same = true
+        Zlib::GzipReader.open(tar_gz_path) do |gzip|
+          Gem::Package::TarReader.new(gzip) do |tar|
+            tar.each do |entry|
+              next unless entry.file?
+              unless verifier.verify(StringIO.new(entry.read), &callback)
+                same = false
+                return false if @options.stop_on_failure?
+              end
+            end
+          end
+        end
+        same
+      end
+
       def create_parser
         parser = OptionParser.new
         parser.version = VERSION
