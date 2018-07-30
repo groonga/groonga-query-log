@@ -226,7 +226,7 @@ module GroongaQueryLog
           end
 
           case entry.message
-          when /\Agrn_init:/
+          when /\Agrn_init:/, /\Amroonga \d+\.\d+ started\.\z/
             process = @running_processes[entry.pid]
             if process
               process.crashed = true
