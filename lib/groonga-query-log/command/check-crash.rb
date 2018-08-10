@@ -77,6 +77,7 @@ module GroongaQueryLog
         attr_accessor :last_time
         attr_accessor :n_leaks
         attr_writer :crashed
+        attr_writer :finished
         attr_reader :important_entries
         def initialize(pid, start_time, log_path)
           @pid = pid
@@ -85,11 +86,23 @@ module GroongaQueryLog
           @log_path = log_path
           @n_leaks = 0
           @crashed = false
+          @finished = false
           @important_entries = []
         end
 
         def crashed?
           @crashed
+        end
+
+        def finished?
+          @finished
+        end
+
+        def successfully_finished?
+          return false if crashed?
+          return false unless finished?
+
+          true
         end
       end
 
@@ -105,6 +118,13 @@ module GroongaQueryLog
               p [:crashed,
                  process.start_time.iso8601,
                  process.last_time.iso8601,
+                 process.pid,
+                 process.log_path]
+            end
+
+            unless process.finished?
+              p [:unfinished,
+                 process.start_time.iso8601,
                  process.pid,
                  process.log_path]
             end
@@ -125,7 +145,7 @@ module GroongaQueryLog
                  process.log_path]
             end
 
-            next unless process.crashed?
+            next unless process.successfully_finished?
 
             start = process.start_time
             last = process.last_time
@@ -229,6 +249,7 @@ module GroongaQueryLog
           when /\Agrn_init:/, /\Amroonga \d+\.\d+ started\.\z/
             process = @running_processes[entry.pid]
             if process
+              process.finished = true
               process.crashed = true
               yield(process)
               @running_processes.delete(entry.pid)
@@ -239,6 +260,7 @@ module GroongaQueryLog
             n_leaks = $1.to_i
             process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
+            process.finished = true
             yield(process)
             @running_processes.delete(entry.pid)
           else
@@ -253,6 +275,7 @@ module GroongaQueryLog
             case entry.message
             when "-- CRASHED!!! --"
               process.crashed = true
+              process.finished = true
             when "----------------"
               if process.crashed?
                 yield(process)
