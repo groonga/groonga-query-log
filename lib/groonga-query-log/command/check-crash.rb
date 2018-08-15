@@ -256,7 +256,7 @@ module GroongaQueryLog
             end
             process = GroongaProcess.new(entry.pid, entry.timestamp, path)
             @running_processes[entry.pid] = process
-          when /\Agrn_fin \(\d+\)\z/
+          when /\Agrn_fin \((\d+)\)\z/
             n_leaks = $1.to_i
             process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
