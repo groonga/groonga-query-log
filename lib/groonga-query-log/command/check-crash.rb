@@ -116,20 +116,38 @@ module GroongaQueryLog
         def check
           processes = ProcessEnumerator.new(@general_log_paths)
           processes.each do |process|
-            if process.crashed?
-              p [:crashed,
+            need_query_log_parsing = true
+            if process.successfully_finished?
+              need_query_log_parsing = false
+              p [:process,
+                 :success,
                  process.start_time.iso8601,
                  process.last_time.iso8601,
                  process.pid,
                  process.start_log_path,
                  process.last_log_path]
-            end
-
-            unless process.finished?
-              p [:unfinished,
+            elsif process.crashed?
+              p [:process,
+                 :crashed,
+                 process.start_time.iso8601,
+                 process.last_time.iso8601,
+                 process.pid,
+                 process.start_log_path,
+                 process.last_log_path]
+            else
+              p [:process,
+                 :unfinished,
                  process.start_time.iso8601,
                  process.pid,
                  process.start_log_path]
+            end
+
+            unless process.n_leaks.zero?
+              p [:leak,
+                 process.n_leaks,
+                 process.last_time.iso8601,
+                 process.pid,
+                 process.last_log_path]
             end
 
             unless process.important_entries.empty?
@@ -141,15 +159,7 @@ module GroongaQueryLog
               end
             end
 
-            unless process.n_leaks.zero?
-              p [:leak,
-                 process.n_leaks,
-                 process.last_time.iso8601,
-                 process.pid,
-                 process.last_log_path]
-            end
-
-            next unless process.successfully_finished?
+            next unless need_query_log_parsing
 
             start = process.start_time
             last = process.last_time
