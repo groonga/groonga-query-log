@@ -173,9 +173,12 @@ module GroongaQueryLog
                                         statistic)
             end
             parsing_statistics = query_log_parser.parsing_statistics
-            unless parsing_statistics.empty?
+            target_parsing_statistics = parsing_statistics.reject do |statistic|
+              statistic.start_time < start
+            end
+            unless target_parsing_statistics.empty?
               puts("Running queries:")
-              parsing_statistics.each do |statistic|
+              target_parsing_statistics.each do |statistic|
                 puts("#{statistic.start_time.iso8601}:")
                 puts(statistic.command.to_command_format(pretty_print: true))
               end
