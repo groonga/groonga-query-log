@@ -73,17 +73,19 @@ module GroongaQueryLog
       class GroongaProcess
         attr_reader :pid
         attr_reader :start_time
-        attr_reader :log_path
+        attr_reader :start_log_path
         attr_accessor :last_time
+        attr_accessor :last_log_path
         attr_accessor :n_leaks
         attr_writer :crashed
         attr_writer :finished
         attr_reader :important_entries
-        def initialize(pid, start_time, log_path)
+        def initialize(pid, start_time, start_log_path)
           @pid = pid
           @start_time = start_time
           @last_time = @start_time
-          @log_path = log_path
+          @start_log_path = start_log_path
+          @last_log_path = @start_log_path
           @n_leaks = 0
           @crashed = false
           @finished = false
@@ -119,14 +121,15 @@ module GroongaQueryLog
                  process.start_time.iso8601,
                  process.last_time.iso8601,
                  process.pid,
-                 process.log_path]
+                 process.start_log_path,
+                 process.last_log_path]
             end
 
             unless process.finished?
               p [:unfinished,
                  process.start_time.iso8601,
                  process.pid,
-                 process.log_path]
+                 process.start_log_path]
             end
 
             unless process.important_entries.empty?
@@ -142,7 +145,8 @@ module GroongaQueryLog
               p [:leak,
                  process.n_leaks,
                  process.last_time.iso8601,
-                 process.log_path]
+                 process.pid,
+                 process.last_log_path]
             end
 
             next unless process.successfully_finished?
@@ -260,6 +264,8 @@ module GroongaQueryLog
             n_leaks = $1.to_i
             process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
+            process.last_time = entry.timestamp
+            process.last_log_path = path
             process.finished = true
             yield(process)
             @running_processes.delete(entry.pid)
@@ -272,6 +278,7 @@ module GroongaQueryLog
               process.important_entries << entry
             end
             process.last_time = entry.timestamp
+            process.last_log_path = path
             case entry.message
             when "-- CRASHED!!! --"
               process.crashed = true
