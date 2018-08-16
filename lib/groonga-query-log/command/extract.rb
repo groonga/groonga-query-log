@@ -57,8 +57,8 @@ module GroongaQueryLog
           end
 
           begin
-            if @options.output_path
-              File.open(@options.output_path, "w") do |output|
+            if @options.output
+              File.open(@options.output, "w") do |output|
                 extract(log_paths, output)
               end
             else
@@ -80,7 +80,8 @@ module GroongaQueryLog
           @options.commands = []
           @options.exclude_commands = []
           @options.include_arguments = true
-          @options.output_path = nil
+          @options.output = nil
+          @options.inspect_query = false
           @option_parser = OptionParser.new do |parser|
             parser.version = VERSION
             parser.banner += " QUERY_LOG1 ..."
@@ -128,22 +129,40 @@ module GroongaQueryLog
               @options.include_arguments = include_arguments
             end
 
-            parser.on("--output=PATH",
-                      "Output to PATH.",
-                      "[standard output]") do |path|
-              @options.output_path = path
+            parser.on("--output=OUTPUT",
+                      "If you specify path as OUTPUT,",
+                      "executed commands are printed to the path.",
+                      "If you specify a URL like",
+                      "http://localhost:10041/?table=QueryLogEntries,",
+                      "each entry are stored to QueryLogEntries Groonga table",
+                      "running at localhost on port 10041.",
+                      "[standard output]") do |output|
+              @options.output = output
+            end
+
+            parser.on("--[no-]inspect-query",
+                      "Inspect query.",
+                      "[#{@options.inspect_query}]") do |boolean|
+              @options.inspect_query = boolean
             end
           end
         end
 
         def extract(log_paths, output)
+          if @options.inspect_query
+            formatter = InspectFormatter.new(output)
+          else
+            formatter = DumpFormatter.new(output)
+          end
+          formatter.start
           parser = Parser.new
           parse_log(parser, log_paths) do |statistic|
-            extract_command(statistic, output)
+            extract_command(statistic, formatter)
           end
+          formatter.finish
         end
 
-        def extract_command(statistic, output)
+        def extract_command(statistic, formatter)
           command = statistic.command
           return unless target?(command)
           unless @options.include_arguments
@@ -158,7 +177,7 @@ module GroongaQueryLog
           else
             command_text = command.to_s
           end
-          output.puts(command_text)
+          formatter.command(statistic, command_text)
         end
 
         def target?(command)
@@ -175,6 +194,57 @@ module GroongaQueryLog
           end
 
           true
+        end
+
+        class InspectFormatter
+          def initialize(output)
+            @output = output
+            @first_comand = false
+          end
+
+          def start
+            @output.puts("[")
+          end
+
+          def command(statistic, command_text)
+            if @first_command
+              @first_command = false
+            else
+              @output.puts(",")
+            end
+            record = {
+              "start_time" => statistic.start_time,
+              "elapsed_time" => statistic.elapsed_in_seconds,
+              "last_time" => statistic.last_time,
+              "return_code" => statistic.return_code,
+              "command" => command_text,
+            }
+            statistic.command.arguments.each do |name, value|
+              record["argument_#{name}"] = value
+            end
+            @output.print(record.to_json)
+          end
+
+          def finish
+            @output.puts("") unless @first_comand
+            @output.puts("]")
+          end
+        end
+
+        class DumpFormatter
+          def initialize(output)
+            @output = output
+          end
+
+          def start
+          end
+
+          def command(statistic, command_text)
+            @output.puts(command_text)
+          end
+
+          def finish
+          end
         end
       end
     end
