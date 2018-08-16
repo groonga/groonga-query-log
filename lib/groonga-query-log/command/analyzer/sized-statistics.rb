@@ -143,7 +143,7 @@ module GroongaQueryLog
           return unless @collect_slow_statistics
           if statistic.slow?
             @n_slow_responses += 1
-            if statistic.select_command?
+            if statistic.select_family_command?
               statistic.each_operation do |operation|
                 next unless operation[:slow?]
                 @n_slow_operations += 1

@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -27,8 +27,6 @@ module GroongaQueryLog
     def initialize(context_id)
       @context_id = context_id
       @start_time = nil
-      @command = nil
-      @select_command = nil
       @raw_command = nil
       @operations = []
       @elapsed = nil
@@ -48,16 +46,7 @@ module GroongaQueryLog
     end
 
     def command
-      Groonga::Command::Parser.parse(@raw_command) do |status, command|
-        case status
-        when :on_load_start
-          @loading = false
-          @command ||= command
-        when :on_command
-          @command ||= command
-        end
-      end
-      @command
+      @command ||= parse_command
     end
 
     def elapsed_in_seconds
@@ -76,7 +65,6 @@ module GroongaQueryLog
       return to_enum(__method__) unless block_given?
 
       previous_elapsed = 0
-      ensure_parse_command
       operation_context_context = {
         :filter_index => 0,
         :drilldown_index => 0,
@@ -114,8 +102,15 @@ module GroongaQueryLog
       _operations
     end
 
-    def select_command?
-      command.name == "select"
+    def select_family_command?
+      case command.command_name
+      when "select", "range_filter"
+        true
+      when "logical_select", "logical_range_filter"
+        true
+      else
+        false
+      end
     end
 
     def to_hash
@@ -148,12 +143,20 @@ module GroongaQueryLog
     end
 
     private
+    def parse_command
+      command = nil
+      Groonga::Command::Parser.parse(@raw_command) do |_status, _command|
+        command = _command
+      end
+      command
+    end
+
     def nano_seconds_to_seconds(nano_seconds)
       nano_seconds / 1000.0 / 1000.0 / 1000.0
     end
 
     def operation_context(operation, context)
-      return nil if @select_command.nil?
+      return nil unless select_family_command?
 
       extra = operation[:extra]
       return extra if extra
@@ -161,32 +164,27 @@ module GroongaQueryLog
       label = operation[:name]
       case label
       when "filter"
-        if @select_command.query and context[:query_used].nil?
+        if command.query and context[:query_used].nil?
           context[:query_used] = true
-          "query: #{@select_command.query}"
+          "query: #{command.query}"
         else
           index = context[:filter_index]
           context[:filter_index] += 1
-          @select_command.conditions[index]
+          command.conditions[index]
         end
       when "sort"
-        @select_command.sortby
+        command.sortby
       when "score"
-        @select_command.scorer
+        command.scorer
       when "output"
-        @select_command.output_columns
+        command.output_columns
       when "drilldown"
         index = context[:drilldown_index]
         context[:drilldown_index] += 1
-        @select_command.drilldowns[index]
+        command.drilldowns[index]
       else
         nil
       end
-    end
-
-    def ensure_parse_command
-      return unless select_command?
-      @select_command = Groonga::Command::Parser.parse(@raw_command)
     end
 
     def slow_operation?(elapsed)
