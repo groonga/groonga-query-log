@@ -14,8 +14,9 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-require "ostruct"
+require "json"
 require "optparse"
+require "ostruct"
 require "pathname"
 
 require "groonga-query-log"
