@@ -164,9 +164,11 @@ module GroongaQueryLog
       label = operation[:name]
       case label
       when "filter"
-        if command.query and context[:query_used].nil?
+        query = nil
+        query = command.query if command.respond_to?(:query)
+        if query and context[:query_used].nil?
           context[:query_used] = true
-          "query: #{command.query}"
+          "query: #{query}"
         else
           index = context[:filter_index]
           context[:filter_index] += 1
