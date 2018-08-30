@@ -1,5 +1,17 @@
 # News
 
+## 1.3.5: 2018-08-30
+
+### Improvements
+
+  * `groonga-query-log-check-crash`:
+
+    * Added support for no `grn_init` case.
+
+  * `groonga-query-log-analyze`:
+
+    * Improved `range_filter` and `logical_range_filter` support.
+
 ## 1.3.4: 2018-08-22
 
 ### Improvements
