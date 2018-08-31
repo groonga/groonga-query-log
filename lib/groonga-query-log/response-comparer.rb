@@ -255,15 +255,30 @@ module GroongaQueryLog
       drilldowns1 = @response1.body[1..-1] || []
       drilldowns2 = @response2.body[1..-1] || []
       return false if drilldowns1.size != drilldowns2.size
+      drilldown_classes1 = drilldowns1.collect(&:class)
+      drilldown_classes2 = drilldowns2.collect(&:class)
+      return false if drilldown_classes1 != drilldown_classes2
 
-      drilldown_keys = @command.drilldowns
       ignored_drilldown_keys = @options[:ignored_drilldown_keys]
-      drilldowns1.each_with_index do |drilldown1, drilldown_index|
-        drilldown_key = drilldown_keys[drilldown_index]
-        next if ignored_drilldown_keys.include?(drilldown_key)
-        drilldown2 = drilldowns2[drilldown_index]
-        return false unless same_record_set?(drilldown1, drilldown2)
+
+      if drilldown_classes1 == [Hash]
+        drilldowns1 = drilldowns1[0]
+        drilldowns2 = drilldowns2[0]
+        drilldowns1.each do |drilldown_label, drilldown1|
+          next if ignored_drilldown_keys.include?(drilldown_label)
+          drilldown2 = drilldowns2[drilldown_label]
+          return false unless same_record_set?(drilldown1, drilldown2)
+        end
+      else
+        drilldown_keys = @command.drilldowns
+        drilldowns1.each_with_index do |drilldown1, drilldown_index|
+          drilldown_key = drilldown_keys[drilldown_index]
+          next if ignored_drilldown_keys.include?(drilldown_key)
+          drilldown2 = drilldowns2[drilldown_index]
+          return false unless same_record_set?(drilldown1, drilldown2)
+        end
       end
+
       true
     end
 

@@ -438,6 +438,86 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class LabeledDrilldownTest < self
+      def create_response(drilldown)
+        @command["drilldown[name].keys"] = "name"
+        [
+          [
+            [10],
+            [["_id", "UInt32"]],
+          ],
+          {
+            "name" => [
+              [drilldown.size * 2],
+              [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+              *drilldown,
+            ],
+          }
+        ]
+      end
+
+      def test_same
+        response1 = create_response([["A", 10], ["B", 2]])
+        response2 = create_response([["A", 10], ["B", 2]])
+        assert do
+          same?(response1, response2)
+        end
+      end
+
+      def test_not_same
+        response1 = create_response([["A", 11], ["B", 2]])
+        response2 = create_response([["A", 10], ["B", 2]])
+        assert do
+          not same?(response1, response2)
+        end
+      end
+
+      class IgnoreDrilldownKeysTest < self
+        def create_response(drilldown1, drilldown2)
+          @command["drilldown[columns1].keys"] = "column1"
+          @command["drilldown[columns2].keys"] = "column2"
+          [
+            [
+              [10],
+              [["_id", "UInt32"]],
+            ],
+            {
+              "column1" => [
+                [drilldown1.size * 2],
+                [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+                *drilldown1,
+              ],
+              "column2" => [
+                [drilldown2.size * 2],
+                [["_key", "ShortText"], ["_nsubrecs", "Int32"]],
+                *drilldown2,
+              ],
+            },
+          ]
+        end
+
+        def test_same
+          response1 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 11], ["b", 10]])
+          response2 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 99], ["b", 20]])
+          assert do
+            same?(response1, response2, ignored_drilldown_keys: ["column2"])
+          end
+        end
+
+        def test_not_same
+          response1 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 11], ["b", 10]])
+          response2 = create_response([["A", 10], ["B", 2]],
+                                      [["a", 99], ["b", 20]])
+          assert do
+            not same?(response1, response2)
+          end
+        end
+      end
+    end
+
     class ErrorTest < self
       def test_with_location
         response1_header = [
