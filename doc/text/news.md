@@ -1,5 +1,13 @@
 # News
 
+## 1.3.6: 2018-08-31
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for labeled drilldown.
+
 ## 1.3.5: 2018-08-30
 
 ### Improvements
