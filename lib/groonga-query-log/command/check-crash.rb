@@ -289,6 +289,11 @@ module GroongaQueryLog
               GroongaProcess.new(entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
             case entry.log_level
+            when :notice
+              case entry.message
+              when /lock/
+                process.important_entries << entry
+              end
             when :emergency, :alert, :critical, :error
               process.important_entries << entry
             end
