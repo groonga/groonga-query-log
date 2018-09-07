@@ -277,16 +277,28 @@ module GroongaQueryLog
           return if @database_path.exist?
           FileUtils.mkdir_p(@database_path.dirname.to_s)
           system(@groonga, "-n", @database_path.to_s, "quit")
-          grn_files.each do |grn_file|
-            command = [
-              @groonga,
-              "--log-path", log_path.to_s,
-              "--file", grn_file.to_s,
-              @database_path.to_s,
-            ]
+          load_files.each do |load_file|
+            if load_file.extname == ".rb"
+              env = {
+                "GROONGA_LOG_PATH" => log_path.to_s,
+              }
+              command = [
+                RbConfig.ruby,
+                load_file.to_s,
+                @database_path.to_s,
+              ]
+            else
+              env = {}
+              command = [
+                @groonga,
+                "--log-path", log_path.to_s,
+                "--file", grn_file.to_s,
+                @database_path.to_s,
+              ]
+            end
             command_line = command.join(" ")
             puts("Running...: #{command_line}")
-            pid = spawn(*command)
+            pid = spawn(env, *command)
             begin
               pid, status = Process.waitpid2(pid)
             rescue Interrupt
@@ -336,7 +348,7 @@ module GroongaQueryLog
           end
         end
 
-        def grn_files
+        def load_files
           files = schema_files
           files += data_files if @options[:load_data]
           files += index_files
@@ -344,15 +356,15 @@ module GroongaQueryLog
         end
 
         def schema_files
-          Pathname.glob("#{@input_directory}/schema/**/*.grn").sort
+          Pathname.glob("#{@input_directory}/schema/**/*.{grn,rb}").sort
         end
 
         def index_files
-          Pathname.glob("#{@input_directory}/indexes/**/*.grn").sort
+          Pathname.glob("#{@input_directory}/indexes/**/*.{grn,rb}").sort
         end
 
         def data_files
-          Pathname.glob("#{@input_directory}/data/**/*.grn").sort
+          Pathname.glob("#{@input_directory}/data/**/*.{grn,rb}").sort
         end
       end
 
