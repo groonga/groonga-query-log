@@ -1,5 +1,17 @@
 # News
 
+## 1.3.7: 2018-09-11
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for loading data by Ruby.
+
+  * `groonga-query-log-check-crash`:
+
+    * Added lock related logs to important logs.
+
 ## 1.3.6: 2018-08-31
 
 ### Improvements
