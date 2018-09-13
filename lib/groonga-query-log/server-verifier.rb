@@ -145,7 +145,7 @@ module GroongaQueryLog
           $stderr.puts("Rewritten filter:")
           $stderr.puts("  Before: #{filter}")
           $stderr.puts("   After: #{rewritten_filter}")
-          command["filter"] = filter
+          command["filter"] = rewritten_filter
         end
       end
       response1 = groonga1_client.execute(command)
