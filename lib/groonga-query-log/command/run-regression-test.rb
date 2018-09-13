@@ -228,7 +228,16 @@ module GroongaQueryLog
                           server_options)
       end
 
+      module Loggable
+        def puts(*args)
+          $stdout.puts(*args)
+          $stdout.flush
+        end
+      end
+
       class GroongaServer
+        include Loggable
+
         attr_reader :host, :port
         def initialize(groonga, groonga_options, database_path, options)
           @input_directory = options[:input_directory] || Pathname.new(".")
@@ -369,6 +378,8 @@ module GroongaQueryLog
       end
 
       class Tester
+        include Loggable
+
         def initialize(old, new, options)
           @old = old
           @new = new
