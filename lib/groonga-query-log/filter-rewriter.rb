@@ -19,7 +19,7 @@ module GroongaQueryLog
     def initialize(filter, options={})
       @filter = filter
       @options = options
-      @vector_accessors = @options[:vector_accssors] || []
+      @vector_accessors = @options[:vector_accessors] || []
     end
 
     def rewrite
