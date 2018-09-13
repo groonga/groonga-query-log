@@ -19,6 +19,7 @@ require "thread"
 
 require "groonga/client"
 
+require "groonga-query-log/filter-rewriter"
 require "groonga-query-log/parser"
 require "groonga-query-log/response-comparer"
 
@@ -135,6 +136,12 @@ module GroongaQueryLog
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["output_type"] = "json"
+      filter = command["filter"]
+      if filter and @options.need_filter_rewrite?
+        rewriter = FilterRewriter.new(filter,
+                                      @options.to_filter_rewriter_options)
+        command["filter"] = rewriter.rewrite
+      end
       response1 = groonga1_client.execute(command)
       response2 = groonga2_client.execute(command)
       compare_options = {
@@ -182,6 +189,8 @@ module GroongaQueryLog
       attr_writer :verify_cache
       attr_accessor :ignored_drilldown_keys
       attr_writer :stop_on_failure
+      attr_writer :rewrite_vector_equal
+      attr_accessor :vector_accessors
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -204,6 +213,8 @@ module GroongaQueryLog
         @verify_cache = false
         @ignored_drilldown_keys = []
         @stop_on_failure = false
+        @rewrite_vector_equal = false
+        @vector_accessors = []
       end
 
       def request_queue_size
@@ -220,6 +231,10 @@ module GroongaQueryLog
 
       def stop_on_failure?
         @stop_on_failure
+      end
+
+      def rewrite_vector_equal?
+        @rewrite_vector_equal
       end
 
       def target_command_name?(name)
@@ -239,6 +254,17 @@ module GroongaQueryLog
         else
           yield($stdout)
         end
+      end
+
+      def need_filter_rewrite?
+        rewrite_vector_equal?
+      end
+
+      def to_filter_rewriter_options
+        {
+          :rewrite_vector_equal => rewrite_vector_equal?,
+          :vector_accessors => vector_accessors,
+        }
       end
     end
 

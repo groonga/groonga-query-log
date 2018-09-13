@@ -201,6 +201,19 @@ module GroongaQueryLog
           @options.stop_on_failure = boolean
         end
 
+        parser.on("--[no-]rewrite-vector-equal",
+                  "Rewrite 'vector == ...' with 'vector @ ...'",
+                  "(#{@options.rewrite_vector_equal?})") do |boolean|
+          @options.rewrite_vector_equal = boolean
+        end
+
+        parser.on("--vector-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite vector targets",
+                  "You can specify multiple vector accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @options.vector_accessors << accessor
+        end
+
         parser.separator("Debug options:")
         parser.separator("")
 
