@@ -141,7 +141,7 @@ module GroongaQueryLog
         rewriter = FilterRewriter.new(filter,
                                       @options.to_filter_rewriter_options)
         rewritten_filter = rewriter.rewrite
-        if filter != rerwritten_filter
+        if filter != rewritten_filter
           $stderr.puts("Rewritten filter:")
           $stderr.puts("  Before: #{filter}")
           $stderr.puts("   After: #{rewritten_filter}")
