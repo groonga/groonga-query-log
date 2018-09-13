@@ -25,7 +25,7 @@ class FilterRewriterTest < Test::Unit::TestCase
     def rewrite_vector_equal(filter, vector_accessors)
       rewrite(filter,
               :rewrite_vector_equal => true,
-              :vector_accssors => vector_accessors)
+              :vector_accessors => vector_accessors)
     end
 
     def test_not_target_accessor
@@ -38,6 +38,12 @@ class FilterRewriterTest < Test::Unit::TestCase
       assert_equal("((vector @ \"value\"))",
                    rewrite_vector_equal("((vector == \"value\"))",
                                         ["vector"]))
+    end
+
+    def test_under_score
+      assert_equal("vector_column @ \"value\"",
+                   rewrite_vector_equal("vector_column == \"value\"",
+                                        ["vector_column"]))
     end
   end
 end

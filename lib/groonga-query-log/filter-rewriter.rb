@@ -32,7 +32,7 @@ module GroongaQueryLog
 
     private
     def rewrite_vector_equal(filter)
-      filter.gsub(/([a-zA-Z0-9.]+) *==/) do |matched|
+      filter.gsub(/([a-zA-Z0-9_.]+) *==/) do |matched|
         variable = $1
         if @vector_accessors.include?(variable)
           "#{variable} @"
