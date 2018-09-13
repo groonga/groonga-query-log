@@ -155,6 +155,7 @@ module GroongaQueryLog
       output.puts("command: #{command_source}")
       output.puts("response1: #{response1.body.to_json}")
       output.puts("response2: #{response2.body.to_json}")
+      output.flush
     end
 
     def log_client_error(error)
