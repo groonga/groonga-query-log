@@ -45,6 +45,8 @@ module GroongaQueryLog
         @skip_finished_queries = false
         @output_query_log = false
         @stop_on_failure = false
+        @rewrite_vector_equal = false
+        @vector_accessors = []
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -151,6 +153,17 @@ module GroongaQueryLog
                   "(#{@stop_on_failure})") do |boolean|
           @stop_on_failure = boolean
         end
+        parser.on("--[no-]rewrite-vector-equal",
+                  "Rewrite 'vector == ...' with 'vector @ ...'",
+                  "(#{@rewrite_vector_equal})") do |boolean|
+          @rewrite_vector_equal = boolean
+        end
+        parser.on("--vector-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite vector targets",
+                  "You can specify multiple vector accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @vector_accessors << accessor
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -208,6 +221,8 @@ module GroongaQueryLog
           :skip_finished_queries => @skip_finished_queries,
           :ignored_drilldown_keys => @ignored_drilldown_keys,
           :stop_on_failure => @stop_on_failure,
+          :rewrite_vector_equal => @rewrite_vector_equal,
+          :vector_accessors => @vector_accessors,
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,
         }
@@ -483,6 +498,14 @@ module GroongaQueryLog
           end
           if @stop_on_failure
             command_line << "--stop-on-failure"
+          end
+          if @options[:rewrite_vector_equal]
+            command_line << "--rewrite-vector-equal"
+          end
+          vector_accessors = @options[:vector_accessors] || []
+          vector_accessors.each do |vector_accessor|
+            command_line << "--vector-accessor"
+            command_line << vector_accessor
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"
