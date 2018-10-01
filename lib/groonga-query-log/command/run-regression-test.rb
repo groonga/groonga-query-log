@@ -46,6 +46,7 @@ module GroongaQueryLog
         @output_query_log = false
         @stop_on_failure = false
         @rewrite_vector_equal = false
+        @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
 
         @care_order = true
@@ -158,6 +159,11 @@ module GroongaQueryLog
                   "(#{@rewrite_vector_equal})") do |boolean|
           @rewrite_vector_equal = boolean
         end
+        parser.on("--[no-]rewrite-vector-not-equal-empty-string",
+                  "Rewrite 'vector != \"\"' with 'false'",
+                  "(#{@rewrite_vector_not_equal_empty_string})") do |boolean|
+          @rewrite_vector_not_equal_empty_string = boolean
+        end
         parser.on("--vector-accessor=ACCESSOR",
                   "Mark ACCESSOR as rewrite vector targets",
                   "You can specify multiple vector accessors by",
@@ -222,6 +228,8 @@ module GroongaQueryLog
           :ignored_drilldown_keys => @ignored_drilldown_keys,
           :stop_on_failure => @stop_on_failure,
           :rewrite_vector_equal => @rewrite_vector_equal,
+          :rewrite_vector_not_equal_empty_string =>
+            @rewrite_vector_not_equal_empty_string,
           :vector_accessors => @vector_accessors,
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,

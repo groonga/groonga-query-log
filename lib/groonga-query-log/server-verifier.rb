@@ -136,18 +136,8 @@ module GroongaQueryLog
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["output_type"] = "json"
-      filter = command["filter"]
-      if filter and @options.need_filter_rewrite?
-        rewriter = FilterRewriter.new(filter,
-                                      @options.to_filter_rewriter_options)
-        rewritten_filter = rewriter.rewrite
-        if filter != rewritten_filter
-          $stderr.puts("Rewritten filter:")
-          $stderr.puts("  Before: #{filter}")
-          $stderr.puts("   After: #{rewritten_filter}")
-          command["filter"] = rewritten_filter
-        end
-      end
+      rewrite_filter(command, "filter")
+      rewrite_filter(command, "scorer")
       response1 = groonga1_client.execute(command)
       response2 = groonga2_client.execute(command)
       compare_options = {
@@ -159,6 +149,21 @@ module GroongaQueryLog
       unless comparer.same?
         @different_results.push([command, response1, response2])
       end
+    end
+
+    def rewrite_filter(command, name)
+      target = command[name]
+      return if target.nil?
+      return unless @options.need_filter_rewrite?
+
+      rewriter = FilterRewriter.new(target, @options.to_filter_rewriter_options)
+      rewritten_target = rewriter.rewrite
+      return if target == rewritten_target
+
+      $stderr.puts("Rewritten #{name}")
+      $stderr.puts("  Before: #{target}")
+      $stderr.puts("   After: #{rewritten_target}")
+      command[name] = rewritten_target
     end
 
     def report_result(output, result)
@@ -196,6 +201,7 @@ module GroongaQueryLog
       attr_accessor :ignored_drilldown_keys
       attr_writer :stop_on_failure
       attr_writer :rewrite_vector_equal
+      attr_writer :rewrite_vector_not_equal_empty_string
       attr_accessor :vector_accessors
       def initialize
         @groonga1 = GroongaOptions.new
@@ -220,6 +226,7 @@ module GroongaQueryLog
         @ignored_drilldown_keys = []
         @stop_on_failure = false
         @rewrite_vector_equal = false
+        @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
       end
 
@@ -243,6 +250,10 @@ module GroongaQueryLog
         @rewrite_vector_equal
       end
 
+      def rewrite_vector_not_equal_empty_string?
+        @rewrite_vector_not_equal_empty_string
+      end
+
       def target_command_name?(name)
         return false if name.nil?
 
@@ -263,12 +274,15 @@ module GroongaQueryLog
       end
 
       def need_filter_rewrite?
-        rewrite_vector_equal?
+        rewrite_vector_equal? or
+          rewrite_vector_not_equal_empty_string?
       end
 
       def to_filter_rewriter_options
         {
           :rewrite_vector_equal => rewrite_vector_equal?,
+          :rewrite_vector_not_equal_empty_string =>
+            rewrite_vector_not_equal_empty_string?,
           :vector_accessors => vector_accessors,
         }
       end

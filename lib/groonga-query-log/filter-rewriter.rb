@@ -27,6 +27,9 @@ module GroongaQueryLog
       if @options[:rewrite_vector_equal]
         rewritten = rewrite_vector_equal(rewritten)
       end
+      if @options[:rewrite_vector_not_equal_empty_string]
+        rewritten = rewrite_vector_not_equal_empty_string(rewritten)
+      end
       rewritten
     end
 
@@ -36,6 +39,17 @@ module GroongaQueryLog
         variable = $1
         if @vector_accessors.include?(variable)
           "#{variable} @"
+        else
+          matched
+        end
+      end
+    end
+
+    def rewrite_vector_not_equal_empty_string(filter)
+      filter.gsub(/([a-zA-Z0-9_.]+) *!= *(?:''|"")/) do |matched|
+        variable = $1
+        if @vector_accessors.include?(variable)
+          "false"
         else
           matched
         end

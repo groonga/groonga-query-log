@@ -207,6 +207,12 @@ module GroongaQueryLog
           @options.rewrite_vector_equal = boolean
         end
 
+        parser.on("--[no-]rewrite-vector-not-equal-empty-string",
+                  "Rewrite 'vector != \"\"' with 'false'",
+                  "(#{@options.rewrite_vector_not_equal_empty_string?})") do |boolean|
+          @options.rewrite_vector_not_equal_empty_string = boolean
+        end
+
         parser.on("--vector-accessor=ACCESSOR",
                   "Mark ACCESSOR as rewrite vector targets",
                   "You can specify multiple vector accessors by",
