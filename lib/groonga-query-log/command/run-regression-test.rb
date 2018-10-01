@@ -510,6 +510,9 @@ module GroongaQueryLog
           if @options[:rewrite_vector_equal]
             command_line << "--rewrite-vector-equal"
           end
+          if @options[:rewrite_vector_not_equal_empty_string]
+            command_line << "--rewrite-vector-not-equal-empty-string"
+          end
           vector_accessors = @options[:vector_accessors] || []
           vector_accessors.each do |vector_accessor|
             command_line << "--vector-accessor"
