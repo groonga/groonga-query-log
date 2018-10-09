@@ -119,7 +119,7 @@ module GroongaQueryLog
 
     def run_reporter
       Thread.new do
-        @options.create_output do |output|
+        @options.open_output do |output|
           loop do
             result = @different_results.pop
             break if result.nil?
@@ -210,6 +210,7 @@ module GroongaQueryLog
         @request_queue_size = nil
         @disable_cache = false
         @output_path = nil
+        @output_opened = false
         @target_command_names = [
           "io_flush",
           "logical_count",
@@ -264,10 +265,16 @@ module GroongaQueryLog
         end
       end
 
-      def create_output(&block)
+      def open_output(&block)
         if @output_path
-          FileUtils.mkdir_p(File.dirname(@output_path))
-          File.open(@output_path, "w", &block)
+          if @output_opened
+            mode = "a"
+          else
+            FileUtils.mkdir_p(File.dirname(@output_path))
+            mode = "w"
+            @output_opened = true
+          end
+          File.open(@output_path, mode, &block)
         else
           yield($stdout)
         end
