@@ -133,13 +133,17 @@ module GroongaQueryLog
       @options.target_command_name?(command.command_name)
     end
 
+    def normalize_response(response)
+      response.gsub!(/\"null\"/, 'null')
+    end
+
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["output_type"] = "json"
       rewrite_filter(command, "filter")
       rewrite_filter(command, "scorer")
-      response1 = groonga1_client.execute(command)
-      response2 = groonga2_client.execute(command)
+      response1 = normalize_response(groonga1_client.execute(command))
+      response2 = normalize_response(groonga2_client.execute(command))
       compare_options = {
         :care_order => @options.care_order,
         :ignored_drilldown_keys => @options.ignored_drilldown_keys,
