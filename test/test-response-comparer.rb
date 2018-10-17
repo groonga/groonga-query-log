@@ -518,6 +518,34 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class NullColumnTypeTest < self
+      def test_null_column_type
+        response1 = [
+          [
+            [1],
+            [
+              ["_id", "UInt32"],
+              ["snippet_html", "\"null\""],
+            ],
+            [1, 2],
+          ],
+        ]
+        response2 = [
+          [
+            [1],
+            [
+              ["_id", "UInt32"],
+              ["snippet_html", "null"],
+            ],
+            [1, 2],
+          ],
+        ]
+        assert do
+          same?(response1, response2)
+        end
+      end
+    end
+
     class ErrorTest < self
       def test_with_location
         response1_header = [
