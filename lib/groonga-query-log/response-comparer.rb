@@ -56,10 +56,15 @@ module GroongaQueryLog
     end
 
     def same_response?
+      normalize_column_type(@response1.body[0])
+      normalize_column_type(@response2.body[0])
       @response1.body == @response2.body
     end
 
     def same_select_response?
+      normalize_column_type(@response1.body[0])
+      normalize_column_type(@response2.body[0])
+
       if care_order?
         if all_output_columns?
           return false unless same_records_all_output_columns?
@@ -280,6 +285,16 @@ module GroongaQueryLog
       end
 
       true
+    end
+
+    def normalize_column_type(response_body)
+      response_body[1].each do |columns|
+        columns.each do |column|
+          if !(column.nil?) then
+            column.gsub!(/\"null\"/, 'null')
+          end
+        end
+      end
     end
 
     def normalize_value(value, column)
