@@ -525,7 +525,7 @@ class ResponseComparerTest < Test::Unit::TestCase
             [1],
             [
               ["_id", "UInt32"],
-              ["snippet_html", "nil"],
+              ["snippet_html", "\"null\""],
             ],
             [1, 2],
           ],
@@ -535,7 +535,7 @@ class ResponseComparerTest < Test::Unit::TestCase
             [1],
             [
               ["_id", "UInt32"],
-              ["snippet_html", nil],
+              ["snippet_html", "null"],
             ],
             [1, 2],
           ],
