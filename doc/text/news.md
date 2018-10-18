@@ -1,5 +1,41 @@
 # News
 
+## 1.3.8: 2018-10-18
+
+### Improvements
+
+  * `groonga-query-log-verify-server`:
+
+    * Changed to flush logs as soon as possible.
+
+    * Added `--vector-not-equal-empty-string` option.
+
+    * Added support an unification for `"null"` and `null` column types.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Changed to flush logs as soon as possible.
+
+    * Added support for rewriting `vector == ...` with `vector @ ...`.
+
+    * Added support for logging rewriting filters.
+
+    * Added `--vector-not-equal-empty-string` option.
+
+    * Added support an unification for `"null"` and `null` column types.
+
+### Fixes
+
+  * `groonga-query-log-verify-server`:
+
+    * Fixed a bug that logged contents are removed with `.tar.gz`
+      query log.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Fixed a bug that logged contents are removed with `.tar.gz`
+      query log.
+
 ## 1.3.7: 2018-09-11
 
 ### Improvements
