@@ -113,8 +113,8 @@ module GroongaQueryLog
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
 
-      columns1 = records_result1[1]
-      columns2 = records_result2[1]
+      columns1 = normalize_columns(records_result1[1])
+      columns2 = normalize_columns(records_result2[1])
       if all_output_columns?
         columns1.sort_by(&:first) == columns2.sort_by(&:first)
       else
@@ -137,8 +137,8 @@ module GroongaQueryLog
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
 
-      columns1 = records_result1[1]
-      columns2 = records_result2[1]
+      columns1 = normalize_columns(records_result1[1])
+      columns2 = normalize_columns(records_result2[1])
       records1 = records_result1[2..-1]
       records2 = records_result2[2..-1]
 
@@ -185,8 +185,8 @@ module GroongaQueryLog
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
 
-      columns1 = records_result1[1]
-      columns2 = records_result2[1]
+      columns1 = normalize_columns(records_result1[1])
+      columns2 = normalize_columns(records_result2[1])
       return false if columns1.sort_by(&:first) != columns2.sort_by(&:first)
 
       column_to_index1 = make_column_to_index_map(columns1)
@@ -223,8 +223,8 @@ module GroongaQueryLog
       n_hits2 = record_set2[0]
       return false if n_hits1 != n_hits2
 
-      columns1 = record_set1[1]
-      columns2 = record_set2[1]
+      columns1 = normalize_columns(record_set1[1])
+      columns2 = normalize_columns(record_set2[1])
       return false if columns1 != columns2
 
       records1 = record_set1[2..-1]
@@ -280,6 +280,13 @@ module GroongaQueryLog
       end
 
       true
+    end
+
+    def normalize_columns(columns)
+      columns.collect do |name, type|
+        type = nil if type == "null"
+        [name, type]
+      end
     end
 
     def normalize_value(value, column)

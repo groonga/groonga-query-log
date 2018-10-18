@@ -363,6 +363,54 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class ColumnType < self
+      class Null < self
+        def create_response(type)
+          [
+            [
+              [1],
+              [["snippet_html", type]],
+              ["...snippet..."],
+            ]
+          ]
+        end
+
+        def test_all_output_columns
+          response1 = create_response("null")
+          response2 = create_response(nil)
+          assert do
+            same?(response1, response2)
+          end
+        end
+
+        def test_unary_minus_output_column
+          @command["output_columns"] = "-value, snippet_html(body)"
+          response1 = create_response("null")
+          response2 = create_response(nil)
+          assert do
+            same?(response1, response2)
+          end
+        end
+
+        def test_specific_output_column
+          @command["output_columns"] = "snippet_html(body)"
+          response1 = create_response("null")
+          response2 = create_response(nil)
+          assert do
+            same?(response1, response2)
+          end
+        end
+
+        def test_not_care_order
+          response1 = create_response("null")
+          response2 = create_response(nil)
+          assert do
+            same?(response1, response2, care_order: false)
+          end
+        end
+      end
+    end
+
     class DrilldownTest < self
       def create_response(drilldown)
         [
