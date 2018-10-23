@@ -216,10 +216,11 @@ module GroongaQueryLog
           when "delete"
             @flushed = false
             @unflushed_statistics << statistic
+          when "truncate"
+            @flushed = false
+            @unflushed_statistics << statistic
           when "io_flush"
-            # TODO: Improve flushed target detection.
-            @flushed = true
-            @unflushed_statistics.clear
+            check_io_flush(statistic.command)
           when "database_unmap"
             @unflushed_statistics.reject! do |statistic|
               statistic.command.name == "load"
@@ -232,7 +233,60 @@ module GroongaQueryLog
           when /\Acolumn_/
             @flushed = false
             @unflushed_statistics << statistic
+          when "plugin_register", "plugin_unregister"
+            @flushed = false
+            @unflushed_statistics << statistic
           end
+        end
+
+        def check_io_flush(io_flush)
+          # TODO: Improve flushed target detection.
+          if io_flush.target_name
+            if io_flush.recursive?
+              @unflushed_statistics.reject! do |statistic|
+                case statistic.command.command_name
+                when "load"
+                  # TODO: Not enough
+                  statistic.command.table == io_flush.target_name
+                when "delete"
+                  # TODO: Not enough
+                  statistic.command.table == io_flush.target_name
+                when "truncate"
+                  # TODO: Not enough
+                  statistic.command.target_name == io_flush.target_name
+                else
+                  false
+                end
+              end
+            else
+              @unflushed_statistics.reject! do |statistic|
+                case statistic.command.command_name
+                when /_create/
+                  true # TODO: Need io_flush for database
+                else
+                  false
+                end
+              end
+            end
+          else
+            if io_flush.recursive?
+              @unflushed_statistics.clear
+            else
+              @unflushed_statistics.reject! do |statistic|
+                case statistic.command.command_name
+                when /_create\z/
+                  true # TODO: Need io_flush for the target
+                when /_remove\z/, /_rename\z/
+                  true
+                when "plugin_register", "plugin_unregister"
+                  true
+                else
+                  false
+                end
+              end
+            end
+          end
+          @flushed = @unflushed_statistics.empty?
         end
       end
 
