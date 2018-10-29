@@ -61,15 +61,27 @@ class FilterRewriterTest < Test::Unit::TestCase
     end
 
     def test_parenthesis
-      assert_equal("((false))",
+      assert_equal("((vector_size(vector) > 0))",
                    rewrite("((vector != \"\"))",
                            ["vector"]))
     end
 
     def test_under_score
-      assert_equal("false",
+      assert_equal("vector_size(vector_column) > 0",
                    rewrite("vector_column != \"\"",
                            ["vector_column"]))
+    end
+
+    def test_vector_sub_path
+      assert_equal("vector_size(vector) > 0",
+                    rewrite("vector.column != \"\"",
+                            ["vector"]))
+    end
+
+    def test_reference_vector
+      assert_equal("vector_size(reference.vector) > 0",
+                    rewrite("reference.vector != \"\"",
+                            ["reference.vector"]))
     end
   end
 end
