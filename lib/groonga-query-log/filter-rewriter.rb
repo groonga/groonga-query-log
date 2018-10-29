@@ -46,17 +46,18 @@ module GroongaQueryLog
     end
 
     def rewrite_vector_not_equal_empty_string(filter)
-      filter.gsub(/(?:([a-zA-Z0-9_.]+)\.[a-zA-Z0-9_.]+|([a-zA-Z0-9_.]+)) *!= *(?:''|"")/) do |matched|
-        if $1
-          variable = $1
-        else
-          variable = $2
+      filter.gsub(/([a-zA-Z0-9_.]+) *!= *(?:''|"")/) do |matched|
+        variable = $1
+        path = variable.split(".")
+        replaced = matched
+        path.size.downto(1) do |i|
+          sub_path = path[0, i].join(".")
+          if @vector_accessors.include?(sub_path)
+            replaced = "vector_size(#{sub_path}) > 0"
+            break
+          end
         end
-        if @vector_accessors.include?(variable)
-          "vector_size(#{variable}) > 0"
-        else
-          matched
-        end
+        replaced
       end
     end
   end

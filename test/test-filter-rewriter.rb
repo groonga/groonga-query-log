@@ -72,10 +72,16 @@ class FilterRewriterTest < Test::Unit::TestCase
                            ["vector_column"]))
     end
 
-    def test_dot
+    def test_vector_sub_path
       assert_equal("vector_size(vector) > 0",
                     rewrite("vector.column != \"\"",
                             ["vector"]))
+    end
+
+    def test_reference_vector
+      assert_equal("vector_size(reference.vector) > 0",
+                    rewrite("reference.vector != \"\"",
+                            ["reference.vector"]))
     end
   end
 end
