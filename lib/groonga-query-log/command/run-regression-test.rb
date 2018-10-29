@@ -160,7 +160,9 @@ module GroongaQueryLog
           @rewrite_vector_equal = boolean
         end
         parser.on("--[no-]rewrite-vector-not-equal-empty-string",
-                  "Rewrite 'vector != \"\"'and 'vector.column != \"\"' with 'false'",
+                  "Rewrite 'vector != \"\"' and " +
+                  "'vector.column != \"\"' " +
+                  "with 'vector_size(vector) > 0'",
                   "(#{@rewrite_vector_not_equal_empty_string})") do |boolean|
           @rewrite_vector_not_equal_empty_string = boolean
         end
