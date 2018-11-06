@@ -177,7 +177,7 @@ module GroongaQueryLog
     end
 
     def log_client_error(error)
-      $stderr.puts(Time.now.iso8601)
+      $stderr.puts(Time.now.iso8601(6))
       yield if block_given?
       if error.respond_to?(:raw_error)
         target_error = error.raw_error
