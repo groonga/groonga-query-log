@@ -33,12 +33,13 @@ module GroongaQueryLog
 
     def verify(input, &callback)
       @same = true
+      @client_error = false
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
       @different_results.push(nil)
       reporter.join
-      @same
+      @same and !@client_error
     end
 
     private
@@ -50,7 +51,7 @@ module GroongaQueryLog
         n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
-          break if !@same and @options.stop_on_failure?
+          break if (!@same or @client_error) and @options.stop_on_failure?
 
           command = statistic.command
           next if command.nil?
@@ -99,6 +100,7 @@ module GroongaQueryLog
               log_client_error($!) do
                 $stderr.puts(original_source)
               end
+              @client_error = true
               return false
             end
             if @options.verify_cache?
@@ -109,6 +111,7 @@ module GroongaQueryLog
                 log_client_error($!) do
                   $stderr.puts("status after #{original_source}")
                 end
+                @client_error = true
                 return false
               end
             end
