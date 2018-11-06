@@ -326,7 +326,7 @@ module GroongaQueryLog
               command = [
                 @groonga,
                 "--log-path", log_path.to_s,
-                "--file", grn_file.to_s,
+                "--file", load_file.to_s,
                 @database_path.to_s,
               ]
             end
