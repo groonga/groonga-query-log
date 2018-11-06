@@ -29,6 +29,7 @@ module GroongaQueryLog
       @options = options
       @queue = SizedQueue.new(@options.request_queue_size)
       @different_results = Queue.new
+      @error_results = Queue.new
     end
 
     def verify(input, &callback)
@@ -37,6 +38,7 @@ module GroongaQueryLog
       reporter = run_reporter
       producer.join
       @different_results.push(nil)
+      @error_results.push(nil)
       reporter.join
       @same
     end
@@ -122,8 +124,13 @@ module GroongaQueryLog
         @options.open_output do |output|
           loop do
             result = @different_results.pop
-            break if result.nil?
-            report_result(output, result)
+            unless result.nil?
+              report_result(output, result)
+            end
+            result = @error_results.pop
+            unless result.nil?
+              report_result(output, result)
+            end
           end
         end
       end
@@ -146,6 +153,9 @@ module GroongaQueryLog
       }
       comparer = ResponseComparer.new(command, response1, response2,
                                       compare_options)
+      unless comparer.include_error_response?
+        @error_results.push([command, response1, response2])
+      end
       unless comparer.same?
         @different_results.push([command, response1, response2])
       end

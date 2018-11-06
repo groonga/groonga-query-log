@@ -27,6 +27,10 @@ class ResponseComparerTest < Test::Unit::TestCase
     comparer(response1, response2, options).same?
   end
 
+  def include_error_response?(response1, response2, options={})
+    comparer(response1, response2, options).include_error_response?
+  end
+
   def response(body)
     header = [0, 0.0, 0.0]
     response_class = Groonga::Client::Response.find(@command.name)
@@ -584,6 +588,32 @@ class ResponseComparerTest < Test::Unit::TestCase
         response1 = error_response(response1_header)
         response2 = error_response(response2_header)
         assert_true(same?(response1, response2))
+      end
+
+      def test_error_response
+        response1_header = [
+          -63,
+          1.0,
+          0.1,
+          "Syntax error! ()",
+          [
+            ["yy_syntax_error", "ecmascript.lemon", 24],
+          ],
+        ]
+        response2 = [
+            [
+              [3],
+              [
+                ["_id", "UInt32"],
+                ["value", nil],
+              ],
+              [1, -11],
+              [2, -12],
+              [3, -13],
+            ],
+          ]
+        response1 = error_response(response1_header)
+        assert_true(include_error_response?(response1, response2))
       end
     end
   end

@@ -44,6 +44,12 @@ module GroongaQueryLog
       end
     end
 
+    def include_error_response?
+      if error_response?(@response1) or error_response?(@response2)
+        true
+      end
+    end
+
     private
     def error_response?(response)
       response.is_a?(Groonga::Client::Response::Error)
