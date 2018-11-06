@@ -39,7 +39,7 @@ module GroongaQueryLog
       producer.join
       @different_results.push(nil)
       reporter.join
-      @same and !@client_error_is_occurred
+      different_or_error_results?
     end
 
     private
@@ -134,6 +134,10 @@ module GroongaQueryLog
 
     def target_command?(command)
       @options.target_command_name?(command.command_name)
+    end
+
+    def  different_or_error_results?
+      @same and !@client_error_is_occurred
     end
 
     def verify_command(groonga1_client, groonga2_client, command)
