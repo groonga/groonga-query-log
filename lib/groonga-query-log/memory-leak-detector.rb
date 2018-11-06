@@ -33,7 +33,7 @@ module GroongaQueryLog
               check_command(client, command)
             rescue Groonga::Client::Connection::Error
               # TODO: add error log mechanism
-              $stderr.puts(Time.now.iso8601)
+              $stderr.puts(Time.now.iso8601(6))
               $stderr.puts(command.original_source)
               $stderr.puts($!.raw_error.message)
               $stderr.puts($!.raw_error.backtrace)
