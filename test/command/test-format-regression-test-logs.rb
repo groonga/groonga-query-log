@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (C) 2014  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -48,6 +46,7 @@ class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
 
   def test_command_format
     output = <<-OUTPUT
+Command:
 select Logs
 Name: select
 Arguments:
@@ -67,6 +66,7 @@ Arguments:
 
   def test_url_format
     output = <<-OUTPUT
+Command:
 /d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
 Name: select
 Arguments:
