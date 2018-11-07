@@ -84,4 +84,30 @@ class FilterRewriterTest < Test::Unit::TestCase
                             ["reference.vector"]))
     end
   end
+
+  class NullableReferenceNumberTest < self
+    def rewrite(filter, accessors)
+      super(filter,
+            :rewrite_nullable_reference_number => true,
+            :nullable_reference_number_accessors => accessors)
+    end
+
+    def test_not_target_accessor
+      assert_equal("reference.number < 1000",
+                   rewrite("reference.number < 1000",
+                           ["nonexistent"]))
+    end
+
+    def test_parenthesis
+      assert_equal("(((reference._key == null ? 0 : reference.number)) < 1000)",
+                   rewrite("((reference.number) < 1000)",
+                           ["reference.number"]))
+    end
+
+    def test_under_score
+      assert_equal("(ref_column._key == null ? 0 : ref_column.number) < 1000",
+                   rewrite("ref_column.number < 1000",
+                           ["ref_column.number"]))
+    end
+  end
 end

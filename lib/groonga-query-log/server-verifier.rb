@@ -221,6 +221,8 @@ module GroongaQueryLog
       attr_writer :rewrite_vector_equal
       attr_writer :rewrite_vector_not_equal_empty_string
       attr_accessor :vector_accessors
+      attr_writer :rewrite_nullable_reference_number
+      attr_accessor :nullable_reference_number_accessors
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -247,6 +249,8 @@ module GroongaQueryLog
         @rewrite_vector_equal = false
         @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
+        @rewrite_nullable_reference_number = false
+        @nullable_reference_number_accessors = []
       end
 
       def request_queue_size
@@ -271,6 +275,10 @@ module GroongaQueryLog
 
       def rewrite_vector_not_equal_empty_string?
         @rewrite_vector_not_equal_empty_string
+      end
+
+      def rewrite_nullable_reference_number?
+        @rewrite_nullable_reference_number
       end
 
       def target_command_name?(name)
@@ -300,7 +308,8 @@ module GroongaQueryLog
 
       def need_filter_rewrite?
         rewrite_vector_equal? or
-          rewrite_vector_not_equal_empty_string?
+          rewrite_vector_not_equal_empty_string? or
+          rewrite_nullable_reference_number?
       end
 
       def to_filter_rewriter_options
@@ -309,6 +318,10 @@ module GroongaQueryLog
           :rewrite_vector_not_equal_empty_string =>
             rewrite_vector_not_equal_empty_string?,
           :vector_accessors => vector_accessors,
+          :rewrite_nullable_reference_number =>
+            rewrite_nullable_reference_number?,
+          :nullable_reference_number_accessors =>
+            nullable_reference_number_accessors,
         }
       end
     end

@@ -20,6 +20,8 @@ module GroongaQueryLog
       @filter = filter
       @options = options
       @vector_accessors = @options[:vector_accessors] || []
+      @nullable_reference_number_accessors =
+        @options[:nullable_reference_number_accessors] || []
     end
 
     def rewrite
@@ -29,6 +31,9 @@ module GroongaQueryLog
       end
       if @options[:rewrite_vector_not_equal_empty_string]
         rewritten = rewrite_vector_not_equal_empty_string(rewritten)
+      end
+      if @options[:rewrite_nullable_reference_number]
+        rewritten = rewrite_nullable_reference_number(rewritten)
       end
       rewritten
     end
@@ -58,6 +63,18 @@ module GroongaQueryLog
           end
         end
         replaced
+      end
+    end
+
+    def rewrite_nullable_reference_number(filter)
+      filter.gsub(/([a-zA-Z0-9_.]+)/) do |matched|
+        accessor = $1
+        if @nullable_reference_number_accessors.include?(accessor)
+          sub_accessor = accessor.split(".")[0..-2].join(".")
+          "(#{sub_accessor}._key == null ? 0 : #{accessor})"
+        else
+          matched
+        end
       end
     end
   end

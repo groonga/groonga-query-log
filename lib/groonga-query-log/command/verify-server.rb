@@ -217,9 +217,24 @@ module GroongaQueryLog
 
         parser.on("--vector-accessor=ACCESSOR",
                   "Mark ACCESSOR as rewrite vector targets",
-                  "You can specify multiple vector accessors by",
+                  "You can specify multiple accessors by",
                   "specifying this option multiple times") do |accessor|
           @options.vector_accessors << accessor
+        end
+
+        parser.on("--[no-]rewrite-nullable-reference-number",
+                  "Rewrite 'nullable_reference.number' with " +
+                  "with '(nullable_reference._key == null ? 0 : " +
+                  "nullable_reference.number)'",
+                  "(#{@options.rewrite_nullable_reference_number?})") do |boolean|
+          @options.rewrite_nullable_reference_number = boolean
+        end
+
+        parser.on("--nullable-reference-number-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite nullable reference number targets",
+                  "You can specify multiple accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @options.nullable_reference_number_accessors << accessor
         end
 
         parser.separator("Debug options:")

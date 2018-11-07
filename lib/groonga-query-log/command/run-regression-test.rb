@@ -48,6 +48,8 @@ module GroongaQueryLog
         @rewrite_vector_equal = false
         @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
+        @rewrite_nullable_reference_number = false
+        @nullable_reference_number_accessors = []
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -172,6 +174,19 @@ module GroongaQueryLog
                   "specifying this option multiple times") do |accessor|
           @vector_accessors << accessor
         end
+        parser.on("--[no-]rewrite-nullable-reference-number",
+                  "Rewrite 'nullable_reference.number' with " +
+                  "with '(nullable_reference._key == null ? 0 : " +
+                  "nullable_reference.number)'",
+                  "(#{@rewrite_nullable_reference_number})") do |boolean|
+          @rewrite_nullable_reference_number = boolean
+        end
+        parser.on("--nullable-reference-number-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite nullable reference number targets",
+                  "You can specify multiple accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @nullable_reference_number_accessors << accessor
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -233,6 +248,10 @@ module GroongaQueryLog
           :rewrite_vector_not_equal_empty_string =>
             @rewrite_vector_not_equal_empty_string,
           :vector_accessors => @vector_accessors,
+          :rewrite_nullable_reference_number =>
+            @rewrite_nullable_reference_number,
+          :nullable_reference_number_accessors =>
+            @nullable_reference_number_accessors,
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,
         }
@@ -515,10 +534,18 @@ module GroongaQueryLog
           if @options[:rewrite_vector_not_equal_empty_string]
             command_line << "--rewrite-vector-not-equal-empty-string"
           end
-          vector_accessors = @options[:vector_accessors] || []
-          vector_accessors.each do |vector_accessor|
+          accessors = @options[:vector_accessors] || []
+          accessors.each do |accessor|
             command_line << "--vector-accessor"
-            command_line << vector_accessor
+            command_line << accessor
+          end
+          if @options[:rewrite_nullable_reference_number]
+            command_line << "--rewrite-nullable-reference-number"
+          end
+          accessors = @options[:nullable_reference_number_accessors] || []
+          accessors.each do |accessor|
+            command_line << "--nullable-reference-number-accessor"
+            command_line << accessor
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"
