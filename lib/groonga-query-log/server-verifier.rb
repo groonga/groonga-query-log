@@ -33,12 +33,13 @@ module GroongaQueryLog
 
     def verify(input, &callback)
       @same = true
+      @client_error_is_occurred = false
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
       @different_results.push(nil)
       reporter.join
-      @same
+      success?
     end
 
     private
@@ -50,7 +51,7 @@ module GroongaQueryLog
         n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
-          break if !@same and @options.stop_on_failure?
+          break if stop?
 
           command = statistic.command
           next if command.nil?
@@ -90,6 +91,7 @@ module GroongaQueryLog
           loop do
             statistic = @queue.pop
             return true if statistic.nil?
+            return true if stop?
 
             original_source = statistic.command.original_source
             begin
@@ -99,7 +101,8 @@ module GroongaQueryLog
               log_client_error($!) do
                 $stderr.puts(original_source)
               end
-              return false
+              @client_error_is_occurred = true
+              return @options.stop_on_failure?
             end
             if @options.verify_cache?
               begin
@@ -109,7 +112,8 @@ module GroongaQueryLog
                 log_client_error($!) do
                   $stderr.puts("status after #{original_source}")
                 end
-                return false
+                @client_error_is_occurred = true
+                return @options.stop_on_failure?
               end
             end
           end
@@ -133,6 +137,20 @@ module GroongaQueryLog
       @options.target_command_name?(command.command_name)
     end
 
+    def success?
+      return false unless @same
+      return false if @client_error_is_occurred
+      true
+    end
+
+    def failed?
+      not success?
+    end
+
+    def stop?
+      @options.stop_on_failure? and failed?
+    end
+
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["output_type"] = "json"
@@ -147,6 +165,7 @@ module GroongaQueryLog
       comparer = ResponseComparer.new(command, response1, response2,
                                       compare_options)
       unless comparer.same?
+        @same = false
         @different_results.push([command, response1, response2])
       end
     end
@@ -167,7 +186,6 @@ module GroongaQueryLog
     end
 
     def report_result(output, result)
-      @same = false
       command, response1, response2 = result
       command_source = command.original_source || command.to_uri_format
       output.puts("command: #{command_source}")
