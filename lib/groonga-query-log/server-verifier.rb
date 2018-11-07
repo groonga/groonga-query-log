@@ -51,7 +51,7 @@ module GroongaQueryLog
         n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
-          break if (!@same or @client_error_is_occurred) and @options.stop_on_failure?
+          break if stop_parse?
 
           command = statistic.command
           next if command.nil?
@@ -138,6 +138,10 @@ module GroongaQueryLog
 
     def different_or_error_results?
       @same and !@client_error_is_occurred
+    end
+
+    def stop_parse?
+      (!@same or @client_error_is_occurred) and @options.stop_on_failure?
     end
 
     def run_consumer_stop?
