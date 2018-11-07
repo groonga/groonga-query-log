@@ -91,7 +91,7 @@ module GroongaQueryLog
           loop do
             statistic = @queue.pop
             return true if statistic.nil?
-            return true if stop?
+            next if stop?
 
             original_source = statistic.command.original_source
             begin
@@ -102,7 +102,7 @@ module GroongaQueryLog
                 $stderr.puts(original_source)
               end
               @client_error_is_occurred = true
-              return @options.stop_on_failure?
+              return false
             end
             if @options.verify_cache?
               begin
@@ -113,7 +113,7 @@ module GroongaQueryLog
                   $stderr.puts("status after #{original_source}")
                 end
                 @client_error_is_occurred = true
-                return @options.stop_on_failure?
+                return false
               end
             end
           end
