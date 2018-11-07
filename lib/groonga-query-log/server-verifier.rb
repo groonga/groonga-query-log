@@ -28,7 +28,7 @@ module GroongaQueryLog
     def initialize(options)
       @options = options
       @queue = SizedQueue.new(@options.request_queue_size)
-      @different_results = Queue.new
+      @events = Queue.new
     end
 
     def verify(input, &callback)
@@ -37,7 +37,7 @@ module GroongaQueryLog
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
-      @different_results.push(nil)
+      @events.push(nil)
       reporter.join
       success?
     end
@@ -97,22 +97,25 @@ module GroongaQueryLog
             begin
               verify_command(groonga1_client, groonga2_client,
                              statistic.command)
-            rescue
-              log_client_error($!) do
+            rescue => error
+              log_client_error(error) do
                 $stderr.puts(original_source)
               end
               @client_error_is_occurred = true
+              @events.push([:error, statistic.command, error])
               return false
             end
             if @options.verify_cache?
+              command = Groonga::Command::Status.new
               begin
                 verify_command(groonga1_client, groonga2_client,
-                               Groonga::Command::Status.new)
-              rescue
-                log_client_error($!) do
+                               command)
+              rescue => error
+                log_client_error(error) do
                   $stderr.puts("status after #{original_source}")
                 end
                 @client_error_is_occurred = true
+                @events.push([:error, command, error])
                 return false
               end
             end
@@ -125,9 +128,14 @@ module GroongaQueryLog
       Thread.new do
         @options.open_output do |output|
           loop do
-            result = @different_results.pop
-            break if result.nil?
-            report_result(output, result)
+            event = @events.pop
+            break if event.nil?
+            case event[0]
+            when :different
+              report_different(output, *event[1..-1])
+            when :error
+              report_error(output, *event[1..-1])
+            end
           end
         end
       end
@@ -166,7 +174,7 @@ module GroongaQueryLog
                                       compare_options)
       unless comparer.same?
         @same = false
-        @different_results.push([command, response1, response2])
+        @events.push([:different, command, response1, response2])
       end
     end
 
@@ -185,12 +193,21 @@ module GroongaQueryLog
       command[name] = rewritten_target
     end
 
-    def report_result(output, result)
-      command, response1, response2 = result
+    def report_different(output, command, response1, response2)
       command_source = command.original_source || command.to_uri_format
       output.puts("command: #{command_source}")
       output.puts("response1: #{response1.body.to_json}")
       output.puts("response2: #{response2.body.to_json}")
+      output.flush
+    end
+
+    def report_error(output, command, error)
+      command_source = command.original_source || command.to_uri_format
+      output.puts("command: #{command_source}")
+      output.puts("error: #{error.class}: #{error.message}")
+      error.backtrace.each do |trace|
+        output.puts("backtrace: #{trace}")
+      end
       output.flush
     end
 
