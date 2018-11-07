@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -63,6 +63,8 @@ module GroongaQueryLog
           command = nil
           response_old = nil
           response_new = nil
+          backtrace = []
+          error_message = nil
 
           input.each_line do |line|
             unless line.valid_encoding?
@@ -79,6 +81,12 @@ module GroongaQueryLog
               response_new = $POSTMATCH.chomp
               next unless valid_entry?(command, response_old, response_new)
               report_diff(command, response_old, response_new)
+            when /\Aerror: /
+              error_message = $POSTMATCH.chomp
+              report_error(command, error_message, backtrace)
+              backtrace.clear
+            when /\Abacktrace: /
+              backtrace.unshift($POSTMATCH.chomp)
             end
           end
         end
@@ -124,6 +132,13 @@ module GroongaQueryLog
                      response_old_file.path, response_new_file.path)
             end
           end
+        end
+
+        def report_error(command, message, backtrace)
+          report_command(command)
+          puts("Error: #{message}")
+          puts("Backtrace:")
+          puts(backtrace)
         end
 
         def report_command(command)

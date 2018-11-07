@@ -204,10 +204,10 @@ module GroongaQueryLog
     def report_error(output, command, error)
       command_source = command.original_source || command.to_uri_format
       output.puts("command: #{command_source}")
-      output.puts("error: #{error.class}: #{error.message}")
-      error.backtrace.each do |trace|
+      error.backtrace.reverse_each do |trace|
         output.puts("backtrace: #{trace}")
       end
+      output.puts("error: #{error.class}: #{error.message}")
       output.flush
     end
 
