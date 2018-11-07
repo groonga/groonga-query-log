@@ -26,12 +26,16 @@ class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
   def run_command(command_line)
     stdout = $stdout.dup
     output = Tempfile.open("output")
-    $stdout.reopen(output)
-    succees = @command.run(command_line)
-    output.rewind
+    success = false
+    begin
+      $stdout.reopen(output)
+      succees = @command.run(command_line)
+    ensure
+      $stdout.reopen(stdout)
+    end
+    output.close
+    output.open
     [succees, output.read]
-  ensure
-    $stdout.reopen(stdout)
   end
 
   def fixture_path(*components)
@@ -84,5 +88,24 @@ Arguments:
     OUTPUT
     assert_equal([true, output],
                  run_command([fixture_path("url-format.log")]))
+  end
+
+  def test_error
+    output = <<-OUTPUT
+Command:
+/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+Name: select
+Arguments:
+  match_columns: message
+  query: 焼肉
+  table: Logs
+Error: Message
+Backtrace:
+1
+2
+3
+    OUTPUT
+    assert_equal([true, output],
+                 run_command([fixture_path("error.log")]))
   end
 end

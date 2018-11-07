@@ -1,0 +1,5 @@
+command: /d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+backtrace: 3
+backtrace: 2
+backtrace: 1
+error: Message
