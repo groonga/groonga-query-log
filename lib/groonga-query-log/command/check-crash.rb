@@ -163,7 +163,7 @@ module GroongaQueryLog
 
             start = process.start_time
             last = process.last_time
-            @flushed = nil
+            @flushed = true
             @unflushed_statistics = []
             query_log_parser = Parser.new
             query_log_parser.parse_paths(@query_log_paths) do |statistic|
