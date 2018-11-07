@@ -142,6 +142,7 @@ module GroongaQueryLog
         end
 
         def report_command(command)
+          puts("Command:")
           puts(command)
           parsed_command = Groonga::Command::Parser.parse(command)
           puts("Name: #{parsed_command.name}")
