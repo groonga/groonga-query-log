@@ -79,7 +79,7 @@ module GroongaQueryLog
       @options.n_clients.times.collect do
         Thread.new do
           loop do
-            break if run_consumer
+            break if run_consumer_stop?
           end
         end
       end
@@ -136,8 +136,12 @@ module GroongaQueryLog
       @options.target_command_name?(command.command_name)
     end
 
-    def  different_or_error_results?
+    def different_or_error_results?
       @same and !@client_error_is_occurred
+    end
+
+    def run_consumer_stop?
+      run_consumer or @options.stop_on_failure?
     end
 
     def verify_command(groonga1_client, groonga2_client, command)
