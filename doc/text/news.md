@@ -1,5 +1,39 @@
 # News
 
+## 1.3.9: 2018-11-20
+
+### Improvements
+
+  * Improve the accuracy of time so as to become the same accuracy as Groonga.
+
+  * `groonga-query-log-check-crash`:
+
+    * Added support for truncate leak detection.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for rewriting `vector.column != \"\"` with `vector_size(vector) > 0`.
+
+    * Improve "stop-on-failure" option so as to stop execute of tests even when cause HTTP errors.
+
+    * Added `--rewrite_nullable_reference_number` option.
+
+  * `groonga-query-log-server-verifier`:
+
+    * support reporting unexpected error.
+
+  * `groonga-query-log-format-regression-test-logs`
+
+    * Added support error log.
+
+    * Added label for command.
+
+### Fixes
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Fixed a bug that fails read a file that except ".rb" under the schema directory.
+
 ## 1.3.8: 2018-10-18
 
 ### Improvements
