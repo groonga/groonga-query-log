@@ -1,0 +1,3 @@
+command: select --output_columns "_id,message,snippet_html(message)" --query "message" --table "Logs"
+response1: [[[1], [["_id", "UInt32"], ["message", "Text"], ["snippet_html", null], [1, "log message1", "log <span class=\"keyword\">message</span>1"]]]]
+response2: [[[1], [["_id", "UInt32"], ["message", "Text"], ["snippet_html", "null"], [1, "log message1", "log <span class=\"keyword\">message</span>1"]]]]

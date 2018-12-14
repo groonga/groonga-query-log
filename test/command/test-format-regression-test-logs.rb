@@ -90,6 +90,11 @@ Arguments:
                  run_command([fixture_path("url-format.log")]))
   end
 
+  def test_null_normalize
+    assert_equal([true, ""],
+                 run_command([fixture_path("null-normalize.log")]))
+  end
+
   def test_error
     output = <<-OUTPUT
 Command:

@@ -59,6 +59,10 @@ module GroongaQueryLog
         end
 
         private
+        def normalize_response(response)
+          response.gsub!(/"null"/, "null")
+        end
+
         def format_log(input, path)
           command = nil
           response_old = nil
@@ -77,8 +81,10 @@ module GroongaQueryLog
               command = $POSTMATCH.chomp
             when /\Aresponse1: /
               response_old = $POSTMATCH.chomp
+              normalize_response(response_old)
             when /\Aresponse2: /
               response_new = $POSTMATCH.chomp
+              normalize_response(response_new)
               next unless valid_entry?(command, response_old, response_new)
               report_diff(command, response_old, response_new)
             when /\Aerror: /
