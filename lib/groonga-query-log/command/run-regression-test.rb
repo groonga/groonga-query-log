@@ -50,6 +50,8 @@ module GroongaQueryLog
         @vector_accessors = []
         @rewrite_nullable_reference_number = false
         @nullable_reference_number_accessors = []
+        @rewrite_negating_operator = false
+        @rewrite_negating_operator_accessors = []
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -187,6 +189,18 @@ module GroongaQueryLog
                   "specifying this option multiple times") do |accessor|
           @nullable_reference_number_accessors << accessor
         end
+        parser.on("--[no-]rewrite-negating-operator",
+                  "Rewrite '!(column@\"value\")' with " +
+                  "'all_records() &! (column@\"value\")",
+                  "(#{@rewrite_negating_operator})") do |boolean|
+          @rewrite_negating_operator = boolean
+        end
+        parser.on("--negating-operator-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite negating operator targets",
+                  "You can specify multiple accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @negating_operator_accessors << accessor
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -252,6 +266,10 @@ module GroongaQueryLog
             @rewrite_nullable_reference_number,
           :nullable_reference_number_accessors =>
             @nullable_reference_number_accessors,
+          :rewrite_negating_operator =>
+            @rewrite_negating_operator,
+          :negating_operator_accessors =>
+            @negating_operator_accessors
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,
         }

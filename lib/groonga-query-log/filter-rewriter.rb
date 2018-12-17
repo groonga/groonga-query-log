@@ -22,6 +22,8 @@ module GroongaQueryLog
       @vector_accessors = @options[:vector_accessors] || []
       @nullable_reference_number_accessors =
         @options[:nullable_reference_number_accessors] || []
+      @negating_operator_accessors =
+        @options[:negating_operator_accessors] || []
     end
 
     def rewrite
@@ -34,6 +36,9 @@ module GroongaQueryLog
       end
       if @options[:rewrite_nullable_reference_number]
         rewritten = rewrite_nullable_reference_number(rewritten)
+      end
+      if @options[:rewrite_negating_operator]
+        rewritten = rewrite_negating_operator(rewritten)
       end
       rewritten
     end
@@ -72,6 +77,19 @@ module GroongaQueryLog
         if @nullable_reference_number_accessors.include?(accessor)
           sub_accessor = accessor.split(".")[0..-2].join(".")
           "(#{sub_accessor}._key == null ? 0 : #{accessor})"
+        else
+          matched
+        end
+      end
+    end
+
+    def rewrite_negating_operator(filter)
+      filter.gsub(
+        /!(\([a-zA-Z0-9_.]+ *@ *(?:'|")*[a-zA-Z0-9_.]+(?:'|")*\))/
+      ) do |matched|
+        variable = $1
+        if @negating_operator_accessors.include?(variable)
+          "all_records() &! #{variable}"
         else
           matched
         end

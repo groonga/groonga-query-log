@@ -110,4 +110,24 @@ class FilterRewriterTest < Test::Unit::TestCase
                            ["ref_column.number"]))
     end
   end
+
+  class NegatingOperatorTest < self
+    def rewrite(filter, accessors)
+      super(filter,
+            :rewrite_negating_operator => true,
+            :negating_operator_accessors => accessors)
+    end
+
+    def test_not_target_accessor
+      assert_equal("!(column @ \"value\")",
+                  rewrite("!(column @ \"value\")",
+                         ["nonexistent"]))
+    end
+
+    def test_parenthesis
+      assert_equal("(all_records() &! (column @ \"value\"))",
+                   rewrite("(!(column @ \"value\"))",
+                           ["(column @ \"value\")"]))
+    end
+  end
 end

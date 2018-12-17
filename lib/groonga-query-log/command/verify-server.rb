@@ -237,6 +237,20 @@ module GroongaQueryLog
           @options.nullable_reference_number_accessors << accessor
         end
 
+        parser.on("--[no-]rewrite-negating-operator",
+                  "Rewrite '!(column@\"value\")' with " +
+                  "'all_records() &! (column@\"value\")",
+                  "(#{@rewrite_negating_operator})") do |boolean|
+          @rewrite_negating_operator = boolean
+        end
+
+        parser.on("--negating-operator-accessor=ACCESSOR",
+                  "Mark ACCESSOR as rewrite negating operator targets",
+                  "You can specify multiple accessors by",
+                  "specifying this option multiple times") do |accessor|
+          @negating_operator_accessors << accessor
+        end
+
         parser.separator("Debug options:")
         parser.separator("")
 

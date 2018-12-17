@@ -240,6 +240,8 @@ module GroongaQueryLog
       attr_accessor :vector_accessors
       attr_writer :rewrite_nullable_reference_number
       attr_accessor :nullable_reference_number_accessors
+      attr_writer :rewrite_negating_operator
+      attr_accessor :negationg_operator_accessors
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -268,6 +270,8 @@ module GroongaQueryLog
         @vector_accessors = []
         @rewrite_nullable_reference_number = false
         @nullable_reference_number_accessors = []
+        @rewrite_negating_operator = false
+        @negationg_operator_accessors = []
       end
 
       def request_queue_size
@@ -298,6 +302,10 @@ module GroongaQueryLog
         @rewrite_nullable_reference_number
       end
 
+      def rewrite_negating_operator?
+        @rewrite_negating_operator
+      end
+
       def target_command_name?(name)
         return false if name.nil?
 
@@ -326,7 +334,8 @@ module GroongaQueryLog
       def need_filter_rewrite?
         rewrite_vector_equal? or
           rewrite_vector_not_equal_empty_string? or
-          rewrite_nullable_reference_number?
+          rewrite_nullable_reference_number? or
+          rewrite_negating_operator?
       end
 
       def to_filter_rewriter_options
@@ -339,6 +348,10 @@ module GroongaQueryLog
             rewrite_nullable_reference_number?,
           :nullable_reference_number_accessors =>
             nullable_reference_number_accessors,
+          :rewrite_negating_operator =>
+            rewrite_negating_operator?,
+          :negationg_operator_accessors =>
+            negationg_operator_accessors,
         }
       end
     end
