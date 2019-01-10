@@ -209,7 +209,10 @@ module GroongaQueryLog
         end
 
         def check_query_log_statistic(path, statistic)
-          case statistic.command.command_name
+          command = statistic.command
+          return if command.nil?
+
+          case command.command_name
           when "load"
             @flushed = false
             @unflushed_statistics << statistic
@@ -220,10 +223,10 @@ module GroongaQueryLog
             @flushed = false
             @unflushed_statistics << statistic
           when "io_flush"
-            check_io_flush(statistic.command)
+            check_io_flush(command)
           when "database_unmap"
             @unflushed_statistics.reject! do |statistic|
-              statistic.command.name == "load"
+              command.name == "load"
             end
           when "table_list", "column_list"
             # ignore
