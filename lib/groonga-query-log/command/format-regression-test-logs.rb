@@ -28,7 +28,8 @@ require "groonga-query-log/version"
 module GroongaQueryLog
     module Command
       class FormatRegressionTestLogs
-        def initialize
+        def initialize(options={})
+          @output = options[:output] || $stdout
         end
 
         def run(command_line)
@@ -68,8 +69,8 @@ module GroongaQueryLog
 
           input.each_line do |line|
             unless line.valid_encoding?
-              puts("invalid encoding line")
-              puts("#{path}:#{input.lineno}:#{line}")
+              @output.puts("invalid encoding line")
+              @output.puts("#{path}:#{input.lineno}:#{line}")
               next
             end
             case line
@@ -97,18 +98,18 @@ module GroongaQueryLog
           begin
             JSON.parse(response_old)
           rescue JSON::ParserError
-            puts(command)
-            puts("failed to parse old response: #{$!.message}")
-            puts(response_old)
+            @output.puts(command)
+            @output.puts("failed to parse old response: #{$!.message}")
+            @output.puts(response_old)
             valid = false
           end
 
           begin
             JSON.parse(response_new)
           rescue JSON::ParserError
-            puts(command)
-            puts("failed to parse new response: #{$!.message}")
-            puts(response_new)
+            @output.puts(command)
+            @output.puts("failed to parse new response: #{$!.message}")
+            @output.puts(response_new)
             valid = false
           end
 
@@ -125,33 +126,39 @@ module GroongaQueryLog
               PP.pp(JSON.parse(response_new), response_new_file)
               response_new_file.flush
               report_command(command)
-              system("diff",
-                     "--label=old",
-                     "--label=new",
-                     "-u",
-                     response_old_file.path, response_new_file.path)
+              Tempfile.open("response-diff") do |response_diff_file|
+                system("diff",
+                       "--label=old",
+                       "--label=new",
+                       "-u",
+                       response_old_file.path,
+                       response_new_file.path,
+                       out: response_diff_file)
+                response_diff_file.rewind
+                @output.puts(response_diff_file.read)
+              end
             end
           end
         end
 
         def report_error(command, message, backtrace)
           report_command(command)
-          puts("Error: #{message}")
-          puts("Backtrace:")
-          puts(backtrace)
+          @output.puts("Error: #{message}")
+          @output.puts("Backtrace:")
+          @output.puts(backtrace)
         end
 
         def report_command(command)
-          puts("Command:")
-          puts(command)
+          @output.puts("Command:")
+          @output.puts(command)
           parsed_command = Groonga::Command::Parser.parse(command)
-          puts("Name: #{parsed_command.name}")
-          puts("Arguments:")
+          @output.puts("Name: #{parsed_command.name}")
+          @output.puts("Arguments:")
           sorted_arguments = parsed_command.arguments.sort_by do |key, value|
             key
           end
           sorted_arguments.each do |key, value|
-            puts("  #{key}: #{value}")
+            @output.puts("  #{key}: #{value}")
           end
         end
       end
