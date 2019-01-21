@@ -60,10 +60,10 @@ Arguments:
 +++ new
 @@ -1,4 +1,4 @@
  [[[2],
-   [[\"_id\", \"UInt32\"], [\"message\", \"Text\"]],
-   [1, \"log message1\"],
--  [2, \"log message2\"]]]
-+  [3, \"log message3\"]]]
+   [["_id", "UInt32"], ["message", "Text"]],
+   [1, "log message1"],
+-  [2, "log message2"]]]
++  [3, "log message3"]]]
     OUTPUT
     assert_equal([true, output],
                  run_command([fixture_path("command-format.log")]))
@@ -82,10 +82,10 @@ Arguments:
 +++ new
 @@ -1,4 +1,4 @@
  [[[2],
-   [[\"_id\", \"UInt32\"], [\"message\", \"Text\"]],
-   [1, \"log message1: 焼肉\"],
--  [2, \"log message2: 焼肉\"]]]
-+  [3, \"log message3: 焼肉\"]]]
+   [["_id", "UInt32"], ["message", "Text"]],
+   [1, "log message1: 焼肉"],
+-  [2, "log message2: 焼肉"]]]
++  [3, "log message3: 焼肉"]]]
     OUTPUT
     assert_equal([true, output],
                  run_command([fixture_path("url-format.log")]))
@@ -130,10 +130,10 @@ Arguments:
 +++ new
 @@ -1,4 +1,4 @@
  [[[2],
-   [[\"_id\", \"UInt32\"], [\"message\", \"Text\"]],
-   [1, \"log message1\"],
--  [2, \"log message2\"]]]
-+  [3, \"log message3\"]]]
+   [["_id", "UInt32"], ["message", "Text"]],
+   [1, "log message1"],
+-  [2, "log message2"]]]
++  [3, "log message3"]]]
       OUTPUT
       assert_equal(expected, output.read)
     end
