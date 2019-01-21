@@ -108,4 +108,28 @@ Backtrace:
     assert_equal([true, output],
                  run_command([fixture_path("error.log")]))
   end
+
+  def test_output_option
+    output = StringIO.new("output-option")
+    options = {:output => output}
+    @command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
+    run_command([fixture_path("command-format.log")])
+    output.rewind
+    expected = <<-OUTPUT
+Command:
+select Logs
+Name: select
+Arguments:
+  table: Logs
+--- old
++++ new
+@@ -1,4 +1,4 @@
+ [[[2],
+   [[\"_id\", \"UInt32\"], [\"message\", \"Text\"]],
+   [1, \"log message1\"],
+-  [2, \"log message2\"]]]
++  [3, \"log message3\"]]]
+    OUTPUT
+    assert_equal(expected, output.read)
+  end
 end
