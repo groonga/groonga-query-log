@@ -119,7 +119,6 @@ Backtrace:
       options = {:output => output}
       command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
       command.run([fixture_path("command-format.log")])
-      output.rewind
       expected = <<-OUTPUT
 Command:
 select Logs
@@ -135,7 +134,7 @@ Arguments:
 -  [2, "log message2"]]]
 +  [3, "log message3"]]]
       OUTPUT
-      assert_equal(expected, output.read)
+      assert_equal(expected, output.string)
     end
   end
 end
