@@ -115,7 +115,7 @@ Backtrace:
     end
 
     def test_output
-      output = StringIO.new("output-option")
+      output = StringIO.new
       options = {:output => output}
       command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
       command.run([fixture_path("command-format.log")])
