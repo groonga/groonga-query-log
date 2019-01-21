@@ -1,3 +1,4 @@
+# coding: utf-8
 # Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -29,13 +30,13 @@ class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
     success = false
     begin
       $stdout.reopen(output)
-      succees = @command.run(command_line)
+      success = @command.run(command_line)
     ensure
       $stdout.reopen(stdout)
     end
     output.close
     output.open
-    [succees, output.read]
+    [success, output.read]
   end
 
   def fixture_path(*components)
