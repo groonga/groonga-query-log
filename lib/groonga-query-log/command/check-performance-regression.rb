@@ -165,11 +165,16 @@ module GroongaQueryLog
       end
 
       def format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
-        "Before(average): %d (msec) After(average): %d (msec) Ratio: (%s%.2f%%)" % [
-          old_elapsed_nsec / 1000 / 1000,
-          new_elapsed_nsec / 1000 / 1000,
-          ratio > 0 ? '+' : '',
-          ratio
+        flag = ratio > 0 ? '+' : ''
+        "Before(average): %d (nsec) After(average): %d (nsec) Ratio: (%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
+          old_elapsed_nsec,
+          new_elapsed_nsec,
+          flag,
+          ratio,
+          flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000 / 1000 / 1000,
+          flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000 / 1000,
+          flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000,
+          flag, new_elapsed_nsec - old_elapsed_nsec,
         ]
       end
 
