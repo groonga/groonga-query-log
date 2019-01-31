@@ -215,6 +215,21 @@ module GroongaQueryLog
             @options[:output] = output
           end
 
+          parser.on("--input-filter-query=PATH",
+                    "Use PATH for query list to match specific queries.",
+                    "(#{@options[:input_filter_query]})") do |path|
+            if File.exist?(path)
+              @options[:input_filter_query] = []
+              File.foreach(path) do |line|
+                @options[:input_filter_query] << line.chomp
+              end
+            elsif not path.empty?
+              @options[:input_filter_query] = [path]
+            else
+              raise OptionParser::InvalidOption.new("path <#{path}> doesn't exist")
+            end
+          end
+
           parser.on("--input-old-query=PATH",
                     "Use PATH as old input query log or PATH to old query log's directory.",
                     "(#{@options[:input_old_query]})") do |path|
@@ -282,6 +297,8 @@ module GroongaQueryLog
           next if different_query?(old_statistics[i], new_statistics[i])
 
           raw_command = old_statistics[i].raw_command
+          next if not filter_query?(raw_command)
+
           if old_queries[raw_command]
             statistics = old_queries[raw_command]
             statistics << old_statistics[i]
@@ -300,6 +317,19 @@ module GroongaQueryLog
         end
         [old_queries, new_queries]
       end
+
+      def filter_query?(query)
+        if @options[:input_filter_query]
+          if @options[:input_filter_query].include?(query)
+            true
+          else
+            false
+          end
+        else
+          true
+        end
+      end
+
 
       def analyze(log_paths)
         statistics = GroongaQueryLog::Command::Analyzer::SizedStatistics.new
