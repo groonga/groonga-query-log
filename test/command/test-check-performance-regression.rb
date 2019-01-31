@@ -108,10 +108,10 @@ invalid option: --input-new-query=#{fixture_path("nonexsistent.log")}
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12 (msec) After(average): 14 (msec) Ratio: (+16.67%)
+  Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5 (msec) After(average): 6 (msec) Ratio: (+20.00%)
-    Operation: output Before(average): 2 (msec) After(average): 2 (msec) Ratio: (0.00%)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+    Operation: output Before(average): 2000000 (nsec) After(average): 2000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
       OUTPUT
       File.open(path, "r") do |file|
         assert_equal(expected, file.read)
@@ -134,12 +134,12 @@ Query: select --table Site --limit 0
       ])
       expected = <<-OUTPUT
 Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
-  Before(average): 70 (msec) After(average): 70 (msec) Ratio: (0.00%)
+  Before(average): 70000000 (nsec) After(average): 70000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
   Operations:
-    Operation: filter Before(average): 40 (msec) After(average): 40 (msec) Ratio: (0.00%)
-    Operation: filter Before(average): 10 (msec) After(average): 10 (msec) Ratio: (0.00%)
-    Operation: select Before(average): 10 (msec) After(average): 10 (msec) Ratio: (0.00%)
-    Operation: output Before(average): 10 (msec) After(average): 10 (msec) Ratio: (0.00%)
+    Operation: filter Before(average): 40000000 (nsec) After(average): 40000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: filter Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: select Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: output Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -160,10 +160,10 @@ Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12 (msec) After(average): 14 (msec) Ratio: (+16.67%)
+  Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5 (msec) After(average): 6 (msec) Ratio: (+20.00%)
-    Operation: output Before(average): 2 (msec) After(average): 2 (msec) Ratio: (0.00%)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+    Operation: output Before(average): 2000000 (nsec) After(average): 2000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -200,9 +200,9 @@ Query: select --table Site --limit 0
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12 (msec) After(average): 14 (msec) Ratio: (+16.67%)
+  Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5 (msec) After(average): 6 (msec) Ratio: (+20.00%)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -239,9 +239,9 @@ Query: select --table Site --limit 0
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12 (msec) After(average): 14 (msec) Ratio: (+16.67%)
+  Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5 (msec) After(average): 6 (msec) Ratio: (+20.00%)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
       OUTPUT
       assert_equal(expected, output.string)
     end
