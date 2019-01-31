@@ -277,7 +277,7 @@ module GroongaQueryLog
         old_queries = {}
         new_queries = {}
         old_statistics.count.times do |i|
-          next if new_statistics.count < old_statistics.count
+          next if i > new_statistics.count - 1
           next if cached_query?(old_statistics[i])
           next if different_query?(old_statistics[i], new_statistics[i])
 
