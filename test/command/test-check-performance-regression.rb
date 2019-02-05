@@ -110,8 +110,8 @@ invalid option: --input-new-query=#{fixture_path("nonexsistent.log")}
 Query: select --table Site --limit 0
   Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-    Operation: output Before(average): 2000000 (nsec) After(average): 2000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec) Context: 
+Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
       File.open(path, "r") do |file|
         assert_equal(expected, file.read)
@@ -125,7 +125,7 @@ Query: select --table Site --limit 0
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
         "--input-old-query=" + fixture_path("nquery.log"),
-        "--input-new-query=" + fixture_path("nquery.log"),
+        "--input-new-query=" + fixture_path("nquery2.log"),
         "--n-entries=1",
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
@@ -134,12 +134,13 @@ Query: select --table Site --limit 0
       ])
       expected = <<-OUTPUT
 Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
-  Before(average): 70000000 (nsec) After(average): 70000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+  Before(average): 70000000 (nsec) After(average): 90000000 (nsec) Ratio: (+28.57% +0.02sec/+20.00msec/+20000.00usec/+20000000.00nsec)
   Operations:
-    Operation: filter Before(average): 40000000 (nsec) After(average): 40000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
-    Operation: filter Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
-    Operation: select Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
-    Operation: output Before(average): 10000000 (nsec) After(average): 10000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: filter Before(average): 40000000 (nsec) After(average): 80000000 (nsec) Ratio: (+100.00% +0.04sec/+40.00msec/+40000.00usec/+40000000.00nsec) Context: #<accessor _id(Site)> greater_equal 4
+    Operation: filter Before(average): 10000000 (nsec) After(average): 20000000 (nsec) Ratio: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec) Context: #<accessor _id(Site)> less_equal 6
+    Operation: select Before(average): 10000000 (nsec) After(average): 20000000 (nsec) Ratio: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec) Context: 
+    Operation: output Before(average): 10000000 (nsec) After(average): 20000000 (nsec) Ratio: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec) Context: 
+Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -153,17 +154,17 @@ Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
       command.run([
         "--input-old-query=" + fixture_path("query1.log"),
         "--input-new-query=" + fixture_path("query2.log"),
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0"
+        "--slow-response-ratio=0.0",
+        "--slow-operation-ratio=0.0",
+        "--slow-response-threshold=0.0",
+        "--slow-operation-threshold=0.0"
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
   Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-    Operation: output Before(average): 2000000 (nsec) After(average): 2000000 (nsec) Ratio: (0.00% 0.00sec/0.00msec/0.00usec/0.00nsec)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec) Context: 
+Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -182,7 +183,7 @@ Query: select --table Site --limit 0
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0"
       ])
-      expected = ""
+      expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
       assert_equal(expected, output.string)
     end
 
@@ -202,7 +203,8 @@ Query: select --table Site --limit 0
 Query: select --table Site --limit 0
   Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec) Context: 
+Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -221,7 +223,7 @@ Query: select --table Site --limit 0
         "--slow-response-threshold=0.02",
         "--slow-operation-threshold=0"
       ])
-      expected = ""
+      expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
       assert_equal(expected, output.string)
     end
 
@@ -241,7 +243,8 @@ Query: select --table Site --limit 0
 Query: select --table Site --limit 0
   Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
-    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+    Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec) Context: 
+Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -262,7 +265,7 @@ Query: select --table Site --limit 0
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0"
       ])
-      expected = ""
+      expected = "Summary: slow response: 0/0(NaN%) slow operation: 0/0(NaN%) cached: 1\n"
       assert_equal(expected, @output.string)
     end
   end
