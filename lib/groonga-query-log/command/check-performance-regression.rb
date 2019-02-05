@@ -104,11 +104,12 @@ module GroongaQueryLog
               new_operation = new_operation_nsecs[index]
               @n_process_operation += 1
               if slow_operation?(operation[:elapsed], new_operation[:elapsed])
-                @output.puts("    Operation: %s %s" % [
                 @n_slow_operation += 1
+                @output.puts("    Operation: %s %s Context: %s" % [
                   operation[:name],
                   format_elapsed_ratio(operation[:elapsed],
-                                       new_operation[:elapsed], @options[:slow_operation_threshold])
+                                       new_operation[:elapsed], @options[:slow_operation_threshold]),
+                  operation[:context]
                 ])
               end
             end
@@ -160,7 +161,8 @@ module GroongaQueryLog
           end
           operations << {
             :name => statistics.first.operations[index][:name],
-            :elapsed => elapsed_times.inject(:+).to_f / elapsed_times.size
+            :elapsed => elapsed_times.inject(:+).to_f / elapsed_times.size,
+            :context => operation[:context]
           }
         end
         operations
