@@ -110,4 +110,21 @@ class FilterRewriterTest < Test::Unit::TestCase
                            ["ref_column.number"]))
     end
   end
+
+  class RegularExpressionTest < self
+    def rewrite(filter)
+      super(filter,
+            :rewrite_regular_expression => true)
+    end
+
+    def test_rewrite_one
+      assert_equal("column1 @ \"value1\" &! column2 @ \"value2\"",
+                   rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\""))
+    end
+
+    def test_rewrite_multiple
+      assert_equal("column1 @ \"value1\" &! column2 @ \"value2\" &! column2 @ \"value3\" &! column2 @ \"value4\"",
+                   rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2 | value3 | value4).+$\""))
+    end
+  end
 end

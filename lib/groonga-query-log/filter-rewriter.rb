@@ -35,6 +35,9 @@ module GroongaQueryLog
       if @options[:rewrite_nullable_reference_number]
         rewritten = rewrite_nullable_reference_number(rewritten)
       end
+      if @options[:rewrite_regular_expression]
+        rewritten = rewrite_regular_expression(rewritten)
+      end
       rewritten
     end
 
@@ -75,6 +78,22 @@ module GroongaQueryLog
         else
           matched
         end
+      end
+    end
+
+    def rewrite_regular_expression(filter)
+      filter.gsub(
+        /(?<before_expression>.+) *&& *(?<target_column>\w+) *@~ *\"\^\(\?\!\.\*(?<head_value>\w+) *(?:\| *\w+ *)*\)\.\+\$\"/
+      ) do |matched|
+        before_expression = $~[:before_expression]
+        target_column = $~[:target_column]
+        head_value = $~[:head_value]
+
+        replaced = "#{before_expression}&! #{target_column} @ \"#{head_value}\""
+        matched.scan(/\| *(\w+)/) do |except_keyword|
+          replaced << " &! #{target_column} @ \"#{except_keyword[0]}\""
+        end
+        replaced
       end
     end
   end
