@@ -189,10 +189,10 @@ module GroongaQueryLog
           @nullable_reference_number_accessors << accessor
         end
         parser.on("--[no-]rewrite_regular_expression",
-                  "Rewrite 'column1 @ \"keyword\" && column2 @~ " +
-                  "\"^(?!.*keyword1|keyword2|...).+$\"' " +
-                  "with 'column1 @ \"keyword\" &! column2 @ \"keyword1\" " +
-                  "&! column2 @ \"keyword2\" &! ...'",
+                  "Rewrite 'column1 @ \"keyword1\" && column2 @~ " +
+                  "\"^(?!.*keyword2|keyword3|...).+$\"' " +
+                  "with 'column1 @ \"keyword1\" &! column2 @ \"keyword2\" " +
+                  "&! column2 @ \"keyword3\" &! ...'",
                   "(#{@rewrite_regular_expression})") do |boolean|
           @rewrite_regular_expression = boolean
         end
