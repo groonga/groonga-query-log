@@ -112,14 +112,19 @@ class FilterRewriterTest < Test::Unit::TestCase
   end
 
   class RegularExpressionTest < self
-    def rewrite(filter)
+    def rewrite(filter, enabled = true)
       super(filter,
-            :rewrite_regular_expression => true)
+            :rewrite_regular_expression => enabled)
     end
 
     def test_rewrite_one
       assert_equal("column1 @ \"value1\" &! column2 @ \"value2\"",
                    rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\""))
+    end
+
+    def test_no_rewrite
+      assert_equal("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\"",
+                   rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\"", false))
     end
 
     def test_rewrite_multiple
