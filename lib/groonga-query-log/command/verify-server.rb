@@ -230,7 +230,7 @@ module GroongaQueryLog
           @options.rewrite_nullable_reference_number = boolean
         end
 
-        parser.on("--[no-]rewrite_regular_expression",
+        parser.on("--[no-]rewrite-regular-expression",
                   "Rewrite 'column1 @ \"keyword1\" && column2 @~ " +
                   "\"^(?!.*keyword2|keyword3|...).+$\"' " +
                   "with 'column1 @ \"keyword1\" &! column2 @ \"keyword2\" " +
