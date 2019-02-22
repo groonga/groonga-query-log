@@ -35,6 +35,9 @@ module GroongaQueryLog
       if @options[:rewrite_nullable_reference_number]
         rewritten = rewrite_nullable_reference_number(rewritten)
       end
+      if @options[:rewrite_not_or_regular_expression]
+        rewritten = rewrite_not_or_regular_expression(rewritten)
+      end
       rewritten
     end
 
@@ -72,6 +75,26 @@ module GroongaQueryLog
         if @nullable_reference_number_accessors.include?(accessor)
           sub_accessor = accessor.split(".")[0..-2].join(".")
           "(#{sub_accessor}._key == null ? 0 : #{accessor})"
+        else
+          matched
+        end
+      end
+    end
+
+    def rewrite_not_or_regular_expression(filter)
+      filter.gsub(/&& *(?<target_column>[a-zA-Z0-9_.]+) *@~ *"(?<pattern>.*?)"/) do |matched|
+        target_column = $LAST_MATCH_INFO[:target_column]
+        pattern = $LAST_MATCH_INFO[:pattern]
+
+        case pattern
+        when /\A(?<header>(?:\^|\\A)\(\?\!\.\*)
+                (?<body>.+)
+                (?<footer>\)\.[+*](?:\$|\\z))\z/x
+          body = $LAST_MATCH_INFO[:body]
+          conditions = body.split("|").collect do |word|
+            "&! #{target_column} @ \"#{word.strip}\""
+          end
+          conditions.join(" ")
         else
           matched
         end

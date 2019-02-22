@@ -50,6 +50,7 @@ module GroongaQueryLog
         @vector_accessors = []
         @rewrite_nullable_reference_number = false
         @nullable_reference_number_accessors = []
+        @rewrite_not_or_regular_expression = false
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -187,6 +188,14 @@ module GroongaQueryLog
                   "specifying this option multiple times") do |accessor|
           @nullable_reference_number_accessors << accessor
         end
+        parser.on("--[no-]rewrite-not-or-regular-expression",
+                  "Rewrite 'column1 @ \"keyword1\" && column2 @~ " +
+                  "\"^(?!.*keyword2|keyword3|...).+$\"' " +
+                  "with 'column1 @ \"keyword1\" &! column2 @ \"keyword2\" " +
+                  "&! column2 @ \"keyword3\" &! ...'",
+                  "(#{@rewrite_not_or_regular_expression})") do |boolean|
+          @rewrite_not_or_regular_expression = boolean
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -252,6 +261,8 @@ module GroongaQueryLog
             @rewrite_nullable_reference_number,
           :nullable_reference_number_accessors =>
             @nullable_reference_number_accessors,
+          :rewrite_not_or_regular_expression =>
+            @rewrite_not_or_regular_expression,
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,
         }
@@ -546,6 +557,9 @@ module GroongaQueryLog
           accessors.each do |accessor|
             command_line << "--nullable-reference-number-accessor"
             command_line << accessor
+          end
+          if @options[:rewrite_not_or_regular_expression]
+            command_line << "--rewrite-not-or-regular-expression"
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"
