@@ -122,11 +122,6 @@ class FilterRewriterTest < Test::Unit::TestCase
                    rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\""))
     end
 
-    def test_no_rewrite
-      assert_equal("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\"",
-                   rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2).+$\"", false))
-    end
-
     def test_rewrite_multiple
       assert_equal("column1 @ \"value1\" &! column2 @ \"value2\" &! column2 @ \"value3\" &! column2 @ \"value4\"",
                    rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2 | value3 | value4).+$\""))
