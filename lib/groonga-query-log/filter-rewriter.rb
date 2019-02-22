@@ -90,9 +90,7 @@ module GroongaQueryLog
         when /\A(?<header>(?:\^|\\A)\(\?\!\.\*)
                 (?<body>.+)
                 (?<footer>\)\.[+*](?:\$|\\z))\z/x
-          header = $LAST_MATCH_INFO[:header]
           body = $LAST_MATCH_INFO[:body]
-          footer = $LAST_MATCH_INFO[:footer]
           conditions = body.split("|").collect do |word|
             "&! #{target_column} @ \"#{word.strip}\""
           end
