@@ -82,18 +82,24 @@ module GroongaQueryLog
     end
 
     def rewrite_regular_expression(filter)
-      filter.gsub(
-        /(?<before_expression>.+) *&& *(?<target_column>\w+) *@~ *\"\^\(\?\!\.\*(?<head_value>\w+) *(?:\| *\w+ *)*\)\.\+\$\"/
-      ) do |matched|
-        before_expression = $~[:before_expression]
-        target_column = $~[:target_column]
-        head_value = $~[:head_value]
+      filter.gsub(/&& *(?<target_column>[a-zA-Z0-9_.]+) *@~ *"(?<pattern>.*?)"/) do |matched|
+        target_column = $LAST_MATCH_INFO[:target_column]
+        pattern = $LAST_MATCH_INFO[:pattern]
 
-        replaced = "#{before_expression}&! #{target_column} @ \"#{head_value}\""
-        matched.scan(/\| *(\w+)/) do |except_keyword|
-          replaced << " &! #{target_column} @ \"#{except_keyword[0]}\""
+        case pattern
+        when /\A(?<header>(?:\^|\\A)\(\?\!\.\*)
+                (?<body>.+)
+                (?<footer>\)\.[+*](?:\$|\\z))\z/x
+          header = $LAST_MATCH_INFO[:header]
+          body = $LAST_MATCH_INFO[:body]
+          footer = $LAST_MATCH_INFO[:footer]
+          conditions = body.split("|").collect do |word|
+            "&! #{target_column} @ \"#{word.strip}\""
+          end
+          conditions.join(" ")
+        else
+          matched
         end
-        replaced
       end
     end
   end
