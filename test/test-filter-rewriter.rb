@@ -114,7 +114,7 @@ class FilterRewriterTest < Test::Unit::TestCase
   class RegularExpressionTest < self
     def rewrite(filter, enabled = true)
       super(filter,
-            :rewrite_regular_expression => enabled)
+            :rewrite_not_or_regular_expression => enabled)
     end
 
     def test_rewrite_one

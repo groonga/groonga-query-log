@@ -235,8 +235,8 @@ module GroongaQueryLog
                   "\"^(?!.*keyword2|keyword3|...).+$\"' " +
                   "with 'column1 @ \"keyword1\" &! column2 @ \"keyword2\" " +
                   "&! column2 @ \"keyword3\" &! ...'",
-                  "(#{@options.rewrite_regular_expression?})") do |boolean|
-          @options.rewrite_regular_expression = boolean
+                  "(#{@options.rewrite_not_or_regular_expression?})") do |boolean|
+          @options.rewrite_not_or_regular_expression = boolean
         end
 
         parser.on("--nullable-reference-number-accessor=ACCESSOR",
