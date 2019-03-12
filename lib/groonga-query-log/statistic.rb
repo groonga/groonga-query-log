@@ -121,14 +121,17 @@ module GroongaQueryLog
         "return_code" => return_code,
         "slow" => slow?,
       }
-      arguments = command.arguments.collect do |key, value|
-        {"key" => key, "value" => value}
+      if command
+        data["command"] = {
+          "raw" => raw_command,
+          "name" => command.name,
+          "parameters" => command_arguments,
+        }
+      else
+        data["command"] = {
+          "raw" => raw_command
+        }
       end
-      data["command"] = {
-        "raw" => raw_command,
-        "name" => command.name,
-        "parameters" => arguments,
-      }
       operations = []
       each_operation do |operation|
         operation_data = {}
@@ -191,6 +194,13 @@ module GroongaQueryLog
 
     def slow_operation?(elapsed)
       elapsed >= @slow_operation_threshold
+    end
+
+    def command_arguments
+      arguments = command.arguments.collect do |key, value|
+        {"key" => key, "value" => value}
+      end
+      arguments
     end
   end
 end
