@@ -197,10 +197,9 @@ module GroongaQueryLog
     end
 
     def command_arguments
-      arguments = command.arguments.collect do |key, value|
+      command.arguments.collect do |key, value|
         {"key" => key, "value" => value}
       end
-      arguments
     end
   end
 end
