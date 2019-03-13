@@ -1,5 +1,24 @@
 # News
 
+## 1.4.0: 2019-03-13
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for rewriting "column1 @ \"keyword\" && column2 @~ \"^(?!.*keyword1|keyword2|...).+$\"".
+      Specify --rewrite-not-or-regular-expression option to enable it.
+
+### Fixes
+
+  * `groonga-query-log-check-crash`:
+
+    * Fixed missing nil check when request path is "/".
+
+  * `GroongaQueryLog::Statistic`:
+
+    * Fixed missing nil check in `#to_hash` when request path is "/".
+
 ## 1.3.9: 2018-11-20
 
 ### Improvements
