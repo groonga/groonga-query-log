@@ -6,7 +6,7 @@
 
   * `groonga-query-log-run-regression-test`:
 
-    * Added support for rewriting "column1 @ \"keyword\" && column2 @~ \"^(?!.*keyword1|keyword2|...).+$\"".
+    * Added support for rewriting `"column1 @ \"keyword\" && column2 @~ \"^(?!.*keyword1|keyword2|...).+$\""`.
       Specify --rewrite-not-or-regular-expression option to enable it.
 
 ### Fixes
