@@ -71,7 +71,6 @@ module GroongaQueryLog
         @smtp_auth_password = nil
         @smtp_starttls = false
         @smtp_port = 25
-
       end
 
       def run(command_line)
@@ -666,7 +665,6 @@ module GroongaQueryLog
       end
 
       class MailNotifier
-
         def initialize(success, elapsed_time, options)
           @success = success
           @elapsed_time = elapsed_time
