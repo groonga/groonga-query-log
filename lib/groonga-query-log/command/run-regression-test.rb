@@ -725,6 +725,7 @@ Date: #{Time.now.rfc2822}
 
 #{body}
           MAIL
+          return if @options[:skip_smtp]
           smtp = Net::SMTP.new(@options[:smtp_server], @options[:smtp_port])
           smtp.enable_starttls if @options[:smtp_starttls]
           smtp.start(@options[:smtp_server],
