@@ -669,6 +669,7 @@ module GroongaQueryLog
           @success = success
           @elapsed_time = elapsed_time
           @options = options
+          @path = @options[:path] || "results"
         end
 
         def notify
