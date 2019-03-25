@@ -334,7 +334,7 @@ module GroongaQueryLog
       end
 
       def notifier_options
-        options = {
+        {
           :smtp_server => @smtp_server,
           :smtp_auth_user => @smtp_auth_user,
           :smtp_auth_password => @smtp_auth_password,
