@@ -672,15 +672,13 @@ module GroongaQueryLog
           @path = @options[:path] || "results"
         end
 
-        def notify
+        def notify(output=nil)
           format_log = ""
-          Tempfile.open("format_stdout") do |output|
-            options = {:output => output}
-            command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
-            command.run(["results"])
-            output.rewind
-            format_log = output.read
-          end
+          @output = output || StringIO.new
+          options = {:output => @output}
+          command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
+          command.run([@path])
+          format_log = @output.string
 
           subject = @options[:mail_subject_on_success]
           content = format_elapsed_time
