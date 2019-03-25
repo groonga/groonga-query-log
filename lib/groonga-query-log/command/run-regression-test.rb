@@ -682,13 +682,9 @@ module GroongaQueryLog
 
           subject = @options[:mail_subject_on_success]
           content = format_elapsed_time
-          if @tester_result
-            content << "Done."
-          else
-            subject = @options[:mail_subject_on_failure]
-            content << "Report:"
-            content << format_log
-          end
+          subject = @options[:mail_subject_on_failure]
+          content << "Report:"
+          content << format_log
           send_mail(subject, content)
         end
 
