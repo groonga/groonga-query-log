@@ -665,9 +665,8 @@ module GroongaQueryLog
 
           format_log = ""
           @output = output || StringIO.new
-          options = {:output => @output}
-          command = GroongaQueryLog::Command::FormatRegressionTestLogs.new(options)
-          command.run([@path])
+          formetter = FormatRegressionTestLogs.new(output: @output)
+          formetter.run([@path])
           format_log = @output.string
 
           subject = @options[:mail_subject_on_success]
