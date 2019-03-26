@@ -90,10 +90,10 @@ module GroongaQueryLog
                             tester_options)
         success = tester.run
 
-        if @notifier_options[:mail_to]
-          notifier = MailNotifier.new(success, Time.now - @start_time, @notifier_options)
-          notifier.notify
-        end
+        notifier = MailNotifier.new(success,
+                                    Time.now - @start_time,
+                                    @notifier_options)
+        notifier.notify
 
         success
       end
@@ -661,6 +661,8 @@ module GroongaQueryLog
         end
 
         def notify(output=nil)
+          return unless @options[:mail_to]
+
           format_log = ""
           @output = output || StringIO.new
           options = {:output => @output}
