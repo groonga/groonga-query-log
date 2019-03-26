@@ -660,20 +660,22 @@ module GroongaQueryLog
           @path = @options[:path] || "results"
         end
 
-        def notify(output=nil)
+        def notify
           return unless @options[:mail_to]
 
-          format_log = ""
-          @output = output || StringIO.new
-          formetter = FormatRegressionTestLogs.new(output: @output)
+          output = StringIO.new
+          formetter = FormatRegressionTestLogs.new(output: output)
           formetter.run([@path])
-          format_log = @output.string
+          formatted_log = output.string
 
-          subject = @options[:mail_subject_on_success]
+          if @success
+            subject = @options[:mail_subject_on_success]
+          else
+            subject = @options[:mail_subject_on_failure]
+          end
           content = format_elapsed_time
-          subject = @options[:mail_subject_on_failure]
-          content << "Report:"
-          content << format_log
+          content << "Report:\n"
+          content << formatted_log
           send_mail(subject, content)
         end
 
@@ -693,24 +695,21 @@ module GroongaQueryLog
 
         def send_mail(subject, content)
           header = <<-HEADER
-X-Mailer: groonga-query-log test reporter
 MIME-Version: 1.0
+X-Mailer: groonga-query-log test reporter #{VERSION};
+  https://github.com/groonga/groonga-query-log
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 From: #{@options[:mail_from]}
 To: #{@options[:mail_to]}
 Subject: #{subject}
 Date: #{Time.now.rfc2822}
           HEADER
 
-          body = Base64.encode64(content)
-
           mail = <<-MAIL.gsub(/\r?\n/, "\r\n")
 #{header}
-
-#{body}
+#{content}
           MAIL
-          return if @options[:skip_smtp]
           smtp = Net::SMTP.new(@options[:smtp_server], @options[:smtp_port])
           smtp.enable_starttls if @options[:smtp_starttls]
           smtp.start(@options[:smtp_server],
