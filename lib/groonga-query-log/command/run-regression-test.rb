@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2019  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -25,8 +25,8 @@ require "time"
 require "base64"
 
 require "groonga-query-log"
-require "groonga-query-log/command/verify-server"
 require "groonga-query-log/command/format-regression-test-logs"
+require "groonga-query-log/command/verify-server"
 
 module GroongaQueryLog
   module Command
@@ -62,15 +62,17 @@ module GroongaQueryLog
 
         @read_timeout = Groonga::Client::Default::READ_TIMEOUT
 
-        @mail_subject_on_success = "Success"
-        @mail_subject_on_failure = "Failure"
-        @mail_from = "groonga-query-log@#{Socket.gethostname}"
-        @mail_to = nil
-        @smtp_server = "localhost"
-        @smtp_auth_user = nil
-        @smtp_auth_password = nil
-        @smtp_starttls = false
-        @smtp_port = 25
+        @notifier_options = {
+          mail_subject_on_success: "Success",
+          mail_subject_on_failure: "Failure",
+          mail_from: "groonga-query-log@#{Socket.gethostname}",
+          mail_to: nil,
+          smtp_server: "localhost",
+          smtp_auth_user: nil,
+          smtp_auth_password: nil,
+          smtp_starttls: false,
+          smtp_port: 25,
+        }
       end
 
       def run(command_line)
@@ -88,8 +90,8 @@ module GroongaQueryLog
                             tester_options)
         success = tester.run
 
-        if notifier_options[:mail_to]
-          notifier = MailNotifier.new(success, Time.now - @start_time, notifier_options)
+        if @notifier_options[:mail_to]
+          notifier = MailNotifier.new(success, Time.now - @start_time, @notifier_options)
           notifier.notify
         end
 
@@ -252,43 +254,43 @@ module GroongaQueryLog
         parser.separator("Notifications:")
         parser.on("--smtp-server=SERVER",
                   "Use SERVER as SMTP server",
-                  "(#{@smtp_server})") do |server|
-          @smtp_server = server
+                  "(#{@notifier_options[:smtp_server]})") do |server|
+          @notifier_options[:smtp_server] = server
         end
         parser.on("--smtp-auth-user=USER",
                   "Use USER for SMTP AUTH",
-                  "(#{@smtp_auth_user})") do |user|
-          @smtp_auth_user = user
+                  "(#{@notifier_options[:smtp_auth_user]})") do |user|
+          @notifier_options[:smtp_auth_user] = user
         end
         parser.on("--smtp-auth-password=PASSWORD",
                   "Use PASSWORD for SMTP AUTH",
-                  "(#{@smtp_auth_password})") do |password|
-          @smtp_auth_password = password
+                  "(#{@notifier_options[:smtp_auth_password]})") do |password|
+          @notifier_options[:smtp_auth_password] = password
         end
         parser.on("--[no-]smtp-starttls",
                   "Whether use StartTLS in SMTP or not",
-                  "(#{@smtp_starttls})") do |boolean|
-          @smtp_starttls = boolean
+                  "(#{@notifier_options[:smtp_starttls]})") do |boolean|
+          @notifier_options[:smtp_starttls] = boolean
         end
         parser.on("--smtp-port=PORT", Integer,
                   "Use PORT as SMTP server port",
-                  "(#{@smtp_port})") do |port|
-          @smtp_port = port
+                  "(#{@notifier_options[:smtp_port]})") do |port|
+          @notifier_options[:smtp_port] = port
         end
         parser.on("--mail-to=TO",
                   "Send a notification e-mail to TO",
-                  "(#{@mail_to})") do |to|
-          @mail_to = to
+                  "(#{@notifier_options[:mail_to]})") do |to|
+          @notifier_options[:mail_to] = to
         end
         parser.on("--mail-subject-on-success=SUBJECT",
                   "Use SUBJECT as subject for notification e-mail on success",
-                  "(#{@mail_subject_on_success})") do |subject|
-          @mail_subject_on_success = subject
+                  "(#{@notifier_options[:mail_subject_on_success]})") do |subject|
+          @notifier_options[:mail_subject_on_success] = subject
         end
         parser.on("--mail-subject-on-failure=SUBJECT",
                   "Use SUBJECT as subject for notification e-mail on failure",
-                  "(#{@mail_subject_on_failure})") do |subject|
-          @mail_subject_on_failure = subject
+                  "(#{@notifier_options[:mail_subject_on_failure]})") do |subject|
+          @notifier_options[:mail_subject_on_failure] = subject
         end
         parser
       end
@@ -331,20 +333,6 @@ module GroongaQueryLog
           :read_timeout => @read_timeout,
         }
         directory_options.merge(options)
-      end
-
-      def notifier_options
-        {
-          :smtp_server => @smtp_server,
-          :smtp_auth_user => @smtp_auth_user,
-          :smtp_auth_password => @smtp_auth_password,
-          :smtp_port => @smtp_port,
-          :smtp_starttls => @smtp_starttls,
-          :mail_subject_on_failure => @mail_subject_on_failure,
-          :mail_subject_on_success => @mail_subject_on_success,
-          :mail_from => @mail_from,
-          :mail_to => @mail_to
-        }
       end
 
       def old_groonga_server
