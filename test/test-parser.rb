@@ -280,15 +280,21 @@ class ParserTest < Test::Unit::TestCase
 2019-05-09 18:44:25.991431|0x7fff5e4a3060|<000000007759904 rc=0
       LOG
       operations = statistics.first.operations.collect do |operation|
-        operation[:name]
+        [operation[:name], operation[:raw_message]]
       end
       expected = [
-        "flush[Lexicon.sources_value]",
-        "flush[(anonymous:table:dat_key)]",
-        "flush[(anonymous:column:var_size)]",
-        "flush[(anonymous:table:hash_key)]",
-        "flush[(anonymous:column:var_size)]",
-        "flush[(DB)]",
+        ["flush[Lexicon.sources_value]",
+         "flush[Lexicon.sources_value]"],
+        ["flush[(anonymous:table:dat_key)]",
+         "flush[(anonymous:table:dat_key)]"],
+        ["flush[(anonymous:column:var_size)]",
+         "flush[(anonymous:column:var_size)]"],
+        ["flush[(anonymous:table:hash_key)]",
+         "flush[(anonymous:table:hash_key)]"],
+        ["flush[(anonymous:column:var_size)]",
+         "flush[(anonymous:column:var_size)]"],
+        ["flush[(DB)]",
+         "flush[(DB)]"],
       ]
       assert_equal(expected, operations)
     end
@@ -302,10 +308,15 @@ class ParserTest < Test::Unit::TestCase
 2017-12-11 09:37:04.517999|0x7fffc430dff0|<000000001061996 rc=-22
       LOG
       operations = statistics.first.operations.collect do |operation|
-        [operation[:name], operation[:n_records], operation[:extra]]
+        [
+          operation[:name],
+          operation[:n_records],
+          operation[:extra],
+          operation[:raw_message],
+        ]
       end
       expected = [
-        ["load", 3, "[1][2][3]"],
+        ["load", 3, "[1][2][3]", "load(3): [1][2][3]"],
       ]
       assert_equal(expected, operations)
     end

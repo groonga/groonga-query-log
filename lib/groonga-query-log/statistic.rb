@@ -85,6 +85,7 @@ module GroongaQueryLog
           :n_records => operation[:n_records],
           :extra => operation[:extra],
           :slow? => slow_operation?(relative_elapsed_in_seconds),
+          :raw_message => operation[:raw_message],
         }
         yield parsed_operation
       end

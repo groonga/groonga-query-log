@@ -119,11 +119,13 @@ module GroongaQueryLog
         return unless /\A
                        (?<elapsed>\d+)
                        \ 
-                       (?<name>[a-zA-Z._-]+)
-                       (?<sub_name_before>\[.+?\])?
-                       (?:\((?<n_records>\d+)\))?
-                       (?<sub_name_after>\[.+?\])?
-                       (?::\ (?<extra>.*))?
+                       (?<raw_message>
+                         (?<name>[a-zA-Z._-]+)
+                         (?<sub_name_before>\[.+?\])?
+                         (?:\((?<n_records>\d+)\))?
+                         (?<sub_name_after>\[.+?\])?
+                         (?::\ (?<extra>.*))?
+                       )
                       /x =~ rest
         statistic = @parsing_statistics[context_id]
         return if statistic.nil?
@@ -131,7 +133,8 @@ module GroongaQueryLog
         statistic.add_operation(:name => full_name,
                                 :elapsed => elapsed.to_i,
                                 :n_records => n_records.to_i,
-                                :extra => extra)
+                                :extra => extra,
+                                :raw_message => raw_message)
       when "<"
         return unless /\A(\d+) rc=(-?\d+)/ =~ rest
         elapsed = $1
