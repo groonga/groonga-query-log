@@ -12,6 +12,8 @@
 
   * Added `:raw_message` to operation.
 
+  * Added support for `drilldowns[LABEL].adjust`.
+
 ## 1.4.0: 2019-03-13
 
 ### Improvements
