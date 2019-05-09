@@ -298,6 +298,34 @@ class ParserTest < Test::Unit::TestCase
       ]
       assert_equal(expected, operations)
     end
+
+    def test_labeled_drilldown
+      statistics = parse(<<-LOG)
+2019-05-09 19:00:12.085062|0x7ffdf54d2180|>select Memos   --limit 0   --output_columns _id   --drilldowns[tags].keys tags   --drilldowns[tags].adjuster 'categories @ \"full-text-search\" * 2 + categories @ \"mysql\"'   --drilldowns[tags].output_columns _key,_nsubrecs,_score --output_type json
+2019-05-09 19:00:12.085165|0x7ffdf54d2180|:000000000105785 select(3)
+2019-05-09 19:00:12.085664|0x7ffdf54d2180|:000000000605514 drilldowns[tags].adjust(3)
+2019-05-09 19:00:12.085672|0x7ffdf54d2180|:000000000611117 drilldowns[tags](3)
+2019-05-09 19:00:12.085696|0x7ffdf54d2180|:000000000635356 output(0)
+2019-05-09 19:00:12.085722|0x7ffdf54d2180|:000000000661819 output.drilldowns[tags](3)
+2019-05-09 19:00:12.085768|0x7ffdf54d2180|<000000000707717 rc=0
+      LOG
+      operations = statistics.first.operations.collect do |operation|
+        [operation[:name], operation[:raw_message]]
+      end
+      expected = [
+        ["select",
+         "select(3)"],
+        ["drilldowns[tags].adjust",
+         "drilldowns[tags].adjust(3)"],
+        ["drilldowns[tags]",
+         "drilldowns[tags](3)"],
+        ["output",
+         "output(0)"],
+        ["output.drilldowns[tags]",
+         "output.drilldowns[tags](3)"],
+      ]
+      assert_equal(expected, operations)
+    end
   end
 
   class ExtraFieldTest < self
