@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2019  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -264,6 +264,33 @@ class ParserTest < Test::Unit::TestCase
         ]
         assert_equal(expected, operations)
       end
+    end
+  end
+
+  class NameFieldTest < self
+    def test_io_flush
+      statistics = parse(<<-LOG)
+2019-05-09 18:44:25.983672|0x7fff5e4a3060|>io_flush Lexicon.sources_value --output_type json
+2019-05-09 18:44:25.989502|0x7fff5e4a3060|:000000005833721 flush[Lexicon.sources_value]
+2019-05-09 18:44:25.989519|0x7fff5e4a3060|:000000005848066 flush[(anonymous:table:dat_key)]
+2019-05-09 18:44:25.990491|0x7fff5e4a3060|:000000006820471 flush[(anonymous:column:var_size)]
+2019-05-09 18:44:25.990496|0x7fff5e4a3060|:000000006824538 flush[(anonymous:table:hash_key)]
+2019-05-09 18:44:25.991425|0x7fff5e4a3060|:000000007753922 flush[(anonymous:column:var_size)]
+2019-05-09 18:44:25.991427|0x7fff5e4a3060|:000000007755618 flush[(DB)]
+2019-05-09 18:44:25.991431|0x7fff5e4a3060|<000000007759904 rc=0
+      LOG
+      operations = statistics.first.operations.collect do |operation|
+        operation[:name]
+      end
+      expected = [
+        "flush[Lexicon.sources_value]",
+        "flush[(anonymous:table:dat_key)]",
+        "flush[(anonymous:column:var_size)]",
+        "flush[(anonymous:table:hash_key)]",
+        "flush[(anonymous:column:var_size)]",
+        "flush[(DB)]",
+      ]
+      assert_equal(expected, operations)
     end
   end
 

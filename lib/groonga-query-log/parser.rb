@@ -116,17 +116,21 @@ module GroongaQueryLog
         statistic.start(time_stamp, rest)
         @parsing_statistics[context_id] = statistic
       when ":"
-        return unless /\A(\d+) (.+)\((\d+)\)(\[.+\])?(?:: (.*))?/ =~ rest
-        elapsed = $1
-        name = $2
-        name += $4 if $4
-        n_records = $3.to_i
-        extra = $5
+        return unless /\A
+                       (?<elapsed>\d+)
+                       \ 
+                       (?<name>[a-zA-Z._-]+)
+                       (?<sub_name_before>\[.+?\])?
+                       (?:\((?<n_records>\d+)\))?
+                       (?<sub_name_after>\[.+?\])?
+                       (?::\ (?<extra>.*))?
+                      /x =~ rest
         statistic = @parsing_statistics[context_id]
         return if statistic.nil?
-        statistic.add_operation(:name => name,
+        full_name = "#{name}#{sub_name_before}#{sub_name_after}"
+        statistic.add_operation(:name => full_name,
                                 :elapsed => elapsed.to_i,
-                                :n_records => n_records,
+                                :n_records => n_records.to_i,
                                 :extra => extra)
       when "<"
         return unless /\A(\d+) rc=(-?\d+)/ =~ rest
