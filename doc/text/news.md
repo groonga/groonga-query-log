@@ -1,5 +1,17 @@
 # News
 
+## 1.4.1: 2019-05-09
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for notifying by e-mail.
+
+  * Added support for `flush`.
+
+  * Added `:raw_message` to operation.
+
 ## 1.4.0: 2019-03-13
 
 ### Improvements
