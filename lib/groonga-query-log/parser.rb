@@ -121,7 +121,7 @@ module GroongaQueryLog
                        \ 
                        (?<raw_message>
                          (?<name>[a-zA-Z._-]+)
-                         (?<sub_name_before>\[.+?\][^(]*)?
+                         (?<sub_name_before>\[.+?\](?:[a-zA-Z._-]*))?
                          (?:\((?<n_records>\d+)\))?
                          (?<sub_name_after>\[.+?\])?
                          (?::\ (?<extra>.*))?
