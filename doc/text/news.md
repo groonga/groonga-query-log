@@ -1,5 +1,11 @@
 # News
 
+## 1.4.2: 2019-05-13
+
+### Improvements
+
+  * Added support for `drilldowns[LABEL].columns[LABEL]`.
+
 ## 1.4.1: 2019-05-09
 
 ### Improvements
