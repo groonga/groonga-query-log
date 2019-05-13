@@ -326,6 +326,37 @@ class ParserTest < Test::Unit::TestCase
       ]
       assert_equal(expected, operations)
     end
+
+    def test_labeled_drilldown_sort
+      statistics = parse(<<-LOG)
+2019-05-13 16:18:34.272078|0x7ffcb639c7f0|>select Memos   --filter true   --drilldowns[tag].keys tag,date   --drilldowns[tag].output_columns _key[0],_key[1],_nsubrecs   --drilldowns[tag].sort_keys _value.tag._key,_value.date --output_type json
+2019-05-13 16:18:34.297587|0x7ffcb639c7f0|:000000025513058 filter(5): true
+2019-05-13 16:18:34.297595|0x7ffcb639c7f0|:000000025518645 select(5)
+2019-05-13 16:18:34.297657|0x7ffcb639c7f0|:000000025581524 drilldowns[tag](4)
+2019-05-13 16:18:34.297756|0x7ffcb639c7f0|:000000025680289 output(5)
+2019-05-13 16:18:34.297828|0x7ffcb639c7f0|:000000025751970 drilldowns[tag].sort[_value.tag._key,_value.date](4)
+2019-05-13 16:18:34.297911|0x7ffcb639c7f0|:000000025835741 output.drilldowns[tag](4)
+2019-05-13 16:18:34.297980|0x7ffcb639c7f0|<000000025904314 rc=0
+      LOG
+      operations = statistics.first.operations.collect do |operation|
+        [operation[:name], operation[:raw_message]]
+      end
+      expected = [
+        ["filter",
+         "filter(5): true"],
+        ["select",
+         "select(5)"],
+        ["drilldowns[tag]",
+         "drilldowns[tag](4)"],
+        ["output",
+         "output(5)"],
+        ["drilldowns[tag].sort[_value.tag._key,_value.date]",
+         "drilldowns[tag].sort[_value.tag._key,_value.date](4)"],
+        ["output.drilldowns[tag]",
+         "output.drilldowns[tag](4)"],
+      ]
+      assert_equal(expected, operations)
+    end
   end
 
   class ExtraFieldTest < self
