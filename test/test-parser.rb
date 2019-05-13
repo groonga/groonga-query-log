@@ -326,6 +326,49 @@ class ParserTest < Test::Unit::TestCase
       ]
       assert_equal(expected, operations)
     end
+
+    def test_labeled_drilldown_columns
+      statistics = parse(<<-LOG)
+2019-05-13 17:56:57.353124|0x7ffe678ba4e0|>logical_select Logs   --shard_key timestamp   --output_columns _id   --limit 0   --drilldowns[item].keys items   --drilldowns[item].sort_keys price   --drilldowns[item].output_columns _key,_nsubrecs,price,price_with_tax   --drilldowns[item].columns[price_with_tax].stage initial   --drilldowns[item].columns[price_with_tax].type UInt32   --drilldowns[item].columns[price_with_tax].flags COLUMN_SCALAR   --drilldowns[item].columns[price_with_tax].value 'price * 1.08'   --drilldowns[real_price].table item   --drilldowns[real_price].keys price_with_tax --output_type json
+2019-05-13 17:56:57.355173|0x7ffe678ba4e0|:000000002051683 select(2)[Logs_20170315]
+2019-05-13 17:56:57.355191|0x7ffe678ba4e0|:000000002068357 select(2)[Logs_20170316]
+2019-05-13 17:56:57.355204|0x7ffe678ba4e0|:000000002081732 select(2)[Logs_20170317]
+2019-05-13 17:56:57.355420|0x7ffe678ba4e0|:000000002298949 drilldowns[item](6)
+2019-05-13 17:56:57.355571|0x7ffe678ba4e0|:000000002449229 drilldowns[item].columns[price_with_tax](6)
+2019-05-13 17:56:57.355671|0x7ffe678ba4e0|:000000002548867 drilldowns[real_price](3)
+2019-05-13 17:56:57.355723|0x7ffe678ba4e0|:000000002600511 output(0)
+2019-05-13 17:56:57.355780|0x7ffe678ba4e0|:000000002657685 drilldowns[item].sort(6): price
+2019-05-13 17:56:57.355842|0x7ffe678ba4e0|:000000002720445 output.drilldowns[item](6)
+2019-05-13 17:56:57.355878|0x7ffe678ba4e0|:000000002755476 output.drilldowns[real_price](3)
+2019-05-13 17:56:57.355981|0x7ffe678ba4e0|<000000002859294 rc=0
+      LOG
+      operations = statistics.first.operations.collect do |operation|
+        [operation[:name], operation[:raw_message]]
+      end
+      expected = [
+        ["select[Logs_20170315]",
+         "select(2)[Logs_20170315]"],
+        ["select[Logs_20170316]",
+         "select(2)[Logs_20170316]"],
+        ["select[Logs_20170317]",
+         "select(2)[Logs_20170317]"],
+        ["drilldowns[item]",
+         "drilldowns[item](6)"],
+        ["drilldowns[item].columns[price_with_tax]",
+         "drilldowns[item].columns[price_with_tax](6)"],
+        ["drilldowns[real_price]",
+         "drilldowns[real_price](3)"],
+        ["output",
+         "output(0)"],
+        ["drilldowns[item].sort",
+         "drilldowns[item].sort(6): price"],
+        ["output.drilldowns[item]",
+         "output.drilldowns[item](6)"],
+        ["output.drilldowns[real_price]",
+         "output.drilldowns[real_price](3)"]
+      ]
+      assert_equal(expected, operations)
+    end
   end
 
   class ExtraFieldTest < self
