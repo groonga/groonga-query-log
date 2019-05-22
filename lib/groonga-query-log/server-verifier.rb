@@ -333,7 +333,7 @@ module GroongaQueryLog
         rewrite_vector_equal? or
           rewrite_vector_not_equal_empty_string? or
           rewrite_nullable_reference_number? or
-          rewrite_not_or_regular_expression
+          rewrite_not_or_regular_expression?
       end
 
       def to_filter_rewriter_options
