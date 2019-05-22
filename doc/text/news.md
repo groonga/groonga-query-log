@@ -1,5 +1,12 @@
 # News
 
+## 1.4.3: 2019-05-22
+
+### Fixes
+
+  * `server-verifier`:
+    * Fix a bug that failure execute test when there is no "--rewrite-not-or-regular-expression" option
+
 ## 1.4.2: 2019-05-13
 
 ### Improvements
