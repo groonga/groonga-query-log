@@ -137,4 +137,31 @@ class FilterRewriterTest < Test::Unit::TestCase
                    rewrite("column1 @ \"value1\" && column2 @~ \"^(?!.*value2 | value3 | value4).+$\""))
     end
   end
+
+  class AndNotOperatorTest < self
+    def rewrite(filter, enabled = true)
+      super(filter,
+            :rewrite_and_not_operator => enabled)
+    end
+
+    def test_rewrite_one
+      assert_equal("(column1 @ \"value1\") &! (column2 @ \"value2\")",
+                   rewrite("(column1 @ \"value1\") && ! (column2 @ \"value2\")"))
+    end
+
+    def test_reference
+      assert_equal("(column1 @ \"value1\") &! (reference.column2 @ \"value2\")",
+                   rewrite("(column1 @ \"value1\") && ! (reference.column2 @ \"value2\")"))
+    end
+
+    def test_under_score
+      assert_equal("(column1 @ \"value1\") &! (column_2 @ \"value2\")",
+                   rewrite("(column1 @ \"value1\") && ! (column_2 @ \"value2\")"))
+    end
+
+    def test_rewrite_multiple
+      assert_equal("(column1 @ \"value1\") &! (column2 @ \"value2\") &! (column2 @ \"value3\")",
+                   rewrite("(column1 @ \"value1\") && ! (column2 @ \"value2\") && ! (column2 @ \"value3\")"))
+    end
+  end
 end

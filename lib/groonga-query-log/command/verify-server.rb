@@ -239,6 +239,15 @@ module GroongaQueryLog
           @options.rewrite_not_or_regular_expression = boolean
         end
 
+        parser.on("--[no-]rewrite-and-not-operator",
+                  "Rewrite '(column1 @ \"keyword1\") && !(column2 @ " +
+                  "\"keyword2\")' " +
+                  "with '(column1 @ \"keyword1\") &! (column2 @ " +
+                  "\"keyword2\")'",
+                  "(#{@options.rewrite_and_not_operator?})") do |boolean|
+          @options.rewrite_and_not_operator = boolean
+        end
+
         parser.on("--nullable-reference-number-accessor=ACCESSOR",
                   "Mark ACCESSOR as rewrite nullable reference number targets",
                   "You can specify multiple accessors by",
