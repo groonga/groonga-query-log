@@ -38,6 +38,9 @@ module GroongaQueryLog
       if @options[:rewrite_not_or_regular_expression]
         rewritten = rewrite_not_or_regular_expression(rewritten)
       end
+      if @options[:rewrite_and_not_operator]
+        rewritten = rewrite_and_not_operator(rewritten)
+      end
       rewritten
     end
 
@@ -99,6 +102,10 @@ module GroongaQueryLog
           matched
         end
       end
+    end
+
+    def rewrite_and_not_operator(filter)
+      filter.gsub(/&& *!/, "&!")
     end
   end
 end
