@@ -72,7 +72,7 @@ module GroongaQueryLog
           end
         end
 
-        if @options[:output].kind_of?(String)
+        if @options[:output].is_a?(String)
           if @options[:output] == "-"
             @output = $stdio
           else
