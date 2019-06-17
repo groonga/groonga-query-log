@@ -74,39 +74,39 @@ old query log and new query log must be specified.
     end
 
     def test_nonexistent_input_old_query
-      expected = <<-OUTPUT
-invalid option: --input-old-query=#{fixture_path("nonexsistent.log")}
-      OUTPUT
       actual = run_command_with_stderr do
         @command.run([
-          "--input-old-query=" + fixture_path("nonexsistent.log")
+          fixture_path("nonexsistent.log"),
+          fixture_path("query2.log")
         ])
       end
-      assert_equal(expected, actual)
+      assert_equal(<<-OUTPUT, actual)
+query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
+      OUTPUT
     end
 
     def test_nonexistent_input_new_query
-      expected = <<-OUTPUT
-invalid option: --input-new-query=#{fixture_path("nonexsistent.log")}
-      OUTPUT
       actual = run_command_with_stderr do
         @command.run([
-          "--input-new-query=" + fixture_path("nonexsistent.log")
+          fixture_path("query1.log"),
+          fixture_path("nonexsistent.log")
         ])
       end
-      assert_equal(expected, actual)
+      assert_equal(<<-OUTPUT, actual)
+query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
+      OUTPUT
     end
 
     def test_output
       path = "/tmp/output"
       @command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0",
-        "--output=#{path}"
+        "--output=#{path}",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
@@ -126,13 +126,13 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("nquery.log"),
-        "--input-new-query=" + fixture_path("nquery2.log"),
         "--n-entries=1",
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0",
+        fixture_path("nquery.log"),
+        fixture_path("nquery2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
@@ -154,12 +154,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=0.0",
         "--slow-operation-ratio=0.0",
         "--slow-response-threshold=0.0",
-        "--slow-operation-threshold=0.0"
+        "--slow-operation-threshold=0.0",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
@@ -178,12 +178,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=20",
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0",
-        "--slow-operation-threshold=0"
+        "--slow-operation-threshold=0",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
       assert_equal(expected, output.string)
@@ -194,12 +194,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=0",
         "--slow-operation-ratio=10",
         "--slow-response-threshold=0",
-        "--slow-operation-threshold=0"
+        "--slow-operation-threshold=0",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
@@ -218,12 +218,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0.02",
-        "--slow-operation-threshold=0"
+        "--slow-operation-threshold=0",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
       assert_equal(expected, output.string)
@@ -234,12 +234,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--input-old-query=" + fixture_path("query1.log"),
-        "--input-new-query=" + fixture_path("query2.log"),
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
         "--slow-response-threshold=0",
-        "--slow-operation-threshold=0.001"
+        "--slow-operation-threshold=0.001",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
@@ -261,11 +261,11 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 
     def test_ignored_cache
       @command.run([
-        "--input-old-query=" + fixture_path("cache.log"),
-        "--input-new-query=" + fixture_path("cache.log"),
         "--slow-response-ratio=0",
         "--slow-operation-ratio=0",
-        "--slow-response-threshold=0"
+        "--slow-response-threshold=0",
+        fixture_path("cache.log"),
+        fixture_path("cache.log")
       ])
       expected = "Summary: slow response: 0/0(NaN%) slow operation: 0/0(NaN%) cached: 1\n"
       assert_equal(expected, @output.string)
