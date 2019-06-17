@@ -31,7 +31,7 @@ class CheckPerformanceRegressionCommandTest < Test::Unit::TestCase
   sub_test_case("options") do
 
     MISSING_QUERY_LOG_ERROR = <<-OUTPUT
-query logs is not specified. use --input-old-query and --input-new-query
+old query log and new query log must be specified.
     OUTPUT
 
     def run_command_with_stderr
@@ -53,19 +53,21 @@ query logs is not specified. use --input-old-query and --input-new-query
       assert_equal(MISSING_QUERY_LOG_ERROR, actual)
     end
 
-    def test_no_input_old_query
+    def test_too_few_query_logs
       actual = run_command_with_stderr do
         @command.run([
-          "--input-new-query=" + fixture_path("query2.log")
+          fixture_path("query1.log")
         ])
       end
       assert_equal(MISSING_QUERY_LOG_ERROR, actual)
     end
 
-    def test_no_input_new_query
+    def test_too_many_query_logs
       actual = run_command_with_stderr do
         @command.run([
-          "--input-old-query=" + fixture_path("query1.log")
+          fixture_path("query1.log"),
+          fixture_path("query2.log"),
+          fixture_path("query1.log")
         ])
       end
       assert_equal(MISSING_QUERY_LOG_ERROR, actual)
