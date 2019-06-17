@@ -32,11 +32,11 @@ module GroongaQueryLog
       def initialize(options={})
         setup_options
         @output = options[:output] || $stdout
-        @n_process_query = 0
+        @n_processed_queries = 0
         @n_slow_response = 0
         @n_slow_operation = 0
-        @n_process_operation = 0
-        @n_cached_query = 0
+        @n_processed_operations = 0
+        @n_cached_queries = 0
       end
 
       def run(arguments)
@@ -82,7 +82,7 @@ module GroongaQueryLog
           b[:ratio] <=> a[:ratio]
         end
 
-        @n_process_query = old_queries.keys.count
+        @n_processed_queries = old_queries.keys.count
 
         statistics.each do |statistic|
           query = statistic[:query]
@@ -101,7 +101,7 @@ module GroongaQueryLog
             new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
             old_operation_nsecs.each_with_index do |operation, index|
               new_operation = new_operation_nsecs[index]
-              @n_process_operation += 1
+              @n_processed_operations += 1
               if slow_operation?(operation[:elapsed], new_operation[:elapsed])
                 @n_slow_operation += 1
                 @output.puts("    Operation: %s %s Context: %s" % [
@@ -116,11 +116,11 @@ module GroongaQueryLog
         end
 
         @output.puts("Summary: slow response: %d/%d(%.2f%%) slow operation: %d/%d(%.2f%%) cached: %d" % [
-                       @n_slow_response, @n_process_query,
-                       @n_slow_response / @n_process_query.to_f * 100,
-                       @n_slow_operation, @n_process_operation,
-                       @n_slow_operation / @n_process_operation.to_f * 100,
-                       @n_cached_query,
+                       @n_slow_response, @n_processed_queries,
+                       @n_slow_response / @n_processed_queries.to_f * 100,
+                       @n_slow_operation, @n_processed_operations,
+                       @n_slow_operation / @n_processed_operations.to_f * 100,
+                       @n_cached_queries,
                      ])
 
         if @output.kind_of?(File)
@@ -320,7 +320,7 @@ module GroongaQueryLog
         old_statistics.count.times do |i|
           next if i > new_statistics.count - 1
           if cached_query?(old_statistics[i])
-            @n_cached_query += 1
+            @n_cached_queries += 1
             next
           end
           next if different_query?(old_statistics[i], new_statistics[i])
