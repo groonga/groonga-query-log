@@ -1,4 +1,3 @@
-# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
