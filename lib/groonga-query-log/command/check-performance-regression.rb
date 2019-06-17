@@ -40,16 +40,36 @@ module GroongaQueryLog
       end
 
       def run(arguments)
+        paths = []
         begin
-          @option_parser.parse!(arguments)
+          paths = @option_parser.parse!(arguments)
         rescue OptionParser::InvalidOption => error
           $stderr.puts(error)
           return false
         end
 
-        unless @options[:input_old_query] and @options[:input_new_query]
-          $stderr.puts("query logs is not specified. use --input-old-query and --input-new-query")
+        if paths.size != 2
+          $stderr.puts("old query log and new query log must be specified.")
           return false
+        end
+
+        paths.each_with_index do |path, index|
+          if File.directory?(path)
+            if index == 0
+              @options[:input_old_query] = Dir.glob("#{path}/*.log")
+            else
+              @options[:input_new_query] = Dir.glob("#{path}/*.log")
+            end
+          elsif File.exist?(path)
+            if index == 0
+              @options[:input_old_query] = [path]
+            else
+              @options[:input_new_query] = [path]
+            end
+          else
+            $stderr.puts("query log path doesn't exist: <#{path}>")
+            return false
+          end
         end
 
         if @options[:output].kind_of?(String)
@@ -226,6 +246,7 @@ module GroongaQueryLog
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
+          parser.banner += " OLD_QUERY_LOG NEW_QUERY_LOG"
 
           parser.on("-n", "--n-entries=N",
                     Integer,
@@ -251,30 +272,6 @@ module GroongaQueryLog
               end
             elsif not path.empty?
               @options[:input_filter_query] = [path]
-            else
-              raise OptionParser::InvalidOption.new("path <#{path}> doesn't exist")
-            end
-          end
-
-          parser.on("--input-old-query=PATH",
-                    "Use PATH as old input query log or PATH to old query log's directory.",
-                    "(#{@options[:input_old_query]})") do |path|
-            if File.directory?(path)
-              @options[:input_old_query] = Dir.glob("#{path}/*.log")
-            elsif File.exist?(path)
-              @options[:input_old_query] = [path]
-            else
-              raise OptionParser::InvalidOption.new("path <#{path}> doesn't exist")
-            end
-          end
-
-          parser.on("--input-new-query=PATH",
-                    "Use PATH as new input query log or PATH to new query log's directory",
-                    "(#{@options[:input_new_query]})") do |path|
-            if File.directory?(path)
-              @options[:input_new_query] = Dir.glob("#{path}/*.log")
-            elsif File.exist?(path)
-              @options[:input_new_query] = [path]
             else
               raise OptionParser::InvalidOption.new("path <#{path}> doesn't exist")
             end
