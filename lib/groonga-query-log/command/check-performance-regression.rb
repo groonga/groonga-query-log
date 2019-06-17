@@ -76,7 +76,7 @@ module GroongaQueryLog
           if @options[:output] == "-"
             @output = $stdio
           else
-            @output = File.open(@options[:output], "w+")
+            @output = File.open(@options[:output], "w")
           end
         end
 
