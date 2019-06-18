@@ -86,7 +86,7 @@ module GroongaQueryLog
         old_queries, new_queries = group_statistics(old_statistics, new_statistics)
 
         statistics = []
-        old_queries.keys.each do |query|
+        old_queries.each_key do |query|
           old_elapsed_nsec = average_elapsed_nsec(old_queries[query])
           new_elapsed_nsec = average_elapsed_nsec(new_queries[query])
           ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
