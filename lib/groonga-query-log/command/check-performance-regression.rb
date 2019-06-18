@@ -98,9 +98,7 @@ module GroongaQueryLog
           }
         end
 
-        statistics.sort! do |a, b|
-          b[:ratio] <=> a[:ratio]
-        end
+        statistics = statistics.sort_by { |statistic[:ratio] }
 
         @n_processed_queries = old_queries.keys.count
 
