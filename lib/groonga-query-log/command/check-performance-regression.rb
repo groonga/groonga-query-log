@@ -317,7 +317,7 @@ module GroongaQueryLog
           next if different_query?(old_statistics[i], new_statistics[i])
 
           raw_command = old_statistics[i].raw_command
-          next if not filter_query?(raw_command)
+          next unless filter_query?(raw_command)
 
           if old_queries[raw_command]
             statistics = old_queries[raw_command]
