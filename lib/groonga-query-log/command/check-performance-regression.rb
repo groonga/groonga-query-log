@@ -323,7 +323,8 @@ module GroongaQueryLog
             statistics << old_statistic
             old_queries[raw_command] = statistics
           else
-            old_queries[raw_command] = [old_statistic]
+            old_queries[raw_command] ||= []
+            old_queries[raw_command] << old_statistic
           end
 
           if new_queries[raw_command]
@@ -331,7 +332,8 @@ module GroongaQueryLog
             statistics << new_statistic
             new_queries[raw_command] = statistics
           else
-            new_queries[raw_command] = [new_statistic]
+            new_queries[raw_command] ||= []
+            new_queries[raw_command] << new_statistic
           end
         end
         [old_queries, new_queries]
