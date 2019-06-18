@@ -340,15 +340,8 @@ module GroongaQueryLog
       end
 
       def filter_query?(query)
-        if @options[:input_filter_query]
-          if @options[:input_filter_query].include?(query)
-            true
-          else
-            false
-          end
-        else
-          true
-        end
+        return true unless @options[:input_filter_query]
+        @options[:input_filter_query].include?(query)
       end
 
 
