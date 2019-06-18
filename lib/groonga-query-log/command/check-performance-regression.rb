@@ -189,9 +189,8 @@ module GroongaQueryLog
         return false if old_elapsed_nsec == new_elapsed_nsec
         ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
         elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
-        slow_response = ((ratio >= @options[:slow_response_ratio]) and
-                        (elapsed_sec >= @options[:slow_response_threshold]))
-        slow_response
+        (ratio >= @options[:slow_response_ratio]) and
+          (elapsed_sec >= @options[:slow_response_threshold])
       end
 
       def slow_operation?(old_elapsed_nsec, new_elapsed_nsec)
