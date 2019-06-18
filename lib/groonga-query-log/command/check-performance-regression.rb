@@ -263,10 +263,7 @@ module GroongaQueryLog
                     "Use PATH for query list to match specific queries.",
                     "(#{@options[:input_filter_query]})") do |path|
             if File.exist?(path)
-              @options[:input_filter_query] = []
-              File.foreach(path) do |line|
-                @options[:input_filter_query] << line.chomp
-              end
+              @options[:input_filter_query] = File.readlines(path, chomp: true)
             elsif not path.empty?
               @options[:input_filter_query] = [path]
             else
