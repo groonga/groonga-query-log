@@ -308,31 +308,30 @@ module GroongaQueryLog
       def group_statistics(old_statistics, new_statistics)
         old_queries = {}
         new_queries = {}
-        old_statistics.count.times do |i|
-          next if i > new_statistics.count - 1
-          if cached_query?(old_statistics[i])
+        old_statistics.zip(new_statistics) do |old_statistic, new_statistic|
+          if cached_query?(old_statistic)
             @n_cached_queries += 1
             next
           end
-          next if different_query?(old_statistics[i], new_statistics[i])
+          next if different_query?(old_statistic, new_statistic)
 
-          raw_command = old_statistics[i].raw_command
+          raw_command = old_statistic.raw_command
           next unless filter_query?(raw_command)
 
           if old_queries[raw_command]
             statistics = old_queries[raw_command]
-            statistics << old_statistics[i]
+            statistics << old_statistic
             old_queries[raw_command] = statistics
           else
-            old_queries[raw_command] = [old_statistics[i]]
+            old_queries[raw_command] = [old_statistic]
           end
 
           if new_queries[raw_command]
             statistics = new_queries[raw_command]
-            statistics << new_statistics[i]
+            statistics << new_statistic
             new_queries[raw_command] = statistics
           else
-            new_queries[raw_command] = [new_statistics[i]]
+            new_queries[raw_command] = [new_statistic]
           end
         end
         [old_queries, new_queries]
