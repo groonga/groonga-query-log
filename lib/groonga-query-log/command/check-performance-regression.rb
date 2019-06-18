@@ -203,7 +203,7 @@ module GroongaQueryLog
       end
 
       def format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
-        flag = ratio > 0 ? '+' : ''
+        flag = ratio > 0 ? "+" : ""
         "Before(average): %d (nsec) After(average): %d (nsec) Ratio: (%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
           old_elapsed_nsec,
           new_elapsed_nsec,
@@ -223,7 +223,7 @@ module GroongaQueryLog
 
       def cached_query?(statistics)
         (statistics.operations.count == CACHED_QUERY_OPERAION_COUNT) and
-          (statistics.operations[0][:name] == 'cache')
+          (statistics.operations[0][:name] == "cache")
       end
 
       def different_query?(old_statistics, new_statistics)
@@ -233,7 +233,7 @@ module GroongaQueryLog
       def setup_options
         @options = {}
         @options[:n_entries] = 1000
-        @options[:order] = 'start-time'
+        @options[:order] = "start-time"
         @options[:slow_operation_ratio] = 10
         @options[:slow_response_ratio] = 0
         @options[:slow_operation_threshold] = 0.1
