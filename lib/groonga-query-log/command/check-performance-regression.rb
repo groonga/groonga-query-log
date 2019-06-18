@@ -150,10 +150,10 @@ module GroongaQueryLog
 
       private
       def elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        if old_elapsed_nsec == 0 and new_elapsed_nsec == 0
+        if old_elapsed_nsec.zero?
+          if new_elapsed_nsec.zero?
           0.0
-        elsif old_elapsed_nsec == 0 and new_elapsed_nsec > 0
-          if new_elapsed_nsec / NSEC_IN_SECONDS < threshold
+          elsif (new_elapsed_nsec / NSEC_IN_SECONDS) < threshold
             -Float::INFINITY
           else
             Float::INFINITY
