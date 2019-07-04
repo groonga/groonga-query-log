@@ -33,15 +33,14 @@ old query log and new query log must be specified.
     OUTPUT
 
     def run_command_with_stderr
-      actual = ""
-      Tempfile.open("redirect-stderr-tmpfile") do |file|
-        $stderr.reopen(file)
-        yield(file)
-        $stderr.flush
-        file.rewind
-        actual = file.read
+      begin
+        output = StringIO.new
+        $stderr = output
+        yield
+        output.string
+      ensure
+        $stderr = STDERR
       end
-      actual
     end
 
     def test_no_option
