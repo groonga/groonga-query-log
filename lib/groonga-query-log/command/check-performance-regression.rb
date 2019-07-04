@@ -345,19 +345,17 @@ module GroongaQueryLog
         statistics = GroongaQueryLog::Command::Analyzer::SizedStatistics.new
         statistics.apply_options(@options)
         full_statistics = []
-        process_statistic = lambda do |statistic|
-          full_statistics << statistic
-        end
 
         begin
-          parse(log_paths, &process_statistic)
+          parse(log_paths) do |statistic|
+            full_statistics << statistic
+          end
         rescue Error
           $stderr.puts($!.message)
           return false
         end
 
-        statistics.replace(full_statistics)
-        statistics
+        full_statistics
       end
 
       def parse(log_paths, &process_statistic)
