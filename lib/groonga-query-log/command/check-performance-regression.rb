@@ -347,8 +347,11 @@ module GroongaQueryLog
         full_statistics = []
 
         begin
+          n = 1
           parse(log_paths) do |statistic|
+            next if n > @options[:n_entries]
             full_statistics << statistic
+            n = n + 1
           end
         rescue Error
           $stderr.puts($!.message)
