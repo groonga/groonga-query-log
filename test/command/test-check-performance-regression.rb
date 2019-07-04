@@ -28,7 +28,6 @@ class CheckPerformanceRegressionCommandTest < Test::Unit::TestCase
   end
 
   sub_test_case("options") do
-
     MISSING_QUERY_LOG_ERROR = <<-OUTPUT
 old query log and new query log must be specified.
     OUTPUT
