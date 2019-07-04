@@ -37,6 +37,7 @@ module GroongaQueryLog
         @n_slow_operation = 0
         @n_processed_operations = 0
         @n_cached_queries = 0
+        @target_queries = []
       end
 
       def run(arguments)
@@ -259,15 +260,13 @@ module GroongaQueryLog
             @options[:output] = output
           end
 
-          parser.on("--input-filter-query=PATH",
-                    "Use PATH for query list to match specific queries.",
-                    "(#{@options[:input_filter_query]})") do |path|
+          parser.on("--target-query-file=TARGET_QUERY_FILE",
+                    "Analyze matched queries which are listed in specified TARGET_QUERY_FILE.",
+                    "(#{@options[:target_queries]})") do |path|
             if File.exist?(path)
-              @options[:input_filter_query] = File.readlines(path, chomp: true)
-            elsif not path.empty?
-              @options[:input_filter_query] = [path]
+              @target_queries = File.readlines(path, chomp: true)
             else
-              raise OptionParser::InvalidOption.new("path <#{path}> doesn't exist")
+              raise OptionParser::InvalidOption.new("target query file doesn't exist: <#{path}>")
             end
           end
 
@@ -316,7 +315,7 @@ module GroongaQueryLog
           next if different_query?(old_statistic, new_statistic)
 
           raw_command = old_statistic.raw_command
-          next unless filter_query?(raw_command)
+          next unless target_query?(raw_command)
 
           if old_queries[raw_command]
             statistics = old_queries[raw_command]
@@ -339,9 +338,9 @@ module GroongaQueryLog
         [old_queries, new_queries]
       end
 
-      def filter_query?(query)
-        return true unless @options[:input_filter_query]
-        @options[:input_filter_query].include?(query)
+      def target_query?(query)
+        return true unless @options[:target_query_file]
+        @options[:target_queries].include?(query)
       end
 
 
