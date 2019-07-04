@@ -255,7 +255,6 @@ module GroongaQueryLog
 
           parser.on("--output=PATH",
                     "Output to PATH.",
-                    "'-' PATH means standard output.",
                     "(#{@options[:output]})") do |output|
             @options[:output] = output
           end
