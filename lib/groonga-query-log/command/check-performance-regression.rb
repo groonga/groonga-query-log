@@ -90,16 +90,16 @@ module GroongaQueryLog
         old_queries.each_key do |query|
           old_elapsed_nsec = average_elapsed_nsec(old_queries[query])
           new_elapsed_nsec = average_elapsed_nsec(new_queries[query])
-          ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
+          percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
           statistics << {
             :query => query,
-            :ratio => ratio,
+            :percentage => percentage,
             :old_elapsed_nsec => old_elapsed_nsec,
             :new_elapsed_nsec => new_elapsed_nsec
           }
         end
 
-        statistics = statistics.sort_by { |statistic| statistic[:ratio] }
+        statistics = statistics.sort_by { |statistic| statistic[:percentage] }
 
         @n_processed_queries = old_queries.keys.count
 
@@ -111,10 +111,10 @@ module GroongaQueryLog
           if slow_response?(old_elapsed_nsec, new_elapsed_nsec)
             @n_slow_response += 1
             @output.puts("Query: #{query}")
-            ratio = statistic[:ratio]
+            percentage = statistic[:percentage]
             @output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
             @output.puts("   After(average): #{new_elapsed_nsec} (nsec)")
-            @output.puts("            Ratio: #{format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)}")
+            @output.puts("          Changes: #{format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)}")
             @output.puts("       Operations:")
             old_operation_nsecs = average_elapsed_operation_nsecs(old_queries[query])
             new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
@@ -137,9 +137,9 @@ module GroongaQueryLog
                                new_operation[:elapsed]
                              ])
                 @output.puts("%24s[%d]: %s" % [
-                               "Ratio", index,
-                               format_elapsed_ratio(operation[:elapsed],
-                                                    new_operation[:elapsed], @options[:slow_operation_threshold])
+                               "Changes", index,
+                               format_elapsed_percentage(operation[:elapsed],
+                                                         new_operation[:elapsed], @options[:slow_operation_threshold])
                              ])
                 @output.puts("%24s[%d]: %s" % [
                                "Context", index, operation[:context]
@@ -165,7 +165,7 @@ module GroongaQueryLog
       end
 
       private
-      def elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, threshold)
+      def elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
         if old_elapsed_nsec.zero?
           if new_elapsed_nsec.zero?
           0.0
@@ -203,7 +203,7 @@ module GroongaQueryLog
 
       def slow_response?(old_elapsed_nsec, new_elapsed_nsec)
         return false if old_elapsed_nsec == new_elapsed_nsec
-        ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
+        ratio = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
         elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
         (ratio >= @options[:slow_response_ratio]) and
           (elapsed_sec >= @options[:slow_response_threshold])
@@ -211,18 +211,18 @@ module GroongaQueryLog
 
       def slow_operation?(old_elapsed_nsec, new_elapsed_nsec)
         return false if old_elapsed_nsec == new_elapsed_nsec
-        ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_operation_threshold])
+        ratio = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_operation_threshold])
         elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
         slow_operation = ((ratio >= @options[:slow_operation_ratio]) and
                          (elapsed_sec >= @options[:slow_operation_threshold]))
         slow_operation
       end
 
-      def format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
-        flag = ratio > 0 ? "+" : ""
+      def format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)
+        flag = percentage > 0 ? "+" : ""
         "(%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
           flag,
-          ratio,
+          percentage,
           flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000 / 1000 / 1000,
           flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000 / 1000,
           flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000,
@@ -230,9 +230,9 @@ module GroongaQueryLog
         ]
       end
 
-      def format_elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        ratio = elapsed_ratio(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
+      def format_elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
+        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
+        format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)
       end
 
       def cached_query?(statistics)
