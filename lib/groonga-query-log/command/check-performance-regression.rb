@@ -193,7 +193,7 @@ module GroongaQueryLog
             statistic.operations[index][:relative_elapsed]
           end
           operations << {
-            :name => statistics.first.operations[index][:name],
+            :name => operation[:name],
             :elapsed => elapsed_times.inject(:+).to_f / elapsed_times.size,
             :context => operation[:context]
           }
