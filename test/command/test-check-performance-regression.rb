@@ -109,12 +109,12 @@ query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
 Query: select --table Site --limit 0
   Before(average): 12000000.0 (nsec)
    After(average): 14000000.0 (nsec)
-            Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
+          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
        Operations:
                Operation[0]: select
          Before(average)[0]: 5000000.0 (nsec)
           After(average)[0]: 6000000.0 (nsec)
-                   Ratio[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
                  Context[0]: 
 Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
@@ -139,27 +139,27 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
   Before(average): 70000000.0 (nsec)
    After(average): 90000000.0 (nsec)
-            Ratio: (+28.57% +0.02sec/+20.00msec/+20000.00usec/+20000000.00nsec)
+          Changes: (+28.57% +0.02sec/+20.00msec/+20000.00usec/+20000000.00nsec)
        Operations:
                Operation[0]: filter
          Before(average)[0]: 40000000.0 (nsec)
           After(average)[0]: 80000000.0 (nsec)
-                   Ratio[0]: (+100.00% +0.04sec/+40.00msec/+40000.00usec/+40000000.00nsec)
+                 Changes[0]: (+100.00% +0.04sec/+40.00msec/+40000.00usec/+40000000.00nsec)
                  Context[0]: #<accessor _id(Site)> greater_equal 4
                Operation[1]: filter
          Before(average)[1]: 10000000.0 (nsec)
           After(average)[1]: 20000000.0 (nsec)
-                   Ratio[1]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
+                 Changes[1]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
                  Context[1]: #<accessor _id(Site)> less_equal 6
                Operation[2]: select
          Before(average)[2]: 10000000.0 (nsec)
           After(average)[2]: 20000000.0 (nsec)
-                   Ratio[2]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
+                 Changes[2]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
                  Context[2]: 
                Operation[3]: output
          Before(average)[3]: 10000000.0 (nsec)
           After(average)[3]: 20000000.0 (nsec)
-                   Ratio[3]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
+                 Changes[3]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
                  Context[3]: 
 Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
       OUTPUT
@@ -184,12 +184,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
 Query: select --table Site --limit 0
   Before(average): 12000000.0 (nsec)
    After(average): 14000000.0 (nsec)
-            Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
+          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
        Operations:
                Operation[0]: select
          Before(average)[0]: 5000000.0 (nsec)
           After(average)[0]: 6000000.0 (nsec)
-                   Ratio[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
                  Context[0]: 
 Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
@@ -230,12 +230,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 Query: select --table Site --limit 0
   Before(average): 12000000.0 (nsec)
    After(average): 14000000.0 (nsec)
-            Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
+          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
        Operations:
                Operation[0]: select
          Before(average)[0]: 5000000.0 (nsec)
           After(average)[0]: 6000000.0 (nsec)
-                   Ratio[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
                  Context[0]: 
 Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
@@ -276,12 +276,12 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 Query: select --table Site --limit 0
   Before(average): 12000000.0 (nsec)
    After(average): 14000000.0 (nsec)
-            Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
+          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
        Operations:
                Operation[0]: select
          Before(average)[0]: 5000000.0 (nsec)
           After(average)[0]: 6000000.0 (nsec)
-                   Ratio[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
+                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
                  Context[0]: 
 Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
