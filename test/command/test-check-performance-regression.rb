@@ -95,27 +95,25 @@ query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
     end
 
     def test_output
-      path = "/tmp/output"
-      @command.run([
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0",
-        "--output=#{path}",
-        fixture_path("query1.log"),
-        fixture_path("query2.log")
-      ])
-      expected = <<-OUTPUT
+      Tempfile.open do |output|
+        @command.run([
+                       "--slow-response-ratio=0",
+                       "--slow-operation-ratio=0",
+                       "--slow-response-threshold=0",
+                       "--slow-operation-threshold=0",
+                       "--output=#{output.path}",
+                       fixture_path("query1.log"),
+                       fixture_path("query2.log")
+                     ])
+        expected = <<-OUTPUT
 Query: select --table Site --limit 0
   Before(average): 12000000 (nsec) After(average): 14000000 (nsec) Ratio: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
   Operations:
     Operation: select Before(average): 5000000 (nsec) After(average): 6000000 (nsec) Ratio: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec) Context: 
 Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       OUTPUT
-      File.open(path, "r") do |file|
-        assert_equal(expected, file.read)
+        assert_equal(expected, output.read)
       end
-      File.unlink(path)
     end
 
     def test_n_query
