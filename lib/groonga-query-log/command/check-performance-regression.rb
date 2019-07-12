@@ -236,8 +236,7 @@ module GroongaQueryLog
       end
 
       def cached_query?(statistics)
-        (statistics.operations.count == CACHED_QUERY_OPERAION_COUNT) and
-          (statistics.operations[0][:name] == "cache")
+        statistics.operations.collect { |operation| operation[:name] } == ["cache"]
       end
 
       def different_query?(old_statistics, new_statistics)
