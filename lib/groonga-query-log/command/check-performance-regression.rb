@@ -112,10 +112,10 @@ module GroongaQueryLog
             @n_slow_response += 1
             @output.puts("Query: #{query}")
             ratio = statistic[:ratio]
-            @output.puts("  %s" % [
-              format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
-            ])
-            @output.puts("  Operations:")
+            @output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
+            @output.puts("   After(average): #{new_elapsed_nsec} (nsec)")
+            @output.puts("            Ratio: #{format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)}")
+            @output.puts("       Operations:")
             old_operation_nsecs = average_elapsed_operation_nsecs(old_queries[query])
             new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
             old_operation_nsecs.each_with_index do |operation, index|
@@ -123,12 +123,27 @@ module GroongaQueryLog
               @n_processed_operations += 1
               if slow_operation?(operation[:elapsed], new_operation[:elapsed])
                 @n_slow_operation += 1
-                @output.puts("    Operation: %s %s Context: %s" % [
-                  operation[:name],
-                  format_elapsed_ratio(operation[:elapsed],
-                                       new_operation[:elapsed], @options[:slow_operation_threshold]),
-                  operation[:context]
-                ])
+                @output.puts("%24s[%d]: %s" % [
+                               "Operation",
+                               index,
+                               operation[:name]
+                             ])
+                @output.puts("%24s[%d]: %s (nsec)" % [
+                               "Before(average)", index,
+                               operation[:elapsed]
+                             ])
+                @output.puts("%24s[%d]: %s (nsec)" % [
+                               "After(average)", index,
+                               new_operation[:elapsed]
+                             ])
+                @output.puts("%24s[%d]: %s" % [
+                               "Ratio", index,
+                               format_elapsed_ratio(operation[:elapsed],
+                                                    new_operation[:elapsed], @options[:slow_operation_threshold])
+                             ])
+                @output.puts("%24s[%d]: %s" % [
+                               "Context", index, operation[:context]
+                             ])
               end
             end
           end
@@ -205,9 +220,7 @@ module GroongaQueryLog
 
       def format_elapsed_calculated_ratio(ratio, old_elapsed_nsec, new_elapsed_nsec)
         flag = ratio > 0 ? "+" : ""
-        "Before(average): %d (nsec) After(average): %d (nsec) Ratio: (%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
-          old_elapsed_nsec,
-          new_elapsed_nsec,
+        "(%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
           flag,
           ratio,
           flag, (new_elapsed_nsec - old_elapsed_nsec) / 1000 / 1000 / 1000,
