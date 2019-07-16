@@ -26,7 +26,6 @@ require "groonga-query-log/command/analyzer/sized-statistics"
 module GroongaQueryLog
   module Command
     class CheckPerformanceRegression < CommandLine
-      CACHED_QUERY_OPERAION_COUNT = 1
       NSEC_IN_SECONDS = (1000 * 1000 * 1000.0)
 
       def initialize(options={})
