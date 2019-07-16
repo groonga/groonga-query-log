@@ -73,14 +73,6 @@ module GroongaQueryLog
           end
         end
 
-        if @options[:output].is_a?(String)
-          if @options[:output] == "-"
-            @output = $stdin
-          else
-            @output = File.open(@options[:output], "w")
-          end
-        end
-
         old_statistics = analyze(@options[:input_old_query])
         new_statistics = analyze(@options[:input_new_query])
 
@@ -103,68 +95,76 @@ module GroongaQueryLog
 
         @n_processed_queries = old_queries.keys.count
 
-        statistics.each do |statistic|
-          query = statistic[:query]
-          old_elapsed_nsec = statistic[:old_elapsed_nsec]
-          new_elapsed_nsec = statistic[:new_elapsed_nsec]
+        open_output do |output|
+          statistics.each do |statistic|
+            query = statistic[:query]
+            old_elapsed_nsec = statistic[:old_elapsed_nsec]
+            new_elapsed_nsec = statistic[:new_elapsed_nsec]
 
-          if slow_response?(old_elapsed_nsec, new_elapsed_nsec)
-            @n_slow_response += 1
-            @output.puts("Query: #{query}")
-            percentage = statistic[:percentage]
-            @output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
-            @output.puts("   After(average): #{new_elapsed_nsec} (nsec)")
-            @output.puts("          Changes: #{format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)}")
-            @output.puts("       Operations:")
-            old_operation_nsecs = average_elapsed_operation_nsecs(old_queries[query])
-            new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
-            old_operation_nsecs.each_with_index do |operation, index|
-              new_operation = new_operation_nsecs[index]
-              @n_processed_operations += 1
-              if slow_operation?(operation[:elapsed], new_operation[:elapsed])
-                @n_slow_operation += 1
-                @output.puts("%24s[%d]: %s" % [
-                               "Operation",
-                               index,
-                               operation[:name]
-                             ])
-                @output.puts("%24s[%d]: %s (nsec)" % [
-                               "Before(average)", index,
-                               operation[:elapsed]
-                             ])
-                @output.puts("%24s[%d]: %s (nsec)" % [
-                               "After(average)", index,
-                               new_operation[:elapsed]
-                             ])
-                @output.puts("%24s[%d]: %s" % [
-                               "Changes", index,
-                               format_elapsed_percentage(operation[:elapsed],
-                                                         new_operation[:elapsed], @options[:slow_operation_threshold])
-                             ])
-                @output.puts("%24s[%d]: %s" % [
-                               "Context", index, operation[:context]
-                             ])
+            if slow_response?(old_elapsed_nsec, new_elapsed_nsec)
+              @n_slow_response += 1
+              output.puts("Query: #{query}")
+              percentage = statistic[:percentage]
+              output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
+              output.puts("   After(average): #{new_elapsed_nsec} (nsec)")
+              output.puts("          Changes: #{format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)}")
+              output.puts("       Operations:")
+              old_operation_nsecs = average_elapsed_operation_nsecs(old_queries[query])
+              new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
+              old_operation_nsecs.each_with_index do |operation, index|
+                new_operation = new_operation_nsecs[index]
+                @n_processed_operations += 1
+                if slow_operation?(operation[:elapsed], new_operation[:elapsed])
+                  @n_slow_operation += 1
+                  output.puts("%24s[%d]: %s" % [
+                                "Operation",
+                                index,
+                                operation[:name]
+                              ])
+                  output.puts("%24s[%d]: %s (nsec)" % [
+                                "Before(average)", index,
+                                operation[:elapsed]
+                              ])
+                  output.puts("%24s[%d]: %s (nsec)" % [
+                                "After(average)", index,
+                                new_operation[:elapsed]
+                              ])
+                  output.puts("%24s[%d]: %s" % [
+                                "Changes", index,
+                                format_elapsed_percentage(operation[:elapsed],
+                                                          new_operation[:elapsed], @options[:slow_operation_threshold])
+                              ])
+                  output.puts("%24s[%d]: %s" % [
+                                "Context", index, operation[:context]
+                              ])
+                end
               end
             end
           end
+
+          output.puts("Summary: slow response: %d/%d(%.2f%%) slow operation: %d/%d(%.2f%%) cached: %d" % [
+                        @n_slow_response, @n_processed_queries,
+                        @n_slow_response / @n_processed_queries.to_f * 100,
+                        @n_slow_operation, @n_processed_operations,
+                        @n_slow_operation / @n_processed_operations.to_f * 100,
+                        @n_cached_queries,
+                      ])
         end
-
-        @output.puts("Summary: slow response: %d/%d(%.2f%%) slow operation: %d/%d(%.2f%%) cached: %d" % [
-                       @n_slow_response, @n_processed_queries,
-                       @n_slow_response / @n_processed_queries.to_f * 100,
-                       @n_slow_operation, @n_processed_operations,
-                       @n_slow_operation / @n_processed_operations.to_f * 100,
-                       @n_cached_queries,
-                     ])
-
-        if @output.kind_of?(File)
-          @output.close
-        end
-
         true
       end
 
       private
+      def open_output(&block)
+        output = @output
+        output = @options[:output] if @options[:output]
+        case output
+        when String
+          File.open(output, "w", &block)
+        else
+          yield(output)
+        end
+      end
+
       def elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
         if old_elapsed_nsec.zero?
           if new_elapsed_nsec.zero?
