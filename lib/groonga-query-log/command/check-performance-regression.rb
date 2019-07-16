@@ -204,19 +204,18 @@ module GroongaQueryLog
 
       def slow_response?(old_elapsed_nsec, new_elapsed_nsec)
         return false if old_elapsed_nsec == new_elapsed_nsec
-        ratio = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
+        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
         elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
-        (ratio >= @options[:slow_response_ratio]) and
+        (percentage >= @options[:slow_response_percentage]) and
           (elapsed_sec >= @options[:slow_response_threshold])
       end
 
       def slow_operation?(old_elapsed_nsec, new_elapsed_nsec)
         return false if old_elapsed_nsec == new_elapsed_nsec
-        ratio = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_operation_threshold])
+        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_operation_threshold])
         elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
-        slow_operation = ((ratio >= @options[:slow_operation_ratio]) and
-                         (elapsed_sec >= @options[:slow_operation_threshold]))
-        slow_operation
+        ((percentage >= @options[:slow_operation_percentage]) and
+         (elapsed_sec >= @options[:slow_operation_threshold]))
       end
 
       def format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)
@@ -282,22 +281,22 @@ module GroongaQueryLog
             end
           end
 
-          parser.on("--slow-operation-ratio=PERCENTAGE",
+          parser.on("--slow-operation-percentage=PERCENTAGE",
                     Float,
                     "Use PERCENTAGE% as threshold to detect slow operations.",
-                    "Example: --slow-operation-ratio=#{@options[:slow_operation_ratio]} means",
-                    "changed amount of operation time is #{@options[:slow_operation_ratio]}% or more.",
-                    "(#{@options[:slow_operation_ratio]})") do |ratio|
-            @options[:slow_operation_ratio] = ratio
+                    "Example: --slow-operation-percentage=#{@options[:slow_operation_percentage]} means",
+                    "changed amount of operation time is #{@options[:slow_operation_percentage]}% or more.",
+                    "(#{@options[:slow_operation_ratio]})") do |percentage|
+            @options[:slow_operation_percentage] = percentage
           end
 
-          parser.on("--slow-response-ratio=PERCENTAGE",
+          parser.on("--slow-response-percentage=PERCENTAGE",
                     Float,
                     "Use PERCENTAGE% as threshold to detect slow responses.",
-                    "Example: --slow-response-ratio=#{@options[:slow_response_ratio]} means",
-                    "changed amount of response time is #{@options[:slow_response_ratio]}% or more.",
-                    "(#{@options[:slow_response_ratio]})") do |ratio|
-            @options[:slow_response_ratio] = ratio
+                    "Example: --slow-response-percentage=#{@options[:slow_response_percentage]} means",
+                    "changed amount of response time is #{@options[:slow_response_percentage]}% or more.",
+                    "(#{@options[:slow_response_percentage]})") do |percentage|
+            @options[:slow_response_percentage] = percentage
           end
 
           parser.on("--slow-operation-threshold=THRESHOLD",

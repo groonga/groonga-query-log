@@ -97,8 +97,8 @@ query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
     def test_output
       Tempfile.open('test_output') do |output|
         @command.run([
-                       "--slow-response-ratio=0",
-                       "--slow-operation-ratio=0",
+                       "--slow-response-percentage=0",
+                       "--slow-operation-percentage=0",
                        "--slow-response-threshold=0",
                        "--slow-operation-threshold=0",
                        "--output=#{output.path}",
@@ -128,8 +128,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
         "--n-entries=1",
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
+        "--slow-response-percentage=0",
+        "--slow-operation-percentage=0",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0",
         fixture_path("nquery.log"),
@@ -173,8 +173,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-ratio=0.0",
-        "--slow-operation-ratio=0.0",
+        "--slow-response-percentage=0.0",
+        "--slow-operation-percentage=0.0",
         "--slow-response-threshold=0.0",
         "--slow-operation-threshold=0.0",
         fixture_path("query1.log"),
@@ -203,8 +203,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-ratio=20",
-        "--slow-operation-ratio=0",
+        "--slow-response-percentage=20",
+        "--slow-operation-percentage=0",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0",
         fixture_path("query1.log"),
@@ -219,8 +219,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=10",
+        "--slow-response-percentage=0",
+        "--slow-operation-percentage=10",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0",
         fixture_path("query1.log"),
@@ -249,8 +249,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
+        "--slow-response-percentage=0",
+        "--slow-operation-percentage=0",
         "--slow-response-threshold=0.02",
         "--slow-operation-threshold=0",
         fixture_path("query1.log"),
@@ -265,8 +265,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
+        "--slow-response-percentage=0",
+        "--slow-operation-percentage=0",
         "--slow-response-threshold=0",
         "--slow-operation-threshold=0.001",
         fixture_path("query1.log"),
@@ -298,8 +298,8 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 
     def test_ignored_cache
       @command.run([
-        "--slow-response-ratio=0",
-        "--slow-operation-ratio=0",
+        "--slow-response-percentage=0",
+        "--slow-operation-percentage=0",
         "--slow-response-threshold=0",
         fixture_path("cache.log"),
         fixture_path("cache.log")
