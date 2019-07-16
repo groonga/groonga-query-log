@@ -95,7 +95,7 @@ query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
     end
 
     def test_output
-      Tempfile.open do |output|
+      Tempfile.open('test_output') do |output|
         @command.run([
                        "--slow-response-ratio=0",
                        "--slow-operation-ratio=0",
