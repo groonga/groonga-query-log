@@ -1,5 +1,20 @@
 # News
 
+## 1.4.4: 2019-08-05
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for rewriting `"&& !" operator`.
+      Specify --rewrite-and-not-operator option to enable it.
+
+### Fixes
+
+  * `rewrite-filter`:
+
+    * Fix a wrong rewrite value.
+
 ## 1.4.3: 2019-05-22
 
 ### Fixes
