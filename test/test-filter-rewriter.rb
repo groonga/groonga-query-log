@@ -1,4 +1,5 @@
 # Copyright (C) 2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -99,13 +100,13 @@ class FilterRewriterTest < Test::Unit::TestCase
     end
 
     def test_parenthesis
-      assert_equal("(((reference._key == null ? 0 : reference.number)) < 1000)",
+      assert_equal("(((reference._key == \"\" ? 0 : reference.number)) < 1000)",
                    rewrite("((reference.number) < 1000)",
                            ["reference.number"]))
     end
 
     def test_under_score
-      assert_equal("(ref_column._key == null ? 0 : ref_column.number) < 1000",
+      assert_equal("(ref_column._key == \"\" ? 0 : ref_column.number) < 1000",
                    rewrite("ref_column.number < 1000",
                            ["ref_column.number"]))
     end

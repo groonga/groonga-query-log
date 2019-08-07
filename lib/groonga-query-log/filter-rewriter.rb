@@ -1,4 +1,5 @@
 # Copyright (C) 2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -77,7 +78,7 @@ module GroongaQueryLog
         accessor = $1
         if @nullable_reference_number_accessors.include?(accessor)
           sub_accessor = accessor.split(".")[0..-2].join(".")
-          "(#{sub_accessor}._key == null ? 0 : #{accessor})"
+          "(#{sub_accessor}._key == \"\" ? 0 : #{accessor})"
         else
           matched
         end
