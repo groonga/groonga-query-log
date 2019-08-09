@@ -34,8 +34,8 @@ module GroongaQueryLog
         setup_options
         @output = options[:output] || $stdout
         @n_processed_queries = 0
-        @n_slow_response = 0
-        @n_slow_operation = 0
+        @n_slow_responses = 0
+        @n_slow_operations = 0
         @n_processed_operations = 0
         @n_cached_queries = 0
         @target_queries = []
@@ -91,7 +91,7 @@ module GroongaQueryLog
             new_elapsed_nsec = statistic[:new_elapsed_nsec]
 
             if slow_response?(old_elapsed_nsec, new_elapsed_nsec)
-              @n_slow_response += 1
+              @n_slow_responses += 1
               output.puts("Query: #{query}")
               percentage = statistic[:percentage]
               output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
@@ -104,7 +104,7 @@ module GroongaQueryLog
                 new_operation = new_operation_nsecs[index]
                 @n_processed_operations += 1
                 if slow_operation?(operation[:elapsed], new_operation[:elapsed])
-                  @n_slow_operation += 1
+                  @n_slow_operations += 1
                   output.puts("%24s[%d]: %s" % [
                                 "Operation",
                                 index,
@@ -132,10 +132,10 @@ module GroongaQueryLog
           end
 
           output.puts("Summary: slow response: %d/%d(%.2f%%) slow operation: %d/%d(%.2f%%) cached: %d" % [
-                        @n_slow_response, @n_processed_queries,
-                        @n_slow_response / @n_processed_queries.to_f * 100,
-                        @n_slow_operation, @n_processed_operations,
-                        @n_slow_operation / @n_processed_operations.to_f * 100,
+                        @n_slow_responses, @n_processed_queries,
+                        @n_slow_responses / @n_processed_queries.to_f * 100,
+                        @n_slow_operations, @n_processed_operations,
+                        @n_slow_operations / @n_processed_operations.to_f * 100,
                         @n_cached_queries,
                       ])
         end
