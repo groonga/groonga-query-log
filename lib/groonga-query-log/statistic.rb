@@ -61,6 +61,12 @@ module GroongaQueryLog
       elapsed_in_seconds >= @slow_response_threshold
     end
 
+    def cache_used?
+      each_operation.any? do |operation|
+        operation[:name] == "cache"
+      end
+    end
+
     def each_operation
       return to_enum(__method__) unless block_given?
 

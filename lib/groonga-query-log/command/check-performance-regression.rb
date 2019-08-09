@@ -394,7 +394,7 @@ Summary:
         def count_cached_queries(statistics)
           n_cached_queries = 0
           statistics.each do |statistic|
-            n_cached_queries += 1 if cached_query?(statistic)
+            n_cached_queries += 1 if statistic.cache_used?
           end
           n_cached_queries
         end
@@ -405,12 +405,8 @@ Summary:
           end
         end
 
-        def cached_query?(statistics)
-          statistics.operations.collect { |operation| operation[:name] } == ["cache"]
-        end
-
         def target_statistic?(statistic)
-          return false if cached_query?(statistic)
+          return false if statistic.cache_used?
           return true if @target_queries.empty?
           @target_queries.include?(statistic.raw_command)
         end
