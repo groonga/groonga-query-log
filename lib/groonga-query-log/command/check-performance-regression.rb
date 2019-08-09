@@ -168,7 +168,7 @@ module GroongaQueryLog
       def elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
         if old_elapsed_nsec.zero?
           if new_elapsed_nsec.zero?
-          0.0
+            0.0
           elsif (new_elapsed_nsec / NSEC_IN_SECONDS) < threshold
             -Float::INFINITY
           else
