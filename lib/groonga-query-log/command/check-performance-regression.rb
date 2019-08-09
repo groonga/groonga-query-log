@@ -357,7 +357,8 @@ module GroongaQueryLog
 
         begin
           n = 1
-          parse(log_paths) do |statistic|
+          parser = Parser.new(@options)
+          parse_log(parser, log_paths) do |statistic|
             next if n > @options[:n_entries]
             full_statistics << statistic
             n = n + 1
@@ -368,11 +369,6 @@ module GroongaQueryLog
         end
 
         full_statistics
-      end
-
-      def parse(log_paths, &process_statistic)
-        parser = Parser.new(@options)
-        parse_log(parser, log_paths, &process_statistic)
       end
     end
   end
