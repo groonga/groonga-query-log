@@ -61,7 +61,9 @@ module GroongaQueryLog
         return false if new_query_paths.nil?
 
         old_statistics = analyze(old_query_paths)
+        return false if old_statistics.nil?
         new_statistics = analyze(new_query_paths)
+        return false if new_statistics.nil?
 
         old_queries, new_queries = group_statistics(old_statistics, new_statistics)
 
@@ -362,7 +364,7 @@ module GroongaQueryLog
           end
         rescue Error
           $stderr.puts($!.message)
-          return false
+          return nil
         end
 
         full_statistics
