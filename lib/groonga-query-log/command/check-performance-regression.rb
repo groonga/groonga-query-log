@@ -55,27 +55,13 @@ module GroongaQueryLog
           return false
         end
 
-        paths.each_with_index do |path, index|
-          if File.directory?(path)
-            if index == 0
-              @options[:input_old_query] = Dir.glob("#{path}/*.log")
-            else
-              @options[:input_new_query] = Dir.glob("#{path}/*.log")
-            end
-          elsif File.exist?(path)
-            if index == 0
-              @options[:input_old_query] = [path]
-            else
-              @options[:input_new_query] = [path]
-            end
-          else
-            $stderr.puts("query log path doesn't exist: <#{path}>")
-            return false
-          end
-        end
+        old_query_paths = resolve_path(paths[0])
+        return false if old_query_paths.nil?
+        new_query_paths = resolve_path(paths[1])
+        return false if new_query_paths.nil?
 
-        old_statistics = analyze(@options[:input_old_query])
-        new_statistics = analyze(@options[:input_new_query])
+        old_statistics = analyze(old_query_paths)
+        new_statistics = analyze(new_query_paths)
 
         old_queries, new_queries = group_statistics(old_statistics, new_statistics)
 
@@ -155,6 +141,17 @@ module GroongaQueryLog
       end
 
       private
+      def resolve_path(path)
+        if File.directory?(path)
+          Dir.glob("#{path}/*.log")
+        elsif File.exist?(path)
+          [path]
+        else
+          $stderr.puts("query log path doesn't exist: <#{path}>")
+          nil
+        end
+      end
+
       def open_output(&block)
         output = @output
         output = @options[:output] if @options[:output]
@@ -251,8 +248,6 @@ module GroongaQueryLog
         @options[:slow_response_ratio] = 0
         @options[:slow_operation_threshold] = 0.1
         @options[:slow_response_threshold] = 0.2
-        @options[:input_old_query] = nil
-        @options[:input_new_query] = nil
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
