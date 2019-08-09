@@ -31,14 +31,7 @@ module GroongaQueryLog
       MSEC_IN_SECONDS = 1000
 
       def initialize(options={})
-        @output = options[:output] || "-"
-        setup_options
-        @n_processed_queries = 0
-        @n_slow_responses = 0
-        @n_slow_operations = 0
-        @n_processed_operations = 0
-        @n_cached_queries = 0
-        @target_queries = []
+        setup_options(options)
       end
 
       def run(arguments)
@@ -65,81 +58,14 @@ module GroongaQueryLog
         new_statistics = analyze(new_query_paths)
         return false if new_statistics.nil?
 
-        old_queries, new_queries = group_statistics(old_statistics, new_statistics)
-
-        statistics = []
-        old_queries.each_key do |query|
-          old_elapsed_nsec = average_elapsed_nsec(old_queries[query])
-          new_elapsed_nsec = average_elapsed_nsec(new_queries[query])
-          percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
-          statistics << {
-            :query => query,
-            :percentage => percentage,
-            :old_elapsed_nsec => old_elapsed_nsec,
-            :new_elapsed_nsec => new_elapsed_nsec
-          }
-        end
-
-        statistics = statistics.sort_by { |statistic| statistic[:percentage] }
-
-        @n_processed_queries = old_queries.size
-
         open_output do |output|
-          statistics.each do |statistic|
-            query = statistic[:query]
-            old_elapsed_nsec = statistic[:old_elapsed_nsec]
-            new_elapsed_nsec = statistic[:new_elapsed_nsec]
-
-            if slow_response?(old_elapsed_nsec, new_elapsed_nsec)
-              @n_slow_responses += 1
-              output.puts("Query: #{query}")
-              percentage = statistic[:percentage]
-              output.puts("  Before(average): #{old_elapsed_nsec} (nsec)")
-              output.puts("   After(average): #{new_elapsed_nsec} (nsec)")
-              output.puts("          Changes: #{format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)}")
-              output.puts("       Operations:")
-              old_operation_nsecs = average_elapsed_operation_nsecs(old_queries[query])
-              new_operation_nsecs = average_elapsed_operation_nsecs(new_queries[query])
-              old_operation_nsecs.each_with_index do |operation, index|
-                new_operation = new_operation_nsecs[index]
-                @n_processed_operations += 1
-                if slow_operation?(operation[:elapsed], new_operation[:elapsed])
-                  @n_slow_operations += 1
-                  output.puts("%24s[%d]: %s" % [
-                                "Operation",
-                                index,
-                                operation[:name]
-                              ])
-                  output.puts("%24s[%d]: %s (nsec)" % [
-                                "Before(average)", index,
-                                operation[:elapsed]
-                              ])
-                  output.puts("%24s[%d]: %s (nsec)" % [
-                                "After(average)", index,
-                                new_operation[:elapsed]
-                              ])
-                  output.puts("%24s[%d]: %s" % [
-                                "Changes", index,
-                                format_elapsed_percentage(operation[:elapsed],
-                                                          new_operation[:elapsed], @options[:slow_operation_threshold])
-                              ])
-                  output.puts("%24s[%d]: %s" % [
-                                "Context", index, operation[:context]
-                              ])
-                end
-              end
-            end
-          end
-
-          output.puts("Summary: slow response: %d/%d(%.2f%%) slow operation: %d/%d(%.2f%%) cached: %d" % [
-                        @n_slow_responses, @n_processed_queries,
-                        @n_slow_responses / @n_processed_queries.to_f * 100,
-                        @n_slow_operations, @n_processed_operations,
-                        @n_slow_operations / @n_processed_operations.to_f * 100,
-                        @n_cached_queries,
-                      ])
+          checker = Checker.new(old_statistics,
+                                new_statistics,
+                                output,
+                                @threshold,
+                                @target_queries)
+          checker.check
         end
-        true
       end
 
       private
@@ -165,91 +91,11 @@ module GroongaQueryLog
         end
       end
 
-      def elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        if old_elapsed_nsec.zero?
-          if new_elapsed_nsec.zero?
-            0.0
-          elsif (new_elapsed_nsec / NSEC_IN_SECONDS) < threshold
-            -Float::INFINITY
-          else
-            Float::INFINITY
-          end
-        else
-          (new_elapsed_nsec / old_elapsed_nsec) * 100 - 100
-        end
-      end
-
-      def average_elapsed_nsec(statistics)
-        elapsed_times = statistics.collect do |statistic|
-          statistic.elapsed
-        end
-        elapsed_times.inject(:+).to_f / elapsed_times.size
-      end
-
-      def average_elapsed_operation_nsecs(statistics)
-        operations = []
-        statistics.first.operations.each_with_index do |operation, index|
-          elapsed_times = statistics.collect do |statistic|
-            statistic.operations[index][:relative_elapsed]
-          end
-          operations << {
-            :name => operation[:name],
-            :elapsed => elapsed_times.inject(:+).to_f / elapsed_times.size,
-            :context => operation[:context]
-          }
-        end
-        operations
-      end
-
-      def slow_response?(old_elapsed_nsec, new_elapsed_nsec)
-        return false if old_elapsed_nsec == new_elapsed_nsec
-        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_response_threshold])
-        elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
-        (percentage >= @options[:slow_response_percentage]) and
-          (elapsed_sec >= @options[:slow_response_threshold])
-      end
-
-      def slow_operation?(old_elapsed_nsec, new_elapsed_nsec)
-        return false if old_elapsed_nsec == new_elapsed_nsec
-        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, @options[:slow_operation_threshold])
-        elapsed_sec = ((new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS)
-        ((percentage >= @options[:slow_operation_percentage]) and
-         (elapsed_sec >= @options[:slow_operation_threshold]))
-      end
-
-      def format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)
-        flag = percentage > 0 ? "+" : ""
-        "(%s%.2f%% %s%.2fsec/%s%.2fmsec/%s%.2fusec/%s%.2fnsec)" % [
-          flag,
-          percentage,
-          flag, (new_elapsed_nsec - old_elapsed_nsec) / NSEC_IN_SECONDS,
-          flag, (new_elapsed_nsec - old_elapsed_nsec) / USEC_IN_SECONDS,
-          flag, (new_elapsed_nsec - old_elapsed_nsec) / MSEC_IN_SECONDS,
-          flag, new_elapsed_nsec - old_elapsed_nsec,
-        ]
-      end
-
-      def format_elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        percentage = elapsed_percentage(old_elapsed_nsec, new_elapsed_nsec, threshold)
-        format_elapsed_calculated_percentage(percentage, old_elapsed_nsec, new_elapsed_nsec)
-      end
-
-      def cached_query?(statistics)
-        statistics.operations.collect { |operation| operation[:name] } == ["cache"]
-      end
-
-      def different_query?(old_statistics, new_statistics)
-        old_statistics.raw_command != new_statistics.raw_command
-      end
-
-      def setup_options
-        @options = {}
-        @options[:n_entries] = 1000
-        @options[:order] = "start-time"
-        @options[:slow_operation_ratio] = 10
-        @options[:slow_response_ratio] = 0
-        @options[:slow_operation_threshold] = 0.1
-        @options[:slow_response_threshold] = 0.2
+      def setup_options(options)
+        @output = options[:output] || "-"
+        @n_entries = 1000
+        @threshold = Threshold.new
+        @target_queries = []
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
@@ -258,8 +104,8 @@ module GroongaQueryLog
           parser.on("-n", "--n-entries=N",
                     Integer,
                     "Analyze N query log entries",
-                    "(#{@options[:n_entries]})") do |n|
-            @options[:n_entries] = n
+                    "(#{@n_entries})") do |n|
+            @n_entries = n
           end
 
           if @output == "-"
@@ -274,97 +120,62 @@ module GroongaQueryLog
           end
 
           parser.on("--target-query-file=TARGET_QUERY_FILE",
-                    "Analyze matched queries which are listed in specified TARGET_QUERY_FILE.",
-                    "(#{@options[:target_queries]})") do |path|
+                    "Analyze matched queries which are listed " +
+                    "in specified TARGET_QUERY_FILE.") do |path|
             if File.exist?(path)
               @target_queries = File.readlines(path, chomp: true)
             else
-              raise OptionParser::InvalidOption.new("target query file doesn't exist: <#{path}>")
+              message = "target query file doesn't exist: <#{path}>"
+              raise OptionParser::InvalidOption.new(message)
             end
           end
 
-          parser.on("--slow-operation-percentage=PERCENTAGE",
+          parser.on("--slow-query-ratio=RATIO",
                     Float,
-                    "Use PERCENTAGE% as threshold to detect slow operations.",
-                    "Example: --slow-operation-percentage=#{@options[:slow_operation_percentage]} means",
-                    "changed amount of operation time is #{@options[:slow_operation_percentage]}% or more.",
-                    "(#{@options[:slow_operation_ratio]})") do |percentage|
-            @options[:slow_operation_percentage] = percentage
+                    "Use RATIO as threshold to detect slow queries.",
+                    "If MEAN_NEW_ELAPSED_TIME / MEAN_OLD_ELAPSED_TIME AVERAGE",
+                    "is larger than RATIO, the query is slow.",
+                    "(#{@threshold.query_ratio})") do |ratio|
+            @threshold.query_ratio = ratio
           end
 
-          parser.on("--slow-response-percentage=PERCENTAGE",
+          parser.on("--slow-query-second=SECOND",
                     Float,
-                    "Use PERCENTAGE% as threshold to detect slow responses.",
-                    "Example: --slow-response-percentage=#{@options[:slow_response_percentage]} means",
-                    "changed amount of response time is #{@options[:slow_response_percentage]}% or more.",
-                    "(#{@options[:slow_response_percentage]})") do |percentage|
-            @options[:slow_response_percentage] = percentage
+                    "Use SECOND as threshold to detect slow queries.",
+                    "If MEAN_NEW_ELAPSED_TIME - MEAN_OLD_ELAPSED_TIME AVERAGE",
+                    "is larger than SECOND, the query is slow.",
+                    "(#{@threshold.query_second})") do |second|
+            @threshold.query_second = second
           end
 
-          parser.on("--slow-operation-threshold=THRESHOLD",
+          parser.on("--slow-operation-ratio=RATIO",
                     Float,
-                    "Use THRESHOLD seconds to detect slow operations.",
-                    "(#{@options[:slow_operation_threshold]})") do |threshold|
-            @options[:slow_operation_threshold] = threshold
+                    "Use RATIO as threshold to detect slow operations.",
+                    "If MEAN_NEW_ELAPSED_TIME / MEAN_OLD_ELAPSED_TIME AVERAGE",
+                    "is larger than RATIO, the operation is slow.",
+                    "(#{@threshold.operation_ratio})") do |ratio|
+            @threshold.operation_ratio = ratio
           end
 
-          parser.on("--slow-response-threshold=THRESHOLD",
+          parser.on("--slow-operation-second=SECOND",
                     Float,
-                    "Use THRESHOLD seconds to detect slow responses.",
-                    "(#{@options[:slow_response_threshold]})") do |threshold|
-            @options[:slow_response_threshold] = threshold
+                    "Use SECOND as threshold to detect slow operations.",
+                    "If MEAN_NEW_ELAPSED_TIME - MEAN_OLD_ELAPSED_TIME AVERAGE",
+                    "is larger than SECOND, the operation is slow.",
+                    "(#{@threshold.operation_second})") do |second|
+            @threshold.operation_second = second
           end
         end
-      end
-
-      def group_statistics(old_statistics, new_statistics)
-        old_queries = {}
-        new_queries = {}
-        old_statistics.zip(new_statistics) do |old_statistic, new_statistic|
-          if cached_query?(old_statistic)
-            @n_cached_queries += 1
-            next
-          end
-          next if different_query?(old_statistic, new_statistic)
-
-          raw_command = old_statistic.raw_command
-          next unless target_query?(raw_command)
-
-          if old_queries[raw_command]
-            statistics = old_queries[raw_command]
-            statistics << old_statistic
-          else
-            old_queries[raw_command] ||= []
-            old_queries[raw_command] << old_statistic
-          end
-
-          if new_queries[raw_command]
-            statistics = new_queries[raw_command]
-            statistics << new_statistic
-          else
-            new_queries[raw_command] ||= []
-            new_queries[raw_command] << new_statistic
-          end
-        end
-        [old_queries, new_queries]
-      end
-
-      def target_query?(query)
-        return true unless @options[:target_query_file]
-        @options[:target_queries].include?(query)
       end
 
 
       def analyze(log_paths)
-        statistics = GroongaQueryLog::Command::Analyzer::SizedStatistics.new
-        statistics.apply_options(@options)
         full_statistics = []
-
         begin
           n = 1
-          parser = Parser.new(@options)
+          parser = Parser.new
           parse_log(parser, log_paths) do |statistic|
-            next if n > @options[:n_entries]
+            next if n > @n_entries
             full_statistics << statistic
             n += 1
           end
@@ -372,8 +183,268 @@ module GroongaQueryLog
           $stderr.puts($!.message)
           return nil
         end
-
         full_statistics
+      end
+
+      class Threshold
+        attr_accessor :query_ratio
+        attr_accessor :query_second
+        attr_accessor :operation_ratio
+        attr_accessor :operation_second
+        def initialize
+          @query_ratio = 0
+          @query_second = 0.2
+          @operation_ratio = 0.1
+          @operation_second = 0.1
+        end
+
+        def slow_query?(diff_sec, diff_ratio)
+          return false if diff_sec.zero?
+          (diff_sec >= @query_second) and
+            (diff_ratio >= @query_ratio)
+        end
+
+        def slow_operation?(diff_sec, diff_ratio)
+          return false if diff_sec.zero?
+          (diff_sec >= @operation_second) and
+            (diff_ratio >= @operation_ratio)
+        end
+      end
+
+      class Statistic
+        def initialize(old, new, threshold)
+          @old = old
+          @new = new
+          @threshold = threshold
+        end
+
+        def old_elapsed_time
+          @old_elapsed_time ||= compute_mean(@old)
+        end
+
+        def new_elapsed_time
+          @new_elapsed_time ||= compute_mean(@new)
+        end
+
+        def diff_elapsed_time
+          new_elapsed_time - old_elapsed_time
+        end
+
+        def ratio
+          @ratio ||= compute_ratio
+        end
+
+        private
+        def compute_ratio
+          if old_elapsed_time.zero?
+            if new_elapsed_time.zero?
+              0.0
+            else
+              Float::INIFINITY
+            end
+          else
+            new_elapsed_time / old_elapsed_time
+          end
+        end
+      end
+
+      class OperationStatistic < Statistic
+        attr_reader :index
+        def initialize(operation, index, old, new, threshold)
+          super(old, new, threshold)
+          @operation = operation
+          @index = index
+        end
+
+        def name
+          @operation[:name]
+        end
+
+        def context
+          @operation[:context]
+        end
+
+        def slow?
+          @threshold.slow_operation?(diff_elapsed_time, ratio)
+        end
+
+        private
+        def compute_mean(operations)
+          elapsed_times = operations.collect do |operation|
+            operation[:relative_elapsed] / 1000.0 / 1000.0 / 1000.0
+          end
+          elapsed_times.inject(:+) / elapsed_times.size
+        end
+      end
+
+      class QueryStatistic < Statistic
+        attr_reader :query
+        def initialize(query, old, new, threshold)
+          super(old, new, threshold)
+          @query = query
+        end
+
+        def slow?
+          @threshold.slow_query?(diff_elapsed_time, ratio)
+        end
+
+        def each_operation_statistic
+          @old.first.operations.each_with_index do |operation, i|
+            old_operations = @old.collect do |statistic|
+              statistic.operations[i]
+            end
+            # TODO: old and new may use different index
+            new_operations = @new.collect do |statistic|
+              statistic.operations[i]
+            end
+            operation_statistic = OperationStatistic.new(operation,
+                                                         i,
+                                                         old_operations,
+                                                         new_operations,
+                                                         @threshold)
+            yield(operation_statistic)
+          end
+        end
+
+        private
+        def compute_mean(statistics)
+          elapsed_times = statistics.collect do |statistic|
+            statistic.elapsed / 1000.0 / 1000.0 / 1000.0
+          end
+          elapsed_times.inject(:+) / elapsed_times.size
+        end
+      end
+
+      class Checker
+        def initialize(old_statistics,
+                       new_statistics,
+                       output,
+                       threshold,
+                       target_queries)
+          @old_statistics = old_statistics
+          @new_statistics = new_statistics
+          @output = output
+          @threshold = threshold
+          @target_queries = target_queries
+        end
+
+        def check
+          old_statistics = filter_statistics(@old_statistics)
+          new_statistics = filter_statistics(@new_statistics)
+          old_queries = old_statistics.group_by(&:raw_command)
+          new_queries = new_statistics.group_by(&:raw_command)
+
+          query_statistics = []
+          old_queries.each_key do |query|
+            query_statistic = QueryStatistic.new(query,
+                                                 old_queries[query],
+                                                 new_queries[query],
+                                                 @threshold)
+            next unless query_statistic.slow?
+            query_statistics << query_statistic
+          end
+
+          n_slow_queries = 0
+          n_target_operations = 0
+          n_slow_operations = 0
+          query_statistics.sort_by(&:ratio).each do |query_statistic|
+            n_slow_queries += 1
+            @output.puts(<<-REPORT)
+Query: #{query_statistic.query}
+  Mean (old): #{format_elapsed_time(query_statistic.old_elapsed_time)}
+  Mean (new): #{format_elapsed_time(query_statistic.new_elapsed_time)}
+  Diff:       #{format_diff(query_statistic)}
+  Operations:
+            REPORT
+            query_statistic.each_operation_statistic do |operation_statistic|
+              n_target_operations += 1
+              next unless operation_statistic.slow?
+
+              n_slow_operations += 1
+              index = operation_statistic.index
+              name = operation_statistic.name
+              context = operation_statistic.context
+              label = [name, context].compact.join(" ")
+              old_elapsed_time = operation_statistic.old_elapsed_time
+              new_elapsed_time = operation_statistic.new_elapsed_time
+              @output.puts(<<-REPORT)
+    Operation[#{index}]: #{label}
+      Mean (old): #{format_elapsed_time(old_elapsed_time)}
+      Mean (new): #{format_elapsed_time(new_elapsed_time)}
+      Diff:       #{format_diff(operation_statistic)}
+              REPORT
+            end
+          end
+
+          n_all_queries = @old_statistics.size
+          n_target_queries = old_queries.size
+          n_old_cached_queries = count_cached_queries(@old_statistics)
+          n_new_cached_queries = count_cached_queries(@new_statistics)
+          @output.puts(<<-REPORT)
+Summary:
+  Slow queries:    #{format_summary(n_slow_queries, n_target_queries)}
+  Slow operations: #{format_summary(n_slow_operations, n_target_operations)}
+  Caches (old):    #{format_summary(n_old_cached_queries, n_all_queries)}
+  Caches (new):    #{format_summary(n_new_cached_queries, n_all_queries)}
+          REPORT
+          true
+        end
+
+        private
+        def count_cached_queries(statistics)
+          n_cached_queries = 0
+          statistics.each do |statistic|
+            n_cached_queries += 1 if cached_query?(statistic)
+          end
+          n_cached_queries
+        end
+
+        def filter_statistics(statistics)
+          statistics.find_all do |statistic|
+            target_statistic?(statistic)
+          end
+        end
+
+        def cached_query?(statistics)
+          statistics.operations.collect { |operation| operation[:name] } == ["cache"]
+        end
+
+        def target_statistic?(statistic)
+          return false if cached_query?(statistic)
+          return true if @target_queries.empty?
+          @target_queries.include?(statistic.raw_command)
+        end
+
+        def format_elapsed_time(elapsed_time)
+          if elapsed_time < (1 / 1000.0 / 1000.0)
+            "%.1fnsec" % (elapsed_time * 1000 * 1000)
+          elsif elapsed_time < (1 / 1000.0)
+            "%.1fusec" % (elapsed_time * 1000 * 1000)
+          elsif elapsed_time < 1
+            "%.1fmsec" % (elapsed_time * 1000)
+          elsif elapsed_time < 60
+            "%.1fsec" % elapsed_time
+          else
+            "%.1fmin" % (elapsed_time / 60)
+          end
+        end
+
+        def format_diff(statistic)
+          "%s%s/%+.2f" % [
+            statistic.diff_elapsed_time < 0 ? "-" : "+",
+            format_elapsed_time(statistic.diff_elapsed_time),
+            statistic.ratio,
+          ]
+        end
+
+        def format_summary(n_slows, total)
+          if total.zero?
+            percentage = 0.0
+          else
+            percentage = (n_slows / total.to_f) * 100
+          end
+          "%d/%d(%6.2f%%)" % [n_slows, total, percentage]
+        end
       end
     end
   end

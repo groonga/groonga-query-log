@@ -97,26 +97,29 @@ query log path doesn't exist: <#{fixture_path("nonexsistent.log")}>
     def test_output
       Tempfile.open('test_output') do |output|
         @command.run([
-                       "--slow-response-percentage=0",
-                       "--slow-operation-percentage=0",
-                       "--slow-response-threshold=0",
-                       "--slow-operation-threshold=0",
+                       "--slow-query-ratio=0",
+                       "--slow-query-second=0",
+                       "--slow-operation-ratio=0",
+                       "--slow-operation-second=0",
                        "--output=#{output.path}",
                        fixture_path("query1.log"),
                        fixture_path("query2.log")
                      ])
         expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12000000.0 (nsec)
-   After(average): 14000000.0 (nsec)
-          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
-       Operations:
-               Operation[0]: select
-         Before(average)[0]: 5000000.0 (nsec)
-          After(average)[0]: 6000000.0 (nsec)
-                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-                 Context[0]: 
-Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
+  Mean (old): 12.0msec
+  Mean (new): 14.0msec
+  Diff:       +2.0msec/+1.17
+  Operations:
+    Operation[0]: select
+      Mean (old): 5.0msec
+      Mean (new): 6.0msec
+      Diff:       +1.0msec/+1.20
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 1/2( 50.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
       OUTPUT
         assert_equal(expected, output.read)
       end
@@ -128,40 +131,40 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
         "--n-entries=1",
-        "--slow-response-percentage=0",
-        "--slow-operation-percentage=0",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0",
+        "--slow-query-ratio=0",
+        "--slow-query-second=0",
+        "--slow-operation-ratio=0",
+        "--slow-operation-second=0",
         fixture_path("nquery.log"),
         fixture_path("nquery2.log")
       ])
       expected = <<-OUTPUT
-Query: select --table Site --filter \"_id >= 4 && _id <= 6\"
-  Before(average): 70000000.0 (nsec)
-   After(average): 90000000.0 (nsec)
-          Changes: (+28.57% +0.02sec/+20.00msec/+20000.00usec/+20000000.00nsec)
-       Operations:
-               Operation[0]: filter
-         Before(average)[0]: 40000000.0 (nsec)
-          After(average)[0]: 80000000.0 (nsec)
-                 Changes[0]: (+100.00% +0.04sec/+40.00msec/+40000.00usec/+40000000.00nsec)
-                 Context[0]: #<accessor _id(Site)> greater_equal 4
-               Operation[1]: filter
-         Before(average)[1]: 10000000.0 (nsec)
-          After(average)[1]: 20000000.0 (nsec)
-                 Changes[1]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
-                 Context[1]: #<accessor _id(Site)> less_equal 6
-               Operation[2]: select
-         Before(average)[2]: 10000000.0 (nsec)
-          After(average)[2]: 20000000.0 (nsec)
-                 Changes[2]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
-                 Context[2]: 
-               Operation[3]: output
-         Before(average)[3]: 10000000.0 (nsec)
-          After(average)[3]: 20000000.0 (nsec)
-                 Changes[3]: (+100.00% +0.01sec/+10.00msec/+10000.00usec/+10000000.00nsec)
-                 Context[3]: 
-Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
+Query: select --table Site --filter "_id >= 4 && _id <= 6"
+  Mean (old): 70.0msec
+  Mean (new): 90.0msec
+  Diff:       +20.0msec/+1.29
+  Operations:
+    Operation[0]: filter #<accessor _id(Site)> greater_equal 4
+      Mean (old): 40.0msec
+      Mean (new): 80.0msec
+      Diff:       +40.0msec/+2.00
+    Operation[1]: filter #<accessor _id(Site)> less_equal 6
+      Mean (old): 10.0msec
+      Mean (new): 20.0msec
+      Diff:       +10.0msec/+2.00
+    Operation[2]: select
+      Mean (old): 10.0msec
+      Mean (new): 20.0msec
+      Diff:       +10.0msec/+2.00
+    Operation[3]: output
+      Mean (old): 10.0msec
+      Mean (new): 20.0msec
+      Diff:       +10.0msec/+2.00
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 4/4(100.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -173,117 +176,138 @@ Summary: slow response: 1/1(100.00%) slow operation: 4/4(100.00%) cached: 0
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-percentage=0.0",
-        "--slow-operation-percentage=0.0",
-        "--slow-response-threshold=0.0",
-        "--slow-operation-threshold=0.0",
+        "--slow-query-ratio=0.0",
+        "--slow-query-second=0.0",
+        "--slow-operation-ratio=0.0",
+        "--slow-operation-second=0.0",
         fixture_path("query1.log"),
         fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12000000.0 (nsec)
-   After(average): 14000000.0 (nsec)
-          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
-       Operations:
-               Operation[0]: select
-         Before(average)[0]: 5000000.0 (nsec)
-          After(average)[0]: 6000000.0 (nsec)
-                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-                 Context[0]: 
-Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
+  Mean (old): 12.0msec
+  Mean (new): 14.0msec
+  Diff:       +2.0msec/+1.17
+  Operations:
+    Operation[0]: select
+      Mean (old): 5.0msec
+      Mean (new): 6.0msec
+      Diff:       +1.0msec/+1.20
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 1/2( 50.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
       OUTPUT
       assert_equal(expected, output.string)
     end
   end
 
-  sub_test_case("ratio") do
-    def test_response_filtered
+  sub_test_case("query-ratio") do
+    def test_filtered
       output = StringIO.new
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-percentage=20",
-        "--slow-operation-percentage=0",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0",
-        fixture_path("query1.log"),
-        fixture_path("query2.log")
-      ])
-      expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
-      assert_equal(expected, output.string)
-    end
-
-    def test_operation_filtered
-      output = StringIO.new
-      options = {:output => output}
-      command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
-      command.run([
-        "--slow-response-percentage=0",
-        "--slow-operation-percentage=10",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0",
+        "--slow-query-ratio=2",
+        "--slow-query-second=0",
+        "--slow-operation-ratio=0",
+        "--slow-operation-second=0",
         fixture_path("query1.log"),
         fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
-Query: select --table Site --limit 0
-  Before(average): 12000000.0 (nsec)
-   After(average): 14000000.0 (nsec)
-          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
-       Operations:
-               Operation[0]: select
-         Before(average)[0]: 5000000.0 (nsec)
-          After(average)[0]: 6000000.0 (nsec)
-                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-                 Context[0]: 
-Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
+Summary:
+  Slow queries:    0/1(  0.00%)
+  Slow operations: 0/0(  0.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
       OUTPUT
       assert_equal(expected, output.string)
     end
   end
 
-  sub_test_case("threshold") do
-    def test_response_threshold
+  sub_test_case("operation-ratio") do
+    def test_filtered
       output = StringIO.new
       options = {:output => output}
       command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
       command.run([
-        "--slow-response-percentage=0",
-        "--slow-operation-percentage=0",
-        "--slow-response-threshold=0.02",
-        "--slow-operation-threshold=0",
-        fixture_path("query1.log"),
-        fixture_path("query2.log")
-      ])
-      expected = "Summary: slow response: 0/1(0.00%) slow operation: 0/0(NaN%) cached: 0\n"
-      assert_equal(expected, output.string)
-    end
-
-    def test_operation_threshold
-      output = StringIO.new
-      options = {:output => output}
-      command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
-      command.run([
-        "--slow-response-percentage=0",
-        "--slow-operation-percentage=0",
-        "--slow-response-threshold=0",
-        "--slow-operation-threshold=0.001",
+        "--slow-query-ratio=0",
+        "--slow-query-second=0",
+        "--slow-operation-ratio=2",
+        "--slow-operation-second=0",
         fixture_path("query1.log"),
         fixture_path("query2.log")
       ])
       expected = <<-OUTPUT
 Query: select --table Site --limit 0
-  Before(average): 12000000.0 (nsec)
-   After(average): 14000000.0 (nsec)
-          Changes: (+16.67% +0.00sec/+2.00msec/+2000.00usec/+2000000.00nsec)
-       Operations:
-               Operation[0]: select
-         Before(average)[0]: 5000000.0 (nsec)
-          After(average)[0]: 6000000.0 (nsec)
-                 Changes[0]: (+20.00% +0.00sec/+1.00msec/+1000.00usec/+1000000.00nsec)
-                 Context[0]: 
-Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
+  Mean (old): 12.0msec
+  Mean (new): 14.0msec
+  Diff:       +2.0msec/+1.17
+  Operations:
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 0/2(  0.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
+      OUTPUT
+      assert_equal(expected, output.string)
+    end
+  end
+
+  sub_test_case("query-second") do
+    def test_filtered
+      output = StringIO.new
+      options = {:output => output}
+      command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
+      command.run([
+        "--slow-query-ratio=0",
+        "--slow-query-second=0.02",
+        "--slow-operation-ratio=0",
+        "--slow-operation-second=0",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
+      ])
+      expected = <<-OUTPUT
+Summary:
+  Slow queries:    0/1(  0.00%)
+  Slow operations: 0/0(  0.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
+      OUTPUT
+      assert_equal(expected, output.string)
+    end
+  end
+
+  sub_test_case("operation-second") do
+    def test_filtered
+      output = StringIO.new
+      options = {:output => output}
+      command = GroongaQueryLog::Command::CheckPerformanceRegression.new(options)
+      command.run([
+        "--slow-query-ratio=0",
+        "--slow-query-second=0",
+        "--slow-operation-ratio=0",
+        "--slow-operation-second=0.001",
+        fixture_path("query1.log"),
+        fixture_path("query2.log")
+      ])
+      expected = <<-OUTPUT
+Query: select --table Site --limit 0
+  Mean (old): 12.0msec
+  Mean (new): 14.0msec
+  Diff:       +2.0msec/+1.17
+  Operations:
+    Operation[0]: select
+      Mean (old): 5.0msec
+      Mean (new): 6.0msec
+      Diff:       +1.0msec/+1.20
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 1/2( 50.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
       OUTPUT
       assert_equal(expected, output.string)
     end
@@ -298,13 +322,19 @@ Summary: slow response: 1/1(100.00%) slow operation: 1/2(50.00%) cached: 0
 
     def test_ignored_cache
       @command.run([
-        "--slow-response-percentage=0",
-        "--slow-operation-percentage=0",
-        "--slow-response-threshold=0",
+        "--slow-query-ratio=0",
+        "--slow-operation-ratio=0",
+        "--slow-query-second=0",
         fixture_path("cache.log"),
         fixture_path("cache.log")
       ])
-      expected = "Summary: slow response: 0/0(NaN%) slow operation: 0/0(NaN%) cached: 1\n"
+      expected = <<-OUTPUT
+Summary:
+  Slow queries:    0/0(  0.00%)
+  Slow operations: 0/0(  0.00%)
+  Caches (old):    1/1(100.00%)
+  Caches (new):    1/1(100.00%)
+      OUTPUT
       assert_equal(expected, @output.string)
     end
   end
