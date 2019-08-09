@@ -82,7 +82,7 @@ module GroongaQueryLog
 
         statistics = statistics.sort_by { |statistic| statistic[:percentage] }
 
-        @n_processed_queries = old_queries.keys.count
+        @n_processed_queries = old_queries.size
 
         open_output do |output|
           statistics.each do |statistic|
