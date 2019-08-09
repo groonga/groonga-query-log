@@ -31,8 +31,8 @@ module GroongaQueryLog
       MSEC_IN_SECONDS = 1000
 
       def initialize(options={})
+        @output = options[:output] || "-"
         setup_options
-        @output = options[:output] || $stdout
         @n_processed_queries = 0
         @n_slow_responses = 0
         @n_slow_operations = 0
@@ -155,13 +155,13 @@ module GroongaQueryLog
       end
 
       def open_output(&block)
-        output = @output
-        output = @options[:output] if @options[:output]
-        case output
+        case @output
+        when "-"
+          yield($stdout)
         when String
-          File.open(output, "w", &block)
+          File.open(@output, "w", &block)
         else
-          yield(output)
+          yield(@output)
         end
       end
 
@@ -262,10 +262,15 @@ module GroongaQueryLog
             @options[:n_entries] = n
           end
 
+          if @output == "-"
+            default_output = "stdout"
+          else
+            default_output = @output
+          end
           parser.on("--output=PATH",
                     "Output to PATH.",
-                    "(#{@options[:output]})") do |output|
-            @options[:output] = output
+                    "(#{default_output})") do |output|
+            @output = output
           end
 
           parser.on("--target-query-file=TARGET_QUERY_FILE",
