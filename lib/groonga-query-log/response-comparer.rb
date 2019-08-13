@@ -59,6 +59,24 @@ module GroongaQueryLog
       @response1.body == @response2.body
     end
 
+    def same_sort_key?
+      return false unless @command.has_key?(:sort_keys)
+      if !@command.sort_keys.empty?
+        @response1.records.each do |record1|
+          @response2.records.each do |record2|
+            if record2[@command.sort_keys] == record1[@command.sort_keys]
+              next
+            else
+              return false
+            end
+          end
+        end
+        return true
+      else
+        return false
+      end
+    end
+
     def same_select_response?
       if care_order?
         if all_output_columns?
