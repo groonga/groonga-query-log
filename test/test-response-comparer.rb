@@ -185,23 +185,24 @@ class ResponseComparerTest < Test::Unit::TestCase
         end
 
         class SameSortKeyTest < self
-          def test_same_key
+          def test_same_sort_key
+            @command[:sort_keys] = "_score"
             assert_true(same?([
                                 [
                                   [3],
-                                  [["_id", "UInt32"], ["TimeStamp", "Time"]],
-                                  [1, 1422892852.0],
-                                  [2, 1422892853.0],
-                                  [3, 1422892854.0],
+                                  [["_id", "UInt32"], ["_score", "Int32"]],
+                                  [1, 2],
+                                  [2, 2],
+                                  [3, 2],
                                 ],
                               ],
                               [
                                 [
                                   [3],
-                                  [["_id", "UInt32"], ["TimeStamp", "Time"]],
-                                  [2, 1422892853.0],
-                                  [1, 1422892852.0],
-                                  [3, 1422892854.0],
+                                  [["_id", "UInt32"], ["_score", "Int32"]],
+                                  [2, 2],
+                                  [1, 2],
+                                  [3, 2],
                                 ],
                               ]))
           end
@@ -611,3 +612,5 @@ class ResponseComparerTest < Test::Unit::TestCase
     end
   end
 end
+
+
