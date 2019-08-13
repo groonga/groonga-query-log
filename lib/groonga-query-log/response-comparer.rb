@@ -115,27 +115,10 @@ module GroongaQueryLog
 
       columns1 = normalize_columns(records_result1[1])
       columns2 = normalize_columns(records_result2[1])
-      compare_result = false
       if all_output_columns?
-        compare_result =
-          columns1.sort_by(&:first) == columns2.sort_by(&:first)
+        columns1.sort_by(&:first) == columns2.sort_by(&:first)
       else
-        compare_result = columns1 == columns2
-      end
-
-      if !compare_result && !@command.sort_keys.empty?
-        @response1.records.each do |record1|
-          @response2.records.each do |record2|
-            if record2[@command.sort_keys] == record1[@command.sort_keys]
-              next
-            else
-              return compare_result
-            end
-          end
-        end
-        compare_result = true
-      else
-        compare_result
+        columns1 == columns2
       end
     end
 
