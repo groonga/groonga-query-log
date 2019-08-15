@@ -1,5 +1,19 @@
 # News
 
+## 1.4.5: 2019-08-15
+
+### Improvements
+
+  * `groonga-query-log-check-performance-regression`:
+
+    * Added feature for checking deterioration of performance.
+
+### Fixes
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Fixed a bug that `--rewrite-and-not-operator` option doesn't work.
+
 ## 1.4.4: 2019-08-05
 
 ### Improvements
