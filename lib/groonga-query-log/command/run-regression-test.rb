@@ -338,7 +338,7 @@ module GroongaQueryLog
             @nullable_reference_number_accessors,
           :rewrite_not_or_regular_expression =>
             @rewrite_not_or_regular_expression,
-          :rewite_and_not_operator =>
+          :rewrite_and_not_operator =>
             @rewrite_and_not_operator,
           :target_command_names => @target_command_names,
           :read_timeout => @read_timeout,
