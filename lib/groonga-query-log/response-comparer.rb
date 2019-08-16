@@ -61,38 +61,32 @@ module GroongaQueryLog
 
     def same_sort_key?
       return false unless @command.has_key?(:sort_keys)
-      if !@command.sort_keys.empty?
-        @response1.records.each do |record1|
-          @response2.records.each do |record2|
-            if record2[@command.sort_keys] == record1[@command.sort_keys]
-              next
-            else
-              return false
-            end
+      return false if @command.sort_keys.empty?
+      @response1.records.each do |record1|
+        @response2.records.each do |record2|
+          if record2[@command.sort_keys] == record1[@command.sort_keys]
+            next
+          else
+            return false
           end
         end
-        return true
-      else
-        return false
       end
+      return true
     end
 
     def same_shard_key?
       return false unless @command.has_key?(:shard_key)
-      if !@command.shard_key.empty?
-        @response1.records.each do |record1|
-          @response2.records.each do |record2|
-            if record2[@command.shard_key] == record1[@command.shard_key]
-              next
-            else
-              return false
-            end
+      return false if @command.shard_key.empty?
+      @response1.records.each do |record1|
+        @response2.records.each do |record2|
+          if record2[@command.shard_key] == record1[@command.shard_key]
+            next
+          else
+            return false
           end
         end
-        return true
-      else
-        return false
       end
+      return true
     end
 
     def same_select_response?
