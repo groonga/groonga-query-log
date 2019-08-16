@@ -102,10 +102,9 @@ module GroongaQueryLog
         if compare_result
           compare_result = same_drilldowns?
         end
-        if compare_result == false
-          if same_sort_key? or same_shard_key?
-            return same_size_response?
-          end
+        return compare_result if compare_result
+        if same_sort_key? or same_shard_key?
+          return same_size_response?
         end
         compare_result
       else
