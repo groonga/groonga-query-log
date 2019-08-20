@@ -100,6 +100,13 @@ module GroongaQueryLog
       end
 
       private
+      def normalize_path(path)
+        if File::ALT_SEPARATOR
+          path = path.gsub(File::ALT_SEPARATOR, File::SEPARATOR)
+        end
+        path
+      end
+
       def create_option_parser
         parser = OptionParser.new
         parser.version = VERSION
@@ -109,12 +116,12 @@ module GroongaQueryLog
         parser.on("--input-directory=DIRECTORY",
                   "Load schema and data from DIRECTORY.",
                   "(#{@input_directory})") do |directory|
-          @input_directory = Pathname.new(directory)
+          @input_directory = Pathname.new(normalize_path(directory))
         end
         parser.on("--working-directory=DIRECTORY",
                   "Use DIRECTORY as working directory.",
                   "(#{@working_directory})") do |directory|
-          @working_directory = Pathname.new(directory)
+          @working_directory = Pathname.new(normalize_path(directory))
         end
 
         parser.separator("")
