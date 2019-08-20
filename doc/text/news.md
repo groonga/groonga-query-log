@@ -1,5 +1,13 @@
 # News
 
+## 1.4.6: 2019-08-20
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for "\" as path separator.
+
 ## 1.4.5: 2019-08-15
 
 ### Improvements
