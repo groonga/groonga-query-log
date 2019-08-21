@@ -73,6 +73,7 @@ module GroongaQueryLog
           smtp_auth_password: nil,
           smtp_starttls: false,
           smtp_port: 25,
+          path: "#{@working_directory}/results",
         }
       end
 
