@@ -612,5 +612,3 @@ class ResponseComparerTest < Test::Unit::TestCase
     end
   end
 end
-
-
