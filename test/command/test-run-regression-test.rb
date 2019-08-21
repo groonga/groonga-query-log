@@ -84,7 +84,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
-        :working_directory => fixture_path(),
+        :path => fixture_path("results"),
       }
       notifier = MailNotifier.new(true, 3000, options)
       notifier.notify
