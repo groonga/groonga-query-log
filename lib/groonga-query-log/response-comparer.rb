@@ -59,21 +59,6 @@ module GroongaQueryLog
       @response1.body == @response2.body
     end
 
-    def same_shard_key?
-      return false unless @command.has_key?(:shard_key)
-      return false if @command.shard_key.empty?
-      @response1.records.each do |record1|
-        @response2.records.each do |record2|
-          if record2[@command.shard_key] == record1[@command.shard_key]
-            next
-          else
-            return false
-          end
-        end
-      end
-      return true
-    end
-
     def same_select_response?
       if care_order?
         if all_output_columns?
