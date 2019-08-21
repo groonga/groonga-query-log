@@ -1,5 +1,13 @@
 # News
 
+## 1.4.7: 2019-08-21
+
+### Fixes
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Fixed a bug that sometimes doesn't send test reports
+
 ## 1.4.6: 2019-08-20
 
 ### Improvements
