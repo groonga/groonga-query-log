@@ -59,21 +59,6 @@ module GroongaQueryLog
       @response1.body == @response2.body
     end
 
-    def same_sort_key?
-      return false unless @command.has_key?(:sort_keys)
-      return false if @command.sort_keys.empty?
-      @response1.records.each do |record1|
-        @response2.records.each do |record2|
-          if record2[@command.sort_keys] == record1[@command.sort_keys]
-            next
-          else
-            return false
-          end
-        end
-      end
-      return true
-    end
-
     def same_shard_key?
       return false unless @command.has_key?(:shard_key)
       return false if @command.shard_key.empty?
@@ -90,23 +75,15 @@ module GroongaQueryLog
     end
 
     def same_select_response?
-      compare_result = false
       if care_order?
         if all_output_columns?
-          compare_result = same_records_all_output_columns?
+          return false unless same_records_all_output_columns?
         elsif have_unary_minus_output_column?
-          compare_result = same_records_unary_minus_output_column?
+          return false unless same_records_unary_minus_output_column?
         else
-          compare_result = same_records?
+          return false unless same_records?
         end
-        if compare_result
-          compare_result = same_drilldowns?
-        end
-        return compare_result if compare_result
-        if same_sort_key? or same_shard_key?
-          return same_size_response?
-        end
-        compare_result
+        same_drilldowns?
       else
         same_size_response?
       end
