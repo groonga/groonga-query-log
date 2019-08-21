@@ -611,4 +611,32 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
   end
+
+  class LogicalSelectTest < self
+    def setup
+      @command =
+        Groonga::Command::LogicalSelect.new(:logical_table => "Logs",
+                                            :shard_key => "timestamp")
+    end
+    def test_same_shard_key
+      assert_true(same?([
+                          [
+                            [3],
+                            [["_id", "UInt32"], ["timestamp", "Time"]],
+                            [1, 1492272000.0],
+                            [2, 1492272000.0],
+                            [3, 1492272000.0],
+                          ],
+                        ],
+                        [
+                          [
+                            [3],
+                            [["_id", "UInt32"], ["timestamp", "Time"]],
+                            [2, 1492272000.0],
+                            [1, 1492272000.0],
+                            [3, 1492272000.0],
+                          ],
+                        ]))
+    end
+  end
 end
