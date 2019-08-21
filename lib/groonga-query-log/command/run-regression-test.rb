@@ -73,6 +73,7 @@ module GroongaQueryLog
           smtp_auth_password: nil,
           smtp_starttls: false,
           smtp_port: 25,
+          working_directory: @working_directory,
         }
       end
 
@@ -678,7 +679,8 @@ module GroongaQueryLog
           @success = success
           @elapsed_time = elapsed_time
           @options = options
-          @path = @options[:path] || "results"
+          @path =
+            Pathname.new(@options[:working_directory]).join("results")
         end
 
         def notify

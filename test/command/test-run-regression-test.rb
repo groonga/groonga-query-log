@@ -1,3 +1,4 @@
+# coding: utf-8
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -83,7 +84,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
-        :path => fixture_path("url-format.log"),
+        :working_directory => fixture_path(),
       }
       notifier = MailNotifier.new(true, 3000, options)
       notifier.notify
