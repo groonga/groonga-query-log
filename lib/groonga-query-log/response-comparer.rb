@@ -209,6 +209,15 @@ module GroongaQueryLog
 
       records1 = records_result1[2..-1]
       records2 = records_result2[2..-1]
+      sort_keys = @command.sort_keys
+      if @command.respond_to?(:shard_key)
+        shard_key = @command.shard_key
+        sort_keys.unshift(shard_key)
+      end
+      unless sort_keys.empty?
+        records1 = sort_records(records1, columns1, sort_keys)
+        records2 = sort_records(records2, columns2, sort_keys)
+      end
       records1.each_with_index do |record1, record_index|
         record2 = records2[record_index]
         column_to_index1.each do |name, column_index1|
@@ -256,6 +265,18 @@ module GroongaQueryLog
       end
 
       true
+    end
+
+    def sort_records(records, columns, sort_keys)
+      indexed_columns = columns.collect.with_index.to_a
+      sorted_indexed_columns = indexed_columns.sort_by do |(name, type), i|
+        [sort_keys.index(name) || columns.size, name]
+      end
+      records.sort_by do |record|
+        sorted_indexed_columns.collect do |column, i|
+          normalize_value(record[i], column)
+        end
+      end
     end
 
     def make_column_to_index_map(columns)
