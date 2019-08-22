@@ -75,6 +75,37 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
               "Date: #{@now}\r\n")
     end
 
+    def test_started
+      options = {
+        :smtp_server => @smtp_host,
+        :smtp_port => @smtp_port,
+        :mail_from => "groonga-query-log@example.com",
+        :mail_to => "noreply@example.com",
+        :mail_subject_on_start => "Started",
+      }
+      notifier = MailNotifier.new(options)
+      notifier.notify_started
+      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
+EHLO 127.0.0.1
+MAIL FROM:<#{options[:mail_from]}>
+RCPT TO:<#{options[:mail_to]}>
+DATA
+MIME-Version: 1.0
+X-Mailer: groonga-query-log test reporter #{GroongaQueryLog::VERSION};
+  https://github.com/groonga/groonga-query-log
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+From: #{options[:mail_from]}
+To: #{options[:mail_to]}
+Subject: Started
+Date: #{@now}
+
+
+.
+QUIT
+      REQUEST
+    end
+
     def test_success
       options = {
         :smtp_server => @smtp_host,
@@ -85,8 +116,8 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
         :mail_subject_on_failure => "Failure",
         :path => fixture_path("results"),
       }
-      notifier = MailNotifier.new(true, 3000, options)
-      notifier.notify
+      notifier = MailNotifier.new(options)
+      notifier.notify_finished(true, 3000)
       assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>

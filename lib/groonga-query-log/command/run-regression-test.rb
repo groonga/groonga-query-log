@@ -64,6 +64,7 @@ module GroongaQueryLog
         @read_timeout = Groonga::Client::Default::READ_TIMEOUT
 
         @notifier_options = {
+          mail_subject_on_start: "Start",
           mail_subject_on_success: "Success",
           mail_subject_on_failure: "Failure",
           mail_from: "groonga-query-log@#{Socket.gethostname}",
@@ -86,16 +87,14 @@ module GroongaQueryLog
           return false
         end
 
-        @start_time = Time.now
+        notifier = MailNotifier.new(@notifier_options)
+        notifier.notify_started
+        start_time = Time.now
         tester = Tester.new(old_groonga_server,
                             new_groonga_server,
                             tester_options)
         success = tester.run
-
-        notifier = MailNotifier.new(success,
-                                    Time.now - @start_time,
-                                    @notifier_options)
-        notifier.notify
+        notifier.notify_finished(success, Time.now - start_time)
 
         success
       end
@@ -298,6 +297,11 @@ module GroongaQueryLog
                   "Send a notification e-mail to TO",
                   "(#{@notifier_options[:mail_to]})") do |to|
           @notifier_options[:mail_to] = to
+        end
+        parser.on("--mail-subject-on-start=SUBJECT",
+                  "Use SUBJECT as subject for notification e-mail on start",
+                  "(#{@notifier_options[:mail_subject_on_start]})") do |subject|
+          @notifier_options[:mail_subject_on_start] = subject
         end
         parser.on("--mail-subject-on-success=SUBJECT",
                   "Use SUBJECT as subject for notification e-mail on success",
@@ -675,14 +679,19 @@ module GroongaQueryLog
       end
 
       class MailNotifier
-        def initialize(success, elapsed_time, options)
-          @success = success
-          @elapsed_time = elapsed_time
+        def initialize(options)
           @options = options
           @path = @options[:path] || "results"
         end
 
-        def notify
+        def notify_started
+          return unless @options[:mail_to]
+
+          subject = @options[:mail_subject_on_start]
+          send_mail(subject, "")
+        end
+
+        def notify_finished(success, elapsed_time)
           return unless @options[:mail_to]
 
           output = StringIO.new
@@ -690,23 +699,23 @@ module GroongaQueryLog
           formetter.run([@path])
           formatted_log = output.string
 
-          if @success
+          if success
             subject = @options[:mail_subject_on_success]
           else
             subject = @options[:mail_subject_on_failure]
           end
-          content = format_elapsed_time
+          content = format_elapsed_time(elapsed_time)
           content << "Report:\n"
           content << formatted_log
           send_mail(subject, content)
         end
 
         private
-        def format_elapsed_time
-          elapsed_seconds = @elapsed_time % 60
-          elapsed_minutes = @elapsed_time / 60 % 60
-          elapsed_hours = @elapsed_time / 60 / 60 % 24
-          elapsed_days = @elapsed_time / 60 / 60 / 24
+        def format_elapsed_time(elapsed_time)
+          elapsed_seconds = elapsed_time % 60
+          elapsed_minutes = elapsed_time / 60 % 60
+          elapsed_hours = elapsed_time / 60 / 60 % 24
+          elapsed_days = elapsed_time / 60 / 60 / 24
           "Elapsed: %ddays %02d:%02d:%02d\n" % [
             elapsed_days,
             elapsed_hours,
