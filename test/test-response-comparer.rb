@@ -618,6 +618,7 @@ class ResponseComparerTest < Test::Unit::TestCase
         Groonga::Command::LogicalSelect.new(:logical_table => "Logs",
                                             :shard_key => "timestamp")
     end
+
     def test_same_shard_key
       assert_true(same?([
                           [
