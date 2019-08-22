@@ -1,5 +1,18 @@
 # News
 
+## 1.4.8: 2019-08-22
+
+### Improvements
+
+  * Required groonga-command 1.4.2 or later.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Add support for loose sort check. If all sort values are the
+      same values, order in records that have the same values isn't
+      unspecified in Groonga. Loose sort check respects the behavior
+      by sorting in the script.
+
 ## 1.4.7: 2019-08-21
 
 ### Fixes
