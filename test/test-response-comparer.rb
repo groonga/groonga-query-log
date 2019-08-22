@@ -183,29 +183,97 @@ class ResponseComparerTest < Test::Unit::TestCase
             assert_true(score_sort?("_id,-_score,_key"))
           end
         end
+      end
 
-        class SameSortKeyTest < self
-          def test_same_sort_key
-            @command[:sort_keys] = "_score"
-            assert_true(same?([
-                                [
-                                  [3],
-                                  [["_id", "UInt32"], ["_score", "Int32"]],
-                                  [1, 2],
-                                  [2, 2],
-                                  [3, 2],
-                                ],
-                              ],
+      class LooseSortTest < self
+        def test_sorted
+          @command[:sort_keys] = "_score,count"
+          assert_true(same?([
                               [
+                                [3],
                                 [
-                                  [3],
-                                  [["_id", "UInt32"], ["_score", "Int32"]],
-                                  [2, 2],
-                                  [1, 2],
-                                  [3, 2],
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
                                 ],
-                              ]))
-          end
+                                [1, 2, 10],
+                                [2, 2, 10],
+                                [3, 3, 11],
+                              ],
+                            ],
+                            [
+                              [
+                                [3],
+                                [
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
+                                ],
+                                [2, 2, 10],
+                                [1, 2, 10],
+                                [3, 3, 11],
+                              ],
+                            ]))
+        end
+
+        def test_not_sorted
+          @command[:sort_keys] = "_score,count"
+          assert_false(same?([
+                               [
+                                 [3],
+                                 [
+                                   ["_id", "UInt32"],
+                                   ["_score", "Int32"],
+                                   ["count", "Int32"],
+                                 ],
+                                 [1, 2, 10],
+                                 [2, 2, 10],
+                                 [3, 2, 9],
+                               ],
+                             ],
+                             [
+                               [
+                                 [3],
+                                 [
+                                   ["_id", "UInt32"],
+                                   ["_score", "Int32"],
+                                   ["count", "Int32"],
+                                 ],
+                                 [2, 2, 10],
+                                 [1, 2, 10],
+                                 [3, 2, 9],
+                               ],
+                             ]))
+        end
+
+        def test_descendant
+          @command[:sort_keys] = "_score,-count"
+          assert_true(same?([
+                              [
+                                [3],
+                                [
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
+                                ],
+                                [1, 2, 10],
+                                [2, 2, 10],
+                                [3, 2, 9],
+                              ],
+                            ],
+                            [
+                              [
+                                [3],
+                                [
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
+                                ],
+                                [2, 2, 10],
+                                [1, 2, 10],
+                                [3, 2, 9],
+                              ],
+                            ]))
         end
       end
     end
@@ -613,31 +681,123 @@ class ResponseComparerTest < Test::Unit::TestCase
   end
 
   class LogicalSelectTest < self
-    def setup
-      @command =
-        Groonga::Command::LogicalSelect.new(:logical_table => "Logs",
-                                            :shard_key => "timestamp")
-    end
+    class LooseSortTest < self
+      def setup
+        @command =
+          Groonga::Command::LogicalSelect.new(:logical_table => "Logs",
+                                              :shard_key => "timestamp")
+      end
 
-    def test_same_shard_key
-      assert_true(same?([
-                          [
-                            [3],
-                            [["_id", "UInt32"], ["timestamp", "Time"]],
-                            [1, 1492272000.0],
-                            [2, 1492272000.0],
-                            [3, 1492272000.0],
+      def test_not_sorted
+        @command[:sort_keys] = "-count"
+        assert_false(same?([
+                             [
+                               [3],
+                               [
+                                 ["_id", "UInt32"],
+                                 ["timestamp", "Time"],
+                                 ["count", "UInt32"],
+                               ],
+                               [1, 1492272000.0, 10],
+                               [2, 1492272000.0, 10],
+                               [3, 1492272000.0, 11],
+                             ],
+                           ],
+                           [
+                             [
+                               [3],
+                               [
+                                 ["_id", "UInt32"],
+                                 ["timestamp", "Time"],
+                                 ["count", "UInt32"],
+                               ],
+                               [2, 1492272000.0, 10],
+                               [1, 1492272000.0, 10],
+                               [3, 1492272000.0, 11],
+                             ],
+                           ]))
+      end
+
+      def test_no_sort_keys
+        assert_true(same?([
+                            [
+                              [3],
+                              [["_id", "UInt32"], ["timestamp", "Time"]],
+                              [1, 1492272000.0],
+                              [2, 1492272000.0],
+                              [3, 1492272001.0],
+                            ],
                           ],
-                        ],
-                        [
                           [
-                            [3],
-                            [["_id", "UInt32"], ["timestamp", "Time"]],
-                            [2, 1492272000.0],
-                            [1, 1492272000.0],
-                            [3, 1492272000.0],
+                            [
+                              [3],
+                              [["_id", "UInt32"], ["timestamp", "Time"]],
+                              [2, 1492272000.0],
+                              [1, 1492272000.0],
+                              [3, 1492272001.0],
+                            ],
+                          ]))
+      end
+
+      def test_shard_key_and_sort_keys
+        @command[:sort_keys] = "count"
+        assert_true(same?([
+                            [
+                              [3],
+                              [
+                                ["_id", "UInt32"],
+                                ["timestamp", "Time"],
+                                ["count", "UInt32"],
+                              ],
+                              [1, 1492272000.0, 10],
+                              [2, 1492272000.0, 10],
+                              [3, 1492272001.0, 9],
+                            ],
                           ],
-                        ]))
+                          [
+                            [
+                              [3],
+                              [
+                                ["_id", "UInt32"],
+                                ["timestamp", "Time"],
+                                ["count", "UInt32"],
+                              ],
+                              [2, 1492272000.0, 10],
+                              [1, 1492272000.0, 10],
+                              [3, 1492272001.0, 9],
+                            ],
+                          ]))
+      end
+
+      def test_shard_key_and_sort_keys_descendant
+        @command[:sort_keys] = "-count"
+        assert_true(same?([
+                            [
+                              [3],
+                              [
+                                ["_id", "UInt32"],
+                                ["timestamp", "Time"],
+                                ["count", "UInt32"],
+                              ],
+                              [1, 1492272000.0, 10],
+                              [2, 1492272000.0, 10],
+                              [3, 1492272000.0, 9],
+                            ],
+                          ],
+                          [
+                            [
+                              [3],
+                              [
+                                ["_id", "UInt32"],
+                                ["timestamp", "Time"],
+                                ["count", "UInt32"],
+                              ],
+                              [2, 1492272000.0, 10],
+                              [1, 1492272000.0, 10],
+                              [3, 1492272000.0, 9],
+                            ],
+                          ]))
+      end
     end
   end
 end

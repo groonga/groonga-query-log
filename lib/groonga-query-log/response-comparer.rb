@@ -199,9 +199,9 @@ module GroongaQueryLog
         shard_key = @command.shard_key
         sort_keys.unshift(shard_key)
       end
-      unless sort_keys.empty?
-        records1 = sort_records(records1, columns1, sort_keys)
-        records2 = sort_records(records2, columns2, sort_keys)
+      if need_loose_sort?(records1, columns1, records2, columns2, sort_keys)
+        records1 = sort_records_loose(records1, columns1, sort_keys)
+        records2 = sort_records_loose(records2, columns2, sort_keys)
       end
       records1.each_with_index do |record1, record_index|
         record2 = records2[record_index]
@@ -252,15 +252,55 @@ module GroongaQueryLog
       true
     end
 
-    def sort_records(records, columns, sort_keys)
-      indexed_columns = columns.collect.with_index.to_a
-      sorted_indexed_columns = indexed_columns.sort_by do |(name, type), i|
-        [sort_keys.index(name) || columns.size, name]
+    def need_loose_sort?(records1, columns1, records2, columns2, sort_keys)
+      return false if sort_keys.empty?
+      return false unless sorted?(records1, columns1, sort_keys)
+      return false unless sorted?(records2, columns2, sort_keys)
+      true
+    end
+
+    def compare_records(record1, record2, columns, sort_targets)
+      sort_targets.each do |i, order|
+        value1 = normalize_value(record1[i], columns[i])
+        value2 = normalize_value(record2[i], columns[i])
+        compared = (value1 <=> value2)
+        compared = -compared if order == :descendant
+        return compared unless compared == 0
       end
-      records.sort_by do |record|
-        sorted_indexed_columns.collect do |column, i|
-          normalize_value(record[i], column)
+      0
+    end
+
+    def compute_sort_targets(columns, sort_keys)
+      sort_keys.collect do |sort_key|
+        if sort_key.start_with?("-")
+          order = :descendant
+          sort_key = sort_key[1..-1]
+        else
+          order = :ascending
         end
+        i = columns.index do |(name, _)|
+          name == sort_key
+        end
+        [i, order]
+      end
+    end
+
+    def sorted?(records, columns, sort_keys)
+      sort_targets = compute_sort_targets(columns, sort_keys)
+      sorted_records = records.sort do |record1, record2|
+        compare_records(record1, record2, columns, sort_targets)
+      end
+      records == sorted_records
+    end
+
+    def sort_records_loose(records, columns, sort_keys)
+      sort_targets = compute_sort_targets(columns, sort_keys)
+      columns.each_with_index do |column, i|
+        next if sort_targets.any? {|j, _| j == i}
+        sort_targets << [i, :ascending]
+      end
+      records.sort do |record1, record2|
+        compare_records(record1, record2, columns, sort_targets)
       end
     end
 
