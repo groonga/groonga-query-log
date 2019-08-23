@@ -122,6 +122,7 @@ module GroongaQueryLog
           return if response_old == response_new
 
           report_command(command)
+          report_label("old", "new")
           pp_response_old = PP.pp(JSON.parse(response_old), "")
           pp_response_new = PP.pp(JSON.parse(response_new), "")
           diffs = Diff::LCS.diff(pp_response_old.lines.collect(&:chomp),
@@ -178,6 +179,11 @@ module GroongaQueryLog
           sorted_arguments.each do |key, value|
             @output.puts("  #{key}: #{value}")
           end
+        end
+
+        def report_label(old_label, new_label)
+          @output.puts("--- #{old_label}")
+          @output.puts("+++ #{new_label}")
         end
       end
     end
