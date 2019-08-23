@@ -123,10 +123,9 @@ module GroongaQueryLog
 
           report_command(command)
           report_label("old", "new")
-          pp_response_old = PP.pp(JSON.parse(response_old), "")
-          pp_response_new = PP.pp(JSON.parse(response_new), "")
-          diffs = Diff::LCS.diff(pp_response_old.lines.collect(&:chomp),
-                                 pp_response_new.lines.collect(&:chomp))
+          lines_old = response_to_lines(response_old)
+          lines_new = response_to_lines(response_new)
+          diffs = Diff::LCS.diff(lines_old, lines_new)
 
           unified_diff = ""
 
@@ -136,9 +135,11 @@ module GroongaQueryLog
           file_length_difference = 0
           diffs.each do |piece|
             begin
-              hunk = Diff::LCS::Hunk.new(pp_response_old.lines.collect(&:chomp),
-                                         pp_response_new.lines.collect(&:chomp),
-                                         piece, n_lines, file_length_difference)
+              hunk = Diff::LCS::Hunk.new(lines_old,
+                                         lines_new,
+                                         piece,
+                                         n_lines,
+                                         file_length_difference)
               file_length_difference = hunk.file_length_difference
 
               next unless old_hunk
@@ -158,6 +159,10 @@ module GroongaQueryLog
             unified_diff << "\n"
           end
           @output.puts(unified_diff)
+        end
+
+        def response_to_lines(response)
+          PP.pp(JSON.parse(response), "").lines.collect(&:chomp)
         end
 
         def report_error(command, message, backtrace)
