@@ -53,10 +53,10 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency("diff-lcs")
-  spec.add_runtime_dependency("groonga-command-parser")
   spec.add_runtime_dependency("groonga-client")
-  spec.add_runtime_dependency("groonga-log", ">= 0.1.2")
   spec.add_runtime_dependency("groonga-command", ">= 1.4.2")
+  spec.add_runtime_dependency("groonga-command-parser")
+  spec.add_runtime_dependency("groonga-log", ">= 0.1.2")
 
   spec.add_development_dependency("test-unit")
   spec.add_development_dependency("test-unit-rr")
