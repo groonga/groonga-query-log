@@ -1,5 +1,13 @@
 # News
 
+## 1.4.9: 2019-08-23
+
+### Fixes
+
+  * `groonga-query-log-format-regression-test-logs`:
+
+    * Fixed a bug that doesn't work a `diff` command in Windows.
+
 ## 1.4.8: 2019-08-22
 
 ### Improvements
