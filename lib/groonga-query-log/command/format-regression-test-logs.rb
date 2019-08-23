@@ -20,9 +20,9 @@ require "tempfile"
 require "pp"
 require "optparse"
 require "json"
+
 require "diff/lcs"
 require "diff/lcs/hunk"
-
 require "groonga/command/parser"
 
 require "groonga-query-log/version"
