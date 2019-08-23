@@ -20,6 +20,8 @@ require "tempfile"
 require "pp"
 require "optparse"
 require "json"
+require "diff/lcs"
+require "diff/lcs/hunk"
 
 require "groonga/command/parser"
 
@@ -119,26 +121,43 @@ module GroongaQueryLog
         def report_diff(command, response_old, response_new)
           return if response_old == response_new
 
-          Tempfile.open("response-old") do |response_old_file|
-            PP.pp(JSON.parse(response_old), response_old_file)
-            response_old_file.flush
-            Tempfile.open("response-new") do |response_new_file|
-              PP.pp(JSON.parse(response_new), response_new_file)
-              response_new_file.flush
-              report_command(command)
-              Tempfile.open("response-diff") do |response_diff_file|
-                system("diff",
-                       "--label=old",
-                       "--label=new",
-                       "-u",
-                       response_old_file.path,
-                       response_new_file.path,
-                       out: response_diff_file)
-                response_diff_file.rewind
-                @output.puts(response_diff_file.read)
+          report_command(command)
+          pp_response_old = PP.pp(JSON.parse(response_old), "")
+          pp_response_new = PP.pp(JSON.parse(response_new), "")
+          diffs = Diff::LCS.diff(pp_response_old.lines.collect(&:chomp),
+                                 pp_response_new.lines.collect(&:chomp))
+
+          unified_diff = ""
+
+          old_hunk = nil
+          n_lines = 3
+          format = :unified
+          file_length_difference = 0
+          diffs.each do |piece|
+            begin
+              hunk = Diff::LCS::Hunk.new(pp_response_old.lines.collect(&:chomp),
+                                         pp_response_new.lines.collect(&:chomp),
+                                         piece, n_lines, file_length_difference)
+              file_length_difference = hunk.file_length_difference
+
+              next unless old_hunk
+
+              if (n_lines > 0) && hunk.overlaps?(old_hunk)
+                hunk.merge(old_hunk)
+              else
+                unified_diff << old_hunk.diff(format)
               end
+            ensure
+              old_hunk = hunk
+              unified_diff << "\n"
             end
           end
+
+          if old_hunk
+            unified_diff << old_hunk.diff(format)
+            unified_diff << "\n"
+          end
+          @output.puts(unified_diff)
         end
 
         def report_error(command, message, backtrace)
