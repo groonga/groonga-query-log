@@ -21,6 +21,8 @@ require "pp"
 require "optparse"
 require "json"
 
+require "diff/lcs"
+require "diff/lcs/hunk"
 require "groonga/command/parser"
 
 require "groonga-query-log/version"
@@ -119,26 +121,47 @@ module GroongaQueryLog
         def report_diff(command, response_old, response_new)
           return if response_old == response_new
 
-          Tempfile.open("response-old") do |response_old_file|
-            PP.pp(JSON.parse(response_old), response_old_file)
-            response_old_file.flush
-            Tempfile.open("response-new") do |response_new_file|
-              PP.pp(JSON.parse(response_new), response_new_file)
-              response_new_file.flush
-              report_command(command)
-              Tempfile.open("response-diff") do |response_diff_file|
-                system("diff",
-                       "--label=old",
-                       "--label=new",
-                       "-u",
-                       response_old_file.path,
-                       response_new_file.path,
-                       out: response_diff_file)
-                response_diff_file.rewind
-                @output.puts(response_diff_file.read)
+          report_command(command)
+
+          lines_old = response_to_lines(response_old)
+          lines_new = response_to_lines(response_new)
+          diffs = Diff::LCS.diff(lines_old, lines_new)
+
+          @output.puts("--- old")
+          @output.puts("+++ new")
+
+          old_hunk = nil
+          n_lines = 3
+          format = :unified
+          file_length_difference = 0
+          diffs.each do |piece|
+            begin
+              hunk = Diff::LCS::Hunk.new(lines_old,
+                                         lines_new,
+                                         piece,
+                                         n_lines,
+                                         file_length_difference)
+              file_length_difference = hunk.file_length_difference
+
+              next unless old_hunk
+
+              if (n_lines > 0) && hunk.overlaps?(old_hunk)
+                hunk.merge(old_hunk)
+              else
+                @output.puts(old_hunk.diff(format))
               end
+            ensure
+              old_hunk = hunk
             end
           end
+
+          if old_hunk
+            @output.puts(old_hunk.diff(format))
+          end
+        end
+
+        def response_to_lines(response)
+          PP.pp(JSON.parse(response), "").lines.collect(&:chomp)
         end
 
         def report_error(command, message, backtrace)

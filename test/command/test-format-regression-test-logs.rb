@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -58,7 +57,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1"],
@@ -80,7 +79,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1: 焼肉"],
@@ -127,7 +126,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1"],

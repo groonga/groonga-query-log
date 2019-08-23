@@ -144,7 +144,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1: 焼肉"],
