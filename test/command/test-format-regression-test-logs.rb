@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or

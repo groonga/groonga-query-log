@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
