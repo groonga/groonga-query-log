@@ -2,6 +2,12 @@
 
 ## 1.4.9: 2019-08-23
 
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support notify by e-mail when tests start.
+
 ### Fixes
 
   * `groonga-query-log-format-regression-test-logs`:
