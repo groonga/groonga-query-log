@@ -149,7 +149,6 @@ module GroongaQueryLog
               end
             ensure
               old_hunk = hunk
-              unified_diff << "\n"
             end
           end
 

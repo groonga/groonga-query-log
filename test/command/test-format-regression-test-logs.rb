@@ -56,7 +56,6 @@ select Logs
 Name: select
 Arguments:
   table: Logs
-
 @@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
@@ -77,7 +76,6 @@ Arguments:
   match_columns: message
   query: 焼肉
   table: Logs
-
 @@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
@@ -123,7 +121,6 @@ select Logs
 Name: select
 Arguments:
   table: Logs
-
 @@ -1,5 +1,5 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
