@@ -122,12 +122,13 @@ module GroongaQueryLog
           return if response_old == response_new
 
           report_command(command)
-          report_label("old", "new")
+
           lines_old = response_to_lines(response_old)
           lines_new = response_to_lines(response_new)
           diffs = Diff::LCS.diff(lines_old, lines_new)
 
-          unified_diff = ""
+          @output.puts("--- old")
+          @output.puts("+++ new")
 
           old_hunk = nil
           n_lines = 3
@@ -147,7 +148,7 @@ module GroongaQueryLog
               if (n_lines > 0) && hunk.overlaps?(old_hunk)
                 hunk.merge(old_hunk)
               else
-                unified_diff << old_hunk.diff(format)
+                @output.puts(old_hunk.diff(format))
               end
             ensure
               old_hunk = hunk
@@ -155,10 +156,8 @@ module GroongaQueryLog
           end
 
           if old_hunk
-            unified_diff << old_hunk.diff(format)
-            unified_diff << "\n"
+            @output.puts(old_hunk.diff(format))
           end
-          @output.puts(unified_diff)
         end
 
         def response_to_lines(response)
@@ -184,11 +183,6 @@ module GroongaQueryLog
           sorted_arguments.each do |key, value|
             @output.puts("  #{key}: #{value}")
           end
-        end
-
-        def report_label(old_label, new_label)
-          @output.puts("--- #{old_label}")
-          @output.puts("+++ #{new_label}")
         end
       end
     end
