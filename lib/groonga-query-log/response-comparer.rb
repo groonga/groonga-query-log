@@ -34,7 +34,7 @@ module GroongaQueryLog
         end
       else
         case @command.name
-        when "select", "logical_select"
+        when "select", "logical_select", "logical_range_filter"
           same_select_response?
         when "status"
           same_cache_hit_rate?
@@ -109,6 +109,10 @@ module GroongaQueryLog
       records_result2 = @response2.body[0] || []
       return false if records_result1.size != records_result2.size
 
+      if @command.name == "logical_range_filter"
+        records_result1.unshift(0)
+        records_result2.unshift(0)
+      end
       n_hits1 = records_result1[0]
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
@@ -133,6 +137,10 @@ module GroongaQueryLog
       records_result2 = @response2.body[0] || []
       return false if records_result1.size != records_result2.size
 
+      if @command.name == "logical_range_filter"
+        records_result1.unshift(0)
+        records_result2.unshift(0)
+      end
       n_hits1 = records_result1[0]
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
@@ -181,6 +189,10 @@ module GroongaQueryLog
       records_result2 = @response2.body[0] || []
       return false if records_result1.size != records_result2.size
 
+      if @command.name == "logical_range_filter"
+        records_result1.unshift(0)
+        records_result2.unshift(0)
+      end
       n_hits1 = records_result1[0]
       n_hits2 = records_result2[0]
       return false if n_hits1 != n_hits2
@@ -228,6 +240,10 @@ module GroongaQueryLog
     def same_record_set?(record_set1, record_set2)
       return false if record_set1.size != record_set2.size
 
+      if @command.name == "logical_range_filter"
+        records_result1.unshift(0)
+        records_result2.unshift(0)
+      end
       n_hits1 = record_set1[0]
       n_hits2 = record_set2[0]
       return false if n_hits1 != n_hits2
@@ -313,6 +329,7 @@ module GroongaQueryLog
     end
 
     def same_drilldowns?
+      return true if @command.name == "logical_range_filter"
       drilldowns1 = @response1.body[1..-1] || []
       drilldowns2 = @response2.body[1..-1] || []
       return false if drilldowns1.size != drilldowns2.size
