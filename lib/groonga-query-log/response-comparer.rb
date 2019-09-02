@@ -34,8 +34,10 @@ module GroongaQueryLog
         end
       else
         case @command.name
-        when "select", "logical_select", "logical_range_filter"
+        when "select", "logical_select"
           same_select_response?
+        when "logical_range_filter"
+          same_range_filter_response?
         when "status"
           same_cache_hit_rate?
         else
@@ -74,6 +76,16 @@ module GroongaQueryLog
       end
     end
 
+    def same_range_filter_response?
+      if all_output_columns?
+        same_records_all_output_columns?
+      elsif have_unary_minus_output_column?
+        same_records_unary_minus_output_column?
+      else
+        same_records?
+      end
+    end
+
     def same_cache_hit_rate?
       cache_hit_rate1 = @response1.body["cache_hit_rate"]
       cache_hit_rate2 = @response2.body["cache_hit_rate"]
@@ -105,20 +117,18 @@ module GroongaQueryLog
     end
 
     def same_size_response?
-      records_result1 = @response1.body[0] || []
-      records_result2 = @response2.body[0] || []
-      return false if records_result1.size != records_result2.size
+      records1 = @response1.raw_records
+      records2 = @response2.raw_records
+      return false if records1.size != records2.size
 
-      if @command.name == "logical_range_filter"
-        records_result1.unshift(0)
-        records_result2.unshift(0)
+      if @response1.respond_to?(:n_hits)
+        n_hits1 = @response1.n_hits
+        n_hits2 = @response2.n_hits
+        return false if n_hits1 != n_hits2
       end
-      n_hits1 = records_result1[0]
-      n_hits2 = records_result2[0]
-      return false if n_hits1 != n_hits2
 
-      columns1 = normalize_columns(records_result1[1])
-      columns2 = normalize_columns(records_result2[1])
+      columns1 = normalize_columns(@response1.raw_columns)
+      columns2 = normalize_columns(@response2.raw_columns)
       if all_output_columns?
         columns1.sort_by(&:first) == columns2.sort_by(&:first)
       else
@@ -133,22 +143,18 @@ module GroongaQueryLog
     end
 
     def same_records_unary_minus_output_column?
-      records_result1 = @response1.body[0] || []
-      records_result2 = @response2.body[0] || []
-      return false if records_result1.size != records_result2.size
+      records1 = @response1.raw_records
+      records2 = @response2.raw_records
+      return false if records1.size != records2.size
 
-      if @command.name == "logical_range_filter"
-        records_result1.unshift(0)
-        records_result2.unshift(0)
+      if @response1.respond_to?(:n_hits)
+        n_hits1 = @response1.n_hits
+        n_hits2 = @response2.n_hits
+        return false if n_hits1 != n_hits2
       end
-      n_hits1 = records_result1[0]
-      n_hits2 = records_result2[0]
-      return false if n_hits1 != n_hits2
 
-      columns1 = normalize_columns(records_result1[1])
-      columns2 = normalize_columns(records_result2[1])
-      records1 = records_result1[2..-1]
-      records2 = records_result2[2..-1]
+      columns1 = normalize_columns(@response1.raw_columns)
+      columns2 = normalize_columns(@response2.raw_columns)
 
       if columns1.size != columns2.size
         if columns2.size > columns1.size
@@ -185,27 +191,23 @@ module GroongaQueryLog
     end
 
     def same_records_all_output_columns?
-      records_result1 = @response1.body[0] || []
-      records_result2 = @response2.body[0] || []
-      return false if records_result1.size != records_result2.size
+      records1 = @response1.raw_records
+      records2 = @response2.raw_records
+      return false if records1.size != records2.size
 
-      if @command.name == "logical_range_filter"
-        records_result1.unshift(0)
-        records_result2.unshift(0)
+      if @response1.respond_to?(:n_hits)
+        n_hits1 = @response1.n_hits
+        n_hits2 = @response2.n_hits
+        return false if n_hits1 != n_hits2
       end
-      n_hits1 = records_result1[0]
-      n_hits2 = records_result2[0]
-      return false if n_hits1 != n_hits2
 
-      columns1 = normalize_columns(records_result1[1])
-      columns2 = normalize_columns(records_result2[1])
+      columns1 = normalize_columns(@response1.raw_columns)
+      columns2 = normalize_columns(@response2.raw_columns)
       return false if columns1.sort_by(&:first) != columns2.sort_by(&:first)
 
       column_to_index1 = make_column_to_index_map(columns1)
       column_to_index2 = make_column_to_index_map(columns2)
 
-      records1 = records_result1[2..-1]
-      records2 = records_result2[2..-1]
       sort_keys = @command.sort_keys
       if @command.respond_to?(:shard_key)
         shard_key = @command.shard_key
@@ -231,29 +233,24 @@ module GroongaQueryLog
     end
 
     def same_records?
-      record_set1 = @response1.body[0] || []
-      record_set2 = @response2.body[0] || []
-      same_record_set?(record_set1,
-                       record_set2)
+      same_record_set?(@response1, @response2)
     end
 
     def same_record_set?(record_set1, record_set2)
-      return false if record_set1.size != record_set2.size
+      records1 = record_set1.raw_records
+      records2 = record_set2.raw_records
+      return false if records1.size != records2.size
 
-      if @command.name == "logical_range_filter"
-        records_result1.unshift(0)
-        records_result2.unshift(0)
+      if record_set1.respond_to?(:n_hits)
+        n_hits1 = record_set1.n_hits
+        n_hits2 = record_set2.n_hits
+        return false if n_hits1 != n_hits2
       end
-      n_hits1 = record_set1[0]
-      n_hits2 = record_set2[0]
-      return false if n_hits1 != n_hits2
 
-      columns1 = normalize_columns(record_set1[1])
-      columns2 = normalize_columns(record_set2[1])
+      columns1 = normalize_columns(record_set1.raw_columns)
+      columns2 = normalize_columns(record_set2.raw_columns)
       return false if columns1 != columns2
 
-      records1 = record_set1[2..-1]
-      records2 = record_set2[2..-1]
       records1.each_with_index do |record1, record_index|
         record2 = records2[record_index]
         columns1.each_with_index do |column1, column_index|
@@ -329,30 +326,22 @@ module GroongaQueryLog
     end
 
     def same_drilldowns?
-      return true if @command.name == "logical_range_filter"
-      drilldowns1 = @response1.body[1..-1] || []
-      drilldowns2 = @response2.body[1..-1] || []
+      drilldowns1 = @response1.drilldowns
+      drilldowns2 = @response2.drilldowns
       return false if drilldowns1.size != drilldowns2.size
-      drilldown_classes1 = drilldowns1.collect(&:class)
-      drilldown_classes2 = drilldowns2.collect(&:class)
-      return false if drilldown_classes1 != drilldown_classes2
 
       ignored_drilldown_keys = @options[:ignored_drilldown_keys]
 
-      if drilldown_classes1 == [Hash]
-        drilldowns1 = drilldowns1[0]
-        drilldowns2 = drilldowns2[0]
+      if drilldowns1.is_a?(::Hash)
         drilldowns1.each do |drilldown_label, drilldown1|
           next if ignored_drilldown_keys.include?(drilldown_label)
           drilldown2 = drilldowns2[drilldown_label]
           return false unless same_record_set?(drilldown1, drilldown2)
         end
       else
-        drilldown_keys = @command.drilldowns
-        drilldowns1.each_with_index do |drilldown1, drilldown_index|
-          drilldown_key = drilldown_keys[drilldown_index]
+        drilldowns1.zip(drilldowns2) do |drilldown1, drilldown2|
+          drilldown_key = drilldown1.key
           next if ignored_drilldown_keys.include?(drilldown_key)
-          drilldown2 = drilldowns2[drilldown_index]
           return false unless same_record_set?(drilldown1, drilldown2)
         end
       end

@@ -504,6 +504,11 @@ class ResponseComparerTest < Test::Unit::TestCase
     end
 
     class DrilldownTest < self
+      def setup
+        super
+        @command["drilldown"] = "tag"
+      end
+
       def create_response(drilldown)
         [
           [
@@ -614,8 +619,8 @@ class ResponseComparerTest < Test::Unit::TestCase
 
       class IgnoreDrilldownKeysTest < self
         def create_response(drilldown1, drilldown2)
-          @command["drilldown[columns1].keys"] = "column1"
-          @command["drilldown[columns2].keys"] = "column2"
+          @command["drilldown[column1].keys"] = "column1"
+          @command["drilldown[column2].keys"] = "column2"
           [
             [
               [10],
