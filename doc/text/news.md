@@ -1,5 +1,13 @@
 # News
 
+## 1.5.0: 2019-09-02
+
+### Improvements
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Added support for loose comparison for `logical_range_filter`.
+
 ## 1.4.9: 2019-08-23
 
 ### Improvements
