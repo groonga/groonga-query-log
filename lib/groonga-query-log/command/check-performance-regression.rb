@@ -1,4 +1,5 @@
-# Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
+# Copyright (C) 2019  Kentaro Hayashi <hayashi@clear-code.com>
+# Copyright (C) 2019  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -14,8 +15,8 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "optparse"
 require "json"
+require "optparse"
 
 require "groonga-query-log"
 require "groonga-query-log/command-line"
@@ -93,7 +94,7 @@ module GroongaQueryLog
 
       def setup_options(options)
         @output = options[:output] || "-"
-        @n_entries = 1000
+        @n_entries = -1
         @threshold = Threshold.new
         @target_queries = []
 
@@ -104,6 +105,7 @@ module GroongaQueryLog
           parser.on("-n", "--n-entries=N",
                     Integer,
                     "Analyze N query log entries",
+                    "You can use -1 to analyze all query log entries",
                     "(#{@n_entries})") do |n|
             @n_entries = n
           end
@@ -172,12 +174,11 @@ module GroongaQueryLog
       def analyze(log_paths)
         full_statistics = []
         begin
-          n = 1
           parser = Parser.new
-          parse_log(parser, log_paths) do |statistic|
-            next if n > @n_entries
+          parse = parse_log(parser, log_paths)
+          parse = parse.first(@n_entries) if @n_entries >= 0
+          parse.each do |statistic|
             full_statistics << statistic
-            n += 1
           end
         rescue Error
           $stderr.puts($!.message)

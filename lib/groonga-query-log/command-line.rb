@@ -1,5 +1,5 @@
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
-# Copyright (C) 2017-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2017-2019  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,7 @@ module GroongaQueryLog
 
     private
     def parse_log(parser, log_paths, &process_statistic)
+      return to_enum(__method__, parser, log_paths) unless block_given?
       if log_paths.empty?
         if stdin_with_pipe? or stdin_with_redirect?
           parser.parse($stdin, &process_statistic)
