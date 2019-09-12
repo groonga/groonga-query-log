@@ -1,5 +1,5 @@
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
-# Copyright (C) 2019 Yasuhiro Horimoto <horimoto@clear-code.com>
+# Copyright (C) 2019 Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
   include Helper::Path
 
   def fixture_path(*components)
-    super("regression-test-logs", *components)
+    super("run-regression-test", *components)
   end
 
   class SMTPServer
@@ -115,7 +115,7 @@ QUIT
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
-        :path => fixture_path("results/success.log"),
+        :path => fixture_path("mail-notifier/success.log"),
       }
       notifier = MailNotifier.new(options)
       notifier.notify_finished(true, 3000)
@@ -149,7 +149,7 @@ QUIT
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
-        :path => fixture_path("results/failure.log"),
+        :path => fixture_path("mail-notifier/failure.log"),
       }
       notifier = MailNotifier.new(options)
       notifier.notify_finished(false, 3000)
