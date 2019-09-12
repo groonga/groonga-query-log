@@ -1,4 +1,3 @@
-# coding: utf-8
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
 # Copyright (C) 2019 Yasuhiro Horimoto <horimoto@clear-code.com>
 #
