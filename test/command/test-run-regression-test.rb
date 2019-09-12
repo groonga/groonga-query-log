@@ -140,6 +140,7 @@ Elapsed: 0days 00:50:00
 QUIT
       REQUEST
     end
+
     def test_failure
       options = {
         :smtp_server => @smtp_host,
