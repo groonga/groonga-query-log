@@ -186,6 +186,36 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
 
       class LooseSortTest < self
+        def test_not_exist_sort_keys
+          @command[:sort_keys] = "not_exist"
+          assert_true(same?([
+                              [
+                                [3],
+                                [
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
+                                ],
+                                [1, 2, 10],
+                                [2, 2, 10],
+                                [3, 3, 11],
+                              ],
+                            ],
+                            [
+                              [
+                                [3],
+                                [
+                                  ["_id", "UInt32"],
+                                  ["_score", "Int32"],
+                                  ["count", "Int32"],
+                                ],
+                                [1, 2, 10],
+                                [2, 2, 10],
+                                [3, 3, 11],
+                              ],
+                            ]))
+        end
+
         def test_sorted
           @command[:sort_keys] = "_score,count"
           assert_true(same?([

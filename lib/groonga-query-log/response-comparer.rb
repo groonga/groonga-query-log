@@ -1,4 +1,5 @@
 # Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -294,8 +295,9 @@ module GroongaQueryLog
         i = columns.index do |(name, _)|
           name == sort_key
         end
+        next if i.nil?
         [i, order]
-      end
+      end.compact
     end
 
     def sorted?(records, columns, sort_keys)
