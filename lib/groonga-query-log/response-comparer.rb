@@ -1,4 +1,5 @@
 # Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -284,7 +285,8 @@ module GroongaQueryLog
     end
 
     def compute_sort_targets(columns, sort_keys)
-      sort_keys.collect do |sort_key|
+      targets = []
+      sort_keys.each do |sort_key|
         if sort_key.start_with?("-")
           order = :descendant
           sort_key = sort_key[1..-1]
@@ -294,8 +296,9 @@ module GroongaQueryLog
         i = columns.index do |(name, _)|
           name == sort_key
         end
-        [i, order]
+        targets << [i, order] if i
       end
+      targets
     end
 
     def sorted?(records, columns, sort_keys)
