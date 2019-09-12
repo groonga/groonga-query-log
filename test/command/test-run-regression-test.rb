@@ -1,4 +1,6 @@
+# coding: utf-8
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
+# Copyright (C) 2019 Yasuhiro Horimoto <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -134,6 +136,55 @@ Subject: Success
 Date: #{@now}
 
 Elapsed: 0days 00:50:00
+
+.
+QUIT
+      REQUEST
+    end
+    def test_failure
+      options = {
+        :smtp_server => @smtp_host,
+        :smtp_port => @smtp_port,
+        :mail_from => "groonga-query-log@example.com",
+        :mail_to => "noreply@example.com",
+        :mail_subject_on_success => "Success",
+        :mail_subject_on_failure => "Failure",
+        :path => fixture_path("results/failure.log"),
+      }
+      notifier = MailNotifier.new(options)
+      notifier.notify_finished(false, 3000)
+      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
+EHLO 127.0.0.1
+MAIL FROM:<#{options[:mail_from]}>
+RCPT TO:<#{options[:mail_to]}>
+DATA
+MIME-Version: 1.0
+X-Mailer: groonga-query-log test reporter #{GroongaQueryLog::VERSION};
+  https://github.com/groonga/groonga-query-log
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+From: #{options[:mail_from]}
+To: #{options[:mail_to]}
+Subject: Failure
+Date: #{@now}
+
+Elapsed: 0days 00:50:00
+Report:
+Command:
+/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+Name: select
+Arguments:
+  match_columns: message
+  query: 焼肉
+  table: Logs
+--- old
++++ new
+@@ -1,5 +1,5 @@
+ [[[2],
+   [["_id", "UInt32"], ["message", "Text"]],
+   [1, "log message1: 焼肉"],
+-  [2, "log message2: 焼肉"]]]
++  [3, "log message3: 焼肉"]]]
 
 .
 QUIT
