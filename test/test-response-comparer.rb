@@ -186,7 +186,7 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
 
       class LooseSortTest < self
-        def test_not_exist_sort_keys
+        def test_nonexistent_sort_keys
           @command[:sort_keys] = "not_exist"
           assert_true(same?([
                               [
