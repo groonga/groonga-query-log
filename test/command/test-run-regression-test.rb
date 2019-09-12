@@ -114,7 +114,7 @@ QUIT
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
-        :path => fixture_path("results"),
+        :path => fixture_path("results/success.log"),
       }
       notifier = MailNotifier.new(options)
       notifier.notify_finished(true, 3000)
@@ -135,21 +135,6 @@ Date: #{@now}
 
 Elapsed: 0days 00:50:00
 Report:
-Command:
-/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
-Name: select
-Arguments:
-  match_columns: message
-  query: 焼肉
-  table: Logs
---- old
-+++ new
-@@ -1,5 +1,5 @@
- [[[2],
-   [["_id", "UInt32"], ["message", "Text"]],
-   [1, "log message1: 焼肉"],
--  [2, "log message2: 焼肉"]]]
-+  [3, "log message3: 焼肉"]]]
 
 .
 QUIT
