@@ -285,7 +285,8 @@ module GroongaQueryLog
     end
 
     def compute_sort_targets(columns, sort_keys)
-      sort_keys.collect do |sort_key|
+      targets = []
+      sort_keys.each do |sort_key|
         if sort_key.start_with?("-")
           order = :descendant
           sort_key = sort_key[1..-1]
@@ -295,9 +296,9 @@ module GroongaQueryLog
         i = columns.index do |(name, _)|
           name == sort_key
         end
-        next if i.nil?
-        [i, order]
-      end.compact
+        targets << [i, order] if i
+      end
+      targets
     end
 
     def sorted?(records, columns, sort_keys)
