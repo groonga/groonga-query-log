@@ -134,7 +134,6 @@ Subject: Success
 Date: #{@now}
 
 Elapsed: 0days 00:50:00
-Report:
 
 .
 QUIT

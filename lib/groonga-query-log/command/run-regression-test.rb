@@ -1,4 +1,5 @@
 # Copyright (C) 2014-2019  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -699,14 +700,14 @@ module GroongaQueryLog
           formetter.run([@path])
           formatted_log = output.string
 
+          content = format_elapsed_time(elapsed_time)
           if success
             subject = @options[:mail_subject_on_success]
           else
             subject = @options[:mail_subject_on_failure]
+            content << "Report:\n"
+            content << formatted_log
           end
-          content = format_elapsed_time(elapsed_time)
-          content << "Report:\n"
-          content << formatted_log
           send_mail(subject, content)
         end
 
