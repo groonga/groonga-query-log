@@ -241,7 +241,7 @@ module GroongaQueryLog
             if new_elapsed_time.zero?
               0.0
             else
-              Float::INIFINITY
+              Float::INFINITY
             end
           else
             new_elapsed_time / old_elapsed_time
