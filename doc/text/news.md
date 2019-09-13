@@ -1,5 +1,20 @@
 # News
 
+## 1.5.1: 2019-09-13
+
+### Improvements
+
+  * `check-performance-regression`:
+
+    * Modified to analyze all query log entries by default.
+
+  * `groonga-query-log-run-regression-test`:
+
+    * Removed "Report:" from a result of succeeded tests
+
+	* Added support the case where the column specified as a
+      sort key does not exist in the table.
+
 ## 1.5.0: 2019-09-02
 
 ### Improvements
