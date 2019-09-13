@@ -12,7 +12,7 @@
 
     * Removed "Report:" from a result of succeeded tests
 
-	* Added support the case where the column specified as a
+    * Added support the case where the column specified as a
       sort key does not exist in the table.
 
 ## 1.5.0: 2019-09-02
