@@ -1,0 +1,7 @@
+2019-09-24 11:28:16.384410|0x7ffcd86f6b40|>select Memos   --output_columns _key,tag   --filter 'all_records() && (tag == "groonga" || tag == "mroonga" || tag == "droonga")'   --sortby _id
+2019-09-24 11:28:16.467000|0x7ffcd86f6b40|:000000082594372 filter(4): in_values(Memos.tag, #<record:pat:Tags id:1 key:"groonga">, #<record:pat:Tags id:2 key:"mroonga">, #<record:pat:Tags id:4 key:"droonga">)
+2019-09-24 11:28:16.467016|0x7ffcd86f6b40|:000000082610035 filter(4): all_records()
+2019-09-24 11:28:16.467038|0x7ffcd86f6b40|:000000082633089 select(4)
+2019-09-24 11:28:16.467067|0x7ffcd86f6b40|:000000082662096 sort(4): _id
+2019-09-24 11:28:16.467129|0x7ffcd86f6b40|:000000082723557 output(4)
+2019-09-24 11:28:16.467194|0x7ffcd86f6b40|<000000082788858 rc=0

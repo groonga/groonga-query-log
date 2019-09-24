@@ -1,5 +1,6 @@
 # Copyright (C) 2019  Kentaro Hayashi <hayashi@clear-code.com>
 # Copyright (C) 2019  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -307,6 +308,23 @@ module GroongaQueryLog
           end
         end
 
+        def same_operations?
+          old_operations = []
+          @old.collect do |statistic|
+             statistic.operations.each do |operation|
+               old_operations << operation[:name]
+             end
+          end
+
+          new_operations = []
+          @new.collect do |statistic|
+            statistic.operations.each do |operation|
+              new_operations << operation[:name]
+            end
+          end
+          old_operations == new_operations
+        end
+
         private
         def compute_mean(statistics)
           elapsed_times = statistics.collect do |statistic|
@@ -355,25 +373,29 @@ Query: #{query_statistic.query}
   Mean (old): #{format_elapsed_time(query_statistic.old_elapsed_time)}
   Mean (new): #{format_elapsed_time(query_statistic.new_elapsed_time)}
   Diff:       #{format_diff(query_statistic)}
+            REPORT
+            if query_statistic.same_operations?
+              @output.puts(<<-REPORT)
   Operations:
             REPORT
-            query_statistic.each_operation_statistic do |operation_statistic|
-              n_target_operations += 1
-              next unless operation_statistic.slow?
+              query_statistic.each_operation_statistic do |operation_statistic|
+                n_target_operations += 1
+                next unless operation_statistic.slow?
 
-              n_slow_operations += 1
-              index = operation_statistic.index
-              name = operation_statistic.name
-              context = operation_statistic.context
-              label = [name, context].compact.join(" ")
-              old_elapsed_time = operation_statistic.old_elapsed_time
-              new_elapsed_time = operation_statistic.new_elapsed_time
-              @output.puts(<<-REPORT)
+                n_slow_operations += 1
+                index = operation_statistic.index
+                name = operation_statistic.name
+                context = operation_statistic.context
+                label = [name, context].compact.join(" ")
+                old_elapsed_time = operation_statistic.old_elapsed_time
+                new_elapsed_time = operation_statistic.new_elapsed_time
+                @output.puts(<<-REPORT)
     Operation[#{index}]: #{label}
       Mean (old): #{format_elapsed_time(old_elapsed_time)}
       Mean (new): #{format_elapsed_time(new_elapsed_time)}
       Diff:       #{format_diff(operation_statistic)}
               REPORT
+              end
             end
           end
 
