@@ -327,7 +327,7 @@ Summary:
   Slow operations: 0/0(  0.00%)
   Caches (old):    0/1(  0.00%)
   Caches (new):    0/1(  0.00%)
-      OUTPUT
+    OUTPUT
     assert_equal(expected, actual)
   end
 end
