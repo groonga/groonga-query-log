@@ -119,7 +119,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec
@@ -147,7 +147,7 @@ Query: select --table Site --filter "_id >= 4 && _id <= 6"
   Mean (old): 70.0msec
   Mean (new): 90.0msec
   Diff:       +20.0msec/+1.29
-  Operations:
+  Operation set[0]:
     Operation[0]: filter #<accessor _id(Site)> greater_equal 4
       Mean (old): 40.0msec
       Mean (new): 80.0msec
@@ -187,7 +187,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec
@@ -234,7 +234,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
 Summary:
   Slow queries:    1/1(100.00%)
   Slow operations: 0/2(  0.00%)
@@ -277,7 +277,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec

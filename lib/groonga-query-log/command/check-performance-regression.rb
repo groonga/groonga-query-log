@@ -279,6 +279,15 @@ module GroongaQueryLog
         end
       end
 
+      class OperationSet
+        attr_reader :names
+        attr_reader :statistics
+        def initialize(names, statistics)
+          @names = names
+          @statistics = statistics
+        end
+      end
+
       class QueryStatistic < Statistic
         attr_reader :query
         def initialize(query, old, new, threshold)
@@ -290,39 +299,44 @@ module GroongaQueryLog
           @threshold.slow_query?(diff_elapsed_time, ratio)
         end
 
-        def each_operation_statistic
-          @old.first.operations.each_with_index do |operation, i|
-            old_operations = @old.collect do |statistic|
-              statistic.operations[i]
+        def operation_sets
+          old_operation_name_sets = @old.group_by do |statistic|
+            statistic.operations.collect do |operation|
+              operation[:name]
             end
-            # TODO: old and new may use different index
-            new_operations = @new.collect do |statistic|
-              statistic.operations[i]
-            end
-            operation_statistic = OperationStatistic.new(operation,
-                                                         i,
-                                                         old_operations,
-                                                         new_operations,
-                                                         @threshold)
-            yield(operation_statistic)
           end
-        end
-
-        def same_operations?
-          old_operations = []
-          @old.collect do |statistic|
-             statistic.operations.each do |operation|
-               old_operations << operation[:name]
-             end
+          new_operation_name_sets = @new.group_by do |statistic|
+            statistic.operations.collect do |operation|
+              operation[:name]
+            end
           end
 
-          new_operations = []
-          @new.collect do |statistic|
-            statistic.operations.each do |operation|
-              new_operations << operation[:name]
+          operation_sets = []
+          operation_name_sets =
+            (old_operation_name_sets.keys & new_operation_name_sets.keys)
+          operation_name_sets.each do |operation_names|
+            old = old_operation_name_sets[operation_names]
+            next if old.nil?
+            new = new_operation_name_sets[operation_names]
+            next if new.nil?
+            statistics = operation_names.size.times.collect do |i|
+              old_operations = old.collect do |statistic|
+                statistic.operations[i]
+              end
+              new_operations = new.collect do |statistic|
+                statistic.operations[i]
+              end
+              operation = old_operations[0]
+              OperationStatistic.new(operation,
+                                     i,
+                                     old_operations,
+                                     new_operations,
+                                     @threshold)
             end
+            operation_set = OperationSet.new(operation_names, statistics)
+            operation_sets << operation_set
           end
-          old_operations == new_operations
+          operation_sets
         end
 
         private
@@ -374,28 +388,30 @@ Query: #{query_statistic.query}
   Mean (new): #{format_elapsed_time(query_statistic.new_elapsed_time)}
   Diff:       #{format_diff(query_statistic)}
             REPORT
-            next unless query_statistic.same_operations?
 
-            @output.puts(<<-REPORT)
-  Operations:
-            REPORT
-            query_statistic.each_operation_statistic do |operation_statistic|
-              n_target_operations += 1
-              next unless operation_statistic.slow?
-
-              n_slow_operations += 1
-              index = operation_statistic.index
-              name = operation_statistic.name
-              context = operation_statistic.context
-              label = [name, context].compact.join(" ")
-              old_elapsed_time = operation_statistic.old_elapsed_time
-              new_elapsed_time = operation_statistic.new_elapsed_time
+            operation_sets = query_statistic.operation_sets
+            operation_sets.each_with_index do |operation_set, nth_operation_set|
               @output.puts(<<-REPORT)
+  Operation set[#{nth_operation_set}]:
+              REPORT
+              operation_set.statistics.each do |operation_statistic|
+                n_target_operations += 1
+                next unless operation_statistic.slow?
+
+                n_slow_operations += 1
+                index = operation_statistic.index
+                name = operation_statistic.name
+                context = operation_statistic.context
+                label = [name, context].compact.join(" ")
+                old_elapsed_time = operation_statistic.old_elapsed_time
+                new_elapsed_time = operation_statistic.new_elapsed_time
+                @output.puts(<<-REPORT)
     Operation[#{index}]: #{label}
       Mean (old): #{format_elapsed_time(old_elapsed_time)}
       Mean (new): #{format_elapsed_time(new_elapsed_time)}
       Diff:       #{format_diff(operation_statistic)}
-              REPORT
+                REPORT
+              end
             end
           end
 
