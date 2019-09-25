@@ -311,13 +311,13 @@ Summary:
   end
 
   def test_different_operations
-      actual = run_command("--slow-query-ratio=0.0",
-                           "--slow-query-second=0.0",
-                           "--slow-operation-ratio=0.0",
-                           "--slow-operation-second=0.0",
-                           fixture_path("different_operations1.log"),
-                           fixture_path("different_operations2.log"))
-      expected = <<-OUTPUT
+    actual = run_command("--slow-query-ratio=0.0",
+                         "--slow-query-second=0.0",
+                         "--slow-operation-ratio=0.0",
+                         "--slow-operation-second=0.0",
+                         fixture_path("different_operations1.log"),
+                         fixture_path("different_operations2.log"))
+    expected = <<-OUTPUT
 Query: select Memos   --output_columns _key,tag   --filter 'all_records() && (tag == \"groonga\" || tag == \"mroonga\" || tag == \"droonga\")'   --sortby _id
   Mean (old): 7.1msec
   Mean (new): 82.8msec
@@ -328,6 +328,6 @@ Summary:
   Caches (old):    0/1(  0.00%)
   Caches (new):    0/1(  0.00%)
       OUTPUT
-      assert_equal(expected, actual)
+    assert_equal(expected, actual)
   end
 end
