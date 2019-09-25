@@ -1,4 +1,5 @@
 # Copyright (C) 2019  Kentaro Hayashi <hayashi@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -118,7 +119,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec
@@ -146,7 +147,7 @@ Query: select --table Site --filter "_id >= 4 && _id <= 6"
   Mean (old): 70.0msec
   Mean (new): 90.0msec
   Diff:       +20.0msec/+1.29
-  Operations:
+  Operation set[0]:
     Operation[0]: filter #<accessor _id(Site)> greater_equal 4
       Mean (old): 40.0msec
       Mean (new): 80.0msec
@@ -186,7 +187,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec
@@ -233,7 +234,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
 Summary:
   Slow queries:    1/1(100.00%)
   Slow operations: 0/2(  0.00%)
@@ -276,7 +277,7 @@ Query: select --table Site --limit 0
   Mean (old): 12.0msec
   Mean (new): 14.0msec
   Diff:       +2.0msec/+1.17
-  Operations:
+  Operation set[0]:
     Operation[0]: select
       Mean (old): 5.0msec
       Mean (new): 6.0msec
@@ -307,5 +308,26 @@ Summary:
       OUTPUT
       assert_equal(expected, actual)
     end
+  end
+
+  def test_different_operations
+    actual = run_command("--slow-query-ratio=0.0",
+                         "--slow-query-second=0.0",
+                         "--slow-operation-ratio=0.0",
+                         "--slow-operation-second=0.0",
+                         fixture_path("different_operations1.log"),
+                         fixture_path("different_operations2.log"))
+    expected = <<-OUTPUT
+Query: select Memos   --output_columns _key,tag   --filter 'all_records() && (tag == \"groonga\" || tag == \"mroonga\" || tag == \"droonga\")'   --sortby _id
+  Mean (old): 7.1msec
+  Mean (new): 82.8msec
+  Diff:       +75.7msec/+11.64
+Summary:
+  Slow queries:    1/1(100.00%)
+  Slow operations: 0/0(  0.00%)
+  Caches (old):    0/1(  0.00%)
+  Caches (new):    0/1(  0.00%)
+    OUTPUT
+    assert_equal(expected, actual)
   end
 end
