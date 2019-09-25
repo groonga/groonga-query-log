@@ -377,7 +377,7 @@ Query: #{query_statistic.query}
             if query_statistic.same_operations?
               @output.puts(<<-REPORT)
   Operations:
-            REPORT
+              REPORT
               query_statistic.each_operation_statistic do |operation_statistic|
                 n_target_operations += 1
                 next unless operation_statistic.slow?
@@ -394,7 +394,7 @@ Query: #{query_statistic.query}
       Mean (old): #{format_elapsed_time(old_elapsed_time)}
       Mean (new): #{format_elapsed_time(new_elapsed_time)}
       Diff:       #{format_diff(operation_statistic)}
-              REPORT
+                REPORT
               end
             end
           end
