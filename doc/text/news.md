@@ -1,5 +1,16 @@
 # News
 
+
+## 1.5.2: 2019-09-26
+
+### Improvements
+
+  * `check-performance-regression`:
+
+    * Added support that the case which different operations exist.
+
+    * Added support for multiple operation sets.
+
 ## 1.5.1: 2019-09-13
 
 ### Improvements
