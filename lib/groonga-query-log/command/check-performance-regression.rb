@@ -28,10 +28,6 @@ require "groonga-query-log/command/analyzer/sized-statistics"
 module GroongaQueryLog
   module Command
     class CheckPerformanceRegression < CommandLine
-      NSEC_IN_SECONDS = (1000 * 1000 * 1000)
-      USEC_IN_SECONDS = (1000 * 1000)
-      MSEC_IN_SECONDS = 1000
-
       def initialize(options={})
         setup_options(options)
       end
