@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2019  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -178,10 +178,19 @@ module GroongaQueryLog
           write("  responses/sec       : #{@statistics.responses_per_second}\n")
           write("  start time          : #{format_time(@statistics.start_time)}\n")
           write("    end time          : #{format_time(@statistics.end_time)}\n")
-          write("  period(sec)         : #{@statistics.period}\n")
+          write("  period(sec)         : %.3f\n" % @statistics.period)
           slow_response_ratio = @statistics.slow_response_ratio
           write("  slow response ratio : %5.3f%%\n" % slow_response_ratio)
-          write("  total response time : #{@statistics.total_elapsed}\n")
+          write("  total response time : %.3f\n" % @statistics.total_elapsed)
+          write("  Workers:\n")
+          @statistics.each_worker do |worker|
+            write("    #{worker.id}:\n")
+            write("      idle time(sec):\n")
+            write("                total : %.3f\n" % worker.idle_time_total)
+            write("                mean  : %.3f\n" % worker.idle_time_mean)
+            write("                min   : %.3f\n" % worker.idle_time_min)
+            write("                max   : %.3f\n" % worker.idle_time_max)
+          end
           report_slow_operations
         end
 

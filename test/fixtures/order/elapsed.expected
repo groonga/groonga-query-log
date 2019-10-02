@@ -7,9 +7,22 @@ Summary:
   responses/sec       : 387.0613143828114
   start time          : 2012-12-12T17:39:17.624896+09:00
     end time          : 2012-12-12T17:39:17.630063+09:00
-  period(sec)         : 0.00516714
+  period(sec)         : 0.005
   slow response ratio : 0.000%
-  total response time : 0.004345996
+  total response time : 0.004
+  Workers:
+    0x7fffaac6dcf0:
+      idle time(sec):
+                total : 0.000
+                mean  : 0.000
+                min   : 0.000
+                max   : 0.000
+    0x7fff786aa2b0:
+      idle time(sec):
+                total : 0.000
+                mean  : 0.000
+                min   : 0.000
+                max   : 0.000
   Slow Operations:
 
 Slow Queries:

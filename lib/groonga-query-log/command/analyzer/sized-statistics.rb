@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2019  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "groonga-query-log/command/analyzer/sized-grouped-operations"
+require "groonga-query-log/command/analyzer/worker-statistic"
 
 module GroongaQueryLog
   module Command
@@ -112,6 +113,10 @@ module GroongaQueryLog
           end
         end
 
+        def each_worker(&block)
+          @workers.each_value(&block)
+        end
+
         private
         def create_sorter
           case @order
@@ -135,6 +140,7 @@ module GroongaQueryLog
         end
 
         def update_statistic(statistic)
+          update_worker_statistic(statistic)
           @start_time ||= statistic.start_time
           @start_time = [@start_time, statistic.start_time].min
           @end_time ||= statistic.end_time
@@ -152,6 +158,12 @@ module GroongaQueryLog
               end
             end
           end
+        end
+
+        def update_worker_statistic(statistic)
+          id = statistic.context_id
+          @workers[id] ||= WorkerStatistic.new(id)
+          @workers[id] << statistic
         end
       end
     end
