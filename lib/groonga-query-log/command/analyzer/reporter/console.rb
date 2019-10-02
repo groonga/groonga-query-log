@@ -185,6 +185,7 @@ module GroongaQueryLog
           write("  Workers:\n")
           @statistics.each_worker do |worker|
             write("    #{worker.id}:\n")
+            write("      # of processed requests: #{worker.n_statistics}\n")
             write("      idle time(sec):\n")
             write("                total : %.3f\n" % worker.idle_time_total)
             write("                mean  : %.3f\n" % worker.idle_time_mean)

@@ -23,6 +23,7 @@ module GroongaQueryLog
         attr_reader :idle_time_mean
         attr_reader :idle_time_min
         attr_reader :idle_time_max
+        attr_reader :n_statistics
         def initialize(id)
           @id = id
           @idle_time_total = 0.0

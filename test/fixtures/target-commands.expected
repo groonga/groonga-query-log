@@ -12,6 +12,7 @@ Summary:
   total response time : 0.001
   Workers:
     0x7fff786aa2b0:
+      # of processed requests: 1
       idle time(sec):
                 total : 0.000
                 mean  : 0.000
