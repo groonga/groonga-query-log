@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2019  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -24,6 +24,34 @@ module GroongaQueryLog
       class HTMLReporter < Reporter
         include ERB::Util
 
+        private
+        def setup_output
+          @directory_output_mode = false
+          return super unless directory_output?
+
+          @directory_output_mode = true
+          original_output = @output
+          begin
+            FileUtils.mkdir_p(@output)
+            File.open(File.join(@output, "index.html"), "w") do |output|
+              @output = output
+              yield(@output)
+            end
+          ensure
+            @output = original_output
+          end
+        end
+
+        def directory_output?
+          return false unless @output.is_a?(String)
+
+          return true if File.directory?(@output)
+          return true if File.extname(@output).empty?
+          return true if @output.end_with?("/")
+
+          false
+        end
+
         def start
           write(header)
         end
@@ -38,6 +66,7 @@ module GroongaQueryLog
     <div class="summary">
 <%= analyze_parameters %>
 <%= metrics %>
+<%= workers %>
 <%= slow_operations %>
     </div>
           EOH
@@ -56,7 +85,7 @@ module GroongaQueryLog
           statistic_html = erb(<<-EOH, __LINE__ + 1, binding)
       <div class="statistic-heading">
         <h3>Command</h3>
-        <div class="metrics">
+        <div class="statistic-metrics">
           [<%= format_time(statistic.start_time) %>
            -
            <%= format_time(statistic.end_time) %>
@@ -111,7 +140,6 @@ module GroongaQueryLog
           write(statistic_html)
         end
 
-        private
         def erb(content, line, _binding=nil)
           _erb = ERB.new(content, nil, "<>")
           eval(_erb.src, _binding || binding, __FILE__, line)
@@ -136,18 +164,24 @@ span.slow
   color: red;
 }
 
-div.parameters
+div.parameters,
+div.metrics,
+div.workers
 {
   float: left;
   padding: 2em;
 }
 
-div.parameters h3
+div.parameters h3,
+div.metrics h3,
+div.workers h3
 {
   text-align: center;
 }
 
-div.parameters table
+div.parameters table,
+div.metrics table,
+div.workers table
 {
   margin-right: auto;
   margin-left: auto;
@@ -218,7 +252,7 @@ td.name
 
         def metrics
           erb(<<-EOH, __LINE__ + 1)
-      <div class="parameters">
+      <div class="metrics">
         <h3>Metrics</h3>
         <table>
           <tr><th>Name</th><th>Value</th></tr>
@@ -254,6 +288,34 @@ td.name
             <th>total response time</th>
             <td><%= h(@statistics.total_elapsed) %>sec</td>
           </tr>
+        </table>
+      </div>
+          EOH
+        end
+
+        def workers
+          erb(<<-EOH, __LINE__ + 1)
+      <div class="workers">
+        <h3>Workers</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th># of processed requests</th>
+            <th>idle time total</th>
+            <th>idle time mean</th>
+            <th>idle time min</th>
+            <th>idle time max</th>
+          </tr>
+<% @statistics.each_worker do |worker| %>
+          <tr>
+            <td><%= h(worker.id) %></td>
+            <td><%= h(worker.n_statistics) %></td>
+            <td><%= h("%.3f" % worker.idle_time_total) %></td>
+            <td><%= h("%.3f" % worker.idle_time_mean) %></td>
+            <td><%= h("%.3f" % worker.idle_time_min) %></td>
+            <td><%= h("%.3f" % worker.idle_time_max) %></td>
+          </tr>
+<% end %>
         </table>
       </div>
           EOH

@@ -15,18 +15,24 @@ span.slow
   color: red;
 }
 
-div.parameters
+div.parameters,
+div.metrics,
+div.workers
 {
   float: left;
   padding: 2em;
 }
 
-div.parameters h3
+div.parameters h3,
+div.metrics h3,
+div.workers h3
 {
   text-align: center;
 }
 
-div.parameters table
+div.parameters table,
+div.metrics table,
+div.workers table
 {
   margin-right: auto;
   margin-left: auto;
@@ -69,7 +75,7 @@ td.name
           </tr>
         </table>
       </div>
-      <div class="parameters">
+      <div class="metrics">
         <h3>Metrics</h3>
         <table>
           <tr><th>Name</th><th>Value</th></tr>
@@ -107,6 +113,35 @@ td.name
           </tr>
         </table>
       </div>
+      <div class="workers">
+        <h3>Workers</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th># of processed requests</th>
+            <th>idle time total</th>
+            <th>idle time mean</th>
+            <th>idle time min</th>
+            <th>idle time max</th>
+          </tr>
+          <tr>
+            <td>0x7fffaac6dcf0</td>
+            <td>1</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>0.000</td>
+          </tr>
+          <tr>
+            <td>0x7fff786aa2b0</td>
+            <td>1</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>0.000</td>
+            <td>0.000</td>
+          </tr>
+        </table>
+      </div>
       <div class="statistics">
         <h3>Slow Operations</h3>
         <table class="slow-operations">
@@ -125,7 +160,7 @@ td.name
     <div>
       <div class="statistic-heading">
         <h3>Command</h3>
-        <div class="metrics">
+        <div class="statistic-metrics">
           [<span class="time">2012-12-12T17:39:17.624896+09:00</span>
            -
            <span class="time">2012-12-12T17:39:17.628024+09:00</span>
@@ -161,7 +196,7 @@ td.name
       </div>
       <div class="statistic-heading">
         <h3>Command</h3>
-        <div class="metrics">
+        <div class="statistic-metrics">
           [<span class="time">2012-12-12T17:39:17.628846+09:00</span>
            -
            <span class="time">2012-12-12T17:39:17.630063+09:00</span>
