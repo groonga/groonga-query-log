@@ -177,7 +177,7 @@ module GroongaQueryLog
           write("  # of slow responses : #{@statistics.n_slow_responses}\n")
           write("  responses/sec       : #{@statistics.responses_per_second}\n")
           write("  start time          : #{format_time(@statistics.start_time)}\n")
-          write("  last time           : #{format_time(@statistics.last_time)}\n")
+          write("    end time           : #{format_time(@statistics.end_time)}\n")
           write("  period(sec)         : #{@statistics.period}\n")
           slow_response_ratio = @statistics.slow_response_ratio
           write("  slow response ratio : %5.3f%%\n" % slow_response_ratio)
@@ -266,7 +266,7 @@ module GroongaQueryLog
                                        :elapsed)
           data = [
             format_time(statistic.start_time),
-            format_time(statistic.last_time),
+            format_time(statistic.end_time),
             formatted_elapsed,
             statistic.return_code,
           ]

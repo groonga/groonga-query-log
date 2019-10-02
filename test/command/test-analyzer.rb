@@ -115,7 +115,7 @@ class AnalyzerCommandTest < Test::Unit::TestCase
 
   def normalize_json(json)
     json = json.gsub(/("start_time"):\d+(?:\.\d+)/, "\\1:START_TIME")
-    json.gsub(/("last_time"):\d+(?:\.\d+)/, "\\1:LAST_TIME")
+    json.gsub(/("end_time"):\d+(?:\.\d+)/, "\\1:END_TIME")
   end
 
   def expected_analyzed_query(file_name)

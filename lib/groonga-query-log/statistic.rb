@@ -53,8 +53,13 @@ module GroongaQueryLog
       nano_seconds_to_seconds(@elapsed)
     end
 
-    def last_time
+    def end_time
       @start_time + elapsed_in_seconds
+    end
+
+    # @deprecated since 1.5.3. Use {end_time} instead.
+    def last_time
+      end_time
     end
 
     def slow?
@@ -123,7 +128,7 @@ module GroongaQueryLog
     def to_hash
       data = {
         "start_time" => start_time.to_f,
-        "last_time" => last_time.to_f,
+        "end_time" => end_time.to_f,
         "elapsed" => elapsed_in_seconds,
         "return_code" => return_code,
         "slow" => slow?,

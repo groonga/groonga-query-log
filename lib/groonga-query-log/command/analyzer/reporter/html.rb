@@ -59,7 +59,7 @@ module GroongaQueryLog
         <div class="metrics">
           [<%= format_time(statistic.start_time) %>
            -
-           <%= format_time(statistic.last_time) %>
+           <%= format_time(statistic.end_time) %>
            (<%= format_elapsed(statistic.elapsed_in_seconds,
                                :slow? => statistic.slow?) %>)]
           (<%= span({:class => "return-code"}, h(statistic.return_code)) %>)
@@ -239,8 +239,8 @@ td.name
             <td><%= format_time(@statistics.start_time) %></td>
           </tr>
           <tr>
-            <th>last time</th>
-            <td><%= format_time(@statistics.last_time) %></td>
+            <th>end time</th>
+            <td><%= format_time(@statistics.end_time) %></td>
           </tr>
           <tr>
             <th>period</th>

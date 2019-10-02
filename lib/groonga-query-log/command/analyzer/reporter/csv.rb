@@ -33,7 +33,7 @@ module GroongaQueryLog
           @csv = CSV.new(@output)
           header = [
             "start_time",
-            "last_time",
+            "end_time",
             "elapsed",
             "return_code",
             "slow",
@@ -46,7 +46,7 @@ module GroongaQueryLog
         def report_statistic(statistic)
           record = [
             format_time(statistic.start_time),
-            format_time(statistic.last_time),
+            format_time(statistic.end_time),
             statistic.elapsed_in_seconds,
             statistic.return_code,
             statistic.slow?,

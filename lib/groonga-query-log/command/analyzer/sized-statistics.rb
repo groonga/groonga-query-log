@@ -23,18 +23,19 @@ module GroongaQueryLog
       class SizedStatistics < Array
         attr_reader :n_responses, :n_slow_responses, :n_slow_operations
         attr_reader :slow_operations, :total_elapsed
-        attr_reader :start_time, :last_time
+        attr_reader :start_time, :end_time
         def initialize
           @max_size = 10
           self.order = "-elapsed"
           @start_time = nil
-          @last_time = nil
+          @end_time = nil
           @n_responses = 0
           @n_slow_responses = 0
           @n_slow_operations = 0
           @slow_operations = SizedGroupedOperations.new
           @total_elapsed = 0
           @collect_slow_statistics = true
+          @workers = {}
         end
 
         def order=(new_order)
@@ -92,8 +93,8 @@ module GroongaQueryLog
         end
 
         def period
-          if @start_time and @last_time
-            @last_time - @start_time
+          if @start_time and @end_time
+            @end_time - @start_time
           else
             0
           end
@@ -136,8 +137,8 @@ module GroongaQueryLog
         def update_statistic(statistic)
           @start_time ||= statistic.start_time
           @start_time = [@start_time, statistic.start_time].min
-          @last_time ||= statistic.last_time
-          @last_time = [@last_time, statistic.last_time].max
+          @end_time ||= statistic.end_time
+          @end_time = [@end_time, statistic.end_time].max
           @n_responses += 1
           @total_elapsed += statistic.elapsed_in_seconds
           return unless @collect_slow_statistics

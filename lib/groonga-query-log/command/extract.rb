@@ -216,7 +216,7 @@ module GroongaQueryLog
           record = {
             "start_time" => statistic.start_time,
             "elapsed_time" => statistic.elapsed_in_seconds,
-            "last_time" => statistic.last_time,
+            "end_time" => statistic.end_time,
             "return_code" => statistic.return_code,
             "command" => command_text,
           }

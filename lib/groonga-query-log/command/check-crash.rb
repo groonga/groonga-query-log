@@ -74,8 +74,8 @@ module GroongaQueryLog
         attr_reader :pid
         attr_reader :start_time
         attr_reader :start_log_path
-        attr_accessor :last_time
-        attr_accessor :last_log_path
+        attr_accessor :end_time
+        attr_accessor :end_log_path
         attr_accessor :n_leaks
         attr_writer :crashed
         attr_writer :finished
@@ -83,9 +83,9 @@ module GroongaQueryLog
         def initialize(pid, start_time, start_log_path)
           @pid = pid
           @start_time = start_time
-          @last_time = @start_time
+          @end_time = @start_time
           @start_log_path = start_log_path
-          @last_log_path = @start_log_path
+          @end_log_path = @start_log_path
           @n_leaks = 0
           @crashed = false
           @finished = false
@@ -122,18 +122,18 @@ module GroongaQueryLog
               p [:process,
                  :success,
                  process.start_time.iso8601,
-                 process.last_time.iso8601,
+                 process.end_time.iso8601,
                  process.pid,
                  process.start_log_path,
-                 process.last_log_path]
+                 process.end_log_path]
             elsif process.crashed?
               p [:process,
                  :crashed,
                  process.start_time.iso8601,
-                 process.last_time.iso8601,
+                 process.end_time.iso8601,
                  process.pid,
                  process.start_log_path,
-                 process.last_log_path]
+                 process.end_log_path]
             else
               p [:process,
                  :unfinished,
@@ -145,9 +145,9 @@ module GroongaQueryLog
             unless process.n_leaks.zero?
               p [:leak,
                  process.n_leaks,
-                 process.last_time.iso8601,
+                 process.end_time.iso8601,
                  process.pid,
-                 process.last_log_path]
+                 process.end_log_path]
             end
 
             unless process.important_entries.empty?
@@ -161,14 +161,14 @@ module GroongaQueryLog
 
             next unless need_query_log_parsing
 
-            start = process.start_time
-            last = process.last_time
+            start_time = process.start_time
+            end_time = process.end_time
             @flushed = true
             @unflushed_statistics = []
             query_log_parser = Parser.new
             query_log_parser.parse_paths(@query_log_paths) do |statistic|
-              next if statistic.start_time < start
-              break if statistic.start_time > last
+              next if statistic.start_time < start_time
+              break if statistic.start_time > end_time
               check_query_log_statistic(query_log_parser.current_path,
                                         statistic)
             end
@@ -336,8 +336,8 @@ module GroongaQueryLog
               GroongaProcess.new(entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
-            process.last_time = entry.timestamp
-            process.last_log_path = path
+            process.end_time = entry.timestamp
+            process.end_log_path = path
             process.finished = true
             yield(process)
             @running_processes.delete(entry.pid)
@@ -354,8 +354,8 @@ module GroongaQueryLog
             when :emergency, :alert, :critical, :error
               process.important_entries << entry
             end
-            process.last_time = entry.timestamp
-            process.last_log_path = path
+            process.end_time = entry.timestamp
+            process.end_log_path = path
             case entry.message
             when "-- CRASHED!!! --"
               process.crashed = true
