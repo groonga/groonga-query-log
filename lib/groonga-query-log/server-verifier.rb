@@ -119,6 +119,19 @@ module GroongaQueryLog
                 return false
               end
             end
+            if @options.performance_test?
+              begin
+                performance_check(groonga1_client, groonga2_clinet,
+                                  command)
+              rescue => error
+                log_client_error(error) do
+                  $stderr.puts("status after #{original_source}")
+                end
+                @client_error_is_occurred = true
+                @events.push([:error, command, error])
+                return false
+              end
+            end
           end
         end
       end
@@ -147,6 +160,7 @@ module GroongaQueryLog
 
     def success?
       return false unless @same
+      return false if @slow
       return false if @client_error_is_occurred
       true
     end
@@ -175,6 +189,25 @@ module GroongaQueryLog
       unless comparer.same?
         @same = false
         @events.push([:different, command, response1, response2])
+      end
+    end
+
+    def performace_check(groonga1_client, groonga2_client, command)
+      command["cache"] = "no"
+      command["output_type"] = "json"
+      rewrite_filter(command, "filter")
+      rewrite_filter(command, "scorer")
+
+      response1 = []
+      response2 = []
+      3.times do
+        response1 << groonga1_client.execute(command)
+        response2 << groonga2_client.execute(command)
+      end
+      comparer = PerformanceComparer.new(command, responce1, response2)
+      if comparer.slow?
+        @slow = true
+        @event.push([:slow], command, comparer.elapsed_time1, cimparer.elapsed_time2)
       end
     end
 
@@ -242,6 +275,7 @@ module GroongaQueryLog
       attr_accessor :nullable_reference_number_accessors
       attr_writer :rewrite_not_or_regular_expression
       attr_writer :rewrite_and_not_operator
+      attr_writer :performance_test
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -272,6 +306,7 @@ module GroongaQueryLog
         @nullable_reference_number_accessors = []
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
+        @performance_test = false
       end
 
       def request_queue_size
@@ -358,6 +393,10 @@ module GroongaQueryLog
           :rewrite_and_not_operator =>
             rewrite_and_not_operator?,
         }
+      end
+
+      def performance_test?
+        @performance_test
       end
     end
 

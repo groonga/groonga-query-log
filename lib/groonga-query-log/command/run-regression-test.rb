@@ -58,6 +58,8 @@ module GroongaQueryLog
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
 
+        @performance_test = false
+
         @care_order = true
         @ignored_drilldown_keys = []
         @target_command_names = ServerVerifier::Options.new.target_command_names
@@ -257,6 +259,10 @@ module GroongaQueryLog
                   "[#{target_command_names_label}]") do |names|
           @target_command_names = names
         end
+        parser.on("--performance-test",
+                  "Whether execute performance tests or not") do |boolean|
+          @performance_test = boolean
+        end
 
         parser.separator("")
         parser.separator("Network:")
@@ -354,6 +360,7 @@ module GroongaQueryLog
           :rewrite_and_not_operator =>
             @rewrite_and_not_operator,
           :target_command_names => @target_command_names,
+          :performance_test => @performance_test,
           :read_timeout => @read_timeout,
         }
         directory_options.merge(options)
@@ -657,6 +664,9 @@ module GroongaQueryLog
           if @options[:target_command_names]
             command_line << "--target-command-names"
             command_line << @options[:target_command_names].join(",")
+          end
+          if @options[:performance_test]
+            command_line << "--performance_test"
           end
           if @options[:read_timeout]
             command_line << "--read-timeout"
