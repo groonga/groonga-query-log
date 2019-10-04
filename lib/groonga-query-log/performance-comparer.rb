@@ -56,8 +56,15 @@ module GroongaQueryLog
       diffs.sort[median]
     end
 
-    def compute_diff_ratio(responses1, responses2)
-      #todo
+    def compute_diff_ratio(new_elapsed_time, new_elapsed_time)
+      if new_elapsed_time.zero?
+        if old_elapsed_times.zero?
+          0.0
+        end
+        Float::INFINITY
+      else
+        new_elapsed_time / old_elapsed_time
+      end
     end
 
     class Threshold
