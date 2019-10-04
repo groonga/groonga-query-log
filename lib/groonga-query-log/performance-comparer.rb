@@ -42,13 +42,18 @@ module GroongaQueryLog
       false
     end
 
+    def compute_median(diffs)
+      diffs.length % 2 == 0 ? diffs.length / 2 - 1 : diffs.length / 2
+    end
+
     def compute_diff_sec(responses1, responses2)
       diffs = []
       responses1.each_with_index do |response1, response1_index|
         response2 = responses2[response1_index]
         diffs << (response1.header[2] - response2.header[2])
       end
-      diffs.sort[1]
+      median = compute_median(diffs)
+      diffs.sort[median]
     end
 
     def compute_diff_ratio(responses1, responses2)
