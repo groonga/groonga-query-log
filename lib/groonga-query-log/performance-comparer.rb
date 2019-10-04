@@ -27,8 +27,10 @@ module GroongaQueryLog
       if error_response?(@response1) or error_response?(@response2)
         false
       end
-      diff_sec = compute_diff_sec(@response1, @response2)
-      diff_ratio = comupte_diff_ratio(@response1, @response2)
+      diff_sec = compute_diff_sec(new_elapsed_time(@response1),
+                                  old_elapsed_time(@response2))
+      diff_ratio = comupte_diff_ratio(new_elapsed_time(@response1),
+                                      old_elapsed_time(@response2))
       @threshold.slow_query?(diff_sec, diff_ratio)
     end
 
@@ -46,14 +48,26 @@ module GroongaQueryLog
       diffs.length % 2 == 0 ? diffs.length / 2 - 1 : diffs.length / 2
     end
 
-    def compute_diff_sec(responses1, responses2)
-      diffs = []
-      responses1.each_with_index do |response1, response1_index|
-        response2 = responses2[response1_index]
-        diffs << (response1.header[2] - response2.header[2])
+    def new_elapsed_time(responses1)
+      elapsed_times = []
+      responses1.each do |response|
+        elapsed_times << response.header[2]
       end
-      median = compute_median(diffs)
-      diffs.sort[median]
+      median = compute_median(elapsed_times)
+      elapsed_times.sort[median]
+    end
+
+    def old_elapsed_time(response2)
+      elapsed_times = []
+      responses1.each do |response|
+        elapsed_times << response.header[2]
+      end
+      median = compute_median(elapsed_times)
+      elapsed_times.sort[median]
+    end
+
+    def compute_diff_sec(new_elapsed_time, old_elapsed_time)
+      new_elapsed_time - old_elapsed_time
     end
 
     def compute_diff_ratio(new_elapsed_time, new_elapsed_time)
