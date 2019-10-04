@@ -24,6 +24,7 @@ module GroongaQueryLog
         attr_reader :idle_time_min
         attr_reader :idle_time_max
         attr_reader :n_statistics
+        attr_reader :metrics
         def initialize(id)
           @id = id
           @idle_time_total = 0.0
@@ -31,6 +32,10 @@ module GroongaQueryLog
           @idle_time_min = 0.0
           @idle_time_max = 0.0
           @n_statistics = 0
+          @metrics = {
+            timestamp: [],
+            idle_time: [],
+          }
           @previous_statistic = nil
         end
 
@@ -46,6 +51,8 @@ module GroongaQueryLog
               @idle_time_min = [@idle_time_min, idle_time].min
             end
             @idle_time_max = [@idle_time_max, idle_time].max
+            @metrics[:timestamp] << statistic.start_time
+            @metrics[:idle_time] << idle_time
           end
           @previous_statistic = statistic
         end

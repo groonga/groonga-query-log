@@ -16,6 +16,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 require "erb"
+
+require "charty"
+
 require "groonga-query-log/command/analyzer/reporter"
 
 module GroongaQueryLog
@@ -147,8 +150,10 @@ module GroongaQueryLog
 
         def header
           erb(<<-EOH, __LINE__ + 1)
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
     <title>groonga query analyzer</title>
     <style>
 table,
@@ -294,7 +299,8 @@ td.name
         end
 
         def workers
-          erb(<<-EOH, __LINE__ + 1)
+          html = ""
+          html << erb(<<-WORKERS, __LINE__ + 1)
       <div class="workers">
         <h3>Workers</h3>
         <table>
@@ -317,8 +323,27 @@ td.name
           </tr>
 <% end %>
         </table>
+          WORKERS
+          use_charty = false # TODO
+          if use_charty
+            plotter = Charty::Plotter.new(:google_charts)
+            each_worker = @statistics.each_worker
+            figure = plotter.curve do
+              each_worker.each do |worker|
+                metrics = worker.metrics
+                series(metrics[:timestamp],
+                       metrics[:idle_time],
+                       label: worker.id)
+              end
+              xlabel("timestamp")
+              ylabel("idle time")
+            end
+            html << figure.render
+          end
+          html << erb(<<-WORKERS, __LINE__ + 1)
       </div>
-          EOH
+          WORKERS
+          html
         end
 
         def slow_operations
