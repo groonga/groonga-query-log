@@ -337,6 +337,15 @@ td.name
                 ylabel("idle time")
               end
               html << figure.render
+              figure = plotter.curve do
+                metrics = worker.metrics
+                series(metrics[:timestamp],
+                       metrics[:elapsed],
+                       label: worker.id)
+                xlabel("timestamp")
+                ylabel("elapsed")
+              end
+              html << figure.render
             end
           end
           html << erb(<<-WORKERS, __LINE__ + 1)

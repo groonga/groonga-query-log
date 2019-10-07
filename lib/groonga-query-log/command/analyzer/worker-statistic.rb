@@ -35,6 +35,7 @@ module GroongaQueryLog
           @metrics = {
             timestamp: [],
             idle_time: [],
+            elapsed: [],
           }
           @previous_statistic = nil
         end
@@ -53,6 +54,7 @@ module GroongaQueryLog
             @idle_time_max = [@idle_time_max, idle_time].max
             @metrics[:timestamp] << statistic.start_time
             @metrics[:idle_time] << idle_time
+            @metrics[:elapsed] << statistic.elapsed_in_seconds
           end
           @previous_statistic = statistic
         end
