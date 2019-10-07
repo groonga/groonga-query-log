@@ -327,18 +327,17 @@ td.name
           use_charty = false # TODO
           if use_charty
             plotter = Charty::Plotter.new(:google_charts)
-            each_worker = @statistics.each_worker
-            figure = plotter.curve do
-              each_worker.each do |worker|
+            @statistics.each_worker do |worker|
+              figure = plotter.curve do
                 metrics = worker.metrics
                 series(metrics[:timestamp],
                        metrics[:idle_time],
                        label: worker.id)
+                xlabel("timestamp")
+                ylabel("idle time")
               end
-              xlabel("timestamp")
-              ylabel("idle time")
+              html << figure.render
             end
-            html << figure.render
           end
           html << erb(<<-WORKERS, __LINE__ + 1)
       </div>
