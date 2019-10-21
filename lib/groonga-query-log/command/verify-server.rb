@@ -254,13 +254,15 @@ module GroongaQueryLog
                   "specifying this option multiple times") do |accessor|
           @options.nullable_reference_number_accessors << accessor
         end
-        parser.on("--performance-test",
-                  "Whether execute performance tests or not") do |boolean|
-          @options.performance_test = boolean
+
+        parser.on("--[no-]verify-performance",
+                  "Whether verify performance or not",
+                  "[#{@options.verify_performance?}]") do |boolean|
+          @options.verify_performance = boolean
         end
 
-        parser.separator("Debug options:")
         parser.separator("")
+        parser.separator("Debug options:")
 
         parser.on("--abort-on-exception",
                   "Abort on exception in threads") do
