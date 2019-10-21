@@ -1,5 +1,18 @@
 # News
 
+## 1.5.3: 2019-10-21
+
+### Improvements
+
+  * `GroongaQueryLog::Statistic#end_time`: Renamed from
+    `#last_time`. `#last_time` is deprecated.
+
+  * `analyzer`: Added support for reporting worker idle time.
+
+  * `analyzer`: Added support for reporting the number of processed
+    requests per worker.
+
+  * `run-regression-test`: Added `--verify-performance` option.
 
 ## 1.5.2: 2019-09-26
 
