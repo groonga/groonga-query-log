@@ -21,6 +21,7 @@ require "groonga/client"
 
 require "groonga-query-log/filter-rewriter"
 require "groonga-query-log/parser"
+require "groonga-query-log/performance-verifier"
 require "groonga-query-log/response-comparer"
 
 module GroongaQueryLog
@@ -33,6 +34,7 @@ module GroongaQueryLog
 
     def verify(input, &callback)
       @same = true
+      @slow = false
       @client_error_is_occurred = false
       producer = run_producer(input, &callback)
       reporter = run_reporter
@@ -133,6 +135,8 @@ module GroongaQueryLog
             case event[0]
             when :different
               report_different(output, *event[1..-1])
+            when :slow
+              report_slow(output, *event[1..-1])
             when :error
               report_error(output, *event[1..-1])
             end
@@ -147,6 +151,7 @@ module GroongaQueryLog
 
     def success?
       return false unless @same
+      return false if @slow
       return false if @client_error_is_occurred
       true
     end
@@ -161,6 +166,7 @@ module GroongaQueryLog
 
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
+      command["cache"] = "no" if @options.verify_performance?
       command["output_type"] = "json"
       rewrite_filter(command, "filter")
       rewrite_filter(command, "scorer")
@@ -175,6 +181,24 @@ module GroongaQueryLog
       unless comparer.same?
         @same = false
         @events.push([:different, command, response1, response2])
+        return
+      end
+
+      return unless @options.verify_performance?
+      responses1 = [response1]
+      responses2 = [response2]
+      n_tries = 4
+      n_tries.times do
+        responses1 << groonga1_client.execute(command)
+        responses2 << groonga2_client.execute(command)
+      end
+      verifier = PerformanceVerifier.new(command, responses1, responses2)
+      if verifier.slow?
+        @slow = true
+        @events.push([:slow,
+                      command,
+                      verifier.old_elapsed_time,
+                      verifier.new_elapsed_time])
       end
     end
 
@@ -198,6 +222,15 @@ module GroongaQueryLog
       output.puts("command: #{command_source}")
       output.puts("response1: #{response1.body.to_json}")
       output.puts("response2: #{response2.body.to_json}")
+      output.flush
+    end
+
+    def report_slow(output, command, old_elapsed_time, new_elapsed_time)
+      command_source = command.original_source || command.to_uri_format
+      output.puts("command: #{command_source}")
+      output.puts("old_elapsed_time: #{old_elapsed_time}")
+      output.puts("new_elapsed_time: #{new_elapsed_time}")
+      output.puts("ratio: #{new_elapsed_time / old_elapsed_time}")
       output.flush
     end
 
@@ -242,6 +275,7 @@ module GroongaQueryLog
       attr_accessor :nullable_reference_number_accessors
       attr_writer :rewrite_not_or_regular_expression
       attr_writer :rewrite_and_not_operator
+      attr_writer :verify_performance
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -272,6 +306,7 @@ module GroongaQueryLog
         @nullable_reference_number_accessors = []
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
+        @verify_performance = false
       end
 
       def request_queue_size
@@ -358,6 +393,10 @@ module GroongaQueryLog
           :rewrite_and_not_operator =>
             rewrite_and_not_operator?,
         }
+      end
+
+      def verify_performance?
+        @verify_performance
       end
     end
 
