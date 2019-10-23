@@ -59,7 +59,7 @@ module GroongaQueryLog
       elapsed_times = responses.collect do |response|
         response.elapsed_time
       end
-      elapsed_times.sort[elapsed_times.size / 2]
+      elapsed_times.sort.first
     end
 
     def compute_diff_ratio
