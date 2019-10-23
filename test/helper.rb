@@ -41,5 +41,20 @@ module Helper
         end
       end
     end
+
+    def run_command(command, command_line)
+      stdout = $stdout.dup
+      output = Tempfile.open("output")
+      success = false
+      begin
+        $stdout.reopen(output)
+        success = command.run(command_line)
+      ensure
+        $stdout.reopen(stdout)
+      end
+      output.close
+      output.open
+      [success, output.read]
+    end
   end
 end

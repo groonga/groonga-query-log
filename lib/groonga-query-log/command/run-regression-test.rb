@@ -306,6 +306,11 @@ module GroongaQueryLog
                   "(#{@notifier_options[:smtp_port]})") do |port|
           @notifier_options[:smtp_port] = port
         end
+        parser.on("--mail-from=FROM",
+                  "Send a notification e-mail from FROM",
+                  "(#{@notifier_options[:mail_from]})") do |from|
+          @notifier_options[:mail_from] = from
+        end
         parser.on("--mail-to=TO",
                   "Send a notification e-mail to TO",
                   "(#{@notifier_options[:mail_to]})") do |to|

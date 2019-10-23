@@ -17,6 +17,7 @@
 require "groonga-query-log/command/format-regression-test-logs"
 
 class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
+  include Helper::Command
   include Helper::Path
 
   def setup
@@ -24,18 +25,7 @@ class FormatRegressionTestLogsCommandTest < Test::Unit::TestCase
   end
 
   def run_command(command_line)
-    stdout = $stdout.dup
-    output = Tempfile.open("output")
-    success = false
-    begin
-      $stdout.reopen(output)
-      success = @command.run(command_line)
-    ensure
-      $stdout.reopen(stdout)
-    end
-    output.close
-    output.open
-    [success, output.read]
+    super(@command, command_line)
   end
 
   def fixture_path(*components)

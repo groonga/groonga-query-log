@@ -18,32 +18,33 @@
 require "groonga-query-log/command/run-regression-test"
 
 class RunRegressionTestCommandTest < Test::Unit::TestCase
+  include Helper::Command
   include Helper::Path
 
-  def fixture_path(*components)
-    super("run-regression-test", *components)
+  def setup
+    @command = GroongaQueryLog::Command::RunRegressionTest.new
+    FileUtils.rm_rf(fixture_path("db.old"))
+    FileUtils.rm_rf(fixture_path("db.new"))
+    setup_smtp_server
   end
 
-  class SMTPServer
-    def initialize
-      @socket = TCPServer.open(host, port)
-    end
+  def teardown
+    teardown_smtp_server
   end
 
-  sub_test_case("MailNotifier") do
-    MailNotifier = GroongaQueryLog::Command::RunRegressionTest::MailNotifier
-
-    def setup
-      @smtp_host = "127.0.0.1"
-      @smtp_port = 20025
-      @requests = []
-      @now = "Tue, 26 Mar 2019 16:39:46 +0900"
-      @server = TCPServer.open(@smtp_host, @smtp_port)
-      @thread = Thread.new do
-        client = @server.accept
+  def setup_smtp_server
+    @smtp_host = "127.0.0.1"
+    @smtp_port = 20025
+    @smtp_request_lines = []
+    @now = "Tue, 26 Mar 2019 16:39:46 +0900"
+    @smtp_server = TCPServer.open(@smtp_host, @smtp_port)
+    @smtp_server_running = true
+    @smtp_server_thread = Thread.new do
+      while @smtp_server_running
+        client = @smtp_server.accept
         client.print("220 localhost SMTP server\r\n")
         client.each_line do |line|
-          @requests << line
+          @smtp_request_lines << line
           case line.chomp
           when /\AEHLO /
             client.print("250 AUTH\r\n")
@@ -63,18 +64,55 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
         end
       end
     end
+  end
 
-    def teardown
-      @server.close
-      @thread.kill
-    end
+  def teardown_smtp_server
+    @smtp_server_running = false
+    smtp_client = TCPSocket.new(@smtp_host, @smtp_port)
+    smtp_client.write("QUIT\r\n")
+    smtp_client.gets
+    smtp_client.close
+    @smtp_server.close
+    @smtp_server_thread.join
+  end
 
-    def normalized_request
-      @requests
-        .join("")
-        .gsub(/^Date: .*\r\n/,
-              "Date: #{@now}\r\n")
+  def normalized_smtp_request
+    @smtp_request_lines
+      .join("")
+      .gsub(/^Date: .*\r\n/,
+            "Date: #{@now}\r\n")
+  end
+
+  def fixture_path(*components)
+    super("run-regression-test", *components)
+  end
+
+  def run_command(command_line)
+    Dir.chdir(fixture_path) do
+      super(@command, command_line)
     end
+  end
+
+  def test_mail_from
+    success, _output = run_command(["--smtp-server", @smtp_host,
+                                    "--smtp-port", @smtp_port.to_s,
+                                    "--mail-to", "noreply@example.com",
+                                    "--mail-from", "tester@example.com"])
+    assert_equal([
+                   success,
+                   [
+                     "From: tester@example.com\r",
+                     "From: tester@example.com\r",
+                   ],
+                 ],
+                 [
+                   true,
+                   normalized_smtp_request.scan(/From: .+/),
+                 ])
+  end
+
+  sub_test_case("MailNotifier") do
+    MailNotifier = GroongaQueryLog::Command::RunRegressionTest::MailNotifier
 
     def test_started
       options = {
@@ -86,7 +124,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
       }
       notifier = MailNotifier.new(options)
       notifier.notify_started
-      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
+      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_smtp_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>
 RCPT TO:<#{options[:mail_to]}>
@@ -119,7 +157,7 @@ QUIT
       }
       notifier = MailNotifier.new(options)
       notifier.notify_finished(true, 3000)
-      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
+      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_smtp_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>
 RCPT TO:<#{options[:mail_to]}>
@@ -153,7 +191,7 @@ QUIT
       }
       notifier = MailNotifier.new(options)
       notifier.notify_finished(false, 3000)
-      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_request)
+      assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_smtp_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>
 RCPT TO:<#{options[:mail_to]}>
