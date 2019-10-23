@@ -1,5 +1,13 @@
 # News
 
+## 1.5.4: 2019-10-23
+
+### Improvements
+
+  * `run-regression-test`: Added `--mail-from` option.
+
+  * `format-regression-test-logs`: Added support for slow queries.
+
 ## 1.5.3: 2019-10-21
 
 ### Improvements
