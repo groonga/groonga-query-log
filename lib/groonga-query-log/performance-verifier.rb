@@ -20,7 +20,7 @@ module GroongaQueryLog
       @command = command
       @old_responses = old_responses
       @new_responses = new_responses
-      @threshold_diff = 0.01
+      @threshold_diff = 0.1
       @threshold_ratio = 1.1
     end
 
