@@ -36,6 +36,8 @@ module GroongaQueryLog
         @input_directory = Pathname.new(".")
         @working_directory = Pathname.new(".")
 
+        @n_clients = 1
+
         @old_groonga = "groonga"
         @old_database = "db.old/db"
         @old_groonga_options = []
