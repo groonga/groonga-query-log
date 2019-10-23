@@ -99,6 +99,24 @@ Backtrace:
                  run_command([fixture_path("error.log")]))
   end
 
+  def test_slow
+    output = <<-OUTPUT
+Command:
+/d/select?match_columns=description&query=column_create&table=Entries
+Name: select
+Arguments:
+  match_columns: description
+  query: column_create
+  table: Entries
+Slow:
+  Old: 174.8usec
+  New: 201.7usec
+  Ratio: +15.4%
+    OUTPUT
+    assert_equal([true, output],
+                 run_command([fixture_path("slow.log")]))
+  end
+
   sub_test_case(".new") do
     def setup
     end

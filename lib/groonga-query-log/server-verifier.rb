@@ -228,9 +228,9 @@ module GroongaQueryLog
     def report_slow(output, command, old_elapsed_time, new_elapsed_time)
       command_source = command.original_source || command.to_uri_format
       output.puts("command: #{command_source}")
-      output.puts("old_elapsed_time: #{old_elapsed_time}")
-      output.puts("new_elapsed_time: #{new_elapsed_time}")
-      output.puts("ratio: #{new_elapsed_time / old_elapsed_time}")
+      output.puts("elapsed_time_old: #{old_elapsed_time}")
+      output.puts("elapsed_time_new: #{new_elapsed_time}")
+      output.puts("elapsed_time_ratio: #{new_elapsed_time / old_elapsed_time}")
       output.flush
     end
 

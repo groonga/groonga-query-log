@@ -24,11 +24,14 @@ require "diff/lcs"
 require "diff/lcs/hunk"
 require "groonga/command/parser"
 
+require "groonga-query-log/formattable"
 require "groonga-query-log/version"
 
 module GroongaQueryLog
   module Command
     class FormatRegressionTestLogs
+      include Formattable
+
       def initialize(options={})
         @output = options[:output] || $stdout
       end
@@ -67,6 +70,9 @@ module GroongaQueryLog
         response_new = nil
         backtrace = []
         error_message = nil
+        elapsed_time_old = nil
+        elapsed_time_new = nil
+        elapsed_time_ratio = nil
 
         input.each_line do |line|
           unless line.valid_encoding?
@@ -89,6 +95,16 @@ module GroongaQueryLog
             backtrace.clear
           when /\Abacktrace: /
             backtrace.unshift($POSTMATCH.chomp)
+          when /\Aelapsed_time_old: /
+            elapsed_time_old = Float($POSTMATCH.chomp)
+          when /\Aelapsed_time_new: /
+            elapsed_time_new = Float($POSTMATCH.chomp)
+          when /\Aelapsed_time_ratio: /
+            elapsed_time_ratio = Float($POSTMATCH.chomp)
+            report_slow(command,
+                        elapsed_time_old,
+                        elapsed_time_new,
+                        elapsed_time_ratio)
           end
         end
       end
@@ -168,6 +184,17 @@ module GroongaQueryLog
         @output.puts("Error: #{message}")
         @output.puts("Backtrace:")
         @output.puts(backtrace)
+      end
+
+      def report_slow(command,
+                      elapsed_time_old,
+                      elapsed_time_new,
+                      elapsed_time_ratio)
+        report_command(command)
+        @output.puts("Slow:")
+        @output.puts("  Old: %s" % format_elapsed_time(elapsed_time_old))
+        @output.puts("  New: %s" % format_elapsed_time(elapsed_time_new))
+        @output.puts("  Ratio: +%.1f%%" % ((elapsed_time_ratio * 100) - 100))
       end
 
       def report_command(command)

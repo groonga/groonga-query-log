@@ -21,6 +21,7 @@ require "optparse"
 
 require "groonga-query-log"
 require "groonga-query-log/command-line"
+require "groonga-query-log/formattable"
 
 require "groonga-query-log/command/analyzer"
 require "groonga-query-log/command/analyzer/sized-statistics"
@@ -345,6 +346,8 @@ module GroongaQueryLog
       end
 
       class Checker
+        include Formattable
+
         def initialize(old_statistics,
                        new_statistics,
                        output,
@@ -444,20 +447,6 @@ Summary:
           return false if statistic.cache_used?
           return true if @target_queries.empty?
           @target_queries.include?(statistic.raw_command)
-        end
-
-        def format_elapsed_time(elapsed_time)
-          if elapsed_time < (1 / 1000.0 / 1000.0)
-            "%.1fnsec" % (elapsed_time * 1000 * 1000)
-          elsif elapsed_time < (1 / 1000.0)
-            "%.1fusec" % (elapsed_time * 1000 * 1000)
-          elsif elapsed_time < 1
-            "%.1fmsec" % (elapsed_time * 1000)
-          elsif elapsed_time < 60
-            "%.1fsec" % elapsed_time
-          else
-            "%.1fmin" % (elapsed_time / 60)
-          end
         end
 
         def format_diff(statistic)
