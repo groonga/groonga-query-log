@@ -16,15 +16,14 @@
 
 class PerformanceVerifierTest < Test::Unit::TestCase
   def setup
-    @old_responses = []
-    [0.3, 0.2, 0.1].each do |elapsed_time|
+    @old_responses = build_responses([0.3, 0.2, 0.1])
+    @new_responses = build_responses([0.9, 0.5, 0.7])
+  end
+
+  def build_responses(elapsed_times)
+    elapsed_times.collect do |elapsed_time|
       header = [0, 0, elapsed_time]
-      @old_responses << Groonga::Client::Response::Base.new(nil, header, nil)
-    end
-    @new_responses = []
-    [0.9, 0.5, 0.7].each do |elapsed_time|
-      header = [0, 0, elapsed_time]
-      @new_responses << Groonga::Client::Response::Base.new(nil, header, nil)
+      Groonga::Client::Response::Base.new(nil, header, nil)
     end
   end
 
