@@ -255,11 +255,7 @@ module GroongaQueryLog
           @options.nullable_reference_number_accessors << accessor
         end
 
-        parser.on("--[no-]verify-performance",
-                  "Whether verify performance or not",
-                  "[#{@options.verify_performance?}]") do |boolean|
-          @options.verify_performance = boolean
-        end
+        create_parser_performance(parser)
 
         parser.separator("")
         parser.separator("Debug options:")
@@ -267,6 +263,26 @@ module GroongaQueryLog
         parser.on("--abort-on-exception",
                   "Abort on exception in threads") do
           Thread.abort_on_exception = true
+        end
+      end
+
+      def create_parser_performance(parser)
+        parser.separator("")
+        parser.separator("Performance options:")
+
+        parser.on("--[no-]verify-performance",
+                  "Whether verify performance or not",
+                  "[#{@options.verify_performance?}]") do |boolean|
+          @options.verify_performance = boolean
+        end
+
+        options = @options.performance_verifier_options
+        parser.on("--performance-choose-strategy=STRATEGY",
+                  options.available_choose_strategies,
+                  "How to choose elapsed time",
+                  "(#{options.available_choose_strategies.join(", ")})",
+                  "[#{options.choose_strategy}]") do |strategy|
+          options.choose_strategy = strategy
         end
       end
     end

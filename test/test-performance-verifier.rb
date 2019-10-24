@@ -18,6 +18,7 @@ class PerformanceVerifierTest < Test::Unit::TestCase
   def setup
     @old_responses = build_responses([0.3, 0.2, 0.1])
     @new_responses = build_responses([0.9, 0.5, 0.7])
+    @options = GroongaQueryLog::PerformanceVerifier::Options.new
   end
 
   def build_responses(elapsed_times)
@@ -30,14 +31,34 @@ class PerformanceVerifierTest < Test::Unit::TestCase
   def build_verifier
     GroongaQueryLog::PerformanceVerifier.new(nil,
                                              @old_responses,
-                                             @new_responses)
+                                             @new_responses,
+                                             @options)
   end
 
-  def test_old_elapsed_time
-    assert_equal(0.1, build_verifier.old_elapsed_time)
-  end
+  sub_test_case(":choose_strategy") do
+    sub_test_case(":fastest") do
+      def test_old_elapsed_time
+        assert_equal(0.1, build_verifier.old_elapsed_time)
+      end
 
-  def test_new_elapsed_time
-    assert_equal(0.5, build_verifier.new_elapsed_time)
+      def test_new_elapsed_time
+        assert_equal(0.5, build_verifier.new_elapsed_time)
+      end
+    end
+
+    sub_test_case(":median") do
+      def setup
+        super
+        @options.choose_strategy = :median
+      end
+
+      def test_old_elapsed_time
+        assert_equal(0.2, build_verifier.old_elapsed_time)
+      end
+
+      def test_new_elapsed_time
+        assert_equal(0.7, build_verifier.new_elapsed_time)
+      end
+    end
   end
 end

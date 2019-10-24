@@ -65,6 +65,7 @@ module GroongaQueryLog
         @target_command_names = ServerVerifier::Options.new.target_command_names
 
         @verify_performance = false
+        @performance_verfifier_options = PerformanceVerifier::Options.new
 
         @read_timeout = Groonga::Client::Default::READ_TIMEOUT
 
@@ -269,6 +270,17 @@ module GroongaQueryLog
                   "[#{@verify_performance}]") do |boolean|
           @verify_performance = boolean
         end
+        available_choose_strategies =
+          @performance_verfifier_options.available_choose_strategies
+        default_choose_strategy =
+          @performance_verfifier_options.choose_strategy
+        parser.on("--performance-choose-strategy=STRATEGY",
+                  available_choose_strategies,
+                  "How to choose elapsed time",
+                  "(#{available_choose_strategies.join(", ")})",
+                  "[#{default_choose_strategy}]") do |strategy|
+          @performance_verfifier_options.choose_strategy = strategy
+        end
 
         parser.separator("")
         parser.separator("Network:")
@@ -372,6 +384,7 @@ module GroongaQueryLog
             @rewrite_and_not_operator,
           :target_command_names => @target_command_names,
           :verify_performance => @verify_performance,
+          :performance_verfifier_options => @performance_verfifier_options,
           :read_timeout => @read_timeout,
         }
         directory_options.merge(options)
@@ -678,6 +691,9 @@ module GroongaQueryLog
           end
           if @options[:verify_performance]
             command_line << "--verify-performance"
+            command_line << "--performance-choose-strategy"
+            options = @options[:performance_verfifier_options]
+            command_line << options.choose_strategy.to_s
           end
           if @options[:read_timeout]
             command_line << "--read-timeout"

@@ -16,10 +16,21 @@
 
 module GroongaQueryLog
   class PerformanceVerifier
-    def initialize(command, old_responses, new_responses)
+    class Options < Struct.new(:choose_strategy)
+      def choose_strategy
+        super || :fastest
+      end
+
+      def available_choose_strategies
+        [:fastest, :median]
+      end
+    end
+
+    def initialize(command, old_responses, new_responses, options)
       @command = command
       @old_responses = old_responses
       @new_responses = new_responses
+      @options = options
       @threshold_diff = 0.1
       @threshold_ratio = 1.1
     end
@@ -37,11 +48,11 @@ module GroongaQueryLog
     end
 
     def old_elapsed_time
-      decide_target_elapsed_time(@old_responses)
+      choose_target_elapsed_time(@old_responses)
     end
 
     def new_elapsed_time
-      decide_target_elapsed_time(@new_responses)
+      choose_target_elapsed_time(@new_responses)
     end
 
     def diff_ratio
@@ -55,11 +66,23 @@ module GroongaQueryLog
       end
     end
 
-    def decide_target_elapsed_time(responses)
+    def choose_target_elapsed_time(responses)
       elapsed_times = responses.collect do |response|
         response.elapsed_time
       end
-      elapsed_times.sort.first
+      sorted_elapsed_times = elapsed_times.sort
+
+      strategy = @options.choose_strategy
+      case strategy
+      when :fastest
+        sorted_elapsed_times.first
+      when :median
+        sorted_elapsed_times[elapsed_times.size / 2]
+      else
+        message =
+          "choose strategy must be :fastest or :median: #{strategy.inspect}"
+        raise ArgumentError, message
+      end
     end
 
     def compute_diff_ratio
