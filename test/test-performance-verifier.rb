@@ -27,13 +27,17 @@ class PerformanceVerifierTest < Test::Unit::TestCase
     end
   end
 
+  def build_verifier
+    GroongaQueryLog::PerformanceVerifier.new(nil,
+                                             @old_responses,
+                                             @new_responses)
+  end
+
   def test_old_elapsed_time
-    verifier = GroongaQueryLog::PerformanceVerifier.new(nil, @old_responses, @new_responses)
-    assert_equal(0.1, verifier.old_elapsed_time)
+    assert_equal(0.1, build_verifier.old_elapsed_time)
   end
 
   def test_new_elapsed_time
-    verifier = GroongaQueryLog::PerformanceVerifier.new(nil, @old_responses, @new_responses)
-    assert_equal(0.5, verifier.new_elapsed_time)
+    assert_equal(0.5, build_verifier.new_elapsed_time)
   end
 end
