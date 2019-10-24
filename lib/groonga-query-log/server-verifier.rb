@@ -192,7 +192,10 @@ module GroongaQueryLog
         responses1 << groonga1_client.execute(command)
         responses2 << groonga2_client.execute(command)
       end
-      verifier = PerformanceVerifier.new(command, responses1, responses2)
+      verifier = PerformanceVerifier.new(command,
+                                         responses1,
+                                         responses2,
+                                         @options.performance_verifier_options)
       if verifier.slow?
         @slow = true
         @events.push([:slow,
@@ -276,6 +279,7 @@ module GroongaQueryLog
       attr_writer :rewrite_not_or_regular_expression
       attr_writer :rewrite_and_not_operator
       attr_writer :verify_performance
+      attr_reader :performance_verifier_options
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -307,6 +311,7 @@ module GroongaQueryLog
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
         @verify_performance = false
+        @performance_verifier_options = PerformanceVerifier::Options.new
       end
 
       def request_queue_size
