@@ -59,6 +59,7 @@ module GroongaQueryLog
         @nullable_reference_number_accessors = []
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
+        @output_result_to_stdout = false
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -82,6 +83,10 @@ module GroongaQueryLog
           smtp_port: 25,
           path: "#{@working_directory}/results",
         }
+        @outputter_options = {
+          to_stdout: false,
+          path: "#{@working_directory}/results",
+        }
       end
 
       def run(command_line)
@@ -101,6 +106,8 @@ module GroongaQueryLog
                             tester_options)
         success = tester.run
         notifier.notify_finished(success, Time.now - start_time)
+        outputter = OutputResult.new(@outputter_options)
+        outputter.puts(success);
 
         success
       end
@@ -241,6 +248,11 @@ module GroongaQueryLog
                   "\"keyword2\")'",
                   "(#{@rewrite_and_not_operator})") do |boolean|
           @rewrite_and_not_operator = boolean
+        end
+        parser.on("--output-result-to-stdout",
+                  "Output test results to stdout",
+                  "(#{@outputter_options[:to_stdout]})") do |boolean|
+          @outputter_options[:to_stdout] = boolean
         end
 
         parser.separator("")
@@ -713,6 +725,39 @@ module GroongaQueryLog
 
         def use_persistent_cache?
           @old.use_persistent_cache? or @new.use_persistent_cache?
+        end
+      end
+
+      class OutputResult
+        def initialize(options)
+          @options = options
+          @path = @options[:path] || "results"
+        end
+
+        def puts(success)
+          return unless @options.has_value?(true)
+
+          output = StringIO.new
+          formetter = FormatRegressionTestLogs.new(output: output)
+          formetter.run([@path])
+          formatted_log = output.string
+          content = ""
+          if success
+            content << "Success\n"
+          else
+            content << "Report:\n"
+            content << formatted_log
+          end
+
+          if @options[:to_stdout]
+            to_stdout(content)
+          end
+        end
+
+        private
+        def to_stdout(content)
+          $stdout.puts(content)
+          $stdout.flush
         end
       end
 

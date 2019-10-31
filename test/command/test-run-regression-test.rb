@@ -229,4 +229,55 @@ QUIT
       REQUEST
     end
   end
+
+  sub_test_case("OutputResult") do
+    OutputResult = GroongaQueryLog::Command::RunRegressionTest::OutputResult
+
+    def setup
+      $stdout = StringIO.new
+    end
+
+    def teardown
+      $stdout = STDOUT
+    end
+
+    def test_success
+      options = {
+        :to_stdout => true,
+        :path => fixture_path("output-result/success.log"),
+      }
+      outputter = OutputResult.new(options)
+      outputter.puts(true);
+      result = $stdout.string
+      assert_equal("Success\n", result)
+    end
+
+    def test_failure
+      options = {
+        :to_stdout => true,
+        :path => fixture_path("output-result/failure.log"),
+      }
+      outputter = OutputResult.new(options)
+      outputter.puts(false);
+      result = $stdout.string
+      assert_equal(<<-RESULT, result)
+Report:
+Command:
+/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
+Name: select
+Arguments:
+  match_columns: message
+  query: 焼肉
+  table: Logs
+--- old
++++ new
+@@ -1,5 +1,5 @@
+ [[[2],
+   [["_id", "UInt32"], ["message", "Text"]],
+   [1, "log message1: 焼肉"],
+-  [2, "log message2: 焼肉"]]]
++  [3, "log message3: 焼肉"]]]
+      RESULT
+    end
+  end
 end
