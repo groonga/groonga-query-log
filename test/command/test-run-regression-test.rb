@@ -83,6 +83,13 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
             "Date: #{@now}\r\n")
   end
 
+  def normalize_output(output)
+    output
+      .gsub(/^\[.*\n/, "")
+      .gsub(/^Running.*\n/, "")
+      .gsub(/^Elapsed: \d+days \d{2}:\d{2}:\d{2}$/, "Elapsed: 0days 00:00:00")
+  end
+
   def fixture_path(*components)
     super("run-regression-test", *components)
   end
@@ -91,6 +98,16 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
     Dir.chdir(fixture_path) do
       super(@command, command_line)
     end
+  end
+
+  def test_success
+    success, output = run_command([])
+    assert_equal([
+                   true,
+                   "Elapsed: 0days 00:00:00\n" +
+                   "Success\n"
+                 ],
+                [success, normalize_output(output)])
   end
 
   def test_mail_from
@@ -156,7 +173,7 @@ QUIT
         :path => fixture_path("mail-notifier/success.log"),
       }
       notifier = MailNotifier.new(options)
-      notifier.notify_finished(true, 3000)
+      notifier.notify_finished(true, "report")
       assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_smtp_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>
@@ -172,8 +189,7 @@ To: #{options[:mail_to]}
 Subject: Success
 Date: #{@now}
 
-Elapsed: 0days 00:50:00
-
+report
 .
 QUIT
       REQUEST
@@ -190,7 +206,7 @@ QUIT
         :path => fixture_path("mail-notifier/failure.log"),
       }
       notifier = MailNotifier.new(options)
-      notifier.notify_finished(false, 3000)
+      notifier.notify_finished(false, "report")
       assert_equal(<<-REQUEST.gsub(/\n/, "\r\n").b, normalized_smtp_request)
 EHLO 127.0.0.1
 MAIL FROM:<#{options[:mail_from]}>
@@ -206,78 +222,10 @@ To: #{options[:mail_to]}
 Subject: Failure
 Date: #{@now}
 
-Elapsed: 0days 00:50:00
-Report:
-Command:
-/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
-Name: select
-Arguments:
-  match_columns: message
-  query: 焼肉
-  table: Logs
---- old
-+++ new
-@@ -1,5 +1,5 @@
- [[[2],
-   [["_id", "UInt32"], ["message", "Text"]],
-   [1, "log message1: 焼肉"],
--  [2, "log message2: 焼肉"]]]
-+  [3, "log message3: 焼肉"]]]
-
+report
 .
 QUIT
       REQUEST
-    end
-  end
-
-  sub_test_case("OutputResult") do
-    OutputResult = GroongaQueryLog::Command::RunRegressionTest::OutputResult
-
-    def setup
-      $stdout = StringIO.new
-    end
-
-    def teardown
-      $stdout = STDOUT
-    end
-
-    def test_success
-      options = {
-        :to_stdout => true,
-        :path => fixture_path("output-result/success.log"),
-      }
-      outputter = OutputResult.new(options)
-      outputter.puts(true);
-      result = $stdout.string
-      assert_equal("Success\n", result)
-    end
-
-    def test_failure
-      options = {
-        :to_stdout => true,
-        :path => fixture_path("output-result/failure.log"),
-      }
-      outputter = OutputResult.new(options)
-      outputter.puts(false);
-      result = $stdout.string
-      assert_equal(<<-RESULT, result)
-Report:
-Command:
-/d/select?table=Logs&match_columns=message&query=%E7%84%BC%E8%82%89
-Name: select
-Arguments:
-  match_columns: message
-  query: 焼肉
-  table: Logs
---- old
-+++ new
-@@ -1,5 +1,5 @@
- [[[2],
-   [["_id", "UInt32"], ["message", "Text"]],
-   [1, "log message1: 焼肉"],
--  [2, "log message2: 焼肉"]]]
-+  [3, "log message3: 焼肉"]]]
-      RESULT
     end
   end
 end

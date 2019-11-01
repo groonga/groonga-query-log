@@ -59,7 +59,6 @@ module GroongaQueryLog
         @nullable_reference_number_accessors = []
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
-        @output_result_to_stdout = false
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -81,11 +80,6 @@ module GroongaQueryLog
           smtp_auth_password: nil,
           smtp_starttls: false,
           smtp_port: 25,
-          path: "#{@working_directory}/results",
-        }
-        @outputter_options = {
-          to_stdout: false,
-          path: "#{@working_directory}/results",
         }
       end
 
@@ -100,14 +94,17 @@ module GroongaQueryLog
 
         notifier = MailNotifier.new(@notifier_options)
         notifier.notify_started
+
         start_time = Time.now
         tester = Tester.new(old_groonga_server,
                             new_groonga_server,
                             tester_options)
         success = tester.run
-        notifier.notify_finished(success, Time.now - start_time)
-        outputter = OutputResult.new(@outputter_options)
-        outputter.puts(success);
+        elapsed_time = Time.now - start_time
+
+        report = format_report(success, elapsed_time)
+        notifier.notify_finished(success, report)
+        puts(report)
 
         success
       end
@@ -249,11 +246,6 @@ module GroongaQueryLog
                   "(#{@rewrite_and_not_operator})") do |boolean|
           @rewrite_and_not_operator = boolean
         end
-        parser.on("--output-result-to-stdout",
-                  "Output test results to stdout",
-                  "(#{@outputter_options[:to_stdout]})") do |boolean|
-          @outputter_options[:to_stdout] = boolean
-        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -358,10 +350,15 @@ module GroongaQueryLog
         parser
       end
 
+      def results_directory
+        @working_directory + "results"
+      end
+
       def directory_options
         {
           :input_directory   => @input_directory,
           :working_directory => @working_directory,
+          :results_directory => results_directory,
         }
       end
 
@@ -414,6 +411,34 @@ module GroongaQueryLog
                           @new_groonga_options,
                           @new_database,
                           server_options)
+      end
+
+      def format_report(success, elapsed_time)
+        formatted = format_elapsed_time(elapsed_time)
+        if success
+          formatted << "Success"
+        else
+          formatted << "Failure"
+          output = StringIO.new
+          formetter = FormatRegressionTestLogs.new(output: output)
+          formetter.run([results_directory])
+          formatted << "Report:\n"
+          formatted << output.string
+        end
+        formatted
+      end
+
+      def format_elapsed_time(elapsed_time)
+        elapsed_seconds = elapsed_time % 60
+        elapsed_minutes = elapsed_time / 60 % 60
+        elapsed_hours = elapsed_time / 60 / 60 % 24
+        elapsed_days = elapsed_time / 60 / 60 / 24
+        "Elapsed: %ddays %02d:%02d:%02d\n" % [
+          elapsed_days,
+          elapsed_hours,
+          elapsed_minutes,
+          elapsed_seconds
+        ]
       end
 
       module Loggable
@@ -573,6 +598,8 @@ module GroongaQueryLog
           @new = new
           @input_directory = options[:input_directory] || Pathname.new(".")
           @working_directory = options[:working_directory] || Pathname.new(".")
+          @results_directory =
+            options[:results_directory] || (@working_directory + "results")
           @n_clients = options[:n_clients] || 1
           @stop_on_failure = options[:stop_on_failure]
           @options = options
@@ -720,7 +747,7 @@ module GroongaQueryLog
         end
 
         def test_log_path(query_log_path)
-          @working_directory + "results" + "#{query_log_path.basename}.log"
+          @results_directory + "#{query_log_path.basename}.log"
         end
 
         def use_persistent_cache?
@@ -728,43 +755,9 @@ module GroongaQueryLog
         end
       end
 
-      class OutputResult
-        def initialize(options)
-          @options = options
-          @path = @options[:path] || "results"
-        end
-
-        def puts(success)
-          return unless @options.has_value?(true)
-
-          output = StringIO.new
-          formetter = FormatRegressionTestLogs.new(output: output)
-          formetter.run([@path])
-          formatted_log = output.string
-          content = ""
-          if success
-            content << "Success\n"
-          else
-            content << "Report:\n"
-            content << formatted_log
-          end
-
-          if @options[:to_stdout]
-            to_stdout(content)
-          end
-        end
-
-        private
-        def to_stdout(content)
-          $stdout.puts(content)
-          $stdout.flush
-        end
-      end
-
       class MailNotifier
         def initialize(options)
           @options = options
-          @path = @options[:path] || "results"
         end
 
         def notify_started
@@ -774,39 +767,18 @@ module GroongaQueryLog
           send_mail(subject, "")
         end
 
-        def notify_finished(success, elapsed_time)
+        def notify_finished(success, report)
           return unless @options[:mail_to]
 
-          output = StringIO.new
-          formetter = FormatRegressionTestLogs.new(output: output)
-          formetter.run([@path])
-          formatted_log = output.string
-
-          content = format_elapsed_time(elapsed_time)
           if success
             subject = @options[:mail_subject_on_success]
           else
             subject = @options[:mail_subject_on_failure]
-            content << "Report:\n"
-            content << formatted_log
           end
-          send_mail(subject, content)
+          send_mail(subject, report)
         end
 
         private
-        def format_elapsed_time(elapsed_time)
-          elapsed_seconds = elapsed_time % 60
-          elapsed_minutes = elapsed_time / 60 % 60
-          elapsed_hours = elapsed_time / 60 / 60 % 24
-          elapsed_days = elapsed_time / 60 / 60 / 24
-          "Elapsed: %ddays %02d:%02d:%02d\n" % [
-            elapsed_days,
-            elapsed_hours,
-            elapsed_minutes,
-            elapsed_seconds
-          ]
-        end
-
         def send_mail(subject, content)
           header = <<-HEADER
 MIME-Version: 1.0
