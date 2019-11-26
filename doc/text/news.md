@@ -1,5 +1,11 @@
 # News
 
+## 1.5.6: 2019-11-26
+
+### Improvements
+
+  * `run-regression-test`: Outputted report to stdout by default.
+
 ## 1.5.5: 2019-10-24
 
 ### Improvements
