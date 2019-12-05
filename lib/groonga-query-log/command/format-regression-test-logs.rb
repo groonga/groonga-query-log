@@ -112,38 +112,32 @@ module GroongaQueryLog
 
       def valid_entry?(command, response_old, response_new)
         valid = true
-
-        begin
-          unless response_old.nil?
-            JSON.parse(response_old)
-          else
-            @output.puts(command)
-            @output.puts("old response is nil")
-            valid = false
-          end
-        rescue JSON::ParserError
-          @output.puts(command)
-          @output.puts("failed to parse old response: #{$!.message}")
-          @output.puts(response_old)
+        unless validate_response(command, "old", response_old)
           valid = false
         end
-
-        begin
-          unless response_new.nil?
-            JSON.parse(response_new)
-          else
-            @output.puts(command)
-            @output.puts("new response is nil")
-            valid = false
-          end
-        rescue JSON::ParserError
-          @output.puts(command)
-          @output.puts("failed to parse new response: #{$!.message}")
-          @output.puts(response_new)
+        unless validate_response(command, "new", response_new)
           valid = false
         end
-
         valid
+      end
+
+      def validate_response(command, type, response)
+        if response.nil?
+          @output.puts(command)
+          @output.puts("no #{type} response")
+          return false
+        end
+
+        begin
+          JSON.parse(response)
+        rescue JSON::ParserError
+          @output.puts(command)
+          @output.puts("failed to parse #{type} response: #{$!.message}")
+          @output.puts(response)
+          return false
+        end
+
+        true
       end
 
       def report_diff(command, response_old, response_new)
