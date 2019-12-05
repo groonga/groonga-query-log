@@ -1,4 +1,5 @@
 # Copyright (C) 2014-2019  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -111,26 +112,32 @@ module GroongaQueryLog
 
       def valid_entry?(command, response_old, response_new)
         valid = true
-
-        begin
-          JSON.parse(response_old)
-        rescue JSON::ParserError
-          @output.puts(command)
-          @output.puts("failed to parse old response: #{$!.message}")
-          @output.puts(response_old)
+        unless validate_response(command, "old", response_old)
           valid = false
         end
-
-        begin
-          JSON.parse(response_new)
-        rescue JSON::ParserError
-          @output.puts(command)
-          @output.puts("failed to parse new response: #{$!.message}")
-          @output.puts(response_new)
+        unless validate_response(command, "new", response_new)
           valid = false
         end
-
         valid
+      end
+
+      def validate_response(command, type, response)
+        if response.nil?
+          @output.puts(command)
+          @output.puts("no #{type} response")
+          return false
+        end
+
+        begin
+          JSON.parse(response)
+        rescue JSON::ParserError
+          @output.puts(command)
+          @output.puts("failed to parse #{type} response: #{$!.message}")
+          @output.puts(response)
+          return false
+        end
+
+        true
       end
 
       def report_diff(command, response_old, response_new)
