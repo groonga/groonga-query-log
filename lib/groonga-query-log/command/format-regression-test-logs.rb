@@ -1,4 +1,5 @@
 # Copyright (C) 2014-2019  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -113,7 +114,13 @@ module GroongaQueryLog
         valid = true
 
         begin
-          JSON.parse(response_old)
+          unless response_old.nil?
+            JSON.parse(response_old)
+          else
+            @output.puts(command)
+            @output.puts("old response is nil")
+            valid = false
+          end
         rescue JSON::ParserError
           @output.puts(command)
           @output.puts("failed to parse old response: #{$!.message}")
@@ -122,7 +129,13 @@ module GroongaQueryLog
         end
 
         begin
-          JSON.parse(response_new)
+          unless response_new.nil?
+            JSON.parse(response_new)
+          else
+            @output.puts(command)
+            @output.puts("new response is nil")
+            valid = false
+          end
         rescue JSON::ParserError
           @output.puts(command)
           @output.puts("failed to parse new response: #{$!.message}")
