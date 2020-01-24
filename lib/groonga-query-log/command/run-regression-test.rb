@@ -1,5 +1,5 @@
 # Copyright (C) 2014-2020  Sutou Kouhei <kou@clear-code.com>
-# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
+# Copyright (C) 2019-2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -62,6 +62,7 @@ module GroongaQueryLog
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
         @debug_rewrite = false
+        @execution_query_rate = 1.0
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -108,7 +109,8 @@ module GroongaQueryLog
 
         report = format_report(success,
                                elapsed_time,
-                               n_leaked_objects)
+                               n_leaked_objects,
+                               tester.n_execute_commands)
         notifier.notify_finished(success, report)
         puts(report)
 
@@ -277,6 +279,14 @@ module GroongaQueryLog
                   "(#{@debug_rewrite})") do |boolean|
           @debug_rewrite = boolean
         end
+        parser.on("--execution-query-rate=RATE", Float,
+                  "You can specify execution query rate." +
+                  "The unit of this option is %." +
+                  "For example, if you specify 0.1 in this option, " +
+                  "execute queries with the probability of 1/10.",
+                  "(#{@execution_query_rate})") do |rate|
+          @execution_query_rate = rate
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -423,6 +433,7 @@ module GroongaQueryLog
           :rewrite_and_not_operator =>
             @rewrite_and_not_operator,
           :debug_rewrite => @debug_rewrite,
+          :execution_query_rate => @execution_query_rate,
           :target_command_names => @target_command_names,
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
@@ -447,10 +458,14 @@ module GroongaQueryLog
                           server_options)
       end
 
-      def format_report(success, elapsed_time, n_leaked_objects)
+      def format_report(success,
+                        elapsed_time,
+                        n_leaked_objects,
+                        n_execute_commands)
         formatted = format_elapsed_time(elapsed_time)
         if success
-          formatted << "Success"
+          formatted << "Number of execution commands: #{n_execute_commands}\n"
+          formatted << "Success\n"
         else
           formatted << "Failure"
         end
@@ -666,6 +681,7 @@ module GroongaQueryLog
           @stop_on_failure = options[:stop_on_failure]
           @options = options
           @n_ready_waits = 2
+          @n_execute_commands = 0
         end
 
         def run
@@ -687,6 +703,10 @@ module GroongaQueryLog
           new_thread_success = new_thread.value
 
           old_thread_success and new_thread_success
+        end
+
+        def n_execute_commands
+          @n_execute_commands
         end
 
         private
@@ -718,8 +738,9 @@ module GroongaQueryLog
               else
                 callback = nil
               end
-              unless verify_server(log_path, query_log_path, &callback)
-                same = false
+              same, @n_execute_commands =
+                    verify_server(log_path, query_log_path, &callback)
+              unless same
                 break if @stop_on_failure
               end
             rescue Interrupt
@@ -791,6 +812,10 @@ module GroongaQueryLog
           end
           if @options[:debug_rewrite]
             command_line << "--debug-rewrite"
+          end
+          if @options[:execution_query_rate] < 1.0
+            command_line << "--execution-query-rate"
+            command_line << @options[:execution_query_rate].to_s
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"

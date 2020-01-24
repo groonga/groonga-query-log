@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -29,6 +30,7 @@ module GroongaQueryLog
       def run(command_line, &callback)
         input_paths = create_parser.parse(command_line)
         same = true
+        n_execute_commands = 0
         verifier = ServerVerifier.new(@options)
         if input_paths.empty?
           same = verifier.verify($stdin, &callback)
@@ -50,7 +52,7 @@ module GroongaQueryLog
             end
           end
         end
-        same
+        return same, verifier.n_execute_commands
       end
 
       private
@@ -252,6 +254,15 @@ module GroongaQueryLog
                   "Output rewrite logs for debugging",
                   "(#{@options.debug_rewrite?})") do |boolean|
           @options.debug_rewrite = boolean
+        end
+
+        parser.on("--execution-query-rate=RATE", Float,
+                  "You can specify execution query rate." +
+                  "The unit of this option is %." +
+                  "For example, if you specify 0.1 in this option, " +
+                  "execute queries with the probability of 1/10.",
+                  "(#{@options.execution_query_rate})") do |rate|
+          @options.execution_query_rate = rate
         end
 
         parser.on("--nullable-reference-number-accessor=ACCESSOR",

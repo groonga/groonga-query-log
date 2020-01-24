@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -36,12 +37,17 @@ module GroongaQueryLog
       @same = true
       @slow = false
       @client_error_is_occurred = false
+      @n_execute_commands = 0
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
       @events.push(nil)
       reporter.join
       success?
+    end
+
+    def n_execute_commands
+      @n_execute_commands
     end
 
     private
@@ -58,6 +64,7 @@ module GroongaQueryLog
           command = statistic.command
           next if command.nil?
           next unless target_command?(command)
+          next if rand > @options.execution_query_rate
           n_commands += 1
           @queue.push(statistic)
 
@@ -73,6 +80,7 @@ module GroongaQueryLog
         @options.n_clients.times do
           @queue.push(nil)
         end
+        @n_execute_commands = n_commands
         consumers.each(&:join)
       end
     end
@@ -283,6 +291,7 @@ module GroongaQueryLog
       attr_writer :verify_performance
       attr_reader :performance_verifier_options
       attr_writer :debug_rewrite
+      attr_writer :execution_query_rate
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -316,6 +325,7 @@ module GroongaQueryLog
         @verify_performance = false
         @performance_verifier_options = PerformanceVerifier::Options.new
         @debug_rewrite = false
+        @execution_query_rate = 1.0
       end
 
       def request_queue_size
@@ -410,6 +420,10 @@ module GroongaQueryLog
 
       def debug_rewrite?
         @debug_rewrite
+      end
+
+      def execution_query_rate
+        @execution_query_rate
       end
     end
 
