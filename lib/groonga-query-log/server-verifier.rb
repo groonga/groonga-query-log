@@ -214,9 +214,11 @@ module GroongaQueryLog
       rewritten_target = rewriter.rewrite
       return if target == rewritten_target
 
-      $stderr.puts("Rewritten #{name}")
-      $stderr.puts("  Before: #{target}")
-      $stderr.puts("   After: #{rewritten_target}")
+      if @options.debug_rewrite?
+        $stderr.puts("Rewritten #{name}")
+        $stderr.puts("  Before: #{target}")
+        $stderr.puts("   After: #{rewritten_target}")
+      end
       command[name] = rewritten_target
     end
 
@@ -280,6 +282,7 @@ module GroongaQueryLog
       attr_writer :rewrite_and_not_operator
       attr_writer :verify_performance
       attr_reader :performance_verifier_options
+      attr_writer :debug_rewrite
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -312,6 +315,7 @@ module GroongaQueryLog
         @rewrite_and_not_operator = false
         @verify_performance = false
         @performance_verifier_options = PerformanceVerifier::Options.new
+        @debug_rewrite = false
       end
 
       def request_queue_size
@@ -402,6 +406,10 @@ module GroongaQueryLog
 
       def verify_performance?
         @verify_performance
+      end
+
+      def debug_rewrite?
+        @debug_rewrite
       end
     end
 
