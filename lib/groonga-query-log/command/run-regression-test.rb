@@ -706,6 +706,9 @@ module GroongaQueryLog
           if @stop_on_failure
             command_line << "--stop-on-failure"
           end
+          if @debug_rewrite
+            command_line << "--debug-rewrite"
+          end
           if @options[:rewrite_vector_equal]
             command_line << "--rewrite-vector-equal"
           end
