@@ -201,6 +201,12 @@ module GroongaQueryLog
           @options.stop_on_failure = boolean
         end
 
+        parser.on("--[no-]retry-on-no-response",
+                  "Retry execution when the no response",
+                  "(#{@options.retry_on_no_response?})") do |boolean|
+          @options.retry_on_no_response = boolean
+        end
+
         parser.on("--[no-]rewrite-vector-equal",
                   "Rewrite 'vector == ...' with 'vector @ ...'",
                   "(#{@options.rewrite_vector_equal?})") do |boolean|

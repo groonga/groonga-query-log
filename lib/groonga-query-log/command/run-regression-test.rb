@@ -52,6 +52,7 @@ module GroongaQueryLog
         @skip_finished_queries = false
         @output_query_log = false
         @stop_on_failure = false
+        @retry_on_no_response = false
         @rewrite_vector_equal = false
         @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
@@ -198,6 +199,11 @@ module GroongaQueryLog
                   "Stop execution on the first failure",
                   "(#{@stop_on_failure})") do |boolean|
           @stop_on_failure = boolean
+        end
+        parser.on("--[no-]retry-on-no-response",
+                  "Retry execution when the no response",
+                  "(#{@retry_on_no_response})") do |boolean|
+          @retry_on_no_response = boolean
         end
         parser.on("--[no-]rewrite-vector-equal",
                   "Rewrite 'vector == ...' with 'vector @ ...'",
@@ -379,6 +385,7 @@ module GroongaQueryLog
           :skip_finished_queries => @skip_finished_queries,
           :ignored_drilldown_keys => @ignored_drilldown_keys,
           :stop_on_failure => @stop_on_failure,
+          :retry_on_no_response => @retry_on_no_response,
           :rewrite_vector_equal => @rewrite_vector_equal,
           :rewrite_vector_not_equal_empty_string =>
             @rewrite_vector_not_equal_empty_string,
@@ -602,6 +609,7 @@ module GroongaQueryLog
             options[:results_directory] || (@working_directory + "results")
           @n_clients = options[:n_clients] || 1
           @stop_on_failure = options[:stop_on_failure]
+          @retry_on_no_response = options[:retry_on_no_response]
           @options = options
           @n_ready_waits = 2
         end
@@ -698,6 +706,9 @@ module GroongaQueryLog
           end
           if @stop_on_failure
             command_line << "--stop-on-failure"
+          end
+          if @retry_on_no_response
+            command_line << "--retry-on-no-response"
           end
           if @options[:rewrite_vector_equal]
             command_line << "--rewrite-vector-equal"

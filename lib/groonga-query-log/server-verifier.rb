@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -170,8 +171,15 @@ module GroongaQueryLog
       command["output_type"] = "json"
       rewrite_filter(command, "filter")
       rewrite_filter(command, "scorer")
-      response1 = groonga1_client.execute(command)
-      response2 = groonga2_client.execute(command)
+
+      response1, response2 = ""
+      n_tries = 3
+      n_tries.times do
+        response1 = groonga1_client.execute(command)
+        response2 = groonga2_client.execute(command)
+        break unless @options.retry_on_no_response?
+        break if (!response1.nil? && !response2.nil?)
+      end
       compare_options = {
         :care_order => @options.care_order,
         :ignored_drilldown_keys => @options.ignored_drilldown_keys,
@@ -273,6 +281,7 @@ module GroongaQueryLog
       attr_writer :verify_cache
       attr_accessor :ignored_drilldown_keys
       attr_writer :stop_on_failure
+      attr_writer :retry_on_no_response
       attr_writer :rewrite_vector_equal
       attr_writer :rewrite_vector_not_equal_empty_string
       attr_accessor :vector_accessors
@@ -306,6 +315,7 @@ module GroongaQueryLog
         @verify_cache = false
         @ignored_drilldown_keys = []
         @stop_on_failure = false
+        @retry_on_no_response = false
         @rewrite_vector_equal = false
         @rewrite_vector_not_equal_empty_string = false
         @vector_accessors = []
@@ -332,6 +342,10 @@ module GroongaQueryLog
 
       def stop_on_failure?
         @stop_on_failure
+      end
+
+      def retry_on_no_response?
+        @retry_on_no_response
       end
 
       def rewrite_vector_equal?
