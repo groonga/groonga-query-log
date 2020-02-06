@@ -59,6 +59,7 @@ module GroongaQueryLog
         @nullable_reference_number_accessors = []
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
+        @debug_rewrite = false
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -246,6 +247,11 @@ module GroongaQueryLog
                   "(#{@rewrite_and_not_operator})") do |boolean|
           @rewrite_and_not_operator = boolean
         end
+        parser.on("--[no-]debug-rewrite",
+                  "Output rewrite logs for debugging",
+                  "(#{@debug_rewrite})") do |boolean|
+          @debug_rewrite = boolean
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -391,6 +397,7 @@ module GroongaQueryLog
             @rewrite_not_or_regular_expression,
           :rewrite_and_not_operator =>
             @rewrite_and_not_operator,
+          :debug_rewrite => @debug_rewrite,
           :target_command_names => @target_command_names,
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
@@ -723,6 +730,9 @@ module GroongaQueryLog
           end
           if @options[:rewrite_and_not_operator]
             command_line << "--rewrite-and-not-operator"
+          end
+          if @options[:debug_rewrite]
+            command_line << "--debug-rewrite"
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"
