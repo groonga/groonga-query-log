@@ -174,7 +174,7 @@ module GroongaQueryLog
             end
             parsing_statistics = query_log_parser.parsing_statistics
             target_parsing_statistics = parsing_statistics.reject do |statistic|
-              statistic.start_time < start
+              statistic.start_time < start_time
             end
             unless target_parsing_statistics.empty?
               puts("Running queries:")
