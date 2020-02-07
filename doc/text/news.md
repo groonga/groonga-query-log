@@ -1,5 +1,11 @@
 # News
 
+## 1.5.7: 2020-02-07
+
+### Improvements
+
+  * `run-regression-test`: Added `--debug-rewrite` option.
+
 ## 1.5.6: 2019-11-26
 
 ### Improvements
