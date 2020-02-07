@@ -248,6 +248,12 @@ module GroongaQueryLog
           @options.rewrite_and_not_operator = boolean
         end
 
+        parser.on("--[no-]debug-rewrite",
+                  "Output rewrite logs for debugging",
+                  "(#{@debug_rewrite})") do |boolean|
+          @options.debug_rewrite = boolean
+        end
+
         parser.on("--nullable-reference-number-accessor=ACCESSOR",
                   "Mark ACCESSOR as rewrite nullable reference number targets",
                   "You can specify multiple accessors by",
