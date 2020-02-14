@@ -250,7 +250,7 @@ module GroongaQueryLog
 
         parser.on("--[no-]debug-rewrite",
                   "Output rewrite logs for debugging",
-                  "(#{@debug_rewrite})") do |boolean|
+                  "(#{@options.debug_rewrite?})") do |boolean|
           @options.debug_rewrite = boolean
         end
 
