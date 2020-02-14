@@ -1,5 +1,11 @@
 # News
 
+## 1.5.8: 2020-02-14
+
+### Fixes
+
+  * `run-regression-test`: Fixed wrong variable and method name.
+
 ## 1.5.7: 2020-02-07
 
 ### Improvements
