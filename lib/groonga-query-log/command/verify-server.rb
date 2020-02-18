@@ -25,12 +25,12 @@ module GroongaQueryLog
     class VerifyServer
       def initialize
         @options = ServerVerifier::Options.new
+        @n_executed_commands = 0
       end
 
       def run(command_line, &callback)
         input_paths = create_parser.parse(command_line)
         same = true
-        n_execute_commands = 0
         verifier = ServerVerifier.new(@options)
         if input_paths.empty?
           same = verifier.verify($stdin, &callback)
@@ -52,7 +52,12 @@ module GroongaQueryLog
             end
           end
         end
-        return same, verifier.n_execute_commands
+        @n_executed_commands = verifier.n_executed_commands
+        same
+      end
+
+      def n_executed_commands
+        @n_executed_commands
       end
 
       private

@@ -738,9 +738,8 @@ module GroongaQueryLog
               else
                 callback = nil
               end
-              same, @n_execute_commands =
-                    verify_server(log_path, query_log_path, &callback)
-              unless same
+              unless verify_server(log_path, query_log_path, &callback)
+                same = false
                 break if @stop_on_failure
               end
             rescue Interrupt
@@ -832,7 +831,9 @@ module GroongaQueryLog
             command_line << @options[:read_timeout].to_s
           end
           verify_server = VerifyServer.new
-          verify_server.run(command_line, &callback)
+          same = verify_server.run(command_line, &callback)
+          @n_executed_commands = verify_server.n_executed_commands
+          same
         end
 
         def query_log_paths
