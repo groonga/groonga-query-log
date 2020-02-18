@@ -64,7 +64,7 @@ module GroongaQueryLog
           command = statistic.command
           next if command.nil?
           next unless target_command?(command)
-          next if rand > @options.execution_query_rate
+          next if rand < @options.omit_rate
           n_commands += 1
           @queue.push(statistic)
 
@@ -291,7 +291,7 @@ module GroongaQueryLog
       attr_writer :verify_performance
       attr_reader :performance_verifier_options
       attr_writer :debug_rewrite
-      attr_writer :execution_query_rate
+      attr_writer :omit_rate
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -325,7 +325,7 @@ module GroongaQueryLog
         @verify_performance = false
         @performance_verifier_options = PerformanceVerifier::Options.new
         @debug_rewrite = false
-        @execution_query_rate = 1.0
+        @omit_rate = 0.0
       end
 
       def request_queue_size
@@ -422,8 +422,8 @@ module GroongaQueryLog
         @debug_rewrite
       end
 
-      def execution_query_rate
-        @execution_query_rate
+      def omit_rate
+        @omit_rate
       end
     end
 

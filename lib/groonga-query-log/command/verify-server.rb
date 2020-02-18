@@ -256,13 +256,12 @@ module GroongaQueryLog
           @options.debug_rewrite = boolean
         end
 
-        parser.on("--execution-query-rate=RATE", Float,
-                  "You can specify execution query rate." +
-                  "The unit of this option is %." +
-                  "For example, if you specify 0.1 in this option, " +
+        parser.on("--omit-rate=RATE", Float,
+                  "You can specify rate for omitting execution queries." +
+                  "For example, if you specify 0.9 in this option, " +
                   "execute queries with the probability of 1/10.",
-                  "(#{@options.execution_query_rate})") do |rate|
-          @options.execution_query_rate = rate
+                  "(#{@options.omit_rate})") do |rate|
+          @options.omit_rate = rate
         end
 
         parser.on("--nullable-reference-number-accessor=ACCESSOR",

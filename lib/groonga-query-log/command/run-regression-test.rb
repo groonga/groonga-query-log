@@ -62,7 +62,7 @@ module GroongaQueryLog
         @rewrite_not_or_regular_expression = false
         @rewrite_and_not_operator = false
         @debug_rewrite = false
-        @execution_query_rate = 1.0
+        @omit_rate = 0.0
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -279,13 +279,12 @@ module GroongaQueryLog
                   "(#{@debug_rewrite})") do |boolean|
           @debug_rewrite = boolean
         end
-        parser.on("--execution-query-rate=RATE", Float,
-                  "You can specify execution query rate." +
-                  "The unit of this option is %." +
-                  "For example, if you specify 0.1 in this option, " +
+        parser.on("--omit-rate=RATE", Float,
+                  "You can specify rate for omitting execution queries." +
+                  "For example, if you specify 0.9 in this option, " +
                   "execute queries with the probability of 1/10.",
-                  "(#{@execution_query_rate})") do |rate|
-          @execution_query_rate = rate
+                  "(#{@omit_rate})") do |rate|
+          @omit_rate = rate
         end
 
         parser.separator("")
@@ -433,7 +432,7 @@ module GroongaQueryLog
           :rewrite_and_not_operator =>
             @rewrite_and_not_operator,
           :debug_rewrite => @debug_rewrite,
-          :execution_query_rate => @execution_query_rate,
+          :omit_rate => @omit_rate,
           :target_command_names => @target_command_names,
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
@@ -813,9 +812,9 @@ module GroongaQueryLog
           if @options[:debug_rewrite]
             command_line << "--debug-rewrite"
           end
-          if @options[:execution_query_rate] < 1.0
-            command_line << "--execution-query-rate"
-            command_line << @options[:execution_query_rate].to_s
+          if @options[:omit_rate] < 1.0
+            command_line << "--omit-rate"
+            command_line << @options[:omit_rate].to_s
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"
