@@ -91,7 +91,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
       .gsub(/^Elapsed: \d+days \d{2}:\d{2}:\d{2}$/, "Elapsed: 0days 00:00:00")
   end
 
-  def n_execute_commands(output)
+  def n_executed_commands(output)
     output.slice(/^Number of execution commands:\s+(\d+)/, 1).to_i
   end
 
@@ -119,7 +119,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
   def test_reduce_execution_query
     command_line = ["--omit-rate=0.9"]
     success, output = run_command(command_line)
-    assert(n_execute_commands(output) < (@n_commands*0.2))
+    assert(n_executed_commands(output) < (@n_commands*0.2))
   end
 
   def test_mail_from

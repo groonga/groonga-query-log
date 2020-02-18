@@ -37,7 +37,7 @@ module GroongaQueryLog
       @same = true
       @slow = false
       @client_error_is_occurred = false
-      @n_execute_commands = 0
+      @n_executed_commands = 0
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
@@ -46,8 +46,8 @@ module GroongaQueryLog
       success?
     end
 
-    def n_execute_commands
-      @n_execute_commands
+    def n_executed_commands
+      @n_executed_commands
     end
 
     private
@@ -80,7 +80,7 @@ module GroongaQueryLog
         @options.n_clients.times do
           @queue.push(nil)
         end
-        @n_execute_commands = n_commands
+        @n_executed_commands = n_commands
         consumers.each(&:join)
       end
     end

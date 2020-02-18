@@ -110,7 +110,7 @@ module GroongaQueryLog
         report = format_report(success,
                                elapsed_time,
                                n_leaked_objects,
-                               tester.n_execute_commands)
+                               tester.n_executed_commands)
         notifier.notify_finished(success, report)
         puts(report)
 
@@ -460,12 +460,13 @@ module GroongaQueryLog
       def format_report(success,
                         elapsed_time,
                         n_leaked_objects,
-                        n_execute_commands)
+                        n_executed_commands)
         formatted = format_elapsed_time(elapsed_time)
         if success
-          formatted << "Number of execution commands: #{n_execute_commands}\n"
+          formatted << "Number of execution commands: #{n_executed_commands}\n"
           formatted << "Success\n"
         else
+          formatted << "Number of execution commands: #{n_executed_commands}\n"          
           formatted << "Failure"
         end
         unless n_leaked_objects.zero?
@@ -680,7 +681,7 @@ module GroongaQueryLog
           @stop_on_failure = options[:stop_on_failure]
           @options = options
           @n_ready_waits = 2
-          @n_execute_commands = 0
+          @n_executed_commands = 0
         end
 
         def run
@@ -704,8 +705,8 @@ module GroongaQueryLog
           old_thread_success and new_thread_success
         end
 
-        def n_execute_commands
-          @n_execute_commands
+        def n_executed_commands
+          @n_executed_commands
         end
 
         private
