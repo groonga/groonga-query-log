@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2020  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -116,6 +116,15 @@ module GroongaQueryLog
                   "Output responses to PATH",
                   "[not output]") do |path|
           @options.responses_path = path
+        end
+
+        available_output_types = ["json", "msgpack", "apache-arrow"]
+        available_output_type_labels = available_output_types.join(", ")
+        parser.on("--output-type=TYPE", available_output_types,
+                  "Use TYPE as the output type",
+                  "(#{available_output_type_labels})",
+                  "[use the original output type]") do |type|
+          @options.output_type = type
         end
       end
     end
