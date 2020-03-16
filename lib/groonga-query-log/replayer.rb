@@ -142,6 +142,9 @@ module GroongaQueryLog
 
       def puts(string)
       end
+
+      def print(string)
+      end
     end
 
     class Options
