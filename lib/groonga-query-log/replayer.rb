@@ -125,7 +125,7 @@ module GroongaQueryLog
     end
 
     def target_command?(command)
-      @options.target_command_name?(command.name)
+      @options.target_command_name?(command.command_name)
     end
 
     class NullOutput
