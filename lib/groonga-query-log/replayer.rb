@@ -182,18 +182,23 @@ module GroongaQueryLog
       end
 
       def create_request_output(&block)
-        if @requests_path
-          File.open(@requests_path, "w", &block)
-        else
+        case @requests_path
+        when nil
           NullOutput.open(&block)
+        when "-"
+          yield($stdout)
+          File.open(@requests_path, "w", &block)
         end
       end
 
       def create_responses_output(&block)
-        if @responses_path
-          File.open(@responses_path, "w", &block)
-        else
+        case @responses_path
+        when nil
           NullOutput.open(&block)
+        when "-"
+          yield($stdout)
+        else
+          File.open(@responses_path, "w", &block)
         end
       end
 
