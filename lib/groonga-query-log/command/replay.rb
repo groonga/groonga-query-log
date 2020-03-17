@@ -29,9 +29,13 @@ module GroongaQueryLog
       def run(command_line)
         input_paths = create_parser.parse(command_line)
         replayer = Replayer.new(@options)
-        input_paths.each do |input_path|
-          File.open(input_path) do |input|
-            replayer.replay(input)
+        if input_paths.empty?
+          replayer.replay($stdin)
+        else
+          input_paths.each do |input_path|
+            File.open(input_path) do |input|
+              replayer.replay(input)
+            end
           end
         end
         true
