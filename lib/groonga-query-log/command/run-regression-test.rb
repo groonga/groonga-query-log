@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2019  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2020  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2019  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -41,10 +41,12 @@ module GroongaQueryLog
         @old_groonga = "groonga"
         @old_database = "db.old/db"
         @old_groonga_options = []
+        @old_groonga_env = {}
 
         @new_groonga = "groonga"
         @new_database = "db.new/db"
         @new_groonga_options = []
+        @new_groonga_env = {}
 
         @recreate_database = false
         @load_data = true
@@ -153,9 +155,19 @@ module GroongaQueryLog
 
         parser.on("--old-groonga-option=OPTION",
                   "Add an additional old groonga option",
-                  "You can specify this option multiple times to specify multiple groonga options",
+                  "You can specify this option multiple times",
+                  "to specify multiple groonga options",
                   "(no options)") do |groonga_option|
           @old_groonga_options << groonga_option
+        end
+
+        parser.on("--old-groonga-env=KEY=VALUE",
+                  "Use KEY=VALUE environment variable for old groonga",
+                  "You can specify this option multiple times",
+                  "to specify multiple environment variables",
+                  "(no environment variables)") do |env|
+          key, value = env.split("=", 2)
+          @old_groonga_env[key] = value
         end
 
         parser.separator("")
@@ -168,9 +180,19 @@ module GroongaQueryLog
 
         parser.on("--new-groonga-option=OPTION",
                   "Add an additional new groonga option",
-                  "You can specify this option multiple times to specify multiple groonga options",
+                  "You can specify this option multiple times",
+                  "to specify multiple groonga options",
                   "(no options)") do |groonga_option|
           @new_groonga_options << groonga_option
+        end
+
+        parser.on("--new-groonga-env=KEY=VALUE",
+                  "Use KEY=VALUE environment variable for new groonga",
+                  "You can specify this option multiple times",
+                  "to specify multiple environment variables",
+                  "(no environment variables)") do |env|
+          key, value = env.split("=", 2)
+          @new_groonga_env[key] = value
         end
 
         parser.separator("")
@@ -409,6 +431,7 @@ module GroongaQueryLog
       def old_groonga_server
         GroongaServer.new(@old_groonga,
                           @old_groonga_options,
+                          @old_groonga_env,
                           @old_database,
                           server_options)
       end
@@ -416,6 +439,7 @@ module GroongaQueryLog
       def new_groonga_server
         GroongaServer.new(@new_groonga,
                           @new_groonga_options,
+                          @new_groonga_env,
                           @new_database,
                           server_options)
       end
@@ -459,11 +483,16 @@ module GroongaQueryLog
         include Loggable
 
         attr_reader :host, :port
-        def initialize(groonga, groonga_options, database_path, options)
+        def initialize(groonga,
+                       groonga_options,
+                       groonga_env,
+                       database_path,
+                       options)
           @input_directory = options[:input_directory] || Pathname.new(".")
           @working_directory = options[:working_directory] || Pathname.new(".")
           @groonga = groonga
           @groonga_options = groonga_options
+          @groonga_env = groonga_env
           @database_path = @working_directory + database_path
           @host = "127.0.0.1"
           @port = find_unused_port
@@ -473,17 +502,20 @@ module GroongaQueryLog
         def run
           return unless @options[:run_queries]
 
-          arguments = @groonga_options.dup
-          arguments.concat(["--bind-address", @host])
-          arguments.concat(["--port", @port.to_s])
-          arguments.concat(["--protocol", "http"])
-          arguments.concat(["--log-path", log_path.to_s])
+          spawn_args = []
+          spawn_args << @groonga_env if @groonga_env
+          spawn_args << @groonga
+          spawn_args.concat(@groonga_options)
+          spawn_args.concat(["--bind-address", @host])
+          spawn_args.concat(["--port", @port.to_s])
+          spawn_args.concat(["--protocol", "http"])
+          spawn_args.concat(["--log-path", log_path.to_s])
           if @options[:output_query_log]
-            arguments.concat(["--query-log-path", query_log_path.to_s])
+            spawn_args.concat(["--query-log-path", query_log_path.to_s])
           end
-          arguments << "-s"
-          arguments << @database_path.to_s
-          @pid = spawn(@groonga, *arguments)
+          spawn_args << "-s"
+          spawn_args << @database_path.to_s
+          @pid = spawn(*spawn_args)
 
           n_retries = 10
           begin
