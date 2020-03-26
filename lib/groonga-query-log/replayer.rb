@@ -49,6 +49,7 @@ module GroongaQueryLog
             next unless target_command?(statistic.command)
             # TODO: validate orignal_source is one line
             output.puts(statistic.command.original_source)
+            output.flush
             if @options.output_type
               statistic.command[:output_type] ||= @options.output_type
             end
@@ -119,6 +120,7 @@ module GroongaQueryLog
             break if response.nil?
             # TODO: reorder by ID
             output.print(response.raw)
+            output.flush
           end
         end
       end
@@ -144,6 +146,9 @@ module GroongaQueryLog
       end
 
       def print(string)
+      end
+
+      def flush
       end
     end
 
