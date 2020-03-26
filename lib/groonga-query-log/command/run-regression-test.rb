@@ -104,12 +104,15 @@ module GroongaQueryLog
                             tester_options)
         success = tester.run
         elapsed_time = Time.now - start_time
+        n_leaked_objects = tester.new.n_leaked_objects
 
-        report = format_report(success, elapsed_time)
+        report = format_report(success,
+                               elapsed_time,
+                               n_leaked_objects)
         notifier.notify_finished(success, report)
         puts(report)
 
-        success
+        success and n_leaked_objects.zero?
       end
 
       private
@@ -444,12 +447,17 @@ module GroongaQueryLog
                           server_options)
       end
 
-      def format_report(success, elapsed_time)
+      def format_report(success, elapsed_time, n_leaked_objects)
         formatted = format_elapsed_time(elapsed_time)
         if success
           formatted << "Success"
         else
           formatted << "Failure"
+        end
+        unless n_leaked_objects.zero?
+          formatted << "\nLeaked: #{n_leaked_objects}"
+        end
+        unless success
           output = StringIO.new
           formetter = FormatRegressionTestLogs.new(output: output)
           formetter.run([results_directory])
@@ -584,6 +592,19 @@ module GroongaQueryLog
           Process.waitpid(@pid)
         end
 
+        def n_leaked_objects
+          n = 0
+          File.open(log_path) do |log|
+            log.each_line do |line|
+              case line
+              when /grn_fin \((\d+)\)/
+                n += Integer($1, 10)
+              end
+            end
+          end
+          n
+        end
+
         private
         def find_unused_port
           server = TCPServer.new(@host, 0)
@@ -632,6 +653,8 @@ module GroongaQueryLog
       class Tester
         include Loggable
 
+        attr_reader :old
+        attr_reader :new
         def initialize(old, new, options)
           @old = old
           @new = new
