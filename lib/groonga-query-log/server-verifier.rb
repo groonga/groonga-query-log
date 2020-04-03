@@ -27,17 +27,18 @@ require "groonga-query-log/response-comparer"
 
 module GroongaQueryLog
   class ServerVerifier
+    attr_reader :n_executed_commands
     def initialize(options)
       @options = options
       @queue = SizedQueue.new(@options.request_queue_size)
       @events = Queue.new
+      @n_executed_commands = 0
     end
 
     def verify(input, &callback)
       @same = true
       @slow = false
       @client_error_is_occurred = false
-      @n_executed_commands = 0
       producer = run_producer(input, &callback)
       reporter = run_reporter
       producer.join
@@ -46,17 +47,12 @@ module GroongaQueryLog
       success?
     end
 
-    def n_executed_commands
-      @n_executed_commands
-    end
-
     private
     def run_producer(input, &callback)
       Thread.new do
         consumers = run_consumers
 
         parser = Parser.new
-        n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
           break if stop?
@@ -65,10 +61,10 @@ module GroongaQueryLog
           next if command.nil?
           next unless target_command?(command)
           next if rand < @options.omit_rate
-          n_commands += 1
+          @n_executed_commands += 1
           @queue.push(statistic)
 
-          if callback and (n_commands % callback_per_n_commands).zero?
+          if callback and (@n_executed_commands % callback_per_n_commands).zero?
             @options.n_clients.times do
               @queue.push(nil)
             end
@@ -80,7 +76,6 @@ module GroongaQueryLog
         @options.n_clients.times do
           @queue.push(nil)
         end
-        @n_executed_commands = n_commands
         consumers.each(&:join)
       end
     end

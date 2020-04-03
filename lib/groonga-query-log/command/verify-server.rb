@@ -23,6 +23,7 @@ require "groonga-query-log"
 module GroongaQueryLog
   module Command
     class VerifyServer
+      attr_reader :n_executed_commands
       def initialize
         @options = ServerVerifier::Options.new
         @n_executed_commands = 0
@@ -54,10 +55,6 @@ module GroongaQueryLog
         end
         @n_executed_commands = verifier.n_executed_commands
         same
-      end
-
-      def n_executed_commands
-        @n_executed_commands
       end
 
       private
