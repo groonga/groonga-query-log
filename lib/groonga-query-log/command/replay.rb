@@ -122,6 +122,12 @@ module GroongaQueryLog
           @options.responses_path = path
         end
 
+        parser.on("--output-error-responses=PATH",
+                  "Output only error responses to PATH",
+                  "[not output]") do |path|
+          @options.error_responses_path = path
+        end
+
         available_output_types = ["json", "msgpack", "apache-arrow"]
         available_output_type_labels = available_output_types.join(", ")
         parser.on("--output-type=TYPE", available_output_types,

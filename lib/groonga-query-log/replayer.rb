@@ -115,12 +115,18 @@ module GroongaQueryLog
     def run_response_logger
       Thread.new do
         @options.create_responses_output do |output|
-          loop do
-            response = @responses.pop
-            break if response.nil?
-            # TODO: reorder by ID
-            output.print(response.raw)
-            output.flush
+          @options.create_responses_output do |error_output|
+            loop do
+              response = @responses.pop
+              break if response.nil?
+              # TODO: reorder by ID
+              output.print(response.raw)
+              output.flush
+              unless response.success?
+                error_output.print(response.raw)
+                error_output.flush
+              end
+            end
           end
         end
       end
@@ -163,6 +169,7 @@ module GroongaQueryLog
       attr_accessor :target_command_names
       attr_accessor :requests_path
       attr_accessor :responses_path
+      attr_accessor :error_responses_path
       attr_accessor :output_type
       def initialize
         @host = "127.0.0.1"
@@ -175,6 +182,7 @@ module GroongaQueryLog
         @target_command_names = []
         @requests_path = nil
         @responses_path = nil
+        @error_responses_path = nil
         @output_type = nil
       end
 
@@ -187,24 +195,15 @@ module GroongaQueryLog
       end
 
       def create_request_output(&block)
-        case @requests_path
-        when nil
-          NullOutput.open(&block)
-        when "-"
-          yield($stdout)
-          File.open(@requests_path, "w", &block)
-        end
+        create_output(@requests_path, &block)
       end
 
       def create_responses_output(&block)
-        case @responses_path
-        when nil
-          NullOutput.open(&block)
-        when "-"
-          yield($stdout)
-        else
-          File.open(@responses_path, "w", &block)
-        end
+        create_output(@responses_path, &block)
+      end
+
+      def create_error_responses_output(&block)
+        create_output(@error_responses_path, &block)
       end
 
       def request_queue_size
@@ -221,6 +220,18 @@ module GroongaQueryLog
           flags = 0
           flags |= File::FNM_EXTGLOB if File.const_defined?(:FNM_EXTGLOB)
           File.fnmatch(name_pattern, name, flags)
+        end
+      end
+
+      private
+      def create_output(path, &block)
+        case path
+        when nil
+          NullOutput.open(&block)
+        when "-"
+          yield($stdout)
+        else
+          File.open(path, "w", &block)
         end
       end
     end
