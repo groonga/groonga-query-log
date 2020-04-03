@@ -119,7 +119,9 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
   def test_reduce_execution_query
     command_line = ["--omit-rate=0.9"]
     _success, output = run_command(command_line)
-    assert(n_executed_commands(output) < (@n_commands*0.2))
+    assert do
+      n_executed_commands(output) < (@n_commands * 0.2)
+    end
   end
 
   def test_mail_from
