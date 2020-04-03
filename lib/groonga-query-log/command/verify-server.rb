@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,8 +23,10 @@ require "groonga-query-log"
 module GroongaQueryLog
   module Command
     class VerifyServer
+      attr_reader :n_executed_commands
       def initialize
         @options = ServerVerifier::Options.new
+        @n_executed_commands = 0
       end
 
       def run(command_line, &callback)
@@ -50,6 +53,7 @@ module GroongaQueryLog
             end
           end
         end
+        @n_executed_commands = verifier.n_executed_commands
         same
       end
 
@@ -252,6 +256,14 @@ module GroongaQueryLog
                   "Output rewrite logs for debugging",
                   "(#{@options.debug_rewrite?})") do |boolean|
           @options.debug_rewrite = boolean
+        end
+
+        parser.on("--omit-rate=RATE", Float,
+                  "You can specify rate for omitting execution queries." +
+                  "For example, if you specify 0.9 in this option, " +
+                  "execute queries with the probability of 1/10.",
+                  "(#{@options.omit_rate})") do |rate|
+          @options.omit_rate = rate
         end
 
         parser.on("--nullable-reference-number-accessor=ACCESSOR",

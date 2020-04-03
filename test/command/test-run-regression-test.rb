@@ -1,5 +1,5 @@
 # Copyright (C) 2019 Kentaro Hayashi <hayashi@clear-code.com>
-# Copyright (C) 2019 Horimoto Yasuhiro <horimoto@clear-code.com>
+# Copyright (C) 2019-2020 Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
     FileUtils.rm_rf(fixture_path("db.old"))
     FileUtils.rm_rf(fixture_path("db.new"))
     setup_smtp_server
+    @n_commands = 238
   end
 
   def teardown
@@ -90,6 +91,10 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
       .gsub(/^Elapsed: \d+days \d{2}:\d{2}:\d{2}$/, "Elapsed: 0days 00:00:00")
   end
 
+  def n_executed_commands(output)
+    output.slice(/^Number of executed commands:\s+(\d+)/, 1).to_i
+  end
+
   def fixture_path(*components)
     super("run-regression-test", *components)
   end
@@ -105,9 +110,18 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
     assert_equal([
                    true,
                    "Elapsed: 0days 00:00:00\n" +
+                   "Number of executed commands: #{@n_commands}\n" +
                    "Success\n"
                  ],
                 [success, normalize_output(output)])
+  end
+
+  def test_reduce_execution_query
+    command_line = ["--omit-rate=0.9"]
+    _success, output = run_command(command_line)
+    assert do
+      n_executed_commands(output) < (@n_commands * 0.2)
+    end
   end
 
   def test_mail_from

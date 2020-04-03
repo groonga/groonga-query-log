@@ -1,4 +1,5 @@
 # Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -26,10 +27,12 @@ require "groonga-query-log/response-comparer"
 
 module GroongaQueryLog
   class ServerVerifier
+    attr_reader :n_executed_commands
     def initialize(options)
       @options = options
       @queue = SizedQueue.new(@options.request_queue_size)
       @events = Queue.new
+      @n_executed_commands = 0
     end
 
     def verify(input, &callback)
@@ -50,7 +53,6 @@ module GroongaQueryLog
         consumers = run_consumers
 
         parser = Parser.new
-        n_commands = 0
         callback_per_n_commands = 100
         parser.parse(input) do |statistic|
           break if stop?
@@ -58,10 +60,11 @@ module GroongaQueryLog
           command = statistic.command
           next if command.nil?
           next unless target_command?(command)
-          n_commands += 1
+          next if rand < @options.omit_rate
+          @n_executed_commands += 1
           @queue.push(statistic)
 
-          if callback and (n_commands % callback_per_n_commands).zero?
+          if callback and (@n_executed_commands % callback_per_n_commands).zero?
             @options.n_clients.times do
               @queue.push(nil)
             end
@@ -283,6 +286,7 @@ module GroongaQueryLog
       attr_writer :verify_performance
       attr_reader :performance_verifier_options
       attr_writer :debug_rewrite
+      attr_writer :omit_rate
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -316,6 +320,7 @@ module GroongaQueryLog
         @verify_performance = false
         @performance_verifier_options = PerformanceVerifier::Options.new
         @debug_rewrite = false
+        @omit_rate = 0.0
       end
 
       def request_queue_size
@@ -410,6 +415,10 @@ module GroongaQueryLog
 
       def debug_rewrite?
         @debug_rewrite
+      end
+
+      def omit_rate
+        @omit_rate
       end
     end
 
