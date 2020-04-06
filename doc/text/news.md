@@ -1,5 +1,28 @@
 # News
 
+## 1.5.9: 2020-04-06
+
+### Fixes
+
+  * `replay`: Added `--output-type` option.
+
+  * `replay`: Added support for outputting logs to stdout.
+
+  * `replay`: Fixed a bug that command name isn't processed correctly.
+
+  * `replay`: Added support for inputting from stdin.
+
+  * `run-regression-test`: Added `--old-groonga-env` option.
+
+  * `run-regression-test`: Added `--new-groonga-env` option.
+
+  * `run-regression-test`: Added support for checking the number of
+    leaked objects.
+
+  * `replay`: Added `--output-error-responses` option.
+
+  * `run-regression-test`: Added `--omit-rate` option.
+
 ## 1.5.8: 2020-02-14
 
 ### Fixes
