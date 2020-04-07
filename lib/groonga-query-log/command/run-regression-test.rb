@@ -466,7 +466,7 @@ module GroongaQueryLog
         if success
           formatted << "Success\n"
         else
-          formatted << "Failure"
+          formatted << "Failure\n"
         end
         unless n_leaked_objects.zero?
           formatted << "\nLeaked: #{n_leaked_objects}"
