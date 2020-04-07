@@ -92,7 +92,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
   end
 
   def n_executed_commands(output)
-    output.slice(/^Number of executed commands:\s+(\d+)/, 1).to_i
+    output.slice(/^The number of executed commands:\s+(\d+)/, 1).to_i
   end
 
   def fixture_path(*components)
@@ -110,7 +110,7 @@ class RunRegressionTestCommandTest < Test::Unit::TestCase
     assert_equal([
                    true,
                    "Elapsed: 0days 00:00:00\n" +
-                   "Number of executed commands: #{@n_commands}\n" +
+                   "The number of executed commands: #{@n_commands}\n" +
                    "Success\n"
                  ],
                 [success, normalize_output(output)])

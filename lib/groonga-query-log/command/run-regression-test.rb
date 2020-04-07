@@ -462,7 +462,7 @@ module GroongaQueryLog
                         n_leaked_objects,
                         n_executed_commands)
         formatted = format_elapsed_time(elapsed_time)
-        formatted << "Number of executed commands: #{n_executed_commands}\n"
+        formatted << "The number of executed commands: #{n_executed_commands}\n"
         if success
           formatted << "Success\n"
         else
