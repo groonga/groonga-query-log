@@ -31,11 +31,20 @@ module GroongaQueryLog
 
       def run(command_line, &callback)
         input_paths = create_parser.parse(command_line)
-        same = true
         verifier = ServerVerifier.new(@options)
+        begin
+          verify(verifier, input_paths, &callback)
+        ensure
+          @n_executed_commands = verifier.n_executed_commands
+        end
+      end
+
+      private
+      def verify(verifier, input_paths, &callback)
         if input_paths.empty?
-          same = verifier.verify($stdin, &callback)
+          verifier.verify($stdin, &callback)
         else
+          same = true
           input_paths.each do |input_path|
             case input_path
             when /\.tar\.gz\z/
@@ -52,12 +61,10 @@ module GroongaQueryLog
               end
             end
           end
+          same
         end
-        @n_executed_commands = verifier.n_executed_commands
-        same
       end
 
-      private
       def verify_tar_gz(verifier, tar_gz_path, &callback)
         same = true
         Zlib::GzipReader.open(tar_gz_path) do |gzip|
