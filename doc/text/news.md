@@ -1,8 +1,18 @@
 # News
 
-## 1.5.9: 2020-04-06
+## 1.6.0: 2020-04-15
+
+### Improvements
+
+  * `format-regression-test-logs`: Ensured using UTF-8 for input.
 
 ### Fixes
+
+  * `verify-server`: Fixed a executed commands count bug on failure.
+
+## 1.5.9: 2020-04-06
+
+### Improvements
 
   * `replay`: Added `--output-type` option.
 
