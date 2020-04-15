@@ -50,12 +50,12 @@ module GroongaQueryLog
             if File.directory?(path)
               Find.find(path) do |sub_path|
                 next unless File.file?(sub_path)
-                File.open(sub_path) do |file|
+                File.open(sub_path, encoding: "UTF-8") do |file|
                   format_log(file, sub_path)
                 end
               end
             else
-              File.open(path) do |file|
+              File.open(path, encoding: "UTF-8") do |file|
                 format_log(file, path)
               end
             end
