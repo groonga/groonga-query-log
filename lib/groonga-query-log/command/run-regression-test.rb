@@ -608,8 +608,9 @@ module GroongaQueryLog
 
         def n_leaked_objects
           n = 0
-          File.open(log_path) do |log|
+          File.open(log_path, encoding: "UTF-8") do |log|
             log.each_line do |line|
+              next unless line.valid_encoding?
               case line
               when /grn_fin \((\d+)\)/
                 n += Integer($1, 10)
