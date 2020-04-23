@@ -561,7 +561,9 @@ module GroongaQueryLog
           FileUtils.mkdir_p(@database_path.dirname.to_s)
           system(@groonga, "-n", @database_path.to_s, "quit")
           load_files.each do |load_file|
-            if load_file.extname == ".rb"
+            filter_command = nil
+            case load_file.extname
+            when ".rb"
               env = {
                 "GROONGA_LOG_PATH" => log_path.to_s,
               }
@@ -569,6 +571,17 @@ module GroongaQueryLog
                 RbConfig.ruby,
                 load_file.to_s,
                 @database_path.to_s,
+              ]
+            when ".zst"
+              env = {}
+              command = [
+                @groonga,
+                "--log-path", log_path.to_s,
+                @database_path.to_s,
+              ]
+              filter_command = [
+                "zstdcat",
+                load_file.to_s,
               ]
             else
               env = {}
@@ -580,13 +593,36 @@ module GroongaQueryLog
               ]
             end
             command_line = command.join(" ")
+            if filter_command
+              filter_command_line = filter_command.join(" ")
+              command_line = "#{filter_command_line} | #{command_line}"
+            end
             puts("Running...: #{command_line}")
-            pid = spawn(env, *command)
-            begin
-              pid, status = Process.waitpid2(pid)
-            rescue Interrupt
-              Process.kill(:TERM, pid)
-              pid, status = Process.waitpid2(pid)
+            status = nil
+            if filter_command
+              IO.pipe do |input, output|
+                filter_pid = spawn(*filter_command, out: output)
+                output.close
+                pid = spawn(env, *command, in: input)
+                input.close
+                begin
+                  pid, status = Process.waitpid2(pid)
+                  filter_pid, filter_status = Process.waitpid2(filter_pid)
+                rescue Interrupt
+                  Process.kill(:TERM, pid)
+                  Process.kill(:TERM, filter_pid)
+                  pid, status = Process.waitpid2(pid)
+                  filter_pid, filter_status = Process.waitpid2(filter_pid)
+                end
+              end
+            else
+              pid = spawn(env, *command)
+              begin
+                pid, status = Process.waitpid2(pid)
+              rescue Interrupt
+                Process.kill(:TERM, pid)
+                pid, status = Process.waitpid2(pid)
+              end
             end
             unless status.success?
               raise "Failed to run: #{command_line}"
@@ -653,15 +689,15 @@ module GroongaQueryLog
         end
 
         def schema_files
-          Pathname.glob("#{@input_directory}/schema/**/*.{grn,rb}").sort
+          Pathname.glob("#{@input_directory}/schema/**/*.{grn,grn.zst,rb}").sort
         end
 
         def index_files
-          Pathname.glob("#{@input_directory}/indexes/**/*.{grn,rb}").sort
+          Pathname.glob("#{@input_directory}/indexes/**/*.{grn,grn.zst,rb}").sort
         end
 
         def data_files
-          Pathname.glob("#{@input_directory}/data/**/*.{grn,rb}").sort
+          Pathname.glob("#{@input_directory}/data/**/*.{grn,grn.zst,rb}").sort
         end
       end
 
