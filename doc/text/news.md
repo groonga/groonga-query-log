@@ -1,5 +1,13 @@
 # News
 
+## 1.6.1: 2020-04-28
+
+### Improvements
+
+  * `run-regression-test`: Ensured using UTF-8 for `groonga.log`.
+
+  * `run-regression-test`: Added support for loading `.grn.zst`.
+
 ## 1.6.0: 2020-04-15
 
 ### Improvements
