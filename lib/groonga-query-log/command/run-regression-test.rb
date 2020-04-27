@@ -556,10 +556,15 @@ module GroongaQueryLog
           if @options[:recreate_database]
             FileUtils.rm_rf(@database_path.dirname.to_s)
           end
-
           return if @database_path.exist?
+
           FileUtils.mkdir_p(@database_path.dirname.to_s)
-          system(@groonga, "-n", @database_path.to_s, "quit")
+          create_db_command = [@groonga, "-n", @database_path.to_s, "quit"]
+          unless system(*create_db_command)
+            create_db_command_line = create_db_command.join(" ")
+            raise "Failed to run: #{create_db_command_line}"
+          end
+
           load_files.each do |load_file|
             filter_command = nil
             case load_file.extname
