@@ -615,12 +615,12 @@ module GroongaQueryLog
                 input.close
                 begin
                   pid, status = Process.waitpid2(pid)
-                  filter_pid, filter_status = Process.waitpid2(filter_pid)
+                  filter_pid, _filter_status = Process.waitpid2(filter_pid)
                 rescue Interrupt
                   Process.kill(:TERM, pid)
                   Process.kill(:TERM, filter_pid)
                   pid, status = Process.waitpid2(pid)
-                  filter_pid, filter_status = Process.waitpid2(filter_pid)
+                  filter_pid, _filter_status = Process.waitpid2(filter_pid)
                 end
               end
             else
