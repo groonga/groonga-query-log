@@ -217,6 +217,7 @@ QUIT
         :mail_to => "noreply@example.com",
         :mail_subject_on_success => "Success",
         :mail_subject_on_failure => "Failure",
+        :mail_only_on_failure => true,
         :path => fixture_path("mail-notifier/failure.log"),
       }
       notifier = MailNotifier.new(options)

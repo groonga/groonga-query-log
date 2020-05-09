@@ -79,6 +79,7 @@ module GroongaQueryLog
           mail_subject_on_failure: "Failure",
           mail_from: "groonga-query-log@#{Socket.gethostname}",
           mail_to: nil,
+          mail_only_on_failure: false,
           smtp_server: "localhost",
           smtp_auth_user: nil,
           smtp_auth_password: nil,
@@ -386,6 +387,11 @@ module GroongaQueryLog
                   "Use SUBJECT as subject for notification e-mail on failure",
                   "(#{@notifier_options[:mail_subject_on_failure]})") do |subject|
           @notifier_options[:mail_subject_on_failure] = subject
+        end
+        parser.on("--[no-]mail-only-on-failure",
+                  "Send a notification e-mail only on failure",
+                  "(#{@notifier_options[:mail_only_on_failure]})") do |boolean|
+          @notifier_options[:mail_only_on_failure] = boolean
         end
         parser
       end
@@ -900,6 +906,7 @@ module GroongaQueryLog
 
         def notify_started
           return unless @options[:mail_to]
+          return if @options[:mail_only_on_failure]
 
           subject = @options[:mail_subject_on_start]
           send_mail(subject, "")
@@ -910,6 +917,7 @@ module GroongaQueryLog
 
           if success
             subject = @options[:mail_subject_on_success]
+            return if @options[:mail_only_on_failure]
           else
             subject = @options[:mail_subject_on_failure]
           end
