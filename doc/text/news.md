@@ -1,5 +1,13 @@
 # News
 
+## 1.6.2: 2020-05-09
+
+### Improvements
+
+  * `run-regression-test`: Added leaked information to the first line.
+
+  * `run-regression-test`: Added `--mail-only-on-failure` option.
+
 ## 1.6.1: 2020-04-28
 
 ### Improvements
