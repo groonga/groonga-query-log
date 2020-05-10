@@ -1,5 +1,11 @@
 # News
 
+## 1.6.3: 2020-05-11
+
+### Improvements
+
+  * `run-regression-test`: Added `--no-warm-up` option.
+
 ## 1.6.2: 2020-05-09
 
 ### Improvements
