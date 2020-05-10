@@ -49,6 +49,7 @@ module GroongaQueryLog
         @new_groonga_env = {}
 
         @recreate_database = false
+        @warm_up = true
         @load_data = true
         @run_queries = true
         @skip_finished_queries = false
@@ -207,13 +208,20 @@ module GroongaQueryLog
                   "Always recreate Groonga database") do
           @recreate_database = true
         end
+        parser.on("--no-warm-up",
+                  "Don't warm up before test",
+                  "(#{@warm_up})") do |boolean|
+          @warm_up = boolean
+        end
         parser.on("--no-load-data",
-                  "Don't load data. Just loads schema to Groonga database") do
-          @load_data = false
+                  "Don't load data. Just loads schema to Groonga database",
+                 "(#{@load_data})") do |boolean|
+          @load_data = boolean
         end
         parser.on("--no-run-queries",
-                  "Don't run queries. Just creates Groonga database") do
-          @run_queries = false
+                  "Don't run queries. Just creates Groonga database",
+                 "(#{@run_queries})") do |boolean|
+          @run_queries = boolean
         end
         parser.on("--skip-finished-queries",
                   "Don't run finished query logs.") do
@@ -411,9 +419,10 @@ module GroongaQueryLog
       def server_options
         options = {
           :load_data             => @load_data,
-          :run_queries           => @run_queries,
-          :recreate_database     => @recreate_database,
           :output_query_log      => @output_query_log,
+          :recreate_database     => @recreate_database,
+          :run_queries           => @run_queries,
+          :warm_up               => @warm_up,
         }
         directory_options.merge(options)
       end
@@ -556,6 +565,10 @@ module GroongaQueryLog
             n_retries -= 1
             raise if n_retries.zero?
             retry
+          end
+
+          if @options[:warm_up]
+            send_command("schema")
           end
 
           yield if block_given?
