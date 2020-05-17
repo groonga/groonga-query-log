@@ -1,5 +1,11 @@
 # News
 
+## 1.6.4: 2020-05-18
+
+### Improvements
+
+  * `run-regression-test`: Improved how to warm up.
+
 ## 1.6.3: 2020-05-11
 
 ### Improvements
