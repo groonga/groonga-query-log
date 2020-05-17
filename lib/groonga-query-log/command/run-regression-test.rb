@@ -568,7 +568,7 @@ module GroongaQueryLog
           end
 
           if @options[:warm_up]
-            send_command("schema")
+            send_command("dump?dump_records=no")
           end
 
           yield if block_given?
