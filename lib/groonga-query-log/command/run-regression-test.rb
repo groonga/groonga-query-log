@@ -42,11 +42,13 @@ module GroongaQueryLog
         @old_database = "db.old/db"
         @old_groonga_options = []
         @old_groonga_env = {}
+        @old_groonga_warm_up_commands = []
 
         @new_groonga = "groonga"
         @new_database = "db.new/db"
         @new_groonga_options = []
         @new_groonga_env = {}
+        @new_groonga_warm_up_commands = []
 
         @recreate_database = false
         @warm_up = true
@@ -177,6 +179,14 @@ module GroongaQueryLog
           @old_groonga_env[key] = value
         end
 
+        parser.on("--old-groonga-warm-up-commands=COMMAND",
+                  "Run COMMAND before running tests to warm old groonga up",
+                  "You can specify this option multiple times",
+                  "to specify multiple warm up commands",
+                  "(no additional warm up commands)") do |command|
+          @old_groonga_warm_up_commands << command
+        end
+
         parser.separator("")
         parser.separator("New Groonga:")
         parser.on("--new-groonga=GROONGA",
@@ -200,6 +210,14 @@ module GroongaQueryLog
                   "(no environment variables)") do |env|
           key, value = env.split("=", 2)
           @new_groonga_env[key] = value
+        end
+
+        parser.on("--old-groonga-warm-up-commands=COMMAND",
+                  "Run COMMAND before running tests to warm new groonga up",
+                  "You can specify this option multiple times",
+                  "to specify multiple warm up commands",
+                  "(no additional warm up commands)") do |command|
+          @new_groonga_warm_up_commands << command
         end
 
         parser.separator("")
@@ -457,19 +475,23 @@ module GroongaQueryLog
       end
 
       def old_groonga_server
+        options = server_options
+        options[:warm_up_commands] = @old_groonga_warm_up_commands
         GroongaServer.new(@old_groonga,
                           @old_groonga_options,
                           @old_groonga_env,
                           @old_database,
-                          server_options)
+                          options)
       end
 
       def new_groonga_server
+        options = server_options
+        options[:warm_up_commands] = @new_groonga_warm_up_commands
         GroongaServer.new(@new_groonga,
                           @new_groonga_options,
                           @new_groonga_env,
                           @new_database,
-                          server_options)
+                          options)
       end
 
       def format_report(success,
@@ -569,6 +591,10 @@ module GroongaQueryLog
 
           if @options[:warm_up]
             send_command("dump?dump_records=no")
+            warm_up_commands = @options[:warm_up_commands] || []
+            warm_up_commands.each do |command|
+              send_command(command)
+            end
           end
 
           yield if block_given?
