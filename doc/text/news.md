@@ -1,5 +1,15 @@
 # News
 
+## 1.6.5: 2020-05-19
+
+### Improvements
+
+  * `run-regression-test`: Added options to customize how to warm up:
+
+    * `--old-groonga-warm-up-command`
+
+    * `--new-groonga-warm-up-command`
+
 ## 1.6.4: 2020-05-18
 
 ### Improvements
