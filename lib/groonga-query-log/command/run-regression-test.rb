@@ -212,7 +212,7 @@ module GroongaQueryLog
           @new_groonga_env[key] = value
         end
 
-        parser.on("--old-groonga-warm-up-commands=COMMAND",
+        parser.on("--new-groonga-warm-up-commands=COMMAND",
                   "Run COMMAND before running tests to warm new groonga up",
                   "You can specify this option multiple times",
                   "to specify multiple warm up commands",
