@@ -1,5 +1,12 @@
 # News
 
+## 1.6.6: 2020-05-20
+
+### Fixes
+
+  * `run-regression-test`: Fixed a bug that
+    `--old-groonga-warm-up-command` is ignored.
+
 ## 1.6.5: 2020-05-19
 
 ### Improvements
