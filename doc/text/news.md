@@ -1,5 +1,19 @@
 # News
 
+## 1.6.7: 2020-05-30
+
+### Improves
+
+  * `extract`: Added support for no command request case such as `/`.
+
+  * `server-verifier`: Reduced the number of requests for performance
+    verification.
+
+  * `server-verifier`: Added all elapsed times on slow.
+
+  * `format-regression-test-logs`: Added support for all elapsed times
+    on slow.
+
 ## 1.6.6: 2020-05-20
 
 ### Fixes
