@@ -1,5 +1,12 @@
 # News
 
+## 1.6.9: 2020-05-30
+
+### Fixes
+
+  * `server-verifier`: Fixed a bug that performance verification
+    doesn't work.
+
 ## 1.6.8: 2020-05-30
 
 ### Improvements
