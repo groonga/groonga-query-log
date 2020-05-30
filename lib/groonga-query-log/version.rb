@@ -15,5 +15,5 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 module GroongaQueryLog
-  VERSION = "1.6.9"
+  VERSION = "1.7.0"
 end
