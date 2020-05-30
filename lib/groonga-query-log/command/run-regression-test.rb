@@ -580,25 +580,28 @@ module GroongaQueryLog
           spawn_args << @database_path.to_s
           @pid = spawn(*spawn_args)
 
-          n_retries = 10
           begin
-            send_command("status")
-          rescue SystemCallError
-            sleep(1)
-            n_retries -= 1
-            raise if n_retries.zero?
-            retry
-          end
-
-          if @options[:warm_up]
-            send_command("dump?dump_records=no")
-            warm_up_commands = @options[:warm_up_commands] || []
-            warm_up_commands.each do |command|
-              send_command(command)
+            n_retries = 60
+            begin
+              send_command("status")
+            rescue SystemCallError
+              sleep(1)
+              n_retries -= 1
+              raise if n_retries.zero?
+              retry
             end
-          end
 
-          yield if block_given?
+            if @options[:warm_up]
+              send_command("dump?dump_records=no")
+              warm_up_commands = @options[:warm_up_commands] || []
+              warm_up_commands.each do |command|
+                send_command(command)
+              end
+            end
+          rescue
+            shutdown
+            raise
+          end
         end
 
         def ensure_database
@@ -773,7 +776,6 @@ module GroongaQueryLog
           @n_clients = options[:n_clients] || 1
           @stop_on_failure = options[:stop_on_failure]
           @options = options
-          @n_ready_waits = 2
           @n_executed_commands = 0
         end
 
@@ -781,29 +783,39 @@ module GroongaQueryLog
           @old.ensure_database
           @new.ensure_database
 
+          ready_queue = Thread::Queue.new
+          wait_queue = Thread::Queue.new
           old_thread = Thread.new do
+            @old.run
             begin
-              @old.run do
-                run_test
-              end
+              ready_queue.push(true)
+              wait_queue.pop
             ensure
               @old.shutdown
             end
           end
           new_thread = Thread.new do
+            @new.run
             begin
-              @new.run do
-                run_test
-              end
+              ready_queue.push(true)
+              wait_queue.pop
             ensure
               @new.shutdown
             end
           end
+          test_thread = Thread.new do
+            ready_queue.pop
+            ready_queue.pop
+            run_test
+            wait_queue.push(true)
+            wait_queue.push(true)
+          end
 
           old_thread_success = old_thread.value
           new_thread_success = new_thread.value
+          test_thread_success = test_thread.value
 
-          old_thread_success and new_thread_success
+          old_thread_success and new_thread_success and test_thread_success
         end
 
         def n_executed_commands
@@ -812,9 +824,6 @@ module GroongaQueryLog
 
         private
         def run_test
-          @n_ready_waits -= 1
-          return true unless @n_ready_waits.zero?
-
           same = true
           query_log_paths.each do |query_log_path|
             log_path = test_log_path(query_log_path)
