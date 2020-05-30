@@ -559,6 +559,7 @@ module GroongaQueryLog
           @host = "127.0.0.1"
           @port = find_unused_port
           @options = options
+          @pid = nil
         end
 
         def run
@@ -688,11 +689,14 @@ module GroongaQueryLog
         end
 
         def shutdown
+          return if @pid.nil?
           begin
             send_command("shutdown")
           rescue SystemCallError
+            Process.kill(:KILL, @pid)
           end
           Process.waitpid(@pid)
+          @pid = nil
         end
 
         def n_leaked_objects
@@ -778,13 +782,21 @@ module GroongaQueryLog
           @new.ensure_database
 
           old_thread = Thread.new do
-            @old.run do
-              run_test
+            begin
+              @old.run do
+                run_test
+              end
+            ensure
+              @old.shutdown
             end
           end
           new_thread = Thread.new do
-            @new.run do
-              run_test
+            begin
+              @new.run do
+                run_test
+              end
+            ensure
+              @new.shutdown
             end
           end
 
@@ -835,16 +847,6 @@ module GroongaQueryLog
               puts("Interrupt: #{query_log_path}")
             end
           end
-
-          old_thread = Thread.new do
-            @old.shutdown
-          end
-          new_thread = Thread.new do
-            @new.shutdown
-          end
-          old_thread.join
-          new_thread.join
-
           same
         end
 
