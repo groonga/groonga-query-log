@@ -1,0 +1,6 @@
+command: /d/select?match_columns=description&query=column_create&table=Entries
+elapsed_time_old: 0.0001747608184814453
+elapsed_time_new: 0.0002017021179199219
+elapsed_times_old: 0.0001747608184814453 0.0001847608184814453
+elapsed_times_new: 0.0002017021179199219 0.0002117021179199219
+elapsed_time_ratio: 1.154160982264666

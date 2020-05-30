@@ -47,8 +47,16 @@ module GroongaQueryLog
       diff_ratio > @threshold_ratio
     end
 
+    def old_sorted_elapsed_times
+      collect_sorted_elapsed_times(@old_responses)
+    end
+
     def old_elapsed_time
       choose_target_elapsed_time(@old_responses)
+    end
+
+    def new_sorted_elapsed_times
+      collect_sorted_elapsed_times(@new_responses)
     end
 
     def new_elapsed_time
@@ -66,18 +74,22 @@ module GroongaQueryLog
       end
     end
 
-    def choose_target_elapsed_time(responses)
+    def collect_sorted_elapsed_times(responses)
       elapsed_times = responses.collect do |response|
         response.elapsed_time
       end
-      sorted_elapsed_times = elapsed_times.sort
+      elapsed_times.sort
+    end
+
+    def choose_target_elapsed_time(responses)
+      sorted_elapsed_times = collect_sorted_elapsed_times(responses)
 
       strategy = @options.choose_strategy
       case strategy
       when :fastest
         sorted_elapsed_times.first
       when :median
-        sorted_elapsed_times[elapsed_times.size / 2]
+        sorted_elapsed_times[sorted_elapsed_times.size / 2]
       else
         message =
           "choose strategy must be :fastest or :median: #{strategy.inspect}"

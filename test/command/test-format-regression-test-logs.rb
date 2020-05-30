@@ -109,12 +109,30 @@ Arguments:
   query: column_create
   table: Entries
 Slow:
-  Old: 174.8usec
-  New: 201.7usec
+  Old: 174.8usec (174.8usec)
+  New: 201.7usec (201.7usec)
   Ratio: +15.4%
     OUTPUT
     assert_equal([true, output],
                  run_command([fixture_path("slow.log")]))
+  end
+
+  def test_slow_elapsed_times
+    output = <<-OUTPUT
+Command:
+/d/select?match_columns=description&query=column_create&table=Entries
+Name: select
+Arguments:
+  match_columns: description
+  query: column_create
+  table: Entries
+Slow:
+  Old: 174.8usec (174.8usec 184.8usec)
+  New: 201.7usec (201.7usec 211.7usec)
+  Ratio: +15.4%
+    OUTPUT
+    assert_equal([true, output],
+                 run_command([fixture_path("slow-elapsed-times.log")]))
   end
 
   sub_test_case(".new") do

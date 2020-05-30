@@ -30,5 +30,12 @@ module GroongaQueryLog
         "%.1fmin" % (elapsed_time / 60)
       end
     end
+
+    def format_elapsed_times(elapsed_times)
+      formatted_epalsed_times = elapsed_times.collect do |elapsed_time|
+        format_elapsed_time(elapsed_time)
+      end
+      formatted_epalsed_times.join(" ")
+    end
   end
 end

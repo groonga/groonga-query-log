@@ -74,6 +74,8 @@ module GroongaQueryLog
         elapsed_time_old = nil
         elapsed_time_new = nil
         elapsed_time_ratio = nil
+        elapsed_times_old = nil
+        elapsed_times_new = nil
 
         input.each_line do |line|
           unless line.valid_encoding?
@@ -100,11 +102,21 @@ module GroongaQueryLog
             elapsed_time_old = Float($POSTMATCH.chomp)
           when /\Aelapsed_time_new: /
             elapsed_time_new = Float($POSTMATCH.chomp)
+          when /\Aelapsed_times_old: /
+            elapsed_times_old = $POSTMATCH.chomp.split.collect do |value|
+              Float(value)
+            end
+          when /\Aelapsed_times_new: /
+            elapsed_times_new = $POSTMATCH.chomp.split.collect do |value|
+              Float(value)
+            end
           when /\Aelapsed_time_ratio: /
             elapsed_time_ratio = Float($POSTMATCH.chomp)
             report_slow(command,
                         elapsed_time_old,
                         elapsed_time_new,
+                        elapsed_times_old,
+                        elapsed_times_new,
                         elapsed_time_ratio)
           end
         end
@@ -196,11 +208,21 @@ module GroongaQueryLog
       def report_slow(command,
                       elapsed_time_old,
                       elapsed_time_new,
+                      elapsed_times_old,
+                      elapsed_times_new,
                       elapsed_time_ratio)
         report_command(command)
+        elapsed_times_old ||= [elapsed_time_old]
+        elapsed_times_new ||= [elapsed_time_new]
         @output.puts("Slow:")
-        @output.puts("  Old: %s" % format_elapsed_time(elapsed_time_old))
-        @output.puts("  New: %s" % format_elapsed_time(elapsed_time_new))
+        @output.puts("  Old: %s (%s)" % [
+                       format_elapsed_time(elapsed_time_old),
+                       format_elapsed_times(elapsed_times_old),
+                     ])
+        @output.puts("  New: %s (%s)" % [
+                       format_elapsed_time(elapsed_time_new),
+                       format_elapsed_times(elapsed_times_new),
+                     ])
         @output.puts("  Ratio: +%.1f%%" % ((elapsed_time_ratio * 100) - 100))
       end
 

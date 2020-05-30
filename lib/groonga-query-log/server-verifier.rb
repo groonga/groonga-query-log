@@ -214,7 +214,9 @@ module GroongaQueryLog
           @events.push([:slow,
                         command,
                         verifier.old_elapsed_time,
-                        verifier.new_elapsed_time])
+                        verifier.new_elapsed_time,
+                        verifier.old_sorted_elapsed_time,
+                        verifier.new_sorted_elapsed_time])
           return
         end
       end
@@ -245,11 +247,18 @@ module GroongaQueryLog
       output.flush
     end
 
-    def report_slow(output, command, old_elapsed_time, new_elapsed_time)
+    def report_slow(output,
+                    command,
+                    old_elapsed_time,
+                    new_elapsed_time,
+                    old_sorted_elapsed_times,
+                    new_sorted_elapsed_times)
       command_source = command.original_source || command.to_uri_format
       output.puts("command: #{command_source}")
       output.puts("elapsed_time_old: #{old_elapsed_time}")
       output.puts("elapsed_time_new: #{new_elapsed_time}")
+      output.puts("elapsed_times_old: #{old_sorted_elapsed_times.join(' ')}")
+      output.puts("elapsed_times_new: #{new_sorted_elapsed_times.join(' ')}")
       output.puts("elapsed_time_ratio: #{new_elapsed_time / old_elapsed_time}")
       output.flush
     end
