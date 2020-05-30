@@ -187,24 +187,36 @@ module GroongaQueryLog
         return
       end
 
-      return unless @options.verify_performance?
+      if @options.verify_performance?
+        verify_performance(command, response1, response2)
+      end
+    end
+
+    def verify_performance(command, response1, response2)
       responses1 = [response1]
       responses2 = [response2]
-      n_tries = 4
-      n_tries.times do
-        responses1 << groonga1_client.execute(command)
-        responses2 << groonga2_client.execute(command)
-      end
       verifier = PerformanceVerifier.new(command,
                                          responses1,
                                          responses2,
                                          @options.performance_verifier_options)
-      if verifier.slow?
-        @slow = true
-        @events.push([:slow,
-                      command,
-                      verifier.old_elapsed_time,
-                      verifier.new_elapsed_time])
+      return unless verifier.slow?
+
+      n_tries = 4
+      n_tries.times do
+        responses1 << groonga1_client.execute(command)
+        responses2 << groonga2_client.execute(command)
+        verifier = PerformanceVerifier.new(command,
+                                           responses1,
+                                           responses2,
+                                           @options.performance_verifier_options)
+        if verifier.slow?
+          @slow = true
+          @events.push([:slow,
+                        command,
+                        verifier.old_elapsed_time,
+                        verifier.new_elapsed_time])
+          return
+        end
       end
     end
 
