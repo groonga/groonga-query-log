@@ -1,8 +1,17 @@
 # News
 
+## 1.6.8: 2020-05-30
+
+### Improvements
+
+  * `server-verifier`: Stopped sorting elapsed times.
+
+  * `run-regression-test`: Ensured killing Groonga server on start up
+    error.
+
 ## 1.6.7: 2020-05-30
 
-### Improves
+### Improvements
 
   * `extract`: Added support for no command request case such as `/`.
 
