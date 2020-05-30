@@ -47,16 +47,16 @@ module GroongaQueryLog
       diff_ratio > @threshold_ratio
     end
 
-    def old_sorted_elapsed_times
-      collect_sorted_elapsed_times(@old_responses)
+    def old_elapsed_times
+      collect_elapsed_times(@old_responses)
     end
 
     def old_elapsed_time
       choose_target_elapsed_time(@old_responses)
     end
 
-    def new_sorted_elapsed_times
-      collect_sorted_elapsed_times(@new_responses)
+    def new_elapsed_times
+      collect_elapsed_times(@new_responses)
     end
 
     def new_elapsed_time
@@ -74,15 +74,14 @@ module GroongaQueryLog
       end
     end
 
-    def collect_sorted_elapsed_times(responses)
-      elapsed_times = responses.collect do |response|
+    def collect_elapsed_times(responses)
+      responses.collect do |response|
         response.elapsed_time
       end
-      elapsed_times.sort
     end
 
     def choose_target_elapsed_time(responses)
-      sorted_elapsed_times = collect_sorted_elapsed_times(responses)
+      sorted_elapsed_times = collect_elapsed_times(responses).sort
 
       strategy = @options.choose_strategy
       case strategy
