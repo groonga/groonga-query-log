@@ -223,8 +223,8 @@ module GroongaQueryLog
                         command,
                         verifier.old_elapsed_time,
                         verifier.new_elapsed_time,
-                        verifier.old_elapsed_time,
-                        verifier.new_elapsed_time])
+                        verifier.old_elapsed_times,
+                        verifier.new_elapsed_times])
           return
         end
       end
