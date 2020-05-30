@@ -188,11 +188,19 @@ module GroongaQueryLog
       end
 
       if @options.verify_performance?
-        verify_performance(command, response1, response2)
+        verify_performance(command,
+                           groonga1_client,
+                           groonga2_client,
+                           response1,
+                           response2)
       end
     end
 
-    def verify_performance(command, response1, response2)
+    def verify_performance(command,
+                           groonga1_client,
+                           groonga2_client,
+                           response1,
+                           response2)
       responses1 = [response1]
       responses2 = [response2]
       verifier = PerformanceVerifier.new(command,
