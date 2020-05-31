@@ -790,6 +790,7 @@ module GroongaQueryLog
             begin
               ready_queue.push(true)
               wait_queue.pop
+              true
             ensure
               @old.shutdown
             end
@@ -799,6 +800,7 @@ module GroongaQueryLog
             begin
               ready_queue.push(true)
               wait_queue.pop
+              true
             ensure
               @new.shutdown
             end
@@ -806,9 +808,10 @@ module GroongaQueryLog
           test_thread = Thread.new do
             ready_queue.pop
             ready_queue.pop
-            run_test
+            success = run_test
             wait_queue.push(true)
             wait_queue.push(true)
+            success
           end
 
           old_thread_success = old_thread.value
@@ -824,7 +827,7 @@ module GroongaQueryLog
 
         private
         def run_test
-          same = true
+          success = true
           query_log_paths.each do |query_log_path|
             log_path = test_log_path(query_log_path)
             if @options[:skip_finished_queries] and log_path.exist?
@@ -849,14 +852,14 @@ module GroongaQueryLog
                 callback = nil
               end
               unless verify_server(log_path, query_log_path, &callback)
-                same = false
+                success = false
                 break if @stop_on_failure
               end
             rescue Interrupt
               puts("Interrupt: #{query_log_path}")
             end
           end
-          same
+          success
         end
 
         def verify_server(test_log_path, query_log_path, &callback)
