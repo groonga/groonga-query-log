@@ -1,5 +1,14 @@
 # News
 
+## 1.7.1: 2020-06-01
+
+### Fixes
+
+  * `server-verifier`: Fixed a bug that performance verification with
+    `--stop-onlfailre` doesn't work.
+
+  * `run-regression-test`: Fixed a bug that failure is ignored.
+
 ## 1.7.0: 2020-05-31
 
 ### Fixes
