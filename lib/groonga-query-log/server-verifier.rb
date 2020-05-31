@@ -211,6 +211,8 @@ module GroongaQueryLog
 
       n_tries = 4
       n_tries.times do
+        return if stop?
+
         responses1 << groonga1_client.execute(command)
         responses2 << groonga2_client.execute(command)
         verifier = PerformanceVerifier.new(command,
