@@ -219,17 +219,16 @@ module GroongaQueryLog
                                            responses1,
                                            responses2,
                                            @options.performance_verifier_options)
-        if verifier.slow?
-          @slow = true
-          @events.push([:slow,
-                        command,
-                        verifier.old_elapsed_time,
-                        verifier.new_elapsed_time,
-                        verifier.old_elapsed_times,
-                        verifier.new_elapsed_times])
-          return
-        end
+        return unless verifier.slow?
       end
+
+      @slow = true
+      @events.push([:slow,
+                    command,
+                    verifier.old_elapsed_time,
+                    verifier.new_elapsed_time,
+                    verifier.old_elapsed_times,
+                    verifier.new_elapsed_times])
     end
 
     def rewrite_filter(command, name)
