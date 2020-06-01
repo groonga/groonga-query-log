@@ -1,5 +1,12 @@
 # News
 
+## 1.7.2: 2020-06-02
+
+### Fixes
+
+  * `server-verifier`: Fixed a bug that performance verification
+    doesn't try 5 times.
+
 ## 1.7.1: 2020-06-01
 
 ### Fixes
