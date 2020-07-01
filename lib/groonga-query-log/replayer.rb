@@ -83,19 +83,15 @@ module GroongaQueryLog
           end
           begin
             replay_command(client, id, statistic.command)
-          rescue Groonga::Client::Error
+          rescue => error
             # TODO: add error log mechanism
             $stderr.puts(Time.now.iso8601(6))
             $stderr.puts(statistic.command.original_source)
-            $stderr.puts($!.raw_error.message)
-            $stderr.puts($!.raw_error.backtrace)
-            return false
-          rescue
-            # TODO: add error log mechanism
-            $stderr.puts(Time.now.iso8601(6))
-            $stderr.puts(statistic.command.original_source)
-            $stderr.puts($!.message)
-            $stderr.puts($!.backtrace)
+            if error.respond_to?(:raw_error)
+              error = raw_error
+            end
+            $stderr.puts(error.message)
+            $stderr.puts(error.backtrace)
             return false
           end
         end
