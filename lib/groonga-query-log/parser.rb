@@ -160,7 +160,7 @@ module GroongaQueryLog
 
     def target_statistic?(statistic)
       if @target_commands
-        unless @target_commands.include?(statistic.command.name)
+        unless @target_commands.include?(statistic.command.command_name)
           return false
         end
       end
