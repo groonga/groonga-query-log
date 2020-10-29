@@ -184,7 +184,8 @@ module GroongaQueryLog
               end
             end
             unless @unflushed_statistics.empty?
-              puts("Unflushed commands in #{start.iso8601}/#{last.iso8601}")
+              puts("Unflushed commands in " +
+                   "#{start_time.iso8601}/#{end_time.iso8601}")
               @unflushed_statistics.each do |statistic|
                 puts("#{statistic.start_time.iso8601}: #{statistic.raw_command}")
               end
