@@ -71,6 +71,7 @@ module GroongaQueryLog
       end
 
       class GroongaProcess
+        attr_reader :version
         attr_reader :pid
         attr_reader :start_time
         attr_reader :start_log_path
@@ -80,7 +81,8 @@ module GroongaQueryLog
         attr_writer :crashed
         attr_writer :finished
         attr_reader :important_entries
-        def initialize(pid, start_time, start_log_path)
+        def initialize(version, pid, start_time, start_log_path)
+          @version = version
           @pid = pid
           @start_time = start_time
           @end_time = @start_time
@@ -121,6 +123,7 @@ module GroongaQueryLog
               need_query_log_parsing = false
               p [:process,
                  :success,
+                 process.version,
                  process.start_time.iso8601,
                  process.end_time.iso8601,
                  process.pid,
@@ -129,6 +132,7 @@ module GroongaQueryLog
             elsif process.crashed?
               p [:process,
                  :crashed,
+                 process.version,
                  process.start_time.iso8601,
                  process.end_time.iso8601,
                  process.pid,
@@ -137,6 +141,7 @@ module GroongaQueryLog
             else
               p [:process,
                  :unfinished,
+                 process.version,
                  process.start_time.iso8601,
                  process.pid,
                  process.start_log_path]
@@ -144,6 +149,7 @@ module GroongaQueryLog
 
             unless process.n_leaks.zero?
               p [:leak,
+                 process.version,
                  process.n_leaks,
                  process.end_time.iso8601,
                  process.pid,
@@ -321,7 +327,8 @@ module GroongaQueryLog
           end
 
           case entry.message
-          when /\Agrn_init:/, /\Amroonga \d+\.\d+ started\.\z/
+          when /\Agrn_init: <(.+?)>/, /\Amroonga (\d+\.\d+) started\.\z/
+            version = $1
             process = @running_processes[entry.pid]
             if process
               process.finished = true
@@ -329,12 +336,15 @@ module GroongaQueryLog
               yield(process)
               @running_processes.delete(entry.pid)
             end
-            process = GroongaProcess.new(entry.pid, entry.timestamp, path)
+            process = GroongaProcess.new(version,
+                                         entry.pid,
+                                         entry.timestamp,
+                                         path)
             @running_processes[entry.pid] = process
           when /\Agrn_fin \((\d+)\)\z/
             n_leaks = $1.to_i
             @running_processes[entry.pid] ||=
-              GroongaProcess.new(entry.pid, Time.at(0), path)
+              GroongaProcess.new(nil, entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
             process.n_leaks = n_leaks
             process.end_time = entry.timestamp
@@ -344,7 +354,7 @@ module GroongaQueryLog
             @running_processes.delete(entry.pid)
           else
             @running_processes[entry.pid] ||=
-              GroongaProcess.new(entry.pid, Time.at(0), path)
+              GroongaProcess.new(nil, entry.pid, Time.at(0), path)
             process = @running_processes[entry.pid]
             case entry.log_level
             when :notice
