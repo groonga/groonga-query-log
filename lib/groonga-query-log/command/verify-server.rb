@@ -280,7 +280,7 @@ module GroongaQueryLog
           @options.nullable_reference_number_accessors << accessor
         end
 
-        parser.on("--max-limit=LIMIT",
+        parser.on("--max-limit=LIMIT", Integer,
                   "Use LIMIT as the max limit value",
                   "Negative value doesn't rewrite the limit parameter",
                   "(#{@options.max_limit})") do |limit|

@@ -314,7 +314,7 @@ module GroongaQueryLog
                   "(#{@omit_rate})") do |rate|
           @omit_rate = rate
         end
-        parser.on("--max-limit=LIMIT",
+        parser.on("--max-limit=LIMIT", Integer,
                   "Use LIMIT as the max limit value",
                   "Negative value doesn't rewrite the limit parameter",
                   "(#{@max_limit})") do |limit|
