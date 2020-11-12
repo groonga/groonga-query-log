@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2020  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -170,6 +170,14 @@ module GroongaQueryLog
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["cache"] = "no" if @options.verify_performance?
+      if @options.max_limit >= 0 and command["limit"]
+        limit = command["limit"].to_i
+        if limit >= 0
+          command["limit"] = [limit, @options.max_limit].min.to_s
+        else
+          command["limit"] = @options.max_limit.to_s
+        end
+      end
       command["output_type"] = "json"
       rewrite_filter(command, "filter")
       rewrite_filter(command, "scorer")
@@ -317,6 +325,7 @@ module GroongaQueryLog
       attr_reader :performance_verifier_options
       attr_writer :debug_rewrite
       attr_writer :omit_rate
+      attr_accessor :max_limit
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -351,6 +360,7 @@ module GroongaQueryLog
         @performance_verifier_options = PerformanceVerifier::Options.new
         @debug_rewrite = false
         @omit_rate = 0.0
+        @max_limit = -1
       end
 
       def request_queue_size

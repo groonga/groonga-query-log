@@ -66,6 +66,7 @@ module GroongaQueryLog
         @rewrite_and_not_operator = false
         @debug_rewrite = false
         @omit_rate = 0.0
+        @max_limit = -1
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -313,6 +314,12 @@ module GroongaQueryLog
                   "(#{@omit_rate})") do |rate|
           @omit_rate = rate
         end
+        parser.on("--max-limit=LIMIT",
+                  "Use LIMIT as the max limit value",
+                  "Negative value doesn't rewrite the limit parameter",
+                  "(#{@max_limit})") do |limit|
+          @max_limit = limit
+        end
 
         parser.separator("")
         parser.separator("Comparisons:")
@@ -466,6 +473,7 @@ module GroongaQueryLog
             @rewrite_and_not_operator,
           :debug_rewrite => @debug_rewrite,
           :omit_rate => @omit_rate,
+          :max_limit => @max_limit,
           :target_command_names => @target_command_names,
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
@@ -918,6 +926,10 @@ module GroongaQueryLog
           if @options[:omit_rate] < 1.0
             command_line << "--omit-rate"
             command_line << @options[:omit_rate].to_s
+          end
+          if @options[:max_limit] >= 0
+            command_line << "--max-limit"
+            command_line << @options[:max_limit].to_s
           end
           if @options[:target_command_names]
             command_line << "--target-command-names"

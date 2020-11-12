@@ -1,4 +1,4 @@
-# Copyright (C) 2013-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2013-2020  Sutou Kouhei <kou@clear-code.com>
 # Copyright (C) 2020  Horimoto Yasuhiro <horimoto@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
@@ -278,6 +278,13 @@ module GroongaQueryLog
                   "You can specify multiple accessors by",
                   "specifying this option multiple times") do |accessor|
           @options.nullable_reference_number_accessors << accessor
+        end
+
+        parser.on("--max-limit=LIMIT",
+                  "Use LIMIT as the max limit value",
+                  "Negative value doesn't rewrite the limit parameter",
+                  "(#{@options.max_limit})") do |limit|
+          @options.max_limit = limit
         end
 
         create_parser_performance(parser)
