@@ -1,12 +1,20 @@
 # News
 
+## 1.7.4: 2020-11-12
+
+### Fixes
+
+  * `server-verifier`: Fixed a bug that `--max-limit` doesn't work..
+
+  * `run-regression-test`: Fixed a bug that `--max-limit` doesn't work..
+
 ## 1.7.3: 2020-11-12
 
 ### Improvements
 
   * `check-crash`: Added support for showing Groonga version.
 
-  * `server-verifier`: Added  `--max-limit` option.
+  * `server-verifier`: Added `--max-limit` option.
 
   * `run-regression-test`: Added `--max-limit` option.
 
