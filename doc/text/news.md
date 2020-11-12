@@ -1,5 +1,20 @@
 # News
 
+## 1.7.3: 2020-11-12
+
+### Improvements
+
+  * `check-crash`: Added support for showing Groonga version.
+
+  * `server-verifier`: Added  `--max-limit` option.
+
+  * `run-regression-test`: Added `--max-limit` option.
+
+### Fixes
+
+  * `GroongaQueryLog::Parser`: Fixed a bug that target command filter
+    may not work.
+
 ## 1.7.2: 2020-06-02
 
 ### Fixes
