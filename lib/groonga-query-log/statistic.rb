@@ -115,6 +115,7 @@ module GroongaQueryLog
     end
 
     def select_family_command?
+      return false if command.nil?
       case command.command_name
       when "select", "range_filter"
         true
