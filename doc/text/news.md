@@ -1,12 +1,18 @@
 # News
 
+## 1.7.5: 2020-11-18
+
+### Improvements
+
+  * `analyze`: Ignored static file access.
+
 ## 1.7.4: 2020-11-12
 
 ### Fixes
 
-  * `server-verifier`: Fixed a bug that `--max-limit` doesn't work..
+  * `server-verifier`: Fixed a bug that `--max-limit` doesn't work.
 
-  * `run-regression-test`: Fixed a bug that `--max-limit` doesn't work..
+  * `run-regression-test`: Fixed a bug that `--max-limit` doesn't work.
 
 ## 1.7.3: 2020-11-12
 
