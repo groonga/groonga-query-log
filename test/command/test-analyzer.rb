@@ -1,5 +1,5 @@
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
-# Copyright (C) 2014-2019  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2014-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -42,6 +42,7 @@ class AnalyzerCommandTest < Test::Unit::TestCase
     end
 
     def test_no_specified
+      require_tty
       assert_equal("Error: Please specify input log files.\n",
                    run_analyzer)
     end

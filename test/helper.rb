@@ -1,4 +1,4 @@
-# Copyright (C) 2011-2017  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -29,6 +29,10 @@ module Helper
   end
 
   module Command
+    def require_tty
+      omit("Require tty") unless $stdin.tty?
+    end
+
     def open_error_output
       Tempfile.open("groonga-query-log.error") do |error|
         error.sync = true

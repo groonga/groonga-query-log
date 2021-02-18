@@ -1,5 +1,5 @@
 # Copyright (C) 2012  Haruka Yoshihara <yoshihara@clear-code.com>
-# Copyright (C) 2015-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2015-2021  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -45,6 +45,7 @@ column_create --flags "COLUMN_SCALAR" --name "title" --table "Comments" --type "
     end
 
     def test_no_specified
+      require_tty
       assert_equal("Error: Please specify input log files.\n",
                    run_extractor)
     end
