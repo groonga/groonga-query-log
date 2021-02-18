@@ -47,6 +47,7 @@ module GroongaQueryLog
           parser.parse(input) do |statistic|
             next if statistic.command.nil?
             next unless target_command?(statistic.command)
+            next unless available_command?(statistic.command)
             # TODO: validate orignal_source is one line
             output.puts(statistic.command.original_source)
             output.flush
@@ -130,6 +131,15 @@ module GroongaQueryLog
 
     def target_command?(command)
       @options.target_command_name?(command.command_name)
+    end
+
+    def available_command?(command)
+      case command.command_name
+      when "load"
+        not command.values.nil?
+      else
+        true
+      end
     end
 
     class NullOutput
