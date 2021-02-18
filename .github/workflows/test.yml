@@ -19,6 +19,7 @@ jobs:
         run: |
           sudo -H add-apt-repository -y ppa:groonga/ppa
           sudo -H apt update
+          sudo -H apt install -y -V groonga-bin
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
