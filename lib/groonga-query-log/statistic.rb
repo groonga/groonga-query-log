@@ -152,6 +152,7 @@ module GroongaQueryLog
         operation_data["relative_elapsed"] = operation[:relative_elapsed_in_seconds]
         operation_data["context"] = operation[:context]
         operation_data["slow"] = operation[:slow?]
+        operation_data["n_records"] = operation[:n_records]
         operations << operation_data
       end
       data["operations"] = operations
