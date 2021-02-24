@@ -1,5 +1,13 @@
 # News
 
+## 1.7.6: 2021-02-24
+
+### Improvements
+
+  * `replayer`: Ignored `load` without `values`.
+
+  * `statistics`: Added `n_records` to each operation.
+
 ## 1.7.5: 2020-11-18
 
 ### Improvements
