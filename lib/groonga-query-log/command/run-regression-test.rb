@@ -517,7 +517,7 @@ module GroongaQueryLog
         end
         formatted << "\n"
         unless n_leaked_objects.zero?
-          formatted << "\nLeaked: #{n_leaked_objects}"
+          formatted << "\nLeaked: #{n_leaked_objects}\n"
         end
         unless success
           output = StringIO.new
