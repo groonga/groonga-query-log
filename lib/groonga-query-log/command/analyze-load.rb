@@ -1,4 +1,4 @@
-# Copyright (C) 2017-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2017-2024  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -147,9 +147,15 @@ module GroongaQueryLog
           n_column_errors = nil
           total = nil
         end
+        if n_loaded_records and n_loaded_records > 0
+          throughput = statistic.elapsed_in_seconds / n_loaded_records
+        else
+          throughput = nil
+        end
         entry = [
           statistic.start_time.iso8601,
           statistic.elapsed_in_seconds,
+          throughput,
           load_command.table,
           n_loaded_records,
           n_record_errors,
@@ -171,6 +177,7 @@ module GroongaQueryLog
         header = [
           "start_time",
           "elapsed",
+          "throughput",
           "table",
           "n_loaded_records",
           "n_record_errors",
