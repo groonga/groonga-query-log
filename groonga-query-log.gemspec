@@ -54,6 +54,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency("charty")
   spec.add_runtime_dependency("diff-lcs")
+  spec.add_runtime_dependency("net-smtp")
   spec.add_runtime_dependency("groonga-client", ">= 0.6.2")
   spec.add_runtime_dependency("groonga-log", ">= 0.1.2")
 
