@@ -51,7 +51,7 @@ class ReplayerTest < Test::Unit::TestCase
           :read_timeout => 60,
         }
         expected_open_options = default_options.merge(expected_options)
-        mock(Groonga::Client).open(expected_open_options).yields(client) do
+        mock(Groonga::Client).open(**expected_open_options).yields(client) do
           client
         end
       end
