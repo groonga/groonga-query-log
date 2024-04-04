@@ -193,11 +193,13 @@ module GroongaQueryLog
       end
 
       def create_client(&block)
-        Groonga::Client.open(:host     => @host,
-                             :port     => @port,
-                             :protocol => @protocol,
-                             :read_timeout => @read_timeout,
-                             &block)
+        options = {
+          :host => @host,
+          :port => @port,
+          :protocol => @protocol,
+          :read_timeout => @read_timeout
+        }
+        Groonga::Client.open(options, &block)
       end
 
       def create_request_output(&block)
