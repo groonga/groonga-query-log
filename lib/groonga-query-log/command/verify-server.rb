@@ -287,6 +287,14 @@ module GroongaQueryLog
           @options.max_limit = limit
         end
 
+        parser.on("--cancel-rate=RATE", Float,
+                  "You can specify the rate at which request_cancel is sent." +
+                  "For example, if you specify 0.3 in this option, " +
+                  "send request_cancel with the probability of 3/10.",
+                  "(#{@options.cancel_rate})") do |rate|
+          @options.cancel_rate = rate
+        end
+
         create_parser_performance(parser)
 
         parser.separator("")

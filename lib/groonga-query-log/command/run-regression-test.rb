@@ -67,6 +67,7 @@ module GroongaQueryLog
         @debug_rewrite = false
         @omit_rate = 0.0
         @max_limit = -1
+        @cancel_rate = 0.0
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -426,6 +427,14 @@ module GroongaQueryLog
                   "(#{@notifier_options[:mail_only_on_failure]})") do |boolean|
           @notifier_options[:mail_only_on_failure] = boolean
         end
+
+        parser.on("--cancel-rate=RATE", Float,
+                  "You can specify the rate at which request_cancel is sent." +
+                  "For example, if you specify 0.3 in this option, " +
+                  "send request_cancel with the probability of 3/10.",
+                  "(#{@cancel_rate})") do |rate|
+          @cancel_rate = rate
+        end
         parser
       end
 
@@ -478,6 +487,7 @@ module GroongaQueryLog
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
           :read_timeout => @read_timeout,
+          :cancel_rate => @cancel_rate,
         }
         directory_options.merge(options)
       end
@@ -944,6 +954,10 @@ module GroongaQueryLog
           if @options[:read_timeout]
             command_line << "--read-timeout"
             command_line << @options[:read_timeout].to_s
+          end
+          if @options[:cancel_rate] > 0
+            command_line << "--cancel_rate"
+            command_line << @options[:cancel_rate].to_s
           end
           verify_server = VerifyServer.new
           same = verify_server.run(command_line, &callback)
