@@ -169,15 +169,13 @@ module GroongaQueryLog
     end
 
     def generate_request_id
-      @request_id_counter += 1
+      (@request_id_counter += 1).to_s
     end
 
     def verify_command(groonga1_client, groonga2_client, command)
       command["cache"] = "no" if @options.disable_cache?
       command["cache"] = "no" if @options.verify_performance?
-      if @options.cancel_rate > 0 && command.request_id.nil?
-        command["request_id"] = generate_request_id.to_s
-      end
+      command["request_id"] = generate_request_id if @options.verify_cancel?
 
       if @options.max_limit >= 0 and command["limit"]
         limit = command["limit"].to_i
@@ -194,23 +192,20 @@ module GroongaQueryLog
       response1 = groonga1_client.execute(command)
       # `groonga2` is new Groonga.
       response2 = nil
-      request = groonga2_client.execute(command) do |response|
-        response2 = response
-      end
-      canceled = false
-      if rand < @options.cancel_rate
+      if @options.verify_cancel?
+        request = groonga2_client.execute(command) do |response|
+          response2 = response
+        end
+        # Randomize timing of sending `request_cancel`
+        sleep(rand(0..@options.cancel_max_wait))
         @options.groonga2.create_client do |cancel_client|
-          cancel_response = cancel_client.execute("request_cancel", id: command.request_id)
-          canceled = cancel_response.body["canceled"]
+          cancel_client.execute("request_cancel", id: command.request_id)
         end
-      end
-      request.wait
+        request.wait
 
-      if canceled
-        if response2.return_code != -77 # GRN_CANCEL
-          @events.push([:error, command, 'cancelled and return_code is not GRN_CANCEL(-77)'])
-        end
-        return
+        return if response2.return_code == -77 # GRN_CANCEL
+      else
+        response2 = groonga2_client.execute(command)
       end
 
       compare_options = {
@@ -356,7 +351,8 @@ module GroongaQueryLog
       attr_writer :debug_rewrite
       attr_writer :omit_rate
       attr_accessor :max_limit
-      attr_writer :cancel_rate
+      attr_writer :verify_cancel
+      attr_writer :cancel_max_wait
       def initialize
         @groonga1 = GroongaOptions.new
         @groonga2 = GroongaOptions.new
@@ -392,7 +388,8 @@ module GroongaQueryLog
         @debug_rewrite = false
         @omit_rate = 0.0
         @max_limit = -1
-        @cancel_rate = 0.0
+        @verify_cancel = false
+        @cancel_max_wait = 5.0
       end
 
       def request_queue_size
@@ -493,8 +490,12 @@ module GroongaQueryLog
         @omit_rate
       end
 
-      def cancel_rate
-        @cancel_rate
+      def verify_cancel?
+        @verify_cancel
+      end
+
+      def cancel_max_wait
+        @cancel_max_wait
       end
     end
 

@@ -287,12 +287,20 @@ module GroongaQueryLog
           @options.max_limit = limit
         end
 
-        parser.on("--cancel-rate=RATE", Float,
-                  "You can specify the rate at which request_cancel is sent." +
-                  "For example, if you specify 0.3 in this option, " +
-                  "send request_cancel with the probability of 3/10.",
-                  "(#{@options.cancel_rate})") do |rate|
-          @options.cancel_rate = rate
+        parser.on("--[no-]verify-cancel",
+                  "Verify cancellation",
+                  "(#{@options.verify_cancel?})") do |boolean|
+          @options.verify_cancel = boolean
+        end
+
+        parser.on("--cancel-max-wait=SECONDS", Float,
+                  "Used with `--verify_cancel`." +
+                  "You can specify the maximum number of seconds to wait " +
+                  "before sending `request_cancel`." +
+                  "For example, if you specify 5.0 in this option, " +
+                  "wait randomly between 0~5.0 seconds before sending `request_cancel`.",
+                  "(#{@options.cancel_max_wait})") do |seconds|
+          @options.cancel_max_wait = seconds
         end
 
         create_parser_performance(parser)
