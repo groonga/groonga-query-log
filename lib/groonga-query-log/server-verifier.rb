@@ -198,7 +198,7 @@ module GroongaQueryLog
         request = groonga2_client.execute(command) do |response|
           response2 = response
         end
-        # Randomize timing of sending `request_cancel`
+        # Randomize timing of sending request_cancel
         sleep(rand(0..@options.cancel_max_wait))
         @options.groonga2.create_client do |cancel_client|
           cancel_client.execute("request_cancel", id: command.request_id)
