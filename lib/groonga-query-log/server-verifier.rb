@@ -27,6 +27,8 @@ require "groonga-query-log/response-comparer"
 
 module GroongaQueryLog
   class ServerVerifier
+    GRN_CANCEL = -77
+
     attr_reader :n_executed_commands
     def initialize(options)
       @options = options
@@ -203,7 +205,7 @@ module GroongaQueryLog
         end
         request.wait
 
-        return if response2.return_code == -77 # GRN_CANCEL
+        return if response2.return_code == GRN_CANCEL
       else
         response2 = groonga2_client.execute(command)
       end
