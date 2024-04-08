@@ -294,9 +294,9 @@ module GroongaQueryLog
         end
 
         parser.on("--cancel-max-wait=SECONDS", Float,
-                  "Used with `--verify_cancel`." +
+                  "Used with --verify_cancel." +
                   "You can specify the maximum number of seconds to wait " +
-                  "before sending `request_cancel`." +
+                  "before sending request_cancel command." +
                   "For example, if you specify 5.0 in this option, " +
                   "wait randomly between 0~5.0 seconds before sending `request_cancel`.",
                   "(#{@options.cancel_max_wait})") do |seconds|

@@ -190,7 +190,7 @@ module GroongaQueryLog
       rewrite_filter(command, "scorer")
 
       response1 = groonga1_client.execute(command)
-      # `groonga2` is new Groonga.
+      # groonga2 is new Groonga.
       response2 = nil
       if @options.verify_cancel?
         request = groonga2_client.execute(command) do |response|
