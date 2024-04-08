@@ -1,5 +1,13 @@
 # News
 
+## 1.7.7: 2024-04-08
+
+### Improvements
+
+  * `run-regression-test`: Add a test to verify that the request_cancel command can be successfully cancelled.
+
+  * `analyze-load`: Add support for reporting throughput.
+
 ## 1.7.6: 2021-02-24
 
 ### Improvements
