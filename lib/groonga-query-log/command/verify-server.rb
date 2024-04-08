@@ -287,6 +287,22 @@ module GroongaQueryLog
           @options.max_limit = limit
         end
 
+        parser.on("--[no-]verify-cancel",
+                  "Verify cancellation",
+                  "(#{@options.verify_cancel?})") do |boolean|
+          @options.verify_cancel = boolean
+        end
+
+        parser.on("--cancel-max-wait=SECONDS", Float,
+                  "Used with --verify_cancel. " +
+                  "You can specify the maximum number of seconds to wait " +
+                  "before sending request_cancel command. " +
+                  "For example, if you specify 5.0 in this option, " +
+                  "wait randomly between 0~5.0 seconds before sending request_cancel command.",
+                  "(#{@options.cancel_max_wait})") do |seconds|
+          @options.cancel_max_wait = seconds
+        end
+
         create_parser_performance(parser)
 
         parser.separator("")

@@ -67,6 +67,8 @@ module GroongaQueryLog
         @debug_rewrite = false
         @omit_rate = 0.0
         @max_limit = -1
+        @verify_cancel = false
+        @cancel_max_wait = 5.0
 
         @care_order = true
         @ignored_drilldown_keys = []
@@ -426,6 +428,20 @@ module GroongaQueryLog
                   "(#{@notifier_options[:mail_only_on_failure]})") do |boolean|
           @notifier_options[:mail_only_on_failure] = boolean
         end
+        parser.on("--[no-]verify-cancel",
+                  "Verify cancellation",
+                  "(#{@verify_cancel})") do |boolean|
+          @verify_cancel = boolean
+        end
+        parser.on("--cancel-max-wait=SECONDS", Float,
+                  "Used with --verify_cancel. " +
+                  "You can specify the maximum number of seconds to wait " +
+                  "before sending request_cancel command. " +
+                  "For example, if you specify 5.0 in this option, " +
+                  "wait randomly between 0~5.0 seconds before sending request_cancel command.",
+                  "(#{@cancel_max_wait})") do |seconds|
+          @cancel_max_wait = seconds
+        end
         parser
       end
 
@@ -478,6 +494,8 @@ module GroongaQueryLog
           :verify_performance => @verify_performance,
           :performance_verfifier_options => @performance_verfifier_options,
           :read_timeout => @read_timeout,
+          :verify_cancel => @verify_cancel,
+          :cancel_max_wait => @cancel_max_wait,
         }
         directory_options.merge(options)
       end
@@ -944,6 +962,11 @@ module GroongaQueryLog
           if @options[:read_timeout]
             command_line << "--read-timeout"
             command_line << @options[:read_timeout].to_s
+          end
+          if @options[:verify_cancel]
+            command_line << "--verify_cancel"
+            command_line << "--cancel-max-wait"
+            command_line << @options[:cancel_max_wait].to_s
           end
           verify_server = VerifyServer.new
           same = verify_server.run(command_line, &callback)
