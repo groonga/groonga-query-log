@@ -198,13 +198,12 @@ module GroongaQueryLog
         sleep_thread = nil
         request = groonga2_client.execute(command) do |response|
           response2 = response
-          sleep_thread.kill if sleep_thread
+          sleep_thread.kill
         end
 
         # Randomize timing of sending request_cancel command
         sleep_thread = Thread.new do
           sleep(rand(0..@options.cancel_max_wait))
-          sleep_thread = nil
         end
         sleep_thread.join
         unless response2
