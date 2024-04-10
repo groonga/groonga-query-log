@@ -195,13 +195,22 @@ module GroongaQueryLog
       # groonga2 is new Groonga.
       response2 = nil
       if @options.verify_cancel?
+        sleep_thread = nil
         request = groonga2_client.execute(command) do |response|
           response2 = response
+          sleep_thread.kill if sleep_thread
         end
+
         # Randomize timing of sending request_cancel command
-        sleep(rand(0..@options.cancel_max_wait))
-        @options.groonga2.create_client do |cancel_client|
-          cancel_client.execute("request_cancel", id: command.request_id)
+        sleep_thread = Thread.new do
+          sleep(rand(0..@options.cancel_max_wait))
+          sleep_thread = nil
+        end
+        sleep_thread.join
+        unless response2
+          @options.groonga2.create_client do |cancel_client|
+            cancel_client.execute("request_cancel", id: command.request_id)
+          end
         end
         request.wait
 
