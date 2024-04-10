@@ -1,5 +1,12 @@
 # News
 
+## 1.7.8: 2024-04-10
+
+### Improvements
+
+  * `run-regression-test`: Improved processing time for `request_cancel` command verification.
+    * Eliminated unnecessary waiting time.
+
 ## 1.7.7: 2024-04-08
 
 ### Improvements
