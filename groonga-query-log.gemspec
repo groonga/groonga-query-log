@@ -1,6 +1,6 @@
 # -*- ruby -*-
 #
-# Copyright (C) 2012-2019  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2012-2025  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -52,11 +52,13 @@ Gem::Specification.new do |spec|
   spec.licenses = ["LGPLv2.1+"]
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency("base64")
   spec.add_runtime_dependency("charty")
   spec.add_runtime_dependency("diff-lcs")
-  spec.add_runtime_dependency("net-smtp")
   spec.add_runtime_dependency("groonga-client", ">= 0.6.2")
   spec.add_runtime_dependency("groonga-log", ">= 0.1.2")
+  spec.add_runtime_dependency("net-smtp")
+  spec.add_runtime_dependency("ostruct")
 
   spec.add_development_dependency("test-unit")
   spec.add_development_dependency("test-unit-rr")
