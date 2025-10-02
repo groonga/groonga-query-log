@@ -61,7 +61,7 @@ module GroongaQueryLog
                 parser.parse(input) do |statistic|
                   next if @base_time.nil?
                   next if statistic.start_time < @base_time
-                  if statistic.start_time == @base_time
+                  if statistic.end_time > @base_time
                     yield(statistic)
                   end
                   throw(tag)
