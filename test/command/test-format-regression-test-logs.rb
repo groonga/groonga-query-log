@@ -1,4 +1,4 @@
-# Copyright (C) 2014-2018  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2014-2025  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -47,7 +47,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,5 +1,5 @@
+@@ -1,4 +1,4 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1"],
@@ -69,7 +69,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,5 +1,5 @@
+@@ -1,4 +1,4 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1: 焼肉"],
@@ -152,7 +152,7 @@ Arguments:
   table: Logs
 --- old
 +++ new
-@@ -1,5 +1,5 @@
+@@ -1,4 +1,4 @@
  [[[2],
    [["_id", "UInt32"], ["message", "Text"]],
    [1, "log message1"],
