@@ -28,8 +28,8 @@ class CheckCrashCommandTest < Test::Unit::TestCase
     super("check-crash", *components)
   end
 
-  def run_command(command_line)
-    super(@command, command_line)
+  def run_command(*command_line)
+    super(@command, *command_line)
   end
 
   def test_no_target_logs
@@ -37,7 +37,7 @@ class CheckCrashCommandTest < Test::Unit::TestCase
                  run_command([]))
   end
 
-  def test_not_exists_path
+  def test_not_exist_path
     error = assert_raise(Errno::ENOENT) do
       run_command(["/path/to/not-exists"])
     end
