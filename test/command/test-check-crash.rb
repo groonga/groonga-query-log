@@ -29,27 +29,23 @@ class CheckCrashCommandTest < Test::Unit::TestCase
   end
 
   def run_command(*command_line)
-    super(@command, *command_line)
+    super(@command, command_line)
   end
 
   def test_no_target_logs
     assert_equal([true, ""],
-                 run_command([]))
+                 run_command())
   end
 
   def test_not_exist_path
     error = assert_raise(Errno::ENOENT) do
-      run_command(["/path/to/not-exists"])
+      run_command("/path/to/nonexistent")
     end
-    assert_equal("No such file or directory @ rb_sysopen - /path/to/not-exists",
+    assert_equal("No such file or directory @ rb_sysopen - /path/to/nonexistent",
                  error.message)
   end
 
   def test_normal
-    log_paths = [
-      fixture_path("process", "normal.log"),
-      fixture_path("query", "load-flushed", "only-opened.log"),
-    ]
     output = [
       :process,
       :success,
@@ -61,14 +57,11 @@ class CheckCrashCommandTest < Test::Unit::TestCase
       fixture_path("process", "normal.log"),
     ].to_s + "\n"
     assert_equal([true, output],
-                 run_command(log_paths))
+                 run_command(fixture_path("process", "normal.log"),
+                             fixture_path("query", "load-flushed", "only-opened.log")))
   end
 
   def test_leak
-    log_paths = [
-      fixture_path("process", "leak.log"),
-      fixture_path("query", "load-flushed", "only-opened.log"),
-    ]
     output = [
       [
         :process,
@@ -90,15 +83,12 @@ class CheckCrashCommandTest < Test::Unit::TestCase
       ].to_s
     ].join("\n") + "\n"
     assert_equal([true, output],
-                 run_command(log_paths))
+                 run_command(fixture_path("process", "leak.log"),
+                             fixture_path("query", "load-flushed", "only-opened.log")))
   end
 
   sub_test_case("load and flushed on crash") do
     def test_target_name
-      log_paths = [
-        fixture_path("process", "crash.log"),
-        fixture_path("query", "load-flushed", "with-target-name.log"),
-      ]
       output = [
           [
           :process,
@@ -116,14 +106,11 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(log_paths))
+                   run_command(fixture_path("process", "crash.log"),
+                               fixture_path("query", "load-flushed", "with-target-name.log")))
     end
 
     def test_only_opened
-      log_paths = [
-        fixture_path("process", "crash.log"),
-        fixture_path("query", "load-flushed", "only-opened.log"),
-      ]
       output = [
           [
           :process,
@@ -141,16 +128,13 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(log_paths))
+                   run_command(fixture_path("process", "crash.log"),
+                               fixture_path("query", "load-flushed", "only-opened.log")))
     end
   end
 
   sub_test_case("load and unflushed on crash") do
     def test_no_flush
-      log_paths = [
-        fixture_path("process", "crash.log"),
-        fixture_path("query", "load-unflushed", "no-flush.log"),
-      ]
       output = [
           [
           :process,
@@ -170,14 +154,11 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         "2000-01-01T00:00:01+09:00: /d/load?table=Data",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(log_paths))
+                   run_command(fixture_path("process", "crash.log"),
+                               fixture_path("query", "load-unflushed", "no-flush.log")))
     end
 
     def test_only_opened
-      log_paths = [
-        fixture_path("process", "crash.log"),
-        fixture_path("query", "load-unflushed", "only-opened.log"),
-      ]
       output = [
           [
           :process,
@@ -198,7 +179,8 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(log_paths))
+                   run_command(fixture_path("process", "crash.log"),
+                               fixture_path("query", "load-unflushed", "only-opened.log")))
     end
   end
 end
