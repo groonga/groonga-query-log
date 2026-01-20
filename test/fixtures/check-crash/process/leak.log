@@ -1,0 +1,27 @@
+2000-01-01 00:00:00.000000|n| grn_init: <99.9.9>
+2000-01-01 00:00:00.000000|n| vm.overcommit_memory kernel parameter should be 1: <0>: See INFO level log to resolve this
+2000-01-01 00:00:00.000000|n| spec:2:update:Object:32(type):8
+2000-01-01 00:00:00.000000|n| spec:3:update:Bool:32(type):1
+2000-01-01 00:00:00.000000|n| spec:4:update:Int8:32(type):1
+2000-01-01 00:00:00.000000|n| spec:5:update:UInt8:32(type):1
+2000-01-01 00:00:00.000000|n| spec:6:update:Int16:32(type):2
+2000-01-01 00:00:00.000000|n| spec:7:update:UInt16:32(type):2
+2000-01-01 00:00:00.000000|n| spec:8:update:Int32:32(type):4
+2000-01-01 00:00:00.000000|n| spec:9:update:UInt32:32(type):4
+2000-01-01 00:00:00.000000|n| spec:10:update:Int64:32(type):8
+2000-01-01 00:00:00.000000|n| spec:11:update:UInt64:32(type):8
+2000-01-01 00:00:00.000000|n| spec:12:update:Float:32(type):8
+2000-01-01 00:00:00.000000|n| spec:13:update:Time:32(type):8
+2000-01-01 00:00:00.000000|n| spec:14:update:ShortText:32(type):4096
+2000-01-01 00:00:00.000000|n| spec:15:update:Text:32(type):65536
+2000-01-01 00:00:00.000000|n| spec:16:update:LongText:32(type):2147483648
+2000-01-01 00:00:00.000000|n| spec:17:update:TokyoGeoPoint:32(type):8
+2000-01-01 00:00:00.000000|n| spec:18:update:WGS84GeoPoint:32(type):8
+2000-01-01 00:00:00.000000|n| spec:19:update:Float32:32(type):4
+2000-01-01 00:00:00.000000|n| spec:20:update:BFloat16:32(type):2
+2000-01-01 00:00:00.000000|n| spec:21:update:ShortBinary:32(type):4096
+2000-01-01 00:00:00.000000|n| spec:22:update:Binary:32(type):65536
+2000-01-01 00:00:00.000000|n| spec:23:update:LongBinary:32(type):2147483648
+2000-01-01 00:00:00.000000|n| spec:24:update:JSON:32(type):2147483648
+2000-01-01 00:00:00.000000|n| spec:64:update:TokenMecab:33(proc):1
+2000-01-01 00:00:10.000000|n| grn_fin (3)
