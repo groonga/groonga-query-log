@@ -33,7 +33,11 @@ class CheckCrashCommandTest < Test::Unit::TestCase
   end
 
   def test_no_target_logs
-    assert_equal([true, ""],
+    output = <<-OUTPUT
+Usage: run-test [options] LOG1 ...
+        --debug                      Output detailed information (false)
+OUTPUT
+    assert_equal([false, output],
                  run_command())
   end
 
@@ -45,47 +49,6 @@ class CheckCrashCommandTest < Test::Unit::TestCase
                  error.message)
   end
 
-  def test_normal
-    output = [
-      :process,
-      :success,
-      "99.9.9",
-      "2000-01-01T00:00:00+09:00",
-      "2000-01-01T00:00:10+09:00",
-      nil,
-      fixture_path("process", "normal.log"),
-      fixture_path("process", "normal.log"),
-    ].to_s + "\n"
-    assert_equal([true, output],
-                 run_command(fixture_path("process", "normal.log"),
-                             fixture_path("query", "load-flushed", "only-opened.log")))
-  end
-
-  def test_leak
-    output = [
-      [
-        :process,
-        :success,
-        "99.9.9",
-        "2000-01-01T00:00:00+09:00",
-        "2000-01-01T00:00:10+09:00",
-        nil,
-        fixture_path("process", "leak.log"),
-        fixture_path("process", "leak.log"),
-      ].to_s,
-      [
-        :leak,
-        "99.9.9",
-        3,
-        "2000-01-01T00:00:10+09:00",
-        nil,
-        fixture_path("process", "leak.log"),
-      ].to_s
-    ].join("\n") + "\n"
-    assert_equal([true, output],
-                 run_command(fixture_path("process", "leak.log"),
-                             fixture_path("query", "load-flushed", "only-opened.log")))
-  end
 
   def test_command_format_pretty_print
     output = [
@@ -165,102 +128,185 @@ class CheckCrashCommandTest < Test::Unit::TestCase
                              fixture_path("query", "load-unflushed", "no-flush.log")))
   end
 
-  sub_test_case("load and flushed on crash") do
-    def test_target_name
-      output = [
-          [
-          :process,
-          :crashed,
-          "99.9.9",
-          "2000-01-01T00:00:00+09:00",
-          "2000-01-01T12:00:00+09:00",
-          1,
-          fixture_path("process", "crash.log"),
-          fixture_path("process", "crash.log"),
-        ].to_s,
-        "Important entries:",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-      ].join("\n") + "\n"
+  class NormalModeTest < self
+    def test_normal
+      output = <<-OUTPUT
+Summary:
+crashed:no, unfinished:no, leak:no, running_queries:no
+OK: no problems.
+OUTPUT
       assert_equal([true, output],
-                   run_command(fixture_path("process", "crash.log"),
-                               fixture_path("query", "load-flushed", "with-target-name.log")))
-    end
-
-    def test_only_opened
-      output = [
-          [
-          :process,
-          :crashed,
-          "99.9.9",
-          "2000-01-01T00:00:00+09:00",
-          "2000-01-01T12:00:00+09:00",
-          1,
-          fixture_path("process", "crash.log"),
-          fixture_path("process", "crash.log"),
-        ].to_s,
-        "Important entries:",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-      ].join("\n") + "\n"
-      assert_equal([true, output],
-                   run_command(fixture_path("process", "crash.log"),
+                   run_command(fixture_path("process", "normal.log"),
                                fixture_path("query", "load-flushed", "only-opened.log")))
     end
+
+    # todo: add other tests
   end
 
-  sub_test_case("load and unflushed on crash") do
-    def test_no_flush
-      output = [
-          [
-          :process,
-          :crashed,
-          "99.9.9",
-          "2000-01-01T00:00:00+09:00",
-          "2000-01-01T12:00:00+09:00",
-          1,
-          fixture_path("process", "crash.log"),
-          fixture_path("process", "crash.log"),
-        ].to_s,
-        "Important entries:",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-        "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-        "2000-01-01T00:00:01+09:00: /d/load?table=Data",
-      ].join("\n") + "\n"
-      assert_equal([true, output],
-                   run_command("--command-format=uri",
-                               fixture_path("process", "crash.log"),
-                               fixture_path("query", "load-unflushed", "no-flush.log")))
+  class DebugModeTest < self
+    def run_command(*command_line)
+      command_line.push("--debug")
+      super(*command_line)
     end
 
-    def test_only_opened
+    def test_normal
       output = [
-          [
+        [
           :process,
-          :crashed,
+          :success,
           "99.9.9",
           "2000-01-01T00:00:00+09:00",
-          "2000-01-01T12:00:00+09:00",
-          1,
-          fixture_path("process", "crash.log"),
-          fixture_path("process", "crash.log"),
+          "2000-01-01T00:00:10+09:00",
+          nil,
+          fixture_path("process", "normal.log"),
+          fixture_path("process", "normal.log"),
         ].to_s,
-        "Important entries:",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-        "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-        # Unflushed should be detected.
-        # "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-        # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+        "Summary:",
+        "crashed:no, unfinished:no, leak:no, running_queries:no",
+        "OK: no problems.",
+      ].join("\n") + "\n"
+
+      assert_equal([true, output],
+                   run_command(fixture_path("process", "normal.log"),
+                               fixture_path("query", "load-flushed", "only-opened.log")))
+    end
+
+    def test_leak
+      output = [
+        [
+          :process,
+          :success,
+          "99.9.9",
+          "2000-01-01T00:00:00+09:00",
+          "2000-01-01T00:00:10+09:00",
+          nil,
+          fixture_path("process", "leak.log"),
+          fixture_path("process", "leak.log"),
+        ].to_s,
+        [
+          :leak,
+          "99.9.9",
+          3,
+          "2000-01-01T00:00:10+09:00",
+          nil,
+          fixture_path("process", "leak.log"),
+        ].to_s,
+        "Summary:",
+        "crashed:no, unfinished:no, leak:yes, running_queries:no",
+        "NG: Please check the display and logs.",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command("--command-format=uri",
-                               fixture_path("process", "crash.log"),
-                               fixture_path("query", "load-unflushed", "only-opened.log")))
+                   run_command(fixture_path("process", "leak.log"),
+                               fixture_path("query", "load-flushed", "only-opened.log")))
+    end
+
+    sub_test_case("load and flushed on crash") do
+      def test_target_name
+        output = [
+            [
+            :process,
+            :crashed,
+            "99.9.9",
+            "2000-01-01T00:00:00+09:00",
+            "2000-01-01T12:00:00+09:00",
+            1,
+            fixture_path("process", "crash.log"),
+            fixture_path("process", "crash.log"),
+          ].to_s,
+          "Important entries:",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+          "Summary:",
+          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "NG: Please check the display and logs.",
+        ].join("\n") + "\n"
+        assert_equal([true, output],
+                     run_command(fixture_path("process", "crash.log"),
+                                 fixture_path("query", "load-flushed", "with-target-name.log")))
+      end
+
+      def test_only_opened
+        output = [
+            [
+            :process,
+            :crashed,
+            "99.9.9",
+            "2000-01-01T00:00:00+09:00",
+            "2000-01-01T12:00:00+09:00",
+            1,
+            fixture_path("process", "crash.log"),
+            fixture_path("process", "crash.log"),
+          ].to_s,
+          "Important entries:",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+          "Summary:",
+          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "NG: Please check the display and logs.",
+        ].join("\n") + "\n"
+        assert_equal([true, output],
+                     run_command(fixture_path("process", "crash.log"),
+                                 fixture_path("query", "load-flushed", "only-opened.log")))
+      end
+    end
+
+    sub_test_case("load and unflushed on crash") do
+      def test_no_flush
+        output = [
+            [
+            :process,
+            :crashed,
+            "99.9.9",
+            "2000-01-01T00:00:00+09:00",
+            "2000-01-01T12:00:00+09:00",
+            1,
+            fixture_path("process", "crash.log"),
+            fixture_path("process", "crash.log"),
+          ].to_s,
+          "Important entries:",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+          "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+          "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+          "Summary:",
+          "crashed:yes, unfinished:yes, leak:no, running_queries:no",
+          "NG: Please check the display and logs.",
+        ].join("\n") + "\n"
+        assert_equal([true, output],
+                     run_command(fixture_path("process", "crash.log"),
+                                 fixture_path("query", "load-unflushed", "no-flush.log")))
+      end
+
+      def test_only_opened
+        output = [
+            [
+            :process,
+            :crashed,
+            "99.9.9",
+            "2000-01-01T00:00:00+09:00",
+            "2000-01-01T12:00:00+09:00",
+            1,
+            fixture_path("process", "crash.log"),
+            fixture_path("process", "crash.log"),
+          ].to_s,
+          "Important entries:",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+          # Unflushed should be detected.
+          # "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+          # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+          "Summary:",
+          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "NG: Please check the display and logs.",
+        ].join("\n") + "\n"
+        assert_equal([true, output],
+                     run_command(fixture_path("process", "crash.log"),
+                                 fixture_path("query", "load-unflushed", "only-opened.log")))
+      end
     end
   end
 end

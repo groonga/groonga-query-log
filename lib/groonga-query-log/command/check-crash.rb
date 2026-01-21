@@ -23,6 +23,7 @@ module GroongaQueryLog
   module Command
     class CheckCrash < CommandLine
       def initialize
+        @debug = false
         setup_options
       end
 
@@ -31,6 +32,11 @@ module GroongaQueryLog
           log_paths = @option_parser.parse!(arguments)
         rescue OptionParser::InvalidOption => error
           $stderr.puts(error)
+          return false
+        end
+
+        if log_paths.empty?
+          puts @option_parser.help
           return false
         end
 
@@ -66,6 +72,9 @@ module GroongaQueryLog
                     "Only available when `--command-format=command` is specified.") do |boolean|
             @pretty_print = boolean
           end
+          parser.on("--debug", "Output detailed information (#{@debug})") do |boolean|
+            @debug = boolean
+          end
         end
       end
 
@@ -82,6 +91,7 @@ module GroongaQueryLog
       def check(log_paths)
         checker = Checker.new(log_paths,
                               command_format: @command_format,
+                              debug: @debug,
                               pretty_print: @pretty_print)
         checker.check
       end
@@ -127,57 +137,66 @@ module GroongaQueryLog
       end
 
       class Checker
-        def initialize(log_paths, command_format: :command, pretty_print: true)
+        def initialize(log_paths, command_format: :command, debug: false, pretty_print: true)
           split_log_paths(log_paths)
           @command_format = command_format
           @pretty_print = pretty_print
+          @debug = debug
         end
 
         def check
+          summary = {
+            crashed: false,
+            unfinished: false,
+            leak: false,
+            running_queries: false,
+          }
           processes = ProcessEnumerator.new(@general_log_paths)
           processes.each do |process|
             need_query_log_parsing = true
             if process.successfully_finished?
               need_query_log_parsing = false
-              p [:process,
-                 :success,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.start_log_path,
-                 process.end_log_path]
+              debug([:process,
+                     :success,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].to_s)
             elsif process.crashed?
-              p [:process,
-                 :crashed,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.start_log_path,
-                 process.end_log_path]
+              debug([:process,
+                     :crashed,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].to_s)
+              summary[:crashed] = true
             else
-              p [:process,
-                 :unfinished,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.pid,
-                 process.start_log_path]
+              debug([:process,
+                     :unfinished,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.pid,
+                     process.start_log_path].to_s)
             end
 
             unless process.n_leaks.zero?
-              p [:leak,
-                 process.version,
-                 process.n_leaks,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.end_log_path]
+              debug([:leak,
+                     process.version,
+                     process.n_leaks,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.end_log_path].to_s)
+              summary[:leak] = true
             end
 
             unless process.important_entries.empty?
-              puts("Important entries:")
+              info("Important entries:")
               process.important_entries.each_with_index do |entry, i|
-                puts("#{entry.timestamp.iso8601}: " +
+                info("#{entry.timestamp.iso8601}: " +
                      "#{entry.pid}: " +
                      "#{entry.thread_id}: " +
                      "#{entry.log_level}: " +
@@ -203,18 +222,27 @@ module GroongaQueryLog
               statistic.start_time < start_time
             end
             unless target_parsing_statistics.empty?
-              puts("Running queries:")
+              info("Running queries:")
               target_parsing_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
+              summary[:running_queries] = true
             end
             unless @unflushed_statistics.empty?
-              puts("Unflushed commands in " +
+              info("Unflushed commands in " +
                    "#{start_time.iso8601}/#{end_time.iso8601}")
               @unflushed_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
+              summary[:unfinished] = true
             end
+          end
+          info("Summary:")
+          info(summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
+          if summary.value?(true)
+            info("NG: Please check the display and logs.")
+          else
+            info("OK: no problems.")
           end
         end
 
@@ -325,6 +353,15 @@ module GroongaQueryLog
             end
           end
           @flushed = @unflushed_statistics.empty?
+        end
+
+        def debug(message)
+          return unless @debug
+          puts message
+        end
+
+        def info(message)
+          puts message
         end
       end
 
