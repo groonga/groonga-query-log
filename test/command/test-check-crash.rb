@@ -35,7 +35,9 @@ class CheckCrashCommandTest < Test::Unit::TestCase
   def test_no_target_logs
     output = <<-OUTPUT
 Usage: run-test [options] LOG1 ...
-        --debug                      Output detailed information (false)
+        --output-level=LEVEL         Specify the output level. [info]
+                                     Specifying 'debug' displays detailed information.
+                                     (info, debug)
 OUTPUT
     assert_equal([false, output],
                  run_command())
@@ -48,7 +50,6 @@ OUTPUT
     assert_equal("No such file or directory @ rb_sysopen - /path/to/nonexistent",
                  error.message)
   end
-
 
   def test_command_format_pretty_print
     output = [
@@ -128,7 +129,7 @@ OUTPUT
                              fixture_path("query", "load-unflushed", "no-flush.log")))
   end
 
-  class NormalModeTest < self
+  class OutputLevelInfoTest < self
     def test_normal
       output = <<-OUTPUT
 Summary:
@@ -143,9 +144,9 @@ OUTPUT
     # todo: add other tests
   end
 
-  class DebugModeTest < self
+  class OutputLevelDebugTest < self
     def run_command(*command_line)
-      command_line.push("--debug")
+      command_line.push("--output-level=debug")
       super(*command_line)
     end
 
