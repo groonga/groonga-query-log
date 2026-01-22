@@ -232,7 +232,7 @@ module GroongaQueryLog
             @flushed = false
             @unflushed_statistics << statistic
           when "io_flush"
-            check_io_flush(command)
+            check_io_flush(statistic)
           when "database_unmap"
             @unflushed_statistics.reject! do |statistic|
               command.name == "load"
@@ -251,30 +251,30 @@ module GroongaQueryLog
           end
         end
 
-        def check_io_flush(io_flush)
-          # TODO: Improve flushed target detection.
+        def flushed_objects(statistic)
+          statistic.operations.select do |operation|
+            operation[:name].start_with?("flush[")
+          end.map do |operation|
+            /\Aflush\[(.+)\]/.match(operation[:name])[1]
+          end
+        end
+
+        def check_io_flush(statistic)
+          io_flush = statistic.command
           if io_flush.target_name
-            if io_flush.recursive?
+            if io_flush.recursive_dependent?
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
                 when "load"
-                  # TODO: Not enough
                   statistic.command.table == io_flush.target_name
                 when "delete"
-                  # TODO: Not enough
                   statistic.command.table == io_flush.target_name
                 when "truncate"
-                  # TODO: Not enough
                   statistic.command.target_name == io_flush.target_name
-                else
-                  false
-                end
-              end
-            else
-              @unflushed_statistics.reject! do |statistic|
-                case statistic.command.command_name
-                when /_create/
-                  true # TODO: Need io_flush for database
+                when "table_create"
+                  statistic.command.name == io_flush.target_name
+                when "column_create"
+                  "#{statistic.command.table}.#{statistic.command.name}" == io_flush.target_name
                 else
                   false
                 end
@@ -282,12 +282,33 @@ module GroongaQueryLog
             end
           else
             if io_flush.recursive?
-              @unflushed_statistics.clear
+              flushed =  flushed_objects(statistic)
+              @unflushed_statistics.reject! do |statistic|
+                case statistic.command.command_name
+                when "load"
+                  # TODO: Not enough
+                  flushed.include?(statistic.command.table)
+                when "delete"
+                  # TODO: Not enough
+                  flushed.include?(statistic.command.table)
+                when "truncate"
+                  # TODO: Not enough
+                  flushed.include?(statistic.command.target_name)
+                when "table_create"
+                  flushed.include?(statistic.command.name)
+                when "column_create"
+                  flushed.include?("#{statistic.command.table}.#{statistic.command.name}")
+                when /_remove\z/, /_rename\z/
+                  true
+                when "plugin_register", "plugin_unregister"
+                  true
+                else
+                  false
+                end
+              end
             else
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
-                when /_create\z/
-                  true # TODO: Need io_flush for the target
                 when /_remove\z/, /_rename\z/
                   true
                 when "plugin_register", "plugin_unregister"

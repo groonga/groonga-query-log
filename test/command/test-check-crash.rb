@@ -174,9 +174,8 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
         "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
         "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-        # Unflushed should be detected.
-        # "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-        # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+        "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+        "2000-01-01T00:00:01+09:00: /d/load?table=Data",
       ].join("\n") + "\n"
       assert_equal([true, output],
                    run_command(fixture_path("process", "crash.log"),
