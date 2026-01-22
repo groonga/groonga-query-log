@@ -133,7 +133,7 @@ OUTPUT
     def test_normal
       output = <<-OUTPUT
 Summary:
-crashed:no, unfinished:no, leak:no, running_queries:no
+crashed:no, unflushed:no, unfinished:no, leak:no
 OK: no problems.
 OUTPUT
       assert_equal([true, output],
@@ -163,7 +163,7 @@ OUTPUT
           fixture_path("process", "normal.log"),
         ].to_s,
         "Summary:",
-        "crashed:no, unfinished:no, leak:no, running_queries:no",
+        "crashed:no, unflushed:no, unfinished:no, leak:no",
         "OK: no problems.",
       ].join("\n") + "\n"
 
@@ -193,7 +193,7 @@ OUTPUT
           fixture_path("process", "leak.log"),
         ].to_s,
         "Summary:",
-        "crashed:no, unfinished:no, leak:yes, running_queries:no",
+        "crashed:no, unflushed:no, unfinished:no, leak:yes",
         "NG: Please check the display and logs.",
       ].join("\n") + "\n"
       assert_equal([true, output],
@@ -219,7 +219,7 @@ OUTPUT
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
           "Summary:",
-          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "crashed:yes, unflushed:no, unfinished:no, leak:no",
           "NG: Please check the display and logs.",
         ].join("\n") + "\n"
         assert_equal([true, output],
@@ -244,7 +244,7 @@ OUTPUT
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
           "Summary:",
-          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "crashed:yes, unflushed:no, unfinished:no, leak:no",
           "NG: Please check the display and logs.",
         ].join("\n") + "\n"
         assert_equal([true, output],
@@ -273,7 +273,7 @@ OUTPUT
           "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
           "2000-01-01T00:00:01+09:00: /d/load?table=Data",
           "Summary:",
-          "crashed:yes, unfinished:yes, leak:no, running_queries:no",
+          "crashed:yes, unflushed:yes, unfinished:no, leak:no",
           "NG: Please check the display and logs.",
         ].join("\n") + "\n"
         assert_equal([true, output],
@@ -301,7 +301,7 @@ OUTPUT
           # "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
           # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
           "Summary:",
-          "crashed:yes, unfinished:no, leak:no, running_queries:no",
+          "crashed:yes, unflushed:no, unfinished:no, leak:no",
           "NG: Please check the display and logs.",
         ].join("\n") + "\n"
         assert_equal([true, output],
