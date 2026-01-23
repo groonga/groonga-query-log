@@ -23,7 +23,6 @@ module GroongaQueryLog
   module Command
     class CheckCrash < CommandLine
       def initialize
-        @output_level = :info
         setup_options
       end
 
@@ -55,30 +54,32 @@ module GroongaQueryLog
       def setup_options
         available_command_format = [:command, :uri]
         available_output_levels = [:info, :debug]
-        @options = {}
-        @command_format = :command
-        @pretty_print = true
+        @options = {
+          command_format: :command,
+          output_level: :info,
+          pretty_print: true
+        }
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
           parser.banner += " LOG1 ..."
           parser.on("--command-format=FORMAT",
                     available_command_format,
-                    "Specify the output format of the Groonga command that had a problem. [#{@command_format}]",
+                    "Specify the output format of the Groonga command that had a problem. [#{@options[:command_format]}]",
                     "(#{available_command_format.join(", ")})") do |format|
-            @command_format = format
+            @options[:command_format] = format
           end
           parser.on("--[no-]pretty-print",
-                    "Specify to make command output easier to read. [#{@pretty_print}]",
+                    "Specify to make command output easier to read. [#{@options[:pretty_print]}]",
                     "Only available when `--command-format=command` is specified.") do |boolean|
-            @pretty_print = boolean
+            @options[:pretty_print] = boolean
           end
           parser.on("--output-level=LEVEL",
                     available_output_levels,
-                    "Specify the output level. [#{@output_level}]",
+                    "Specify the output level. [#{@options[:output_level]}]",
                     "Specifying 'debug' displays detailed information.",
                     "(#{available_output_levels.join(", ")})") do |output_level|
-            @output_level = output_level
+            @options[:output_level] = output_level
           end
         end
       end
@@ -94,10 +95,7 @@ module GroongaQueryLog
       end
 
       def check(log_paths)
-        checker = Checker.new(log_paths,
-                              command_format: @command_format,
-                              output_level: @output_level,
-                              pretty_print: @pretty_print)
+        checker = Checker.new(log_paths, @options)
         checker.check
       end
 
@@ -142,11 +140,9 @@ module GroongaQueryLog
       end
 
       class Checker
-        def initialize(log_paths, command_format: :command, output_level: :info, pretty_print: true)
+        def initialize(log_paths, options)
           split_log_paths(log_paths)
-          @command_format = command_format
-          @pretty_print = pretty_print
-          @output_level = output_level
+          @options = options
         end
 
         def check
@@ -268,11 +264,11 @@ module GroongaQueryLog
         end
 
         def formated_command(command)
-          if @command_format == :uri
+          if @options[:command_format] == :uri
             command.to_uri_format
           else
-            (@pretty_print ? "\n" : "") +
-              command.to_command_format(pretty_print: @pretty_print)
+            (@options[:pretty_print] ? "\n" : "") +
+              command.to_command_format(pretty_print: @options[:pretty_print])
           end
         end
 
@@ -361,7 +357,7 @@ module GroongaQueryLog
         end
 
         def debug(*messages)
-          return unless @output_level == :debug
+          return unless @options[:output_level] == :debug
           puts(*messages)
         end
 
