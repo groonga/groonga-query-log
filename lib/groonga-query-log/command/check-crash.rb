@@ -47,11 +47,25 @@ module GroongaQueryLog
 
       private
       def setup_options
+        available_command_format = [:command, :uri]
         @options = {}
+        @command_format = :command
+        @pretty_print = true
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
           parser.banner += " LOG1 ..."
+          parser.on("--command-format=FORMAT",
+                    available_command_format,
+                    "Specify the output format of the Groonga command that had a problem. [#{@command_format}]",
+                    "(#{available_command_format.join(", ")})") do |format|
+            @command_format = format
+          end
+          parser.on("--[no-]pretty-print",
+                    "Specify to make command output easier to read. [#{@pretty_print}]",
+                    "Only available when `--command-format=command` is specified.") do |boolean|
+            @pretty_print = boolean
+          end
         end
       end
 
@@ -66,7 +80,9 @@ module GroongaQueryLog
       end
 
       def check(log_paths)
-        checker = Checker.new(log_paths)
+        checker = Checker.new(log_paths,
+                              command_format: @command_format,
+                              pretty_print: @pretty_print)
         checker.check
       end
 
@@ -111,8 +127,10 @@ module GroongaQueryLog
       end
 
       class Checker
-        def initialize(log_paths)
+        def initialize(log_paths, command_format: :command, pretty_print: true)
           split_log_paths(log_paths)
+          @command_format = command_format
+          @pretty_print = pretty_print
         end
 
         def check
@@ -187,15 +205,14 @@ module GroongaQueryLog
             unless target_parsing_statistics.empty?
               puts("Running queries:")
               target_parsing_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}:")
-                puts(statistic.command.to_command_format(pretty_print: true))
+                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
             end
             unless @unflushed_statistics.empty?
               puts("Unflushed commands in " +
                    "#{start_time.iso8601}/#{end_time.iso8601}")
               @unflushed_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}: #{statistic.raw_command}")
+                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
             end
           end
@@ -214,6 +231,15 @@ module GroongaQueryLog
             elsif sample_lines.any? {|line| GroongaLog::Parser.target_line?(line)}
               @general_log_paths << log_path
             end
+          end
+        end
+
+        def formated_command(command)
+          if @command_format == :uri
+            command.to_uri_format
+          else
+            (@pretty_print ? "\n" : "") +
+              command.to_command_format(pretty_print: @pretty_print)
           end
         end
 
