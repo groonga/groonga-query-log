@@ -35,6 +35,10 @@ class CheckCrashCommandTest < Test::Unit::TestCase
   def test_no_target_logs
     output = <<-OUTPUT
 Usage: run-test [options] LOG1 ...
+        --command-format=FORMAT      Specify the output format of the Groonga command that had a problem. [command]
+                                     (command, uri)
+        --[no-]pretty-print          Specify to make command output easier to read. [true]
+                                     Only available when `--command-format=command` is specified.
         --output-level=LEVEL         Specify the output level. [info]
                                      Specifying 'debug' displays detailed information.
                                      (info, debug)
@@ -53,16 +57,6 @@ OUTPUT
 
   def test_command_format_pretty_print
     output = [
-      [
-        :process,
-        :crashed,
-        "99.9.9",
-        "2000-01-01T00:00:00+09:00",
-        "2000-01-01T12:00:00+09:00",
-        1,
-        fixture_path("process", "crash.log"),
-        fixture_path("process", "crash.log"),
-      ].inspect,
       "Important entries:",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
@@ -71,6 +65,9 @@ OUTPUT
       "2000-01-01T00:00:01+09:00: ",
       "load \\",
       "  --table \"Data\"",
+      "Summary:",
+      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
+      "NG: Please check the display and logs.",
     ].join("\n") + "\n"
     assert_equal([true, output],
                  run_command("--command-format=command",
@@ -80,22 +77,15 @@ OUTPUT
 
   def test_command_format_one_line
     output = [
-      [
-        :process,
-        :crashed,
-        "99.9.9",
-        "2000-01-01T00:00:00+09:00",
-        "2000-01-01T12:00:00+09:00",
-        1,
-        fixture_path("process", "crash.log"),
-        fixture_path("process", "crash.log"),
-      ].inspect,
       "Important entries:",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
       "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
       "2000-01-01T00:00:01+09:00: load --table \"Data\"",
+      "Summary:",
+      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
+      "NG: Please check the display and logs.",
     ].join("\n") + "\n"
     assert_equal([true, output],
                  run_command("--command-format=command",
@@ -106,22 +96,15 @@ OUTPUT
 
   def test_uri_format
     output = [
-      [
-        :process,
-        :crashed,
-        "99.9.9",
-        "2000-01-01T00:00:00+09:00",
-        "2000-01-01T12:00:00+09:00",
-        1,
-        fixture_path("process", "crash.log"),
-        fixture_path("process", "crash.log"),
-      ].inspect,
       "Important entries:",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
       "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
       "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
       "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+      "Summary:",
+      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
+      "NG: Please check the display and logs.",
     ].join("\n") + "\n"
     assert_equal([true, output],
                  run_command("--command-format=uri",
@@ -147,6 +130,7 @@ OUTPUT
   class OutputLevelDebugTest < self
     def run_command(*command_line)
       command_line.push("--output-level=debug")
+      command_line.push("--command-format=uri")
       super(*command_line)
     end
 
