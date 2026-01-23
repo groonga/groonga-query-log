@@ -87,6 +87,84 @@ class CheckCrashCommandTest < Test::Unit::TestCase
                              fixture_path("query", "load-flushed", "only-opened.log")))
   end
 
+  def test_command_format_pretty_print
+    output = [
+      [
+        :process,
+        :crashed,
+        "99.9.9",
+        "2000-01-01T00:00:00+09:00",
+        "2000-01-01T12:00:00+09:00",
+        1,
+        fixture_path("process", "crash.log"),
+        fixture_path("process", "crash.log"),
+      ].inspect,
+      "Important entries:",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+      "2000-01-01T00:00:01+09:00: ",
+      "load \\",
+      "  --table \"Data\"",
+    ].join("\n") + "\n"
+    assert_equal([true, output],
+                 run_command("--command-format=command",
+                             fixture_path("process", "crash.log"),
+                             fixture_path("query", "load-unflushed", "no-flush.log")))
+  end
+
+  def test_command_format_one_line
+    output = [
+      [
+        :process,
+        :crashed,
+        "99.9.9",
+        "2000-01-01T00:00:00+09:00",
+        "2000-01-01T12:00:00+09:00",
+        1,
+        fixture_path("process", "crash.log"),
+        fixture_path("process", "crash.log"),
+      ].inspect,
+      "Important entries:",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+      "2000-01-01T00:00:01+09:00: load --table \"Data\"",
+    ].join("\n") + "\n"
+    assert_equal([true, output],
+                 run_command("--command-format=command",
+                             "--no-pretty-print",
+                             fixture_path("process", "crash.log"),
+                             fixture_path("query", "load-unflushed", "no-flush.log")))
+  end
+
+  def test_uri_format
+    output = [
+      [
+        :process,
+        :crashed,
+        "99.9.9",
+        "2000-01-01T00:00:00+09:00",
+        "2000-01-01T12:00:00+09:00",
+        1,
+        fixture_path("process", "crash.log"),
+        fixture_path("process", "crash.log"),
+      ].inspect,
+      "Important entries:",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
+      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
+      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
+      "2000-01-01T00:00:01+09:00: /d/load?table=Data",
+    ].join("\n") + "\n"
+    assert_equal([true, output],
+                 run_command("--command-format=uri",
+                             fixture_path("process", "crash.log"),
+                             fixture_path("query", "load-unflushed", "no-flush.log")))
+  end
+
   sub_test_case("load and flushed on crash") do
     def test_target_name
       output = [
@@ -154,7 +232,8 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         "2000-01-01T00:00:01+09:00: /d/load?table=Data",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(fixture_path("process", "crash.log"),
+                   run_command("--command-format=uri",
+                               fixture_path("process", "crash.log"),
                                fixture_path("query", "load-unflushed", "no-flush.log")))
     end
 
@@ -179,7 +258,8 @@ class CheckCrashCommandTest < Test::Unit::TestCase
         # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
       ].join("\n") + "\n"
       assert_equal([true, output],
-                   run_command(fixture_path("process", "crash.log"),
+                   run_command("--command-format=uri",
+                               fixture_path("process", "crash.log"),
                                fixture_path("query", "load-unflushed", "only-opened.log")))
     end
   end
