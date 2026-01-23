@@ -81,8 +81,8 @@ module GroongaQueryLog
 
       def check(log_paths)
         checker = Checker.new(log_paths,
-                             command_format: @command_format,
-                             pretty_print: @pretty_print)
+                              command_format: @command_format,
+                              pretty_print: @pretty_print)
         checker.check
       end
 
