@@ -161,7 +161,7 @@ OUTPUT
           nil,
           fixture_path("process", "normal.log"),
           fixture_path("process", "normal.log"),
-        ].to_s,
+        ].inspect,
         "Summary:",
         "crashed:no, unflushed:no, unfinished:no, leak:no",
         "OK: no problems.",
@@ -183,7 +183,7 @@ OUTPUT
           nil,
           fixture_path("process", "leak.log"),
           fixture_path("process", "leak.log"),
-        ].to_s,
+        ].inspect,
         [
           :leak,
           "99.9.9",
@@ -191,7 +191,7 @@ OUTPUT
           "2000-01-01T00:00:10+09:00",
           nil,
           fixture_path("process", "leak.log"),
-        ].to_s,
+        ].inspect,
         "Summary:",
         "crashed:no, unflushed:no, unfinished:no, leak:yes",
         "NG: Please check the display and logs.",
@@ -204,7 +204,7 @@ OUTPUT
     sub_test_case("load and flushed on crash") do
       def test_target_name
         output = [
-            [
+          [
             :process,
             :crashed,
             "99.9.9",
@@ -213,7 +213,7 @@ OUTPUT
             1,
             fixture_path("process", "crash.log"),
             fixture_path("process", "crash.log"),
-          ].to_s,
+          ].inspect,
           "Important entries:",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
@@ -238,7 +238,7 @@ OUTPUT
             1,
             fixture_path("process", "crash.log"),
             fixture_path("process", "crash.log"),
-          ].to_s,
+          ].inspect,
           "Important entries:",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
@@ -256,7 +256,7 @@ OUTPUT
     sub_test_case("load and unflushed on crash") do
       def test_no_flush
         output = [
-            [
+          [
             :process,
             :crashed,
             "99.9.9",
@@ -265,7 +265,7 @@ OUTPUT
             1,
             fixture_path("process", "crash.log"),
             fixture_path("process", "crash.log"),
-          ].to_s,
+          ].inspect,
           "Important entries:",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
@@ -283,7 +283,7 @@ OUTPUT
 
       def test_only_opened
         output = [
-            [
+          [
             :process,
             :crashed,
             "99.9.9",
@@ -292,7 +292,7 @@ OUTPUT
             1,
             fixture_path("process", "crash.log"),
             fixture_path("process", "crash.log"),
-          ].to_s,
+          ].inspect,
           "Important entries:",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
           "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",

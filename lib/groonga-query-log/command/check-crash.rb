@@ -14,7 +14,6 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
-require "logger"
 require "optparse"
 
 require "groonga-query-log"
@@ -147,12 +146,7 @@ module GroongaQueryLog
           split_log_paths(log_paths)
           @command_format = command_format
           @pretty_print = pretty_print
-          formatter = proc do |severity, datetime, progname, message|
-            "#{message}\n"
-          end
-          @logger = Logger.new(STDOUT,
-                               formatter: formatter,
-                               level: Logger::Severity.const_get(output_level.upcase))
+          @output_level = output_level
         end
 
         def check
@@ -167,51 +161,51 @@ module GroongaQueryLog
             need_query_log_parsing = true
             if process.successfully_finished?
               need_query_log_parsing = false
-              @logger.debug([:process,
-                             :success,
-                             process.version,
-                             process.start_time.iso8601,
-                             process.end_time.iso8601,
-                             process.pid,
-                             process.start_log_path,
-                             process.end_log_path].to_s)
+              debug([:process,
+                     :success,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].inspect)
             elsif process.crashed?
-              @logger.debug([:process,
-                             :crashed,
-                             process.version,
-                             process.start_time.iso8601,
-                             process.end_time.iso8601,
-                             process.pid,
-                             process.start_log_path,
-                             process.end_log_path].to_s)
+              debug([:process,
+                     :crashed,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].inspect)
               summary[:crashed] = true
             else
-              @logger.debug([:process,
-                             :unfinished,
-                             process.version,
-                             process.start_time.iso8601,
-                             process.pid,
-                             process.start_log_path].to_s)
+              debug([:process,
+                     :unfinished,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.pid,
+                     process.start_log_path].inspect)
             end
 
             unless process.n_leaks.zero?
-              @logger.debug([:leak,
-                             process.version,
-                             process.n_leaks,
-                             process.end_time.iso8601,
-                             process.pid,
-                             process.end_log_path].to_s)
+              debug([:leak,
+                     process.version,
+                     process.n_leaks,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.end_log_path].inspect)
               summary[:leak] = true
             end
 
             unless process.important_entries.empty?
-              @logger.info("Important entries:")
+              info("Important entries:")
               process.important_entries.each_with_index do |entry, i|
-                @logger.info("#{entry.timestamp.iso8601}: " +
-                             "#{entry.pid}: " +
-                             "#{entry.thread_id}: " +
-                             "#{entry.log_level}: " +
-                             "#{entry.message}")
+                info("#{entry.timestamp.iso8601}: " +
+                     "#{entry.pid}: " +
+                     "#{entry.thread_id}: " +
+                     "#{entry.log_level}: " +
+                     "#{entry.message}")
               end
             end
 
@@ -233,27 +227,27 @@ module GroongaQueryLog
               statistic.start_time < start_time
             end
             unless target_parsing_statistics.empty?
-              @logger.info("Running queries:")
+              info("Running queries:")
               target_parsing_statistics.each do |statistic|
-                @logger.info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
               summary[:unfinished] = true
             end
             unless @unflushed_statistics.empty?
-              @logger.info("Unflushed commands in " +
-                           "#{start_time.iso8601}/#{end_time.iso8601}")
+              info("Unflushed commands in " +
+                   "#{start_time.iso8601}/#{end_time.iso8601}")
               @unflushed_statistics.each do |statistic|
-                @logger.info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
               summary[:unflushed] = true
             end
           end
-          @logger.info("Summary:")
-          @logger.info(summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
+          info("Summary:",
+               summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
           if summary.value?(true)
-            @logger.info("NG: Please check the display and logs.")
+            info("NG: Please check the display and logs.")
           else
-            @logger.info("OK: no problems.")
+            info("OK: no problems.")
           end
         end
 
@@ -364,6 +358,15 @@ module GroongaQueryLog
             end
           end
           @flushed = @unflushed_statistics.empty?
+        end
+
+        def debug(*messages)
+          return unless @output_level == :debug
+          puts(*messages)
+        end
+
+        def info(*messages)
+          puts(*messages)
         end
       end
 
