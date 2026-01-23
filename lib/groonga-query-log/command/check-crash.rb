@@ -34,6 +34,11 @@ module GroongaQueryLog
           return false
         end
 
+        if log_paths.empty?
+          puts(@option_parser.help)
+          return false
+        end
+
         begin
           check(log_paths)
         rescue Interrupt
@@ -48,23 +53,33 @@ module GroongaQueryLog
       private
       def setup_options
         available_command_format = [:command, :uri]
-        @options = {}
-        @command_format = :command
-        @pretty_print = true
+        available_output_levels = [:info, :debug]
+        @options = {
+          command_format: :command,
+          output_level: :info,
+          pretty_print: true
+        }
 
         @option_parser = OptionParser.new do |parser|
           parser.version = VERSION
           parser.banner += " LOG1 ..."
           parser.on("--command-format=FORMAT",
                     available_command_format,
-                    "Specify the output format of the Groonga command that had a problem. [#{@command_format}]",
+                    "Specify the output format of the Groonga command that had a problem. [#{@options[:command_format]}]",
                     "(#{available_command_format.join(", ")})") do |format|
-            @command_format = format
+            @options[:command_format] = format
           end
           parser.on("--[no-]pretty-print",
-                    "Specify to make command output easier to read. [#{@pretty_print}]",
+                    "Specify to make command output easier to read. [#{@options[:pretty_print]}]",
                     "Only available when `--command-format=command` is specified.") do |boolean|
-            @pretty_print = boolean
+            @options[:pretty_print] = boolean
+          end
+          parser.on("--output-level=LEVEL",
+                    available_output_levels,
+                    "Specify the output level. [#{@options[:output_level]}]",
+                    "Specifying 'debug' displays detailed information.",
+                    "(#{available_output_levels.join(", ")})") do |output_level|
+            @options[:output_level] = output_level
           end
         end
       end
@@ -80,9 +95,7 @@ module GroongaQueryLog
       end
 
       def check(log_paths)
-        checker = Checker.new(log_paths,
-                              command_format: @command_format,
-                              pretty_print: @pretty_print)
+        checker = Checker.new(log_paths, @options)
         checker.check
       end
 
@@ -127,57 +140,64 @@ module GroongaQueryLog
       end
 
       class Checker
-        def initialize(log_paths, command_format: :command, pretty_print: true)
+        def initialize(log_paths, options)
           split_log_paths(log_paths)
-          @command_format = command_format
-          @pretty_print = pretty_print
+          @options = options
         end
 
         def check
+          summary = {
+            crashed: false,
+            unflushed: false,
+            unfinished: false,
+            leak: false,
+          }
           processes = ProcessEnumerator.new(@general_log_paths)
           processes.each do |process|
             need_query_log_parsing = true
             if process.successfully_finished?
               need_query_log_parsing = false
-              p [:process,
-                 :success,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.start_log_path,
-                 process.end_log_path]
+              debug([:process,
+                     :success,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].inspect)
             elsif process.crashed?
-              p [:process,
-                 :crashed,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.start_log_path,
-                 process.end_log_path]
+              debug([:process,
+                     :crashed,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.start_log_path,
+                     process.end_log_path].inspect)
+              summary[:crashed] = true
             else
-              p [:process,
-                 :unfinished,
-                 process.version,
-                 process.start_time.iso8601,
-                 process.pid,
-                 process.start_log_path]
+              debug([:process,
+                     :unfinished,
+                     process.version,
+                     process.start_time.iso8601,
+                     process.pid,
+                     process.start_log_path].inspect)
             end
 
             unless process.n_leaks.zero?
-              p [:leak,
-                 process.version,
-                 process.n_leaks,
-                 process.end_time.iso8601,
-                 process.pid,
-                 process.end_log_path]
+              debug([:leak,
+                     process.version,
+                     process.n_leaks,
+                     process.end_time.iso8601,
+                     process.pid,
+                     process.end_log_path].inspect)
+              summary[:leak] = true
             end
 
             unless process.important_entries.empty?
-              puts("Important entries:")
+              info("Important entries:")
               process.important_entries.each_with_index do |entry, i|
-                puts("#{entry.timestamp.iso8601}: " +
+                info("#{entry.timestamp.iso8601}: " +
                      "#{entry.pid}: " +
                      "#{entry.thread_id}: " +
                      "#{entry.log_level}: " +
@@ -203,18 +223,27 @@ module GroongaQueryLog
               statistic.start_time < start_time
             end
             unless target_parsing_statistics.empty?
-              puts("Running queries:")
+              info("Running queries:")
               target_parsing_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
+              summary[:unfinished] = true
             end
             unless @unflushed_statistics.empty?
-              puts("Unflushed commands in " +
+              info("Unflushed commands in " +
                    "#{start_time.iso8601}/#{end_time.iso8601}")
               @unflushed_statistics.each do |statistic|
-                puts("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
               end
+              summary[:unflushed] = true
             end
+          end
+          info("Summary:",
+               summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
+          if summary.value?(true)
+            info("NG: Please check the display and logs.")
+          else
+            info("OK: no problems.")
           end
         end
 
@@ -235,11 +264,11 @@ module GroongaQueryLog
         end
 
         def formated_command(command)
-          if @command_format == :uri
+          if @options[:command_format] == :uri
             command.to_uri_format
           else
-            (@pretty_print ? "\n" : "") +
-              command.to_command_format(pretty_print: @pretty_print)
+            (@options[:pretty_print] ? "\n" : "") +
+              command.to_command_format(pretty_print: @options[:pretty_print])
           end
         end
 
@@ -325,6 +354,15 @@ module GroongaQueryLog
             end
           end
           @flushed = @unflushed_statistics.empty?
+        end
+
+        def debug(*messages)
+          return unless @options[:output_level] == :debug
+          puts(*messages)
+        end
+
+        def info(*messages)
+          puts(*messages)
         end
       end
 
