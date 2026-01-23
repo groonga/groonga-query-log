@@ -229,7 +229,7 @@ OUTPUT
 
       def test_only_opened
         output = [
-            [
+          [
             :process,
             :crashed,
             "99.9.9",
