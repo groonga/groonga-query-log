@@ -195,14 +195,7 @@ module GroongaQueryLog
             end
 
             unless process.important_entries.empty?
-              info("Important entries:")
-              process.important_entries.each_with_index do |entry, i|
-                info("#{entry.timestamp.iso8601}: " +
-                     "#{entry.pid}: " +
-                     "#{entry.thread_id}: " +
-                     "#{entry.log_level}: " +
-                     "#{entry.message}")
-              end
+              output_important_entries_info(process.important_entries)
             end
 
             next unless need_query_log_parsing
@@ -223,22 +216,15 @@ module GroongaQueryLog
               statistic.start_time < start_time
             end
             unless target_parsing_statistics.empty?
-              info("Running queries:")
-              target_parsing_statistics.each do |statistic|
-                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
-              end
               summary[:unfinished] = true
+              output_unfinished_info(target_parsing_statistics)
             end
             unless @unflushed_statistics.empty?
-              info("Unflushed commands in " +
-                   "#{start_time.iso8601}/#{end_time.iso8601}")
-              @unflushed_statistics.each do |statistic|
-                info("#{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
-              end
               summary[:unflushed] = true
+              output_unflushed_info(start_time, end_time)
             end
           end
-          info("Summary:",
+          info("\nSummary:",
                summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
           if summary.value?(true)
             info("NG: Please check the display and logs.")
@@ -363,6 +349,55 @@ module GroongaQueryLog
 
         def info(*messages)
           puts(*messages)
+        end
+
+        def output_important_entries_info(entries)
+          info("\n!!!",
+               "!!! Important entries",
+               "!!!",
+               "It contained logs that require checking.",
+               "If you need help, please feel free to contact the community: https://groonga.org/docs/community.html",
+               "===")
+          entries.each do |entry|
+            info("#{entry.timestamp.iso8601}: " +
+                 "#{entry.pid}: " +
+                 "#{entry.thread_id}: " +
+                 "#{entry.log_level}: " +
+                 "#{entry.message}")
+          end
+          info("====")
+        end
+
+        def output_statistics_info(message, tag, statistics)
+          info(message, "===")
+          statistics.each do |statistic|
+            info("[#{tag}] #{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
+          end
+          info("====")
+        end
+
+        def output_unfinished_info(statistics)
+          message = <<-MESSAGE
+
+!!!
+!!! [unfinished] Recovery information
+!!!
+Unfinished commands were found due to abnormal termination or other issues.
+It is safer to rebuild the target tables, columns, and indexes because the data may be corrupted.
+          MESSAGE
+          output_statistics_info(message, "unfinished", statistics)
+        end
+
+        def output_unflushed_info(start_time, end_time)
+          message = <<-MESSAGE
+
+!!!
+!!! [unflushed] Recovery information
+!!!
+There may be commands that were not flushed between #{start_time.iso8601} and #{end_time.iso8601}.
+These commands may not have been written to the database files, so please re-run them.
+          MESSAGE
+          output_statistics_info(message, "unflushed", @unflushed_statistics)
         end
       end
 
