@@ -224,7 +224,8 @@ module GroongaQueryLog
               output_unflushed_info(start_time, end_time)
             end
           end
-          info("\nSummary:",
+          info("",
+               "Summary:",
                summary.map {|k, v| "#{k}:#{v ? "yes" : "no"}" }.join(", "))
           if summary.value?(true)
             info("NG: Please check the display and logs.")
@@ -352,7 +353,8 @@ module GroongaQueryLog
         end
 
         def output_important_entries_info(entries)
-          info("\n!!!",
+          info("",
+               "!!!",
                "!!! Important entries",
                "!!!",
                "It contained logs that require checking.",
