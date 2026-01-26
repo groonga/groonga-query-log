@@ -24,6 +24,10 @@ by using groonga-query-log as a tool.
 
 TODO...
 
+### groonga-query-log-check-crash
+
+  * [doc/text/check-crash.md](doc/text/check-crash.md)
+
 ### groonga-query-log-detect-memory-leak
 
 TODO...
