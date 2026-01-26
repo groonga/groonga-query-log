@@ -327,15 +327,14 @@ module GroongaQueryLog
         def flushed_load?(statistic, flushed)
           table_key, columns_key = load_check_keys(statistic)
 
-          load_table_name = statistic.command.arguments[table_key]
-          return false unless flushed.key?(load_table_name)
-          arguments_columns = statistic.command.arguments[columns_key]
-          return true unless arguments_columns
-
-          arguments_columns.split(",").each do |name|
+          table_name = statistic.command.arguments[table_key]
+          return false unless flushed.key?(table_name)
+          columns = statistic.command.arguments[columns_key]
+          return true unless columns
+          columns.split(",").each do |name|
             name.strip!
             next if name == "_key"
-            return false unless flushed["#{load_table_name}.#{name}"]
+            return false unless flushed["#{table_name}.#{name}"]
           end
           true
         end
