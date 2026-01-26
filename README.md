@@ -1,6 +1,6 @@
 # README
 
-[![Build Status](https://travis-ci.org/groonga/groonga-query-log.png?branch=master)](https://travis-ci.org/groonga/groonga-query-log)
+[![Test](https://github.com/groonga/groonga-query-log/actions/workflows/test.yml/badge.svg)](https://github.com/groonga/groonga-query-log/actions/workflows/test.yml)
 
 ## Name
 
@@ -54,10 +54,9 @@ TODO...
   * [groonga-command-parser](http://rubygems.org/gems/groonga-command-parser)
   * [groonga-client](http://rubygems.org/gems/groonga-client)
 
-## Mailing list
+## Community
 
-  * English: [groonga-talk@lists.sourceforge.net](https://lists.sourceforge.net/lists/listinfo/groonga-talk)
-  * Japanese: [groonga-dev@lists.sourceforge.jp](http://lists.sourceforge.jp/mailman/listinfo/groonga-dev)
+See [the community documentation](https://groonga.org/docs/community.html) for details.
 
 ## Thanks
 
