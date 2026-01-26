@@ -28,6 +28,10 @@ class CheckCrashCommandTest < Test::Unit::TestCase
     super("check-crash", *components)
   end
 
+  def crash_log_path
+    fixture_path("process", "crash.log")
+  end
+
   def run_command(*command_line)
     super(@command, command_line)
   end
@@ -55,73 +59,70 @@ OUTPUT
                  error.message)
   end
 
-  def test_command_format_pretty_print
-    output = [
-      "Important entries:",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-      "2000-01-01T00:00:01+09:00: ",
-      "load \\",
-      "  --table \"Data\"",
-      "Summary:",
-      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
-      "NG: Please check the display and logs.",
-    ].join("\n") + "\n"
-    assert_equal([true, output],
-                 run_command("--command-format=command",
-                             fixture_path("process", "crash.log"),
-                             fixture_path("query", "load-unflushed", "no-flush.log")))
-  end
+  class FormatInfoTest < self
+    def expected(unflushed_command)
+      <<-OUTPUT
 
-  def test_command_format_one_line
-    output = [
-      "Important entries:",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-      "2000-01-01T00:00:01+09:00: load --table \"Data\"",
-      "Summary:",
-      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
-      "NG: Please check the display and logs.",
-    ].join("\n") + "\n"
-    assert_equal([true, output],
-                 run_command("--command-format=command",
-                             "--no-pretty-print",
-                             fixture_path("process", "crash.log"),
-                             fixture_path("query", "load-unflushed", "no-flush.log")))
-  end
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
 
-  def test_uri_format
-    output = [
-      "Important entries:",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-      "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-      "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-      "2000-01-01T00:00:01+09:00: /d/load?table=Data",
-      "Summary:",
-      "crashed:yes, unflushed:yes, unfinished:no, leak:no",
-      "NG: Please check the display and logs.",
-    ].join("\n") + "\n"
-    assert_equal([true, output],
-                 run_command("--command-format=uri",
-                             fixture_path("process", "crash.log"),
-                             fixture_path("query", "load-unflushed", "no-flush.log")))
+!!!
+!!! [unflushed] Recovery information
+!!!
+There may be commands that were not flushed between 2000-01-01T00:00:00+09:00 and 2000-01-01T12:00:00+09:00.
+These commands may not have been written to the database files, so please re-run them.
+===
+[unflushed] 2000-01-01T00:00:01+09:00: #{unflushed_command}
+===
+
+Summary:
+crashed:yes, unflushed:yes, unfinished:no, leak:no
+NG: Please check the display and logs.
+      OUTPUT
+    end
+
+    def test_command_format_pretty_print
+      assert_equal([true, expected("\nload \\\n  --table \"Data\"")],
+                   run_command("--command-format=command",
+                               fixture_path("process", "crash.log"),
+                               fixture_path("query", "load", "unflushed", "no-flush.log")))
+    end
+
+    def test_command_format_one_line
+      assert_equal([true, expected("load --table \"Data\"")],
+                   run_command("--command-format=command",
+                               "--no-pretty-print",
+                               crash_log_path,
+                               fixture_path("query", "load", "unflushed", "no-flush.log")))
+    end
+
+    def test_uri_format
+      assert_equal([true, expected("/d/load?table=Data")],
+                   run_command("--command-format=uri",
+                               crash_log_path,
+                               fixture_path("query", "load", "unflushed", "no-flush.log")))
+    end
   end
 
   class OutputLevelInfoTest < self
     def test_normal
       output = <<-OUTPUT
+
 Summary:
 crashed:no, unflushed:no, unfinished:no, leak:no
 OK: no problems.
 OUTPUT
       assert_equal([true, output],
                    run_command(fixture_path("process", "normal.log"),
-                               fixture_path("query", "load-flushed", "only-opened.log")))
+                               fixture_path("query", "load", "flushed", "only-opened.log")))
     end
 
     # todo: add other tests
@@ -135,162 +136,235 @@ OUTPUT
     end
 
     def test_normal
-      output = [
-        [
-          :process,
-          :success,
-          "99.9.9",
-          "2000-01-01T00:00:00+09:00",
-          "2000-01-01T00:00:10+09:00",
-          nil,
-          fixture_path("process", "normal.log"),
-          fixture_path("process", "normal.log"),
-        ].inspect,
-        "Summary:",
-        "crashed:no, unflushed:no, unfinished:no, leak:no",
-        "OK: no problems.",
-      ].join("\n") + "\n"
+      output = <<-OUTPUT
+#{[
+  :process,
+  :success,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T00:00:10+09:00",
+  nil,
+  fixture_path("process", "normal.log"),
+  fixture_path("process", "normal.log"),
+].inspect}
 
+Summary:
+crashed:no, unflushed:no, unfinished:no, leak:no
+OK: no problems.
+      OUTPUT
       assert_equal([true, output],
                    run_command(fixture_path("process", "normal.log"),
-                               fixture_path("query", "load-flushed", "only-opened.log")))
+                               fixture_path("query", "load", "flushed", "only-opened.log")))
     end
 
     def test_leak
-      output = [
-        [
-          :process,
-          :success,
-          "99.9.9",
-          "2000-01-01T00:00:00+09:00",
-          "2000-01-01T00:00:10+09:00",
-          nil,
-          fixture_path("process", "leak.log"),
-          fixture_path("process", "leak.log"),
-        ].inspect,
-        [
-          :leak,
-          "99.9.9",
-          3,
-          "2000-01-01T00:00:10+09:00",
-          nil,
-          fixture_path("process", "leak.log"),
-        ].inspect,
-        "Summary:",
-        "crashed:no, unflushed:no, unfinished:no, leak:yes",
-        "NG: Please check the display and logs.",
-      ].join("\n") + "\n"
+      output = <<-OUTPUT
+#{[
+  :process,
+  :success,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T00:00:10+09:00",
+  nil,
+  fixture_path("process", "leak.log"),
+  fixture_path("process", "leak.log"),
+].inspect}
+#{[
+  :leak,
+  "99.9.9",
+  3,
+  "2000-01-01T00:00:10+09:00",
+  nil,
+  fixture_path("process", "leak.log"),
+].inspect}
+
+Summary:
+crashed:no, unflushed:no, unfinished:no, leak:yes
+NG: Please check the display and logs.
+      OUTPUT
       assert_equal([true, output],
                    run_command(fixture_path("process", "leak.log"),
-                               fixture_path("query", "load-flushed", "only-opened.log")))
+                               fixture_path("query", "load", "flushed", "only-opened.log")))
     end
 
-    sub_test_case("load and flushed on crash") do
-      def test_target_name
-        output = [
-          [
-            :process,
-            :crashed,
-            "99.9.9",
-            "2000-01-01T00:00:00+09:00",
-            "2000-01-01T12:00:00+09:00",
-            1,
-            fixture_path("process", "crash.log"),
-            fixture_path("process", "crash.log"),
-          ].inspect,
-          "Important entries:",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-          "Summary:",
-          "crashed:yes, unflushed:no, unfinished:no, leak:no",
-          "NG: Please check the display and logs.",
-        ].join("\n") + "\n"
-        assert_equal([true, output],
-                     run_command(fixture_path("process", "crash.log"),
-                                 fixture_path("query", "load-flushed", "with-target-name.log")))
+    sub_test_case("unfinished") do
+      def expected(unfinished_command)
+        <<-OUTPUT
+#{[
+  :process,
+  :crashed,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T12:00:00+09:00",
+  1,
+  fixture_path("process", "crash.log"),
+  fixture_path("process", "crash.log"),
+].inspect}
+
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
+
+!!!
+!!! [unfinished] Recovery information
+!!!
+Unfinished commands were found due to abnormal termination or other issues.
+It is safer to rebuild the target tables, columns, and indexes because the data may be corrupted.
+===
+[unfinished] 2000-01-01T00:00:01+09:00: #{unfinished_command}
+===
+
+Summary:
+crashed:yes, unflushed:no, unfinished:yes, leak:no
+NG: Please check the display and logs.
+        OUTPUT
       end
 
-      def test_only_opened
-        output = [
-          [
-            :process,
-            :crashed,
-            "99.9.9",
-            "2000-01-01T00:00:00+09:00",
-            "2000-01-01T12:00:00+09:00",
-            1,
-            fixture_path("process", "crash.log"),
-            fixture_path("process", "crash.log"),
-          ].inspect,
-          "Important entries:",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-          "Summary:",
-          "crashed:yes, unflushed:no, unfinished:no, leak:no",
-          "NG: Please check the display and logs.",
-        ].join("\n") + "\n"
-        assert_equal([true, output],
-                     run_command(fixture_path("process", "crash.log"),
-                                 fixture_path("query", "load-flushed", "only-opened.log")))
+      def test_load
+        assert_equal([true, expected("/d/load?table=Data")],
+                     run_command(crash_log_path,
+                                 fixture_path("query", "load", "unfinished.log")))
       end
     end
 
-    sub_test_case("load and unflushed on crash") do
-      def test_no_flush
-        output = [
-          [
-            :process,
-            :crashed,
-            "99.9.9",
-            "2000-01-01T00:00:00+09:00",
-            "2000-01-01T12:00:00+09:00",
-            1,
-            fixture_path("process", "crash.log"),
-            fixture_path("process", "crash.log"),
-          ].inspect,
-          "Important entries:",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-          "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-          "2000-01-01T00:00:01+09:00: /d/load?table=Data",
-          "Summary:",
-          "crashed:yes, unflushed:yes, unfinished:no, leak:no",
-          "NG: Please check the display and logs.",
-        ].join("\n") + "\n"
-        assert_equal([true, output],
-                     run_command(fixture_path("process", "crash.log"),
-                                 fixture_path("query", "load-unflushed", "no-flush.log")))
+    sub_test_case("flushed") do
+      def expected
+        <<-OUTPUT
+#{[
+  :process,
+  :crashed,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T12:00:00+09:00",
+  1,
+  fixture_path("process", "crash.log"),
+  fixture_path("process", "crash.log"),
+].inspect}
+
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
+
+Summary:
+crashed:yes, unflushed:no, unfinished:no, leak:no
+NG: Please check the display and logs.
+        OUTPUT
       end
 
-      def test_only_opened
-        output = [
-          [
-            :process,
-            :crashed,
-            "99.9.9",
-            "2000-01-01T00:00:00+09:00",
-            "2000-01-01T12:00:00+09:00",
-            1,
-            fixture_path("process", "crash.log"),
-            fixture_path("process", "crash.log"),
-          ].inspect,
-          "Important entries:",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace",
-          "2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------",
-          # Unflushed should be detected.
-          # "Unflushed commands in 2000-01-01T00:00:00+09:00/2000-01-01T12:00:00+09:00",
-          # "2000-01-01T00:00:01+09:00: /d/load?table=Data",
-          "Summary:",
-          "crashed:yes, unflushed:no, unfinished:no, leak:no",
-          "NG: Please check the display and logs.",
-        ].join("\n") + "\n"
-        assert_equal([true, output],
-                     run_command(fixture_path("process", "crash.log"),
-                                 fixture_path("query", "load-unflushed", "only-opened.log")))
+      sub_test_case("load") do
+        def query_log_path(*components)
+          fixture_path("query", "load", "flushed", *components)
+        end
+
+        def test_target_name
+          assert_equal([true, expected],
+                       run_command(crash_log_path, query_log_path("target-name.log")))
+        end
+        def test_only_opened
+          assert_equal([true, expected],
+                       run_command(crash_log_path, query_log_path("only-opened.log")))
+        end
+      end
+    end
+
+    sub_test_case("unflushed") do
+      def expected
+        <<-OUTPUT
+#{[
+  :process,
+  :crashed,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T12:00:00+09:00",
+  1,
+  fixture_path("process", "crash.log"),
+  fixture_path("process", "crash.log"),
+].inspect}
+
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
+
+!!!
+!!! [unflushed] Recovery information
+!!!
+There may be commands that were not flushed between 2000-01-01T00:00:00+09:00 and 2000-01-01T12:00:00+09:00.
+These commands may not have been written to the database files, so please re-run them.
+===
+[unflushed] 2000-01-01T00:00:01+09:00: /d/load?table=Data
+===
+
+Summary:
+crashed:yes, unflushed:yes, unfinished:no, leak:no
+NG: Please check the display and logs.
+        OUTPUT
+      end
+
+      sub_test_case("load") do
+        def query_log_path(*components)
+          fixture_path("query", "load", "unflushed", *components)
+        end
+
+        def test_no_flush
+          assert_equal([true, expected],
+                       run_command(crash_log_path, query_log_path("no-flush.log")))
+        end
+
+        def test_only_opened
+          # TODO: Unflushed should be detected.
+          # [unflushed] 2000-01-01T00:00:01+09:00: /d/load?table=Data
+
+          output = <<-OUTPUT
+#{[
+  :process,
+  :crashed,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T12:00:00+09:00",
+  1,
+  fixture_path("process", "crash.log"),
+  fixture_path("process", "crash.log"),
+].inspect}
+
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
+
+Summary:
+crashed:yes, unflushed:no, unfinished:no, leak:no
+NG: Please check the display and logs.
+          OUTPUT
+          assert_equal([true, output],
+                       run_command(crash_log_path, query_log_path("only-opened.log")))
+        end
       end
     end
   end
