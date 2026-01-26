@@ -274,7 +274,7 @@ module GroongaQueryLog
             @flushed = false
             @unflushed_statistics << statistic
           when "io_flush"
-            check_io_flush(command)
+            check_io_flush(statistic)
           when "database_unmap"
             @unflushed_statistics.reject! do |statistic|
               command.name == "load"
@@ -293,7 +293,17 @@ module GroongaQueryLog
           end
         end
 
-        def check_io_flush(io_flush)
+        def flushed_objects(statistic)
+          objects = {}
+          statistic.operations.each do |operation|
+            object = operation[:name][/\Aflush\[(.+)\]/, 1]
+            objects[object] = true unless object.nil?
+          end
+          objects
+        end
+
+        def check_io_flush(statistic)
+          io_flush = statistic.command
           # TODO: Improve flushed target detection.
           if io_flush.target_name
             if io_flush.recursive?
@@ -324,19 +334,37 @@ module GroongaQueryLog
             end
           else
             if io_flush.recursive?
-              @unflushed_statistics.clear
-            else
+              flushed = flushed_objects(statistic)
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
-                when /_create\z/
-                  true # TODO: Need io_flush for the target
-                when /_remove\z/, /_rename\z/
-                  true
-                when "plugin_register", "plugin_unregister"
-                  true
+                when "load"
+                  # TODO: Not enough
+                  flushed.key?(statistic.command.table)
+                when "delete"
+                  # TODO: Not enough
+                  flushed.key?(statistic.command.table)
+                when "truncate"
+                  # TODO: Not enough
+                  flushed.key?(statistic.command.target_name)
+                when "table_create"
+                  # TODO: Not enough
+                  flushed.key?(statistic.command.name)
+                when "column_create"
+                  # TODO: Not enough
+                  flushed.key?("#{statistic.command.table}.#{statistic.command.name}")
                 else
                   false
                 end
+              end
+            end
+            @unflushed_statistics.reject! do |statistic|
+              case statistic.command.command_name
+              when /_remove\z/, /_rename\z/
+                true
+              when "plugin_register", "plugin_unregister"
+                true
+              else
+                false
               end
             end
           end

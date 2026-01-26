@@ -227,10 +227,18 @@ NG: Please check the display and logs.
         OUTPUT
       end
 
-      def test_load
-        assert_equal([true, expected("/d/load?table=Data")],
+      data(
+        load: { command: "load", unfinished_command: "/d/load?table=Data" },
+        delete: { command: "delete", unfinished_command: "/d/delete?key=2&table=Data" },
+        column_create: {
+          command: "column_create",
+          unfinished_command: "/d/column_create?flags=COLUMN_INDEX%7CWITH_POSITION&name=blog_title&source=title&table=Terms&type=Site",
+        },
+      )
+      def test_unfinished
+        assert_equal([true, expected(data[:unfinished_command])],
                      run_command(crash_log_path,
-                                 fixture_path("query", "load", "unfinished.log")))
+                                 fixture_path("query", data[:command], "unfinished.log")))
       end
     end
 
@@ -265,24 +273,25 @@ NG: Please check the display and logs.
         OUTPUT
       end
 
-      sub_test_case("load") do
-        def query_log_path(*components)
-          fixture_path("query", "load", "flushed", *components)
-        end
-
-        def test_target_name
-          assert_equal([true, expected],
-                       run_command(crash_log_path, query_log_path("target-name.log")))
-        end
-        def test_only_opened
-          assert_equal([true, expected],
-                       run_command(crash_log_path, query_log_path("only-opened.log")))
-        end
+      data(
+        "command:load flush:target-name": { command: "load", flush_case: "target-name" },
+        "command:load flush:only-opened": { command: "load", flush_case: "only-opened" },
+        "command:delete flush:target-name": { command: "delete", flush_case: "target-name" },
+        "command:delete flush:only-opened": { command: "delete", flush_case: "only-opened" },
+        "command:truncate flush:target-name": { command: "truncate", flush_case: "target-name" },
+        "command:truncate flush:only-opened": { command: "truncate", flush_case: "only-opened" },
+        "command:table_create flush:only-opened": { command: "table_create", flush_case: "only-opened" },
+        "command:column_create flush:only-opened": { command: "column_create", flush_case: "only-opened" },
+      )
+      def test_flushed(data)
+        assert_equal([true, expected],
+                     run_command(crash_log_path,
+                                 fixture_path("query", data[:command], "flushed", "#{data[:flush_case]}.log")))
       end
     end
 
     sub_test_case("unflushed") do
-      def expected
+      def expected(unflushed_command)
         <<-OUTPUT
 #{[
   :process,
@@ -312,7 +321,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 There may be commands that were not flushed between 2000-01-01T00:00:00+09:00 and 2000-01-01T12:00:00+09:00.
 These commands may not have been written to the database files, so please re-run them.
 ===
-[unflushed] 2000-01-01T00:00:01+09:00: /d/load?table=Data
+[unflushed] 2000-01-01T00:00:01+09:00: #{unflushed_command}
 ===
 
 Summary:
@@ -321,50 +330,62 @@ NG: Please check the display and logs.
         OUTPUT
       end
 
-      sub_test_case("load") do
-        def query_log_path(*components)
-          fixture_path("query", "load", "unflushed", *components)
-        end
-
-        def test_no_flush
-          assert_equal([true, expected],
-                       run_command(crash_log_path, query_log_path("no-flush.log")))
-        end
-
-        def test_only_opened
-          # TODO: Unflushed should be detected.
-          # [unflushed] 2000-01-01T00:00:01+09:00: /d/load?table=Data
-
-          output = <<-OUTPUT
-#{[
-  :process,
-  :crashed,
-  "99.9.9",
-  "2000-01-01T00:00:00+09:00",
-  "2000-01-01T12:00:00+09:00",
-  1,
-  fixture_path("process", "crash.log"),
-  fixture_path("process", "crash.log"),
-].inspect}
-
-!!!
-!!! Important entries
-!!!
-It contained logs that require checking.
-If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
-===
-2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
-2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
-2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-===
-
-Summary:
-crashed:yes, unflushed:no, unfinished:no, leak:no
-NG: Please check the display and logs.
-          OUTPUT
-          assert_equal([true, output],
-                       run_command(crash_log_path, query_log_path("only-opened.log")))
-        end
+      data(
+        "command:load flush:no": {
+          command: "load",
+          flush_case: "no-flush",
+          unflushed_command: "/d/load?table=Data"
+        },
+        "command:load flush:only-opened": {
+          command: "load",
+          flush_case: "only-opened",
+          unflushed_command: "/d/load?table=Data"
+        },
+        "command:delete flush:no": {
+          command: "delete",
+          flush_case: "no-flush",
+          unflushed_command: "/d/delete?key=2&table=Data"
+        },
+        "command:delete flush:only-opened": {
+          command: "delete",
+          flush_case: "only-opened",
+          unflushed_command: "/d/delete?key=2&table=Data"
+        },
+        "command:truncate flush:no": {
+          command: "truncate",
+          flush_case: "no-flush",
+          unflushed_command: "/d/truncate?target_name=Data"
+        },
+        "command:truncate flush:only-opened": {
+          command: "truncate",
+          flush_case: "only-opened",
+          unflushed_command: "/d/truncate?target_name=Data"
+        },
+        "command:table_create flush:no": {
+          command: "table_create",
+          flush_case: "no-flush",
+          unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
+        },
+        "command:table_create flush:only-opened": {
+          command: "table_create",
+          flush_case: "only-opened",
+          unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
+        },
+        "command:column_create flush:no": {
+          command: "column_create",
+          flush_case: "no-flush",
+          unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
+        },
+        "command:column_create flush:only-opened": {
+          command: "column_create",
+          flush_case: "only-opened",
+          unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
+        },
+      )
+      def test_unflushed(data)
+        assert_equal([true, expected(data[:unflushed_command])],
+                     run_command(crash_log_path,
+                                 fixture_path("query", data[:command], "unflushed", "#{data[:flush_case]}.log")))
       end
     end
   end
