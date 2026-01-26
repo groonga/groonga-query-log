@@ -294,11 +294,12 @@ module GroongaQueryLog
         end
 
         def flushed_objects(statistic)
-          statistic.operations.select do |operation|
-            operation[:name].start_with?("flush[")
-          end.map do |operation|
-            operation[:name][/\Aflush\[(.+)\]/, 1]
+          objects = {}
+          statistic.operations.each do |operation|
+            object = operation[:name][/\Aflush\[(.+)\]/, 1]
+            objects[object] = true unless object.nil?
           end
+          objects
         end
 
         def check_io_flush(statistic)
@@ -338,19 +339,19 @@ module GroongaQueryLog
                 case statistic.command.command_name
                 when "load"
                   # TODO: Not enough
-                  flushed.include?(statistic.command.table)
+                  flushed.key?(statistic.command.table)
                 when "delete"
                   # TODO: Not enough
-                  flushed.include?(statistic.command.table)
+                  flushed.key?(statistic.command.table)
                 when "truncate"
                   # TODO: Not enough
-                  flushed.include?(statistic.command.target_name)
+                  flushed.key?(statistic.command.target_name)
                 when "table_create"
                   # TODO: Not enough
-                  flushed.include?(statistic.command.name)
+                  flushed.key?(statistic.command.name)
                 when "column_create"
                   # TODO: Not enough
-                  flushed.include?("#{statistic.command.table}.#{statistic.command.name}")
+                  flushed.key?("#{statistic.command.table}.#{statistic.command.name}")
                 else
                   false
                 end
