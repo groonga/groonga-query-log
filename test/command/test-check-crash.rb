@@ -72,7 +72,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-====
+===
 
 !!!
 !!! [unflushed] Recovery information
@@ -81,7 +81,7 @@ There may be commands that were not flushed between 2000-01-01T00:00:00+09:00 an
 These commands may not have been written to the database files, so please re-run them.
 ===
 [unflushed] 2000-01-01T00:00:01+09:00: #{unflushed_command}
-====
+===
 
 Summary:
 crashed:yes, unflushed:yes, unfinished:no, leak:no
@@ -210,7 +210,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-====
+===
 
 !!!
 !!! [unfinished] Recovery information
@@ -219,7 +219,7 @@ Unfinished commands were found due to abnormal termination or other issues.
 It is safer to rebuild the target tables, columns, and indexes because the data may be corrupted.
 ===
 [unfinished] 2000-01-01T00:00:01+09:00: #{unfinished_command}
-====
+===
 
 Summary:
 crashed:yes, unflushed:no, unfinished:yes, leak:no
@@ -257,7 +257,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-====
+===
 
 Summary:
 crashed:yes, unflushed:no, unfinished:no, leak:no
@@ -304,7 +304,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-====
+===
 
 !!!
 !!! [unflushed] Recovery information
@@ -313,7 +313,7 @@ There may be commands that were not flushed between 2000-01-01T00:00:00+09:00 an
 These commands may not have been written to the database files, so please re-run them.
 ===
 [unflushed] 2000-01-01T00:00:01+09:00: /d/load?table=Data
-====
+===
 
 Summary:
 crashed:yes, unflushed:yes, unfinished:no, leak:no
@@ -356,7 +356,7 @@ If you need help, please feel free to contact the community: https://groonga.org
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
 2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
-====
+===
 
 Summary:
 crashed:yes, unflushed:no, unfinished:no, leak:no

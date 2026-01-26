@@ -367,7 +367,7 @@ module GroongaQueryLog
                  "#{entry.log_level}: " +
                  "#{entry.message}")
           end
-          info("====")
+          info("===")
         end
 
         def output_statistics_info(message, tag, statistics)
@@ -375,7 +375,7 @@ module GroongaQueryLog
           statistics.each do |statistic|
             info("[#{tag}] #{statistic.start_time.iso8601}: #{formated_command(statistic.command)}")
           end
-          info("====")
+          info("===")
         end
 
         def output_unfinished_info(statistics)
