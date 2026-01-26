@@ -259,6 +259,12 @@ module GroongaQueryLog
           end
         end
 
+        def with_load?(statistic)
+          statistic.operations.any? do |operation|
+            operation[:name] == "load"
+          end
+        end
+
         def check_query_log_statistic(path, statistic)
           command = statistic.command
           return if command.nil?
@@ -290,6 +296,11 @@ module GroongaQueryLog
           when "plugin_register", "plugin_unregister"
             @flushed = false
             @unflushed_statistics << statistic
+          when "select"
+            if with_load?(statistic)
+              @flushed = false
+              @unflushed_statistics << statistic
+            end
           end
         end
 
@@ -302,14 +313,40 @@ module GroongaQueryLog
           objects
         end
 
-        def check_io_flush(statistic)
-          io_flush = statistic.command
+        def load_check_keys(statistic)
+          case statistic.command.command_name
+          when "load"
+            [:table, :columns]
+          when "select"
+            [:load_table, :load_columns]
+          else
+            raise "Unsupported command name"
+          end
+        end
+
+        def flushed_load?(statistic, flushed)
+          table_key, columns_key = load_check_keys(statistic)
+
+          table_name = statistic.command.arguments[table_key]
+          return false unless flushed.key?(table_name)
+          columns = statistic.command.arguments[columns_key]
+          return true unless columns
+          columns.split(",").each do |name|
+            name.strip!
+            next if name == "_key"
+            return false unless flushed["#{table_name}.#{name}"]
+          end
+          true
+        end
+
+        def check_io_flush(io_flush_statistic)
+          io_flush = io_flush_statistic.command
           if io_flush.target_name
             if io_flush.recursive_dependent?
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
-                when "load"
-                  statistic.command.table == io_flush.target_name
+                when "load", "select"
+                  flushed_load?(statistic, flushed_objects(io_flush_statistic))
                 when "delete"
                   statistic.command.table == io_flush.target_name
                 when "truncate"
@@ -325,12 +362,12 @@ module GroongaQueryLog
             end
           else
             if io_flush.recursive?
-              flushed = flushed_objects(statistic)
+              flushed = flushed_objects(io_flush_statistic)
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
-                when "load"
+                when "load", "select"
                   # TODO: Not enough
-                  flushed.key?(statistic.command.table)
+                  flushed_load?(statistic, flushed_objects(io_flush_statistic))
                 when "delete"
                   # TODO: Not enough
                   flushed.key?(statistic.command.table)
