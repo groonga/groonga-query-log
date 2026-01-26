@@ -274,14 +274,41 @@ NG: Please check the display and logs.
       end
 
       data(
-        "command:load flush:target-name": { command: "load", flush_case: "target-name" },
+        # load
+        "command:load flush:target-name&recursive=dependent": {
+          command: "load",
+          flush_case: "target-name-recursive-dependent",
+        },
         "command:load flush:only-opened": { command: "load", flush_case: "only-opened" },
-        "command:delete flush:target-name": { command: "delete", flush_case: "target-name" },
+        "command:load flush:recursive=yes": { command: "load", flush_case: "recursive-yes" },
+        # delete
+        "command:delete flush:target-name&recursive=dependent": {
+          command: "delete",
+          flush_case: "target-name-recursive-dependent",
+        },
         "command:delete flush:only-opened": { command: "delete", flush_case: "only-opened" },
-        "command:truncate flush:target-name": { command: "truncate", flush_case: "target-name" },
+        "command:delete flush:recursive=yes": { command: "delete", flush_case: "recursive-yes" },
+        # truncate
+        "command:truncate flush:target-name&recursive=dependent": {
+          command: "truncate",
+          flush_case: "target-name-recursive-dependent",
+        },
         "command:truncate flush:only-opened": { command: "truncate", flush_case: "only-opened" },
+        "command:truncate flush:recursive=yes": { command: "truncate", flush_case: "recursive-yes" },
+        # table_create
+        "command:table_create flush:target-name&recursive=dependent": {
+          command: "table_create",
+          flush_case: "target-name-recursive-dependent",
+        },
         "command:table_create flush:only-opened": { command: "table_create", flush_case: "only-opened" },
+        "command:table_create flush:recursive=yes": { command: "table_create", flush_case: "recursive-yes" },
+        # column_create
+        "command:column_create flush:target-name&recursive=dependent": {
+          command: "column_create",
+          flush_case: "target-name-recursive-dependent",
+        },
         "command:column_create flush:only-opened": { command: "column_create", flush_case: "only-opened" },
+        "command:column_create flush:recursive=yes": { command: "column_create", flush_case: "recursive-yes" },
       )
       def test_flushed(data)
         assert_equal([true, expected],
@@ -331,6 +358,7 @@ NG: Please check the display and logs.
       end
 
       data(
+        # load
         "command:load flush:no": {
           command: "load",
           flush_case: "no-flush",
@@ -341,6 +369,22 @@ NG: Please check the display and logs.
           flush_case: "only-opened",
           unflushed_command: "/d/load?table=Data"
         },
+        "command:load flush:recursive=no": {
+          command: "load",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/load?table=Data"
+        },
+        "command:load flush:target-name&recursive=yes": {
+          command: "load",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/load?table=Data"
+        },
+        "command:load flush:target-name&recursive=no": {
+          command: "load",
+          flush_case: "target-name-recursive-no",
+          unflushed_command: "/d/load?table=Data"
+        },
+        # delete
         "command:delete flush:no": {
           command: "delete",
           flush_case: "no-flush",
@@ -351,6 +395,22 @@ NG: Please check the display and logs.
           flush_case: "only-opened",
           unflushed_command: "/d/delete?key=2&table=Data"
         },
+        "command:delete flush:recursive=no": {
+          command: "delete",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/delete?key=2&table=Data"
+        },
+        "command:delete flush:target-name&recursive=yes": {
+          command: "delete",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/delete?key=2&table=Data"
+        },
+        "command:delete flush:target-name&recursive=no": {
+          command: "delete",
+          flush_case: "target-name-recursive-no",
+          unflushed_command: "/d/delete?key=2&table=Data"
+        },
+        # truncate
         "command:truncate flush:no": {
           command: "truncate",
           flush_case: "no-flush",
@@ -361,6 +421,22 @@ NG: Please check the display and logs.
           flush_case: "only-opened",
           unflushed_command: "/d/truncate?target_name=Data"
         },
+        "command:truncate flush:recursive=no": {
+          command: "truncate",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/truncate?target_name=Data"
+        },
+        "command:truncate flush:target-name&recursive=yes": {
+          command: "truncate",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/truncate?target_name=Data"
+        },
+        "command:truncate flush:target-name&recursive=no": {
+          command: "truncate",
+          flush_case: "target-name-recursive-no",
+          unflushed_command: "/d/truncate?target_name=Data"
+        },
+        # table_create
         "command:table_create flush:no": {
           command: "table_create",
           flush_case: "no-flush",
@@ -371,6 +447,22 @@ NG: Please check the display and logs.
           flush_case: "only-opened",
           unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
         },
+        "command:table_create flush:recursive=no": {
+          command: "table_create",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
+        },
+        "command:table_create flush:target-name&recursive=yes": {
+          command: "table_create",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
+        },
+        "command:table_create flush:target-name&recursive=no": {
+          command: "table_create",
+          flush_case: "target-name-recursive-no",
+          unflushed_command: "/d/table_create?flags=TABLE_HASH_KEY&key_type=ShortText&name=Data"
+        },
+        # column_create
         "command:column_create flush:no": {
           command: "column_create",
           flush_case: "no-flush",
@@ -379,6 +471,21 @@ NG: Please check the display and logs.
         "command:column_create flush:only-opened": {
           command: "column_create",
           flush_case: "only-opened",
+          unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
+        },
+        "command:column_create flush:recursive=no": {
+          command: "column_create",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
+        },
+        "command:column_create flush:target-name&recursive=yes": {
+          command: "column_create",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
+        },
+        "command:column_create flush:target-name&recursive=no": {
+          command: "column_create",
+          flush_case: "target-name-recursive-no",
           unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
         },
       )
