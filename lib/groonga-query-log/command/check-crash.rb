@@ -320,7 +320,7 @@ module GroongaQueryLog
           when "select"
             [:load_table, :load_columns]
           else
-            [nil, nil]
+            raise "Unsupported command name"
           end
         end
 
