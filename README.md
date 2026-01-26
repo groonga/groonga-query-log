@@ -56,7 +56,7 @@ TODO...
 
 ## Community
 
-[Please see here.](https://groonga.org/docs/community.html)
+See [the community documentation](https://groonga.org/docs/community.html) for details.
 
 ## Thanks
 
