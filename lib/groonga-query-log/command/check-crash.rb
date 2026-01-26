@@ -259,6 +259,12 @@ module GroongaQueryLog
           end
         end
 
+        def with_load?(statistic)
+          statistic.operations.any? do |operation|
+            operation[:name] == "load"
+          end
+        end
+
         def check_query_log_statistic(path, statistic)
           command = statistic.command
           return if command.nil?
@@ -290,6 +296,11 @@ module GroongaQueryLog
           when "plugin_register", "plugin_unregister"
             @flushed = false
             @unflushed_statistics << statistic
+          when "select"
+            if with_load?(statistic)
+              @flushed = false
+              @unflushed_statistics << statistic
+            end
           end
         end
 
@@ -318,6 +329,8 @@ module GroongaQueryLog
                   statistic.command.name == io_flush.target_name
                 when "column_create"
                   "#{statistic.command.table}.#{statistic.command.name}" == io_flush.target_name
+                when "select"
+                  statistic.command.arguments[:load_table] == io_flush.target_name
                 else
                   false
                 end
@@ -343,6 +356,9 @@ module GroongaQueryLog
                 when "column_create"
                   # TODO: Not enough
                   flushed.key?("#{statistic.command.table}.#{statistic.command.name}")
+                when "select"
+                  # TODO: Not enough
+                  flushed.key?(statistic.command.arguments[:load_table])
                 else
                   false
                 end

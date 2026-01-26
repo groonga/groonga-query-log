@@ -234,6 +234,10 @@ NG: Please check the display and logs.
           command: "column_create",
           unfinished_command: "/d/column_create?flags=COLUMN_INDEX%7CWITH_POSITION&name=blog_title&source=title&table=Terms&type=Site",
         },
+        select_load: {
+          command: "select",
+          unfinished_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
       )
       def test_unfinished
         assert_equal([true, expected(data[:unfinished_command])],
@@ -309,6 +313,13 @@ NG: Please check the display and logs.
         },
         "command:column_create flush:only-opened": { command: "column_create", flush_case: "only-opened" },
         "command:column_create flush:recursive=yes": { command: "column_create", flush_case: "recursive-yes" },
+        # select (with load)
+        "command:select-load flush:target-name&recursive=dependent": {
+          command: "select",
+          flush_case: "target-name-recursive-dependent",
+        },
+        "command:select-load flush:only-opened": { command: "select", flush_case: "only-opened" },
+        "command:select-load flush:recursive=yes": { command: "select", flush_case: "recursive-yes" },
       )
       def test_flushed(data)
         assert_equal([true, expected],
@@ -488,12 +499,71 @@ NG: Please check the display and logs.
           flush_case: "target-name-recursive-no",
           unflushed_command: "/d/column_create?name=count&table=Data&type=Int32"
         },
+        # select (with load)
+        "command:select-load flush:no": {
+          command: "select",
+          flush_case: "no-flush",
+          unflushed_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
+        "command:select-load flush:only-opened": {
+          command: "select",
+          flush_case: "only-opened",
+          unflushed_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
+        "command:select-load flush:recursive=no": {
+          command: "select",
+          flush_case: "recursive-no",
+          unflushed_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
+        "command:select-load flush:target-name&recursive=yes": {
+          command: "select",
+          flush_case: "target-name-recursive-yes",
+          unflushed_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
+        "command:select-load flush:target-name&recursive=no": {
+          command: "select",
+          flush_case: "target-name-recursive-no",
+          unflushed_command: "/d/select?load_columns=_key%2Ccount&load_table=Data&load_values=_key%2Ccount&table=Raw",
+        },
       )
       def test_unflushed(data)
         assert_equal([true, expected(data[:unflushed_command])],
                      run_command(crash_log_path,
                                  fixture_path("query", data[:command], "unflushed", "#{data[:flush_case]}.log")))
       end
+    end
+
+    def test_normal_select
+      output = <<-OUTPUT
+#{[
+  :process,
+  :crashed,
+  "99.9.9",
+  "2000-01-01T00:00:00+09:00",
+  "2000-01-01T12:00:00+09:00",
+  1,
+  fixture_path("process", "crash.log"),
+  fixture_path("process", "crash.log"),
+].inspect}
+
+!!!
+!!! Important entries
+!!!
+It contained logs that require checking.
+If you need help, please feel free to contact the community: https://groonga.org/docs/community.html
+===
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: -- CRASHED!!! --
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ...trace
+2000-01-01T12:00:00+09:00: 1: 00000000: critical: ----------------
+===
+
+Summary:
+crashed:yes, unflushed:no, unfinished:no, leak:no
+NG: Please check the display and logs.
+      OUTPUT
+      assert_equal([true, output],
+                   run_command(crash_log_path,
+                               fixture_path("query", "select", "unflushed", "no-load.log")))
     end
   end
 end
