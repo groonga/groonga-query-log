@@ -304,29 +304,20 @@ module GroongaQueryLog
 
         def check_io_flush(statistic)
           io_flush = statistic.command
-          # TODO: Improve flushed target detection.
           if io_flush.target_name
-            if io_flush.recursive?
+            if io_flush.recursive_dependent?
               @unflushed_statistics.reject! do |statistic|
                 case statistic.command.command_name
                 when "load"
-                  # TODO: Not enough
                   statistic.command.table == io_flush.target_name
                 when "delete"
-                  # TODO: Not enough
                   statistic.command.table == io_flush.target_name
                 when "truncate"
-                  # TODO: Not enough
                   statistic.command.target_name == io_flush.target_name
-                else
-                  false
-                end
-              end
-            else
-              @unflushed_statistics.reject! do |statistic|
-                case statistic.command.command_name
-                when /_create/
-                  true # TODO: Need io_flush for database
+                when "table_create"
+                  statistic.command.name == io_flush.target_name
+                when "column_create"
+                  "#{statistic.command.table}.#{statistic.command.name}" == io_flush.target_name
                 else
                   false
                 end
