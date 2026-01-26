@@ -285,6 +285,11 @@ NG: Please check the display and logs.
         },
         "command:load flush:only-opened": { command: "load", flush_case: "only-opened" },
         "command:load flush:recursive=yes": { command: "load", flush_case: "recursive-yes" },
+        "command:load&columns flush:only-opened": { command: "load", flush_case: "columns-only-opened" },
+        "command:load&columns flushtarget-name&recursive=dependent:": {
+          command: "load",
+          flush_case: "columns-target-name-recursive-dependent",
+        },
         # delete
         "command:delete flush:target-name&recursive=dependent": {
           command: "delete",
@@ -394,6 +399,16 @@ NG: Please check the display and logs.
           command: "load",
           flush_case: "target-name-recursive-no",
           unflushed_command: "/d/load?table=Data"
+        },
+        "command:load&columns flush:only-opened": {
+          command: "load",
+          flush_case: "columns-only-opened",
+          unflushed_command: "/d/load?columns=_key%2Ccount&table=Data"
+        },
+        "command:load&columns flush:target-name&recursive=dependent": {
+          command: "load",
+          flush_case: "columns-target-name-recursive-dependent",
+          unflushed_command: "/d/load?columns=_key%2Ccount&table=Data"
         },
         # delete
         "command:delete flush:no": {
