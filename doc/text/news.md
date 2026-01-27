@@ -1,5 +1,27 @@
 # News
 
+## 1.7.9: 2026-01-27
+
+### Improvements
+
+  * `check-crash`: Improved the output. Made it easier to use for recovery.
+
+    * Check the [documentation](check-crash.md) as some options have been added.
+
+  * `check-crash`: Improved the accuracy of unflushed checks.
+
+    * Improved detection accuracy when no `target_name` is specified for `io_flush`.
+
+    * Added a `select` command with `--load_table` option specified as the check target for unflushed.
+
+  * `check-crash`: Showed PID and thread ID
+
+  * Added support for Ruby 3.4
+
+### Fixes
+
+  * `show-running-queries`: Fixed running query condition
+
 ## 1.7.8: 2024-04-10
 
 ### Improvements
