@@ -17,7 +17,7 @@ jobs:
           - "3.3"
           - "3.4"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Set up Groonga APT repository
         run: |
           wget https://packages.groonga.org/ubuntu/groonga-apt-source-latest-$(lsb_release --codename --short).deb
