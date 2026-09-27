@@ -115,6 +115,44 @@ class ResponseComparerTest < Test::Unit::TestCase
       end
     end
 
+    class ArrowDictionaryTypeTest < self
+      def test_dictionary_string
+        assert_true(same?([
+                            [
+                              [1],
+                              [["User", "string"]],
+                              ["groonga"],
+                            ],
+                          ],
+                          [
+                            [
+                              [1],
+                              [["User",
+                                "dictionary<values=string, indices=int32, ordered=0>"]],
+                              ["groonga"],
+                            ],
+                          ]))
+      end
+
+      def test_list_dictionary_list_string
+        assert_true(same?([
+                            [
+                              [1],
+                              [["Details", "list<item: string>"]],
+                              [["groonga", "mroonga"]],
+                            ],
+                          ],
+                          [
+                            [
+                              [1],
+                              [["Details",
+                                "list<item: dictionary<values=string, indices=int32, ordered=0>>"]],
+                              [["groonga", "mroonga"]],
+                            ],
+                          ]))
+      end
+    end
+
     class SortKeysTest < self
       class DetectScoreSortTest < self
         private

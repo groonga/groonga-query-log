@@ -355,8 +355,14 @@ module GroongaQueryLog
     def normalize_columns(columns)
       columns.collect do |name, type|
         type = nil if type == "null"
+        type = normalize_type(type) if type
         [name, type]
       end
+    end
+
+    def normalize_type(type)
+      type.gsub(/dictionary<values=([^,]+), indices=[a-z0-9]+, ordered=\d+>/,
+                '\1')
     end
 
     def normalize_value(value, column)
