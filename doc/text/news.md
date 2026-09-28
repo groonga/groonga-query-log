@@ -1,5 +1,12 @@
 # News
 
+## 1.8.0: 2026-10-07
+
+### Fixes
+
+  * `server-verifier`: Stopped overriding `output_type` with `json`. It now uses the request's `output_type` as is.
+    * As a result, regression tests now compare responses in the request's `output_type` format.
+
 ## 1.7.9: 2026-01-27
 
 ### Improvements
