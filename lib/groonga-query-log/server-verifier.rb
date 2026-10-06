@@ -187,7 +187,6 @@ module GroongaQueryLog
           command["limit"] = @options.max_limit.to_s
         end
       end
-      command["output_type"] = "json"
       rewrite_filter(command, "filter")
       rewrite_filter(command, "scorer")
 
